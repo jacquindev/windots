@@ -1,0 +1,32 @@
+[am]
+    threeWay = true
+[core]
+    editor = code --wait
+	longpaths = true
+[diff]
+    tool = default-difftool
+[difftool "default-difftool"]
+    cmd = code --wait --diff $LOCAL $REMOTE
+[include]
+    path = ~/.gitconfig-local
+[help]
+    autocorrect = -1
+[log]
+    abbrevCommit = true
+    decorate = short
+[merge]
+    tool = code
+[mergetool "code"]
+    cmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED
+[pull]
+    ff = only
+[push]
+    default = current
+[rerere]
+    enabled = true
+    autoUpdate = true
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
