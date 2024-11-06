@@ -1,0 +1,7 @@
+*.log
+
+modules.lock.json
+db.zo
+foo*
+
+config/lazygit/state.yml
