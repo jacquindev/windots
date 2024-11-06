@@ -1,0 +1,5 @@
+[plugin]
+deps = [{ use = "yazi-rs/plugins:diff", rev = "102a0cd" }, { use = "lpnh/fg", rev = "43fb735" }, { use = "yazi-rs/plugins:full-border", rev = "102a0cd" }, { use = "yazi-rs/plugins:git", rev = "102a0cd" }, { use = "yazi-rs/plugins:smart-filter", rev = "102a0cd" }]
+
+[flavor]
+deps = [{ use = "dangooddd/kanagawa", rev = "b32f205" }, { use = "yazi-rs/flavors:catppuccin-mocha", rev = "d504f70" }, { use = "yazi-rs/flavors:catppuccin-macchiato", rev = "d504f70" }]

@@ -1,0 +1,30 @@
+# A TOML linter such as https://taplo.tamasfe.dev/ can use this schema to validate your config.
+# If you encounter any issues, please make an issue at https://github.com/yazi-rs/schemas.
+"$schema" = "https://yazi-rs.github.io/schemas/keymap.json"
+
+[manager]
+prepend_keymap = [
+    # Fuzzy finder and ripgrep
+    { on = [
+        "f",
+        "g",
+    ], run = "plugin fg", desc = "Find file by content (fuzzy match)" },
+    { on = [
+        "f",
+        "G",
+    ], run = "plugin fg --args='rg'", desc = "Find file by content (ripgrep)" },
+    { on = [
+        "f",
+        "f",
+    ], run = "plugin fg --args='fzf'", desc = "Find file by filename (fzf)" },
+    { on = "<C-f>", run = "plugin fg --args='fzf'", desc = "Find file by filename (fzf)" },
+    { on = "<C-d>", run = "plugin diff", desc = "Diff the selected with the hovered file" },
+    { on = [
+        "F",
+    ], run = "plugin smart-filter", desc = "Smart filter" },
+]
+
+[[input.prepend_keymap]]
+on = "<Esc>"
+run = "close"
+desc = "Cancel input"

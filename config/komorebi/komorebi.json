@@ -1,0 +1,87 @@
+{
+  "$schema": "https://raw.githubusercontent.com/LGUG2Z/komorebi/v0.1.30/schema.json",
+  "app_specific_configuration_path": "$Env:USERPROFILE/.config/komorebi/applications.json",
+  "window_hiding_behaviour": "Cloak",
+  "cross_monitor_move_behaviour": "Insert",
+  "mouse_follows_focus": false,
+  "default_workspace_padding": 10,
+  "default_container_padding": 10,
+  "border": true,
+  "border_implementation": "Komorebi",
+  "border_width": 5,
+  "border_offset": -1,
+  "border_style": "Rounded",
+  "theme": {
+    "palette": "Catppuccin",
+    "name": "Mocha",
+    "unfocused_border": "Surface0",
+    "single_border": "Green",
+    "monocle_border": "Mauve",
+    "floating_border": "Peach",
+    "stack_border": "Sapphire",
+    "stackbar_background": "Mantle",
+    "stackbar_unfocused_text": "Overlay0",
+    "stackbar_focused_text": "Mauve"
+  },
+  "stackbar": {
+    "height": 40,
+    "mode": "OnStack",
+    "tabs": {
+      "width": 300
+    }
+  },
+  "transparency": false,
+  "display_index_preferences": {
+    "0": "XMI3447-5&27a467dc&0&UID256",
+    "1": "VIE0994-5&27a467dc&0&UID281",
+    "2": "XYM2405-5&27a467dc&0&UID280"
+  },
+  "monitors": [
+    {
+      "workspaces": [
+        {
+          "name": "I",
+          "layout": "BSP",
+          "apply_window_based_work_area_offset": true
+        },
+        {
+          "name": "II",
+          "layout": "VerticalStack",
+          "apply_window_based_work_area_offset": true
+        },
+        {
+          "name": "III",
+          "layout": "HorizontalStack",
+          "apply_window_based_work_area_offset": true
+        },
+        {
+          "name": "IV",
+          "layout": "UltrawideVerticalStack",
+          "apply_window_based_work_area_offset": true
+        },
+        {
+          "name": "V",
+          "layout": "Rows",
+          "apply_window_based_work_area_offset": true
+        },
+        {
+          "name": "VI",
+          "layout": "Grid",
+          "apply_window_based_work_area_offset": true
+        },
+        {
+          "name": "VII",
+          "layout": "RightMainVerticalStack",
+          "apply_window_based_work_area_offset": true
+        }
+      ],
+      "window_based_work_area_offset": {
+        "bottom": 50,
+        "left": 10,
+        "right": 10,
+        "top": 60
+      },
+      "window_based_work_area_offset_limit": 8
+    }
+  ]
+}
