@@ -1,0 +1,12 @@
+[submodule "config/yazi/flavors/tokyo-night.yazi"]
+path = config/yazi/flavors/tokyo-night.yazi
+url = https://github.com/BennyOe/tokyo-night.yazi.git
+[submodule "clink/profile/clink-completions"]
+	path = clink/profile/clink-completions
+	url = https://github.com/vladimir-kotikov/clink-completions.git
+[submodule "clink/clink-completions"]
+	path = clink/clink-completions
+	url = https://github.com/vladimir-kotikov/clink-completions.git
+[submodule "clink/clink-gizmos"]
+	path = clink/clink-gizmos
+	url = https://github.com/chrisant996/clink-gizmos.git
