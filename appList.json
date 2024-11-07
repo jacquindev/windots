@@ -1,3 +1,4 @@
+// You can ADD or REMOVE apps in this file before running the `Setup.ps1` script with your preferred applications.
 {
     "$schema": "./schema.json",
     "source": {
