@@ -65,27 +65,6 @@ $SymLinks = @{
     "$Env:USERPROFILE\.gitconfig"                                                                 = ".\home\.gitconfig"
 }
 
-if (($PSBoundParameters.Count -eq 0) -or ($Install)) { 
-    Setup 
-}
-elseif ($Uninstall) { 
-    ''
-    Write-Host "WARNING: This will UNINSTALL all apps that installed by this script, which" -ForegroundColor "Yellow"
-    Write-Host "         included: Scoop Packages, WinGet Packages, PowerShell Modules, " -ForegroundColor "Yellow"
-    Write-Host "         AND symlink files/folders of this 'windots' repo!!!" -ForegroundColor "Yellow"
-    ''
-    Write-Host "NOTES: This script WILL NOT UNINSTALL Scoop/Winget itself, and the" -ForegroundColor "Blue"
-    Write-Host "       ENVIRONMENT VARIABLES we have set, and this 'windots' folder." -ForegroundColor "Blue"
-    ''
-    $confirm = $(Write-Host "ARE YOU SURE TO PROCEED? (y/n) " -ForegroundColor "Red" -NoNewline; Read-Host)
-    if ($confirm -eq 'y') {
-        Reverse
-    }
-    else {
-        Write-Host "Cancelled the process. Exiting..."
-        Break
-    }
-}
 
 ###############################################################################
 ###                              HELPER FUNCTIONS                           ###
@@ -545,4 +524,28 @@ function Reverse {
     Write-Host "Create Symbolic Links:" -ForegroundColor "Blue"
     Write-Host "----------------------" -ForegroundColor "Blue"
     Set-SymbolicLinks -Remove -Symlinks $SymLinks
+}
+
+
+###############################################################################
+###                              START THE SCRIPT                           ###
+###############################################################################
+if (($PSBoundParameters.Count -eq 0) -or ($Install)) { Setup }
+elseif ($Uninstall) { 
+    ''
+    Write-Host "WARNING: This will UNINSTALL all apps that installed by this script, which" -ForegroundColor "Yellow"
+    Write-Host "         included: Scoop Packages, WinGet Packages, PowerShell Modules, " -ForegroundColor "Yellow"
+    Write-Host "         AND symlink files/folders of this 'windots' repo!!!" -ForegroundColor "Yellow"
+    ''
+    Write-Host "NOTES: This script WILL NOT UNINSTALL Scoop/Winget itself, and the" -ForegroundColor "Blue"
+    Write-Host "       ENVIRONMENT VARIABLES we have set, and this 'windots' folder." -ForegroundColor "Blue"
+    ''
+    $confirm = $(Write-Host "ARE YOU SURE TO PROCEED? (y/n) " -ForegroundColor "Red" -NoNewline; Read-Host)
+    if ($confirm -eq 'y') {
+        Reverse
+    }
+    else {
+        Write-Host "Cancelled the process. Exiting..."
+        Break
+    }
 }
