@@ -3,12 +3,24 @@
 [core]
     editor = code --wait
 	longpaths = true
+    pager = delta
 [diff]
     tool = default-difftool
+    colorMoved = default
 [difftool "default-difftool"]
     cmd = code --wait --diff $LOCAL $REMOTE
+[delta]
+    features = catppuccin-mocha
+    side-by-side = true
+    navigate = true
+    true-color = always
+    hyperlinks = true
+    hyperlinks-file-link-format = "vscode://file/{path}:{line}"
 [include]
     path = ~/.gitconfig-local
+    path = ~/.config/delta/themes/themes.gitconfig
+[interactive]
+    diffFilter = delta --color-only
 [help]
     autocorrect = -1
 [log]
@@ -16,6 +28,7 @@
     decorate = short
 [merge]
     tool = code
+    conflictstyle = zdiff3
 [mergetool "code"]
     cmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED
 [pull]
