@@ -109,7 +109,7 @@ Set-Alias -Name 'mkcd' -Value 'New-Directory'
 Set-Alias -Name 'touch' -Value 'New-File'
 Set-Alias -Name 'which' -Value 'Get-CommandInfo'
 
-Remove-Item Alias:rm -Force -ErrorAction SilentlyContinue
+#Remove-Item Alias:rm -Force -ErrorAction SilentlyContinue
 Set-Alias -Name 'rm' -Value 'Remove-MyItem'
 
 # ----------------------------------------------------------------------------------- #
