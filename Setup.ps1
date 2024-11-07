@@ -19,7 +19,7 @@
     - Remember to backup your files / Create a restore point before using this script.
     - My main screen is 3440x1440. You will need to modified 'komorebi.json' to fit your needs.
     - Rainmeter skins are included in 'windows/rainmeter' folder.
-        -> Install jaxCore's skins by run the script 'Install-JaxCore.ps1' 
+        -> Install jaxCore's skins by run the script 'JaxCore.ps1' 
     - Most of applications I am using are modified with Catppuccin Theme!
 
     Author: Jacquin Moon
