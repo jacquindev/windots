@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft-04/schema#",
+  "$id": "https://example.com/product.schema.json",
+  "title": "Applications",
+  "description": "A list of applications to be installed/uninstalled on Windows",
+  "required": ["source"],
+  "type": "object",
+  "properties": {
+    "source": {
+      "description": "Source used to install/uninstall packages",
+      "type": "object",
+      "properties": {
+        "winget": {
+          "type": "array",
+          "items": {
+            "description": "List of WinGet Package Identifiers",
+            "type": "string"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "scoop": {
+          "type": "object",
+          "items": {
+            "description": "List of Scoop Packages",
+            "type": "string"
+          },
+          "properties": {
+            "bucket": {
+              "type": "array",
+              "item": {
+                "description": "List of Scoop bucket to add/remove",
+                "type": "string"
+              }
+            },
+            "user": {
+              "type": "array",
+              "item": {
+                "description": "List of Scoop apps for User",
+                "type": "string",
+                "minItems": 1,
+                "uniqueItems": true
+              }
+            },
+            "global": {
+              "type": "array",
+              "item": {
+                "description": "List of Scoop apps for All Users",
+                "type": "string",
+                "minItems": 1,
+                "uniqueItems": true
+              }
+            }
+          }
+        },
+        "modules": {
+          "type": "array",
+          "items": {
+            "description": "List of PowerShell Modules",
+            "type": "string"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": ["winget", "scoop", "modules"]
+    }
+  }
+}

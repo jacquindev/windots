@@ -1,0 +1,90 @@
+{
+    "$schema": "./schema.json",
+    "source": {
+        "winget": [
+            "chrisant996.Clink",
+            "gerardog.gsudo",
+            "Git.Git",
+            "GitHub.GitHubDesktop",
+            "ImageMagick.ImageMagick",
+            "JanDeDobbeleer.OhMyPosh",
+            "Microsoft.PowerShell",
+            "Microsoft.VisualStudioCode",
+            "Microsoft.WindowsTerminal",
+            // "Notepad++.Notepad++",
+            "Obsidian.Obsidian",
+            "Proton.ProtonVPN",
+            "Spotify.Spotify",
+            // "glzr-io.glazewm",
+            "LGUG2Z.komorebi",
+            "LGUG2Z.whkd",
+            "Rainmeter.Rainmeter",
+            "rocksdanister.LivelyWallpaper",
+            "Stardock.Start11"
+        ],
+        "scoop": {
+            "bucket": [
+                "extras",
+                "java",
+                "sysinternals"
+            ],
+            "user": [
+                "aria2",
+                "bat",
+                "bfg",
+                "btop",
+                "delta",
+                "eza",
+                "flow-launcher",
+                "gh",
+                "git-crypt",
+                "git-filter-repo",
+                "git-lfs",
+                "git-sizer",
+                "innounp",
+                "jq",
+                "lazygit",
+                "less",
+                "nvm",
+                "scoop-completion",
+                "secureuxtheme",
+                "spicetify-cli",
+                "wixtoolset",
+                "yazi",
+                "zoxide"
+            ],
+            "global": [
+                "7zip",
+                "cacert",
+                "fastfetch",
+                "fd",
+                "fzf",
+                "openjdk",
+                "procmon",
+                "pskill",
+                "pslist",
+                "ripgrep",
+                "sed",
+                "wget"
+            ]
+        },
+        "modules": [
+            // "BetterCredentials",
+            "BurntToast",
+            "CompletionPredictor",
+            "DotNetVersionLister",
+            "Microsoft.PowerShell.SecretManagement",
+            "Microsoft.PowerShell.SecretStore",
+            "posh-alias",
+            "posh-git",
+            "powershell-yaml",
+            // "PoshRSJob",
+            "PSFzf",
+            "PSParseHTML",
+            "PSProfiler",
+            "PSScriptTools",
+            // "PSWebSearch",
+            "Terminal-Icons"
+        ]
+    }
+}
