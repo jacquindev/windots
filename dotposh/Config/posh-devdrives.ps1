@@ -70,8 +70,9 @@ $devDrive = Get-DevDrive
 
 $packagePath = "$devDrive\packages"
 $projectPath = "$devDrive\projects"
+$repoPath = "$devDrive\repos"
     
-foreach ($path in @($packagePath, $projectPath)) {
+foreach ($path in @($packagePath, $projectPath, $repoPath)) {
     if (-not (Test-Path -Path $path)) {
         New-Item -Path $path -ItemType Directory -Force | Out-Null
     }
@@ -79,45 +80,45 @@ foreach ($path in @($packagePath, $projectPath)) {
 
 
 ### Dev Drive Settings ###
-$devPathSettings = @(
-    @{ Command = "npm"; PackagePath = "$packagePath\npm"; EnvName = "npm_config_cache"; SourcePaths = @("$env:APPDATA\npm-cache", "$env:LOCALAPPDATA\npm-cache") },
-    @{ Command = "yarn"; PackagePath = "$packagePath\npm"; EnvName = "YARN_CACHE_FOLDER"; SourcePaths = @() },
-    @{ Command = "pip"; PackagePath = "$packagePath\pip"; EnvName = "PIP_CACHE_DIR"; SourcePaths = @("$env:LOCALAPPDATA\pip\Cache") },
-    @{ Command = "cargo"; PackagePath = "$packagePath\cargo"; EnvName = "CARGO_HOME"; SourcePaths = @("$env:USERPROFILE\.cargo") },
-    @{ Command = "vcpkg"; PackagePath = "$packagePath\vcpkg"; EnvName = "VCPKG_DEFAULT_BINARY_CACHE"; SourcePaths = @("$env:LOCALAPPDATA\vcpkg\archives", "$env:APPDATA\vcpkg\archives") },
-    @{ Command = "gradle"; PackagePath = "$packagePath\gradle"; EnvName = "GRADLE_USER_HOME"; SourcePaths = @("$env:USERPROFILE\.gradle") }
-)
+# $devPathSettings = @(
+#     @{ Command = "npm"; PackagePath = "$packagePath\npm"; EnvName = "npm_config_cache"; SourcePaths = @("$env:APPDATA\npm-cache", "$env:LOCALAPPDATA\npm-cache") },
+#     @{ Command = "yarn"; PackagePath = "$packagePath\npm"; EnvName = "YARN_CACHE_FOLDER"; SourcePaths = @() },
+#     @{ Command = "pip"; PackagePath = "$packagePath\pip"; EnvName = "PIP_CACHE_DIR"; SourcePaths = @("$env:LOCALAPPDATA\pip\Cache") },
+#     @{ Command = "cargo"; PackagePath = "$packagePath\cargo"; EnvName = "CARGO_HOME"; SourcePaths = @("$env:USERPROFILE\.cargo") },
+#     @{ Command = "vcpkg"; PackagePath = "$packagePath\vcpkg"; EnvName = "VCPKG_DEFAULT_BINARY_CACHE"; SourcePaths = @("$env:LOCALAPPDATA\vcpkg\archives", "$env:APPDATA\vcpkg\archives") },
+#     @{ Command = "gradle"; PackagePath = "$packagePath\gradle"; EnvName = "GRADLE_USER_HOME"; SourcePaths = @("$env:USERPROFILE\.gradle") }
+# )
 
-foreach ($setting in $devPathSettings) {
-    if (Get-Command -Name $($setting.Command) -ErrorAction SilentlyContinue) {
-        if (-not (Test-Path -PathType Container -Path $($setting.PackagePath))) {
-            New-Item -Path $($setting.PackagePath) -ItemType Directory -Force | Out-Null
-        }
-        Set-DevDriveEnvironmentVariable -Name $($setting.EnvName) -Value $($setting.PackagePath)
-        foreach ($source in $setting.SourcePaths) {
-            if ($null -ne $source) { Move-CacheContents -SourcePath $source -DestinationPath $setting.PackagePath }
-        }
-    }
-}
+# foreach ($setting in $devPathSettings) {
+#     if (Get-Command -Name $($setting.Command) -ErrorAction SilentlyContinue) {
+#         if (-not (Test-Path -PathType Container -Path $($setting.PackagePath))) {
+#             New-Item -Path $($setting.PackagePath) -ItemType Directory -Force | Out-Null
+#         }
+#         Set-DevDriveEnvironmentVariable -Name $($setting.EnvName) -Value $($setting.PackagePath)
+#         foreach ($source in $setting.SourcePaths) {
+#             if ($null -ne $source) { Move-CacheContents -SourcePath $source -DestinationPath $setting.PackagePath }
+#         }
+#     }
+# }
 
 
-### Maven Setup ###
-if (Get-Command "mvn" -ErrorAction SilentlyContinue) {
-    $mavenRepoLocal = "$packagePath\maven"
-    if (!(Test-Path -PathType Container -Path $mavenRepoLocal)) { New-Item -Path $mavenRepoLocal -ItemType Directory -Force | Out-Null }
-    $mavenOpts = [System.Environment]::GetEnvironmentVariable('MAVEN_OPTS', [System.EnvironmentVariableTarget]::User)
-    $escapedMavenRepoLocal = [regex]::Escape($mavenRepoLocal)
-    if ($mavenOpts -notmatch "-Dmaven\.repo\.local=$escapedMavenRepoLocal") {
-        $newMavenOpts = "-Dmaven.repo.local=$mavenRepoLocal $mavenOpts"
-        Set-DevDriveEnvironmentVariable -Name "MAVEN_OPTS" -Value $newMavenOpts
-    }
-    Move-CacheContents -SourcePath "$env:USERPROFILE\.m2\repository" -DestinationPath $mavenRepoLocal
-}
+# ### Maven Setup ###
+# if (Get-Command "mvn" -ErrorAction SilentlyContinue) {
+#     $mavenRepoLocal = "$packagePath\maven"
+#     if (!(Test-Path -PathType Container -Path $mavenRepoLocal)) { New-Item -Path $mavenRepoLocal -ItemType Directory -Force | Out-Null }
+#     $mavenOpts = [System.Environment]::GetEnvironmentVariable('MAVEN_OPTS', [System.EnvironmentVariableTarget]::User)
+#     $escapedMavenRepoLocal = [regex]::Escape($mavenRepoLocal)
+#     if ($mavenOpts -notmatch "-Dmaven\.repo\.local=$escapedMavenRepoLocal") {
+#         $newMavenOpts = "-Dmaven.repo.local=$mavenRepoLocal $mavenOpts"
+#         Set-DevDriveEnvironmentVariable -Name "MAVEN_OPTS" -Value $newMavenOpts
+#     }
+#     Move-CacheContents -SourcePath "$env:USERPROFILE\.m2\repository" -DestinationPath $mavenRepoLocal
+# }
 
 
 ### Quick Jump Aliases ###
 Add-Alias packages "Set-Location $packagePath"
 Add-Alias projects "Set-Location $projectPath"
+Add-Alias repos "Set-Location $repoPath"
 
-
-Remove-Variable path, devDrive, packagePath, projectPath, devPathSettings, setting
+Remove-Variable path, devDrive, packagePath, projectPath, repoPath
