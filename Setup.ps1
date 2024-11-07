@@ -452,14 +452,14 @@ function Setup {
             if (!($catppuccinThemes)) {
                 $catppuccinThemeNames = @('catppuccin_frappe', 'catppuccin_latte', 'catppuccin_macchiato', 'catppuccin_mocha')
                 foreach ($theme in $catppuccinThemeNames) {
-                    Write-Host "Btop: Catppuccin Theme: " -ForegroundColor "Blue" -NoNewline
+                    Write-Host "Btop: Catppuccin Theme: " -ForegroundColor "Green" -NoNewline
                     Write-Host "$theme " -ForegroundColor "Yellow" -NoNewline
                     Write-Host "is being installed..."
                     Install-File -Dir $btopThemeDir -Url "https://raw.githubusercontent.com/catppuccin/btop/refs/heads/main/themes/$theme.theme"
                 }
             }
             else {
-                Write-Host "Btop: " -ForegroundColor "Blue" -NoNewline
+                Write-Host "Btop: " -ForegroundColor "Green" -NoNewline
                 Write-Host "Catppuccin Themes " -ForegroundColor "Yellow" -NoNewline
                 Write-Host "already installed! Skipping..."
             }
@@ -475,7 +475,7 @@ function Setup {
         $extensionList = Get-Content -Path "$PSScriptRoot\vscode\extensions.list"
         foreach ($extension in $extensionList) {
             code --install-extension $extension | Out-Null
-            Write-Host "VSCode Extension: " -ForegroundColor "Blue" -NoNewline
+            Write-Host "VSCode Extension: " -ForegroundColor "Green" -NoNewline
             Write-Host "$extension " -ForegroundColor "Yellow" -NoNewline
             Write-Host "installed"
         }
