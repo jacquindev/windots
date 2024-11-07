@@ -23,7 +23,7 @@
   "editor.unicodeHighlight.nonBasicASCII": false,
   "editor.useTabStops": true,
   // files
-  "files.autoSave": "onFocusChange",
+  //"files.autoSave": "onFocusChange",
   "files.exclude": {
     "**/__pycache__": true,
     "**/.cache": true,
