@@ -13,3 +13,5 @@
 ![cloudsnight](./pics/cloudsnight.jpg)
 
 ## ✨ Videos ✨
+
+[Click here to check theme out!!](./videos/)
