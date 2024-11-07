@@ -2,7 +2,7 @@
     threeWay = true
 [core]
     editor = code --wait
-	longpaths = true
+    longpaths = true
     pager = delta
 [diff]
     tool = default-difftool
