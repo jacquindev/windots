@@ -15,19 +15,21 @@
     "palette": "Catppuccin",
     "name": "Mocha",
     "unfocused_border": "Surface0",
-    "single_border": "Green",
-    "monocle_border": "Mauve",
+    "single_border": "Mauve",
+    "monocle_border": "Green",
     "floating_border": "Peach",
     "stack_border": "Sapphire",
-    "stackbar_background": "Mantle",
+    "stackbar_background": "Base",
     "stackbar_unfocused_text": "Overlay0",
-    "stackbar_focused_text": "Mauve"
+    "stackbar_focused_text": "Sapphire"
   },
   "stackbar": {
-    "height": 40,
+    "height": 35,
     "mode": "OnStack",
     "tabs": {
-      "width": 300
+      "width": 300,
+      "font_family": "FantasqueSansM Nerd Font",
+      "font_size": 30
     }
   },
   "transparency": false,
@@ -41,45 +43,30 @@
       "workspaces": [
         {
           "name": "I",
-          "layout": "BSP",
-          "apply_window_based_work_area_offset": true
-        },
-        {
-          "name": "II",
           "layout": "VerticalStack",
           "apply_window_based_work_area_offset": true
         },
         {
-          "name": "III",
-          "layout": "HorizontalStack",
+          "name": "II",
+          "layout": "BSP",
           "apply_window_based_work_area_offset": true
         },
         {
-          "name": "IV",
+          "name": "III",
           "layout": "UltrawideVerticalStack",
           "apply_window_based_work_area_offset": true
         },
         {
-          "name": "V",
-          "layout": "Rows",
-          "apply_window_based_work_area_offset": true
-        },
-        {
-          "name": "VI",
-          "layout": "Grid",
-          "apply_window_based_work_area_offset": true
-        },
-        {
-          "name": "VII",
-          "layout": "RightMainVerticalStack",
+          "name": "IV",
+          "layout": "HorizontalStack",
           "apply_window_based_work_area_offset": true
         }
       ],
       "window_based_work_area_offset": {
-        "bottom": 50,
-        "left": 10,
-        "right": 10,
-        "top": 60
+        "bottom": -60,
+        "left": 0,
+        "right": 0,
+        "top": 0
       },
       "window_based_work_area_offset_limit": 8
     }
