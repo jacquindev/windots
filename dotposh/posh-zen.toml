@@ -127,8 +127,3 @@ foreground_templates = [
   '{{ if gt .Code 0 }}p:Red{{ end }}',
   '{{ if eq .Code 0}}p:Mauve{{ end }}',
 ]
-
-[secondary_prompt]
-foreground = 'p:Blue'
-background = 'transparent'
-template = '❯❯'
