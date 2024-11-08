@@ -57,8 +57,10 @@ $SymLinks = @{
     "$Env:USERPROFILE\.config\whkdrc"                                                             = ".\config\whkdrc"
     "$Env:USERPROFILE\.config\yazi"                                                               = ".\config\yazi"
     "$Env:USERPROFILE\.config\delta"                                                              = ".\config\delta"
+    "$Env:USERPROFILE\.config\gh-dash"                                                            = ".\config\gh-dash"
     # "$Env:USERPROFILE\.glzr\glazewm\config.yaml"                                                  = ".\config\glazewm\config.yaml"
     "$Env:APPDATA\bat"                                                                            = ".\config\bat"
+    "$Env:APPDATA\topgrade.toml"                                                                  = ".\config\topgrade.toml"
     "$Env:LOCALAPPDATA\lazygit"                                                                   = ".\config\lazygit"
     "$Env:APPDATA\Code\User\settings.json"                                                        = ".\vscode\settings.json"
     "$Env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" = ".\windows\settings.json"
@@ -80,7 +82,7 @@ function Set-WinGetApps {
         $installed = winget list --exact --accept-source-agreements -q $app
         if (![String]::Join("", $installed).Contains($app)) {
             if ($Install) {
-                winget install --exact --silent --accept-source-agreements --accept-package-agreements $app --source winget | Out-Null
+                winget install --exact --silent --accept-source-agreements --accept-package-agreements $app --source winget
                 Write-Host "WinGet: " -ForegroundColor "Green" -NoNewline
                 Write-Host "$app " -ForegroundColor "Yellow" -NoNewline
                 Write-Host "installed."
@@ -98,7 +100,7 @@ function Set-WinGetApps {
                 Write-Host "already installed. Skipping..."
             }
             elseif ($Uninstall) {
-                winget uninstall --exact --silent --accept-source-agreements $app | Out-Null
+                winget uninstall --exact --silent --accept-source-agreements $app
                 Write-Host "WinGet: " -ForegroundColor "Green" -NoNewline 
                 Write-Host "$app " -ForegroundColor "Yellow" -NoNewline
                 Write-Host "uninstalled."
