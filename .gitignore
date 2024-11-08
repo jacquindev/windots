@@ -1,7 +1,7 @@
 *.log
 
 modules.lock.json
-winget.packages.json
+packages.lock.json
 db.zo
 foo*
 
