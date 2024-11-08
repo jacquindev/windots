@@ -1,0 +1,70 @@
+# yaml-language-server: $schema=https://dlvhdr.github.io/gh-dash/configuration/gh-dash/schema.json
+theme:
+  ui:
+    sectionsShowCount: true
+    table:
+      showSeparators: true
+  colors:
+    text:
+      primary: "#cdd6f4"
+      secondary: "#fab387"
+      inverted: "#11111b"
+      faint: "#bac2de"
+      warning: "#f9e2af"
+      success: "#a6e3a1"
+      error: "#f38ba8"
+    background:
+      selected: "#313244"
+    border:
+      primary: "#fab387"
+      secondary: "#45475a"
+      faint: "#313244"
+
+prSections:
+  - title: Pull Requests
+    filters: is:open author:@me
+    layout:
+      author:
+        hidden: true
+  - title: Needs My Review
+    filters: is:open review-requested:@me
+
+issuesSections:
+  - title: Created
+    filters: is:open author:@me
+  - title: Assigned
+    filters: is:open assignee:@me
+
+defaults:
+  layout:
+    prs:
+      repo:
+        grow: true
+        width: 10
+        hidden: false
+  prsLimit: 20
+  issuesLimit: 20
+  preview:
+    open: true
+    width: 60
+  refetchIntervalMinutes: 30
+
+repoPaths:
+  :owner/:repo: /g/repos/github.com/:owner/:repo
+  jacquindev/*: /g/projects/*
+
+pager:
+  diff: delta
+
+keybindings:
+  prs:
+    - key: v
+      command: >
+        cd {{.RepoPath}} &&
+        code . &&
+        gh pr checkout {{.PrNumber}}
+  issues:
+    - key: P
+      command: gh issue pin {{.IssueNumber}} --repo {{.RepoName}}
+
+confirmQuit: false
