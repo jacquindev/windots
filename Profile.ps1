@@ -7,7 +7,7 @@ $OutputEncoding = [System.Text.Encoding]::UTF8
 
 # To communicate that real prompt is still loading while loading asynchronously
 function prompt {
-    "[async init]: PS $($ExecutionContext.SessionState.Path.CurrentLocation)$('>' * ($NestedPromptLevel + 1)) "
+    "[async init]::> "
 }
 
 # Environment Variables
@@ -22,7 +22,7 @@ if (Get-Command 'oh-my-posh' -ErrorAction SilentlyContinue) {
     Set-Alias -Name 'omp' -Value 'oh-my-posh'
     oh-my-posh completion powershell | Out-String | Invoke-Expression
     Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCount 1 -Action {
-        oh-my-posh init pwsh --config "$Env:DOTPOSH\.posh-custom.omp.json" | Invoke-Expression
+        oh-my-posh init pwsh --config "$Env:DOTPOSH\posh-zen.toml" | Invoke-Expression
     } | Out-Null
 }
 
