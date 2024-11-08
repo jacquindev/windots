@@ -93,7 +93,7 @@ style = 'plain'
 
 [[blocks.segments]]
 template = ' {{ .FormattedMs }} '
-foreground = 'p:Blue'
+foreground = 'p:Peach'
 type = 'executiontime'
 style = 'plain'
 
