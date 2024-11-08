@@ -14,6 +14,8 @@
             "Microsoft.WindowsTerminal",
             // "Notepad++.Notepad++",
             "Obsidian.Obsidian",
+            // "Mozilla.Firefox",
+            "Zen-Team.Zen-Browser.Optimized",
             "Proton.ProtonVPN",
             "Spotify.Spotify",
             // "glzr-io.glazewm",
@@ -50,6 +52,7 @@
                 "scoop-completion",
                 "secureuxtheme",
                 "spicetify-cli",
+                "topgrade",
                 "wixtoolset",
                 "yazi",
                 "zoxide"
