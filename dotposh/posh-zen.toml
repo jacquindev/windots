@@ -1,0 +1,134 @@
+#:schema https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
+
+version = 3
+final_space = true
+console_title_template = '{{ .Shell }} in {{ .Folder }}'
+
+[palette]
+Base = '#1e1e2e'
+Blue = '#89b4fa'
+Crust = '#11111b'
+Flamingo = '#f2cdcd'
+Green = '#a6e3a1'
+Lavender = '#b4befe'
+Mantle = '#181825'
+Maroon = '#eba0ac'
+Mauve = '#cba6f7'
+Overlay0 = '#6c7086'
+Overlay1 = '#7f849c'
+Overlay2 = '#9399b2'
+Peach = '#fab387'
+Pink = '#f5c2e7'
+Red = '#f38ba8'
+Rosewater = '#f5e0dc'
+Sapphire = '#74c7ec'
+Sky = '#89dceb'
+Subtext0 = '#a6adc8'
+Subtext1 = '#bac2de'
+Surface0 = '#313244'
+Surface1 = '#45475a'
+Surface2 = '#585b70'
+Teal = '#94e2d5'
+Text = '#cdd6f4'
+Yellow = '#f9e2af'
+
+[[blocks]]
+type = 'prompt'
+alignment = 'left'
+newline = true
+
+[[blocks.segments]]
+template = ' {{ if .WSL }} on {{ end }}{{ .Icon }}  '
+foreground = 'p:Lavender'
+type = 'os'
+style = 'plain'
+
+[blocks.segments.properties]
+alpine = ''
+arch = ''
+centos = ''
+debian = ''
+elementary = ''
+fedora = ''
+gentoo = ''
+linux = ''
+macos = ''
+manjaro = ''
+mint = ''
+opensuse = ''
+raspbian = ''
+ubuntu = ''
+windows = ''
+
+[[blocks.segments]]
+template = '{{ .Path }} '
+foreground = 'p:Pink'
+type = 'path'
+style = 'plain'
+
+[blocks.segments.properties]
+style = 'full'
+
+[[blocks.segments]]
+type = 'git'
+style = 'plain'
+foreground = 'p:Overlay2'
+background = 'transparent'
+template = ' {{ .HEAD }}{{ if or (.Working.Changed) (.Staging.Changed) }}*{{ end }} <cyan>{{ if gt .Behind 0 }}⇣{{ end }}{{ if gt .Ahead 0 }}⇡{{ end }}</>'
+
+[blocks.segments.properties]
+branch_icon = ''
+commit_icon = '@'
+fetch_status = true
+
+[[blocks]]
+type = 'rprompt'
+overflow = 'hide'
+
+[[blocks.segments]]
+template = '{{ (div ((sub .PhysicalTotalMemory .PhysicalFreeMemory)|float64) 1073741824.0) }}/{{ (div .PhysicalTotalMemory 1073741824.0) }}GB '
+foreground = 'p:Blue'
+type = 'sysinfo'
+style = 'plain'
+
+[[blocks.segments]]
+template = ' {{ .FormattedMs }} '
+foreground = 'p:Blue'
+type = 'executiontime'
+style = 'plain'
+
+[blocks.segments.properties]
+threshold = 5000
+
+[[blocks]]
+type = 'prompt'
+alignment = 'left'
+newline = true
+
+[[blocks.segments]]
+leading_diamond = ''
+trailing_diamond = ' '
+template = '   {{ if ne .Status "stopped" }} {{ .Artist }} ✦  {{ .Track }}{{ end }} '
+foreground = 'p:Green'
+background = 'p:Surface1'
+type = 'spotify'
+style = 'diamond'
+
+[[blocks]]
+type = 'prompt'
+alignment = 'left'
+newline = true
+
+[[blocks.segments]]
+template = '❯'
+type = 'text'
+style = 'plain'
+foreground_templates = [
+  '{{ if gt .Code 0 }}p:Red{{ end }}',
+  '{{ if eq .Code 0}}p:Mauve{{ end }}',
+]
+
+[secondary_prompt]
+foreground = 'p:Blue'
+background = 'transparent'
+template = '❯❯'
