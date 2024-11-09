@@ -15,9 +15,9 @@
     "palette": "Catppuccin",
     "name": "Mocha",
     "unfocused_border": "Surface0",
-    "single_border": "Mauve",
+    "single_border": "Peach",
     "monocle_border": "Green",
-    "floating_border": "Peach",
+    "floating_border": "Mauve",
     "stack_border": "Sapphire",
     "stackbar_background": "Base",
     "stackbar_unfocused_text": "Overlay0",
@@ -43,21 +43,11 @@
       "workspaces": [
         {
           "name": "I",
-          "layout": "BSP",
-          "apply_window_based_work_area_offset": true
-        },
-        {
-          "name": "II",
           "layout": "UltrawideVerticalStack",
           "apply_window_based_work_area_offset": true
         },
         {
-          "name": "III",
-          "layout": "VerticalStack",
-          "apply_window_based_work_area_offset": true
-        },
-        {
-          "name": "IV",
+          "name": "II",
           "layout": "HorizontalStack",
           "apply_window_based_work_area_offset": true
         }
@@ -69,6 +59,30 @@
         "top": 0
       },
       "window_based_work_area_offset_limit": 8
+    },
+    {
+      "workspaces": [
+        {
+          "name": "I",
+          "layout": "VerticalStack"
+        },
+        {
+          "name": "II",
+          "layout": "BSP"
+        }
+      ]
+    },
+    {
+      "workspaces": [
+        {
+          "name": "I",
+          "layout": "VerticalStack"
+        },
+        {
+          "name": "II",
+          "layout": "BSP"
+        }
+      ]
     }
   ]
 }
