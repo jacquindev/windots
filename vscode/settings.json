@@ -41,7 +41,7 @@
     "**/package-lock.json": true
   },
   // workbench
-  "workbench.colorTheme": "Catppuccin Mocha",
+  "workbench.colorTheme": "Catppuccin Macchiato",
   "workbench.editor.empty.hint": "hidden",
   "workbench.editor.enablePreview": true,
   "workbench.editor.labelFormat": "medium",
@@ -79,7 +79,7 @@
   "catppuccin.extraBordersEnabled": true,
   "catppuccin.workbenchMode": "flat",
   // glassit - transparency
-  "glassit.alpha": 240,
+  "glassit.alpha": 255,
   // telemetry
   "redhat.telemetry.enabled": false,
   "telemetry.telemetryLevel": "off",
