@@ -60,7 +60,6 @@ $SymLinks = @{
     "$Env:USERPROFILE\.config\gh-dash"                                                            = ".\config\gh-dash"
     # "$Env:USERPROFILE\.glzr\glazewm\config.yaml"                                                  = ".\config\glazewm\config.yaml"
     "$Env:APPDATA\bat"                                                                            = ".\config\bat"
-    "$Env:APPDATA\topgrade.toml"                                                                  = ".\config\topgrade.toml"
     "$Env:LOCALAPPDATA\lazygit"                                                                   = ".\config\lazygit"
     "$Env:APPDATA\Code\User\settings.json"                                                        = ".\vscode\settings.json"
     "$Env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" = ".\windows\settings.json"
