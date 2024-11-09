@@ -7,7 +7,7 @@ $OutputEncoding = [System.Text.Encoding]::UTF8
 
 # To communicate that real prompt is still loading while loading asynchronously
 function prompt {
-    "[async init]::> "
+    "[async]::❯ "
 }
 
 # Environment Variables
@@ -20,9 +20,9 @@ $Env:_ZO_DATA_DIR = "$Env:DOTFILES"
 # Oh-my-posh prompt
 if (Get-Command 'oh-my-posh' -ErrorAction SilentlyContinue) {
     Set-Alias -Name 'omp' -Value 'oh-my-posh'
-    oh-my-posh completion powershell | Out-String | Invoke-Expression
     Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCount 1 -Action {
         oh-my-posh init pwsh --config "$Env:DOTPOSH\posh-zen.toml" | Invoke-Expression
+        oh-my-posh completion powershell | Out-String | Invoke-Expression
     } | Out-Null
 }
 
@@ -36,8 +36,10 @@ foreach ($module in $PoshModules) {
 
 # gsudo Module
 if (Get-Command gsudo -ErrorAction SilentlyContinue) {
-    $gsudoPath = Split-Path (Get-Command gsudo.exe).Path
-    Import-Module "$gsudoPath\gsudoModule.psd1" 
+    Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCount 1 -Action {
+        $gsudoPath = Split-Path (Get-Command gsudo.exe).Path 
+        Import-Module "$gsudoPath\gsudoModule.psd1" 
+    } | Out-Null
 }
 
 # Import Dotposh Modules
