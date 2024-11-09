@@ -1,3 +1,7 @@
+#requires -Module PSReadline
+#requires -Module PSFzf
+#requires -Module CompletionPredictor
+
 <#
     .SYNOPSIS
         PSReadLine & PSFzf Configuration File.
@@ -15,14 +19,6 @@ if (-not (Get-Module -ListAvailable -Name Catppuccin)) {
     Write-Host "Installing PowerShell Module Catppuccin..." -ForegroundColor "Green"
     git clone "https://github.com/catppuccin/powershell.git" "$env:USERPROFILE\Documents\PowerShell\Modules\Catppuccin"
 }
-
-$NeededModules = @('PSReadLine', 'PSFzf', 'CompletionPredictor')
-foreach ($module in $NeededModules) {
-    if (-not (Get-Module -ListAvailable -Name $module -ErrorAction SilentlyContinue)) {
-        Install-Module $module -Scope CurrentUser -Force
-    }
-}
-Remove-Variable NeededModules, module
 
 Import-Module Catppuccin
 $Flavor = $Catppuccin['Mocha']
