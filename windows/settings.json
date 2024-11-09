@@ -33,7 +33,7 @@
             "keys": "alt+shift+d"
         }
     ],
-    "centerOnLaunch": false,
+    "centerOnLaunch": true,
     "confirmCloseAllTabs": false,
     "copyFormatting": "none",
     "copyOnSelect": false,
@@ -58,14 +58,14 @@
         "defaults": 
         {
             "antialiasingMode": "cleartype",
-            "colorScheme": "Catppuccin Mocha",
+            "colorScheme": "Catppuccin Macchiato",
             "font": 
             {
                 "cellHeight": "1.3",
                 "face": "FantasqueSansM Nerd Font Propo",
                 "size": 14
             },
-            "opacity": 90,
+            "opacity": 100,
             "scrollbarState": "hidden",
             "padding": "10"
         },
