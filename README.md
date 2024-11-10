@@ -3,10 +3,10 @@
 > My Dotfiles Repo for Windows 11.
 
 <div align="center">
-  <a href="#install"><kbd> <br> 🌷 Install <br> </kbd></a>&ensp;&ensp;
-  <a href="#preview"><kbd> <br> 🌆 Preview <br> </kbd></a>&ensp;&ensp;
-  <a href="#features"><kbd> <br> ✨ Features <br> </kbd></a>&ensp;&ensp;
-  <a href="#author"><kbd> <br> Author <br> </kbd></a>&ensp;&ensp;
+  <a href="#install"><kbd><br> 🌷 Install <br></kbd></a>&ensp;&ensp;
+  <a href="#preview"><kbd><br> 🌆 Preview <br></kbd></a>&ensp;&ensp;
+  <a href="#features"><kbd><br> ✨ Features <br></kbd></a>&ensp;&ensp;
+  <a href="#author"><kbd><br> 👤 Author <br> </kbd></a>&ensp;&ensp;
 </div>
 
 <h2 id="preview">🌆 Preview</h2>
@@ -82,7 +82,7 @@ Big thanks for those inspirations:
 - [MattFTW's Dotfiles](https://github.com/Matt-FTW/dotfiles) - Most of my wallpapers are from here.
 - [DevDrive PowerShell's Scripts](https://github.com/ran-dall/Dev-Drive) - I copied most of DevDrive's functions for PowerShell here.
 
-<h2 id="author">Author</h2></h2>
+<h2 id="author">👤 Author</h2></h2>
 
 👤 **Jacquin Moon**
 
