@@ -24,22 +24,22 @@
   "editor.useTabStops": true,
   // files
   //"files.autoSave": "onFocusChange",
-  "files.exclude": {
-    "**/__pycache__": true,
-    "**/.cache": true,
-    "**/.coverage": true,
-    "**/.DS_Store": true,
-    "**/.idea": true,
-    "**/.mypy_cache": true,
-    "**/.pytest_cache": true,
-    "**/.venv": true,
-    "**/*.py[co]": true,
-    "**/bower_components": true,
-    "**/docs/build": true,
-    "**/htmlcoverage": true,
-    "**/node_modules": true,
-    "**/package-lock.json": true
-  },
+  // "files.exclude": {
+  //   "**/__pycache__": true,
+  //   "**/.cache": true,
+  //   "**/.coverage": true,
+  //   "**/.DS_Store": true,
+  //   "**/.idea": true,
+  //   "**/.mypy_cache": true,
+  //   "**/.pytest_cache": true,
+  //   "**/.venv": true,
+  //   "**/*.py[co]": true,
+  //   "**/bower_components": true,
+  //   "**/docs/build": true,
+  //   "**/htmlcoverage": true,
+  //   "**/node_modules": true,
+  //   "**/package-lock.json": true
+  // },
   // workbench
   "workbench.colorTheme": "Catppuccin Macchiato",
   "workbench.editor.empty.hint": "hidden",
