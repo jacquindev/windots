@@ -61,6 +61,13 @@
           },
           "minItems": 1,
           "uniqueItems": true
+        },
+        "npm": {
+          "type": "array",
+          "items": {
+            "description": "NPM Global Packages",
+            "type": "string"
+          }
         }
       },
       "required": ["winget", "scoop", "modules"]
