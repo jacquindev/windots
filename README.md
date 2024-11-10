@@ -1,5 +1,7 @@
 <h1 align="center">👋 windots 👋</h1>
 
+<br>
+
 <div align="center">
 <p align="center">
   <a href="https://github.com/jacquindev/windots/commit">
@@ -17,11 +19,13 @@
 </p>
 </div>
 
+<br>
+
 <div align="center">
-  <a href="#install"><kbd><br> 🌷 Install <br></kbd></a>&ensp;&ensp;
-  <a href="#preview"><kbd><br> 🌆 Preview <br></kbd></a>&ensp;&ensp;
-  <a href="#features"><kbd><br> ✨ Features <br></kbd></a>&ensp;&ensp;
-  <a href="#author"><kbd><br> 👤 Author <br> </kbd></a>&ensp;&ensp;
+  <a href="#install"><kbd> <br> 🌷 Install <br> </kbd></a>&ensp;&ensp;
+  <a href="#preview"><kbd> <br> 🌆 Preview <br> </kbd></a>&ensp;&ensp;
+  <a href="#features"><kbd> <br> ✨ Features <br> </kbd></a>&ensp;&ensp;
+  <a href="#author"><kbd> <br> 👤 Author <br> </kbd></a>&ensp;&ensp;
 </div>
 
 <h2 id="preview">🌆 Preview</h2>
