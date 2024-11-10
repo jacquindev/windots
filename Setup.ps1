@@ -48,6 +48,7 @@ $ScoopBuckets = $listApps.scoop.bucket
 $ScoopApps = $listApps.scoop.user
 $ScoopGlobalApps = $listApps.scoop.global
 $PoshModules = $listApps.modules
+$npmPackages = $listApps.npm
 
 $SymLinks = @{
     $PROFILE.CurrentUserAllHosts                                                                  = ".\Profile.ps1"
@@ -58,12 +59,14 @@ $SymLinks = @{
     "$Env:USERPROFILE\.config\yazi"                                                               = ".\config\yazi"
     "$Env:USERPROFILE\.config\delta"                                                              = ".\config\delta"
     "$Env:USERPROFILE\.config\gh-dash"                                                            = ".\config\gh-dash"
+    "$Env:USERPROFILE\.config\npm"                                                                = ".\config\npm"
     # "$Env:USERPROFILE\.glzr\glazewm\config.yaml"                                                  = ".\config\glazewm\config.yaml"
     "$Env:APPDATA\bat"                                                                            = ".\config\bat"
     "$Env:LOCALAPPDATA\lazygit"                                                                   = ".\config\lazygit"
     "$Env:APPDATA\Code\User\settings.json"                                                        = ".\vscode\settings.json"
     "$Env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" = ".\windows\settings.json"
     "$Env:USERPROFILE\.gitconfig"                                                                 = ".\home\.gitconfig"
+    "$ENv:USERPROFILE\.czrc"                                                                      = ".\home\.czrc"
 }
 
 
@@ -382,6 +385,7 @@ function Setup {
     Set-ScoopApps -Install -AppList $ScoopGlobalApps -AllUsers
 
     # Powershell Modules
+    ''
     Write-Host "---------------------------" -ForegroundColor "Blue"
     Write-Host "Install PowerShell Modules:" -ForegroundColor "Blue"
     Write-Host "---------------------------" -ForegroundColor "Blue"
@@ -429,19 +433,20 @@ function Setup {
 
     # btop: add Catppuccin themes
     if (Get-Command btop -ErrorAction SilentlyContinue) {
-        ''
-        Write-Host "------------------------------" -ForegroundColor "Blue"
-        Write-Host "Add Catppuccin Theme for BTOP:" -ForegroundColor "Blue"
-        Write-Host "------------------------------" -ForegroundColor "Blue"
         # !! Since we installed btop with scoop, so the themes folder would be:
         $btopThemeDir = "$scoopDir\apps\btop\current\themes"
         if (Test-Path -PathType Container $btopThemeDir) {
+            ''
+            Write-Host "------------------------------" -ForegroundColor "Blue"
+            Write-Host "Add Catppuccin Theme for BTOP:" -ForegroundColor "Blue"
+            Write-Host "------------------------------" -ForegroundColor "Blue"
             $catppuccinThemes = (Get-ChildItem -Path $btopThemeDir -Recurse | Where-Object { $_.FullName -match 'catppuccin' }).Name
             if (!($catppuccinThemes)) {
                 $catppuccinThemeNames = @('catppuccin_frappe', 'catppuccin_latte', 'catppuccin_macchiato', 'catppuccin_mocha')
                 foreach ($theme in $catppuccinThemeNames) {
-                    Write-Host "Btop: Catppuccin Theme: " -ForegroundColor "Green" -NoNewline
-                    Write-Host "$theme " -ForegroundColor "Yellow" -NoNewline
+                    Write-Host "Btop: " -ForegroundColor "Green" -NoNewline
+                    Write-Host "Catppuccin Theme: " -ForegroundColor "Yellow" -NoNewline
+                    Write-Host "$theme " -ForegroundColor "Magenta" -NoNewline
                     Write-Host "is being installed..."
                     Install-File -Dir $btopThemeDir -Url "https://raw.githubusercontent.com/catppuccin/btop/refs/heads/main/themes/$theme.theme"
                 }
@@ -451,6 +456,62 @@ function Setup {
                 Write-Host "Catppuccin Themes " -ForegroundColor "Yellow" -NoNewline
                 Write-Host "already installed! Skipping..."
             }
+        }
+    }
+
+    # flow-launcher theme
+    $flowLauncherThemeFolder = "$Env:APPDATA\FlowLauncher\Themes"
+    if (Test-Path -PathType Container -Path "$flowLauncherThemeFolder") {
+        ''
+        Write-Host "--------------------------------------" -ForegroundColor "Blue"
+        Write-Host "Add Catppuccin Theme for FlowLauncher:" -ForegroundColor "Blue"
+        Write-Host "--------------------------------------" -ForegroundColor "Blue"
+        $flowThemes = (Get-ChildItem -Path $flowLauncherThemeFolder -Recurse | Where-Object { $_.FullName -match 'Catppuccin' }).Name
+        if (!($flowThemes)) {
+            @('Frappe', 'Latte', 'Macchiato', 'Mocha') | ForEach-Object {
+                Write-Host "FlowLauncher: " -ForegroundColor "Green" -NoNewline
+                Write-Host "Catppuccin Theme: " -ForegroundColor "Yellow" -NoNewline
+                Write-Host "Catppuccin $_ " -ForegroundColor "Magenta" -NoNewline
+                Write-Host "is being installed..."
+                Install-File -Dir $flowLauncherThemeFolder -Url "https://raw.githubusercontent.com/catppuccin/flow-launcher/refs/heads/main/themes/Catppuccin%20$_.xaml"
+            }
+        }
+        else {
+            Write-Host "FlowLauncher: " -ForegroundColor "Green" -NoNewline
+            Write-Host "Catppuccin Themes " -ForegroundColor "Yellow" -NoNewline
+            Write-Host "already installed! Skipping..."
+        }
+    }
+
+    # NodeJS
+    # Since we installed nvm using scoop, nvm dir would be:
+    if ((!(Get-Command npm -ErrorAction SilentlyContinue)) -and (Get-Command nvm -ErrorAction SilentlyContinue)) {
+        ''
+        Write-Host "--------------------------------" -ForegroundColor "Blue"
+        Write-Host "Install NodeJS, NPM, YARN, etc: " -ForegroundColor "Blue"
+        Write-Host "--------------------------------" -ForegroundColor "Blue"
+        $ltsOrLatest = $(Write-Host "NodeJS not found. Install lts (y) or latest (n)? "-ForegroundColor "Cyan" -NoNewline; Read-Host)
+        if ($ltsOrLatest -eq 'y') {
+            nvm install lts
+            nvm use lts
+        }
+        else {
+            nvm install latest
+            nvm use latest
+        }
+        corepack enable
+        npm config set userconfig="$env:USERPROFILE\.config\npm\.npmrc" --global
+    }
+    elseif (Get-Command npm -ErrorAction SilentlyContinue) {
+        ''
+        Write-Host "----------------------------" -ForegroundColor "Blue"
+        Write-Host "Install NPM Global Packages:" -ForegroundColor "Blue"
+        Write-Host "----------------------------" -ForegroundColor "Blue"
+        foreach ($package in $npmPackages) {
+            npm install --global --silent $package
+            Write-Host "npm: " -ForegroundColor "Green" -NoNewline
+            Write-Host "$package " -ForegroundColor "Yellow" -NoNewline
+            Write-Host "installed."
         }
     }
 
@@ -478,7 +539,7 @@ function Setup {
             Write-GitConfigLocal
         }
         else {
-            Write-Host "Git Email and Name already set in local config. Skipping update." -ForegroundColor "Yellow"
+            Write-Host "Git Email and Name already set in local config. Skipping update..." 
         }
     }
     else {
