@@ -1,5 +1,17 @@
 <h1 align="center">👋 windots 👋</h1>
 
+<p align="center">
+  <a href="https://github.com/jacquindev/windots/commit">
+    <img alt="LastCommit" src="https://img.shields.io/github/last-commit/jacquindev/windots/main?style=for-the-badge&logo=github&color=%237dcfff">
+  </a>
+  <a href="https://github.com/jacquindev/windots/stars">
+    <img alt="Stars" src="https://img.shields.io/github/stars/jacquindev/windots?style=for-the-badge&logo=github&color=%23f7768e">
+  </a>
+  <a href="https://github.com/jacquindev/windots/">
+    <img alt="RepoSize" src="https://img.shields.io/github/repo-size/jacquindev/windots?style=for-the-badge&logo=hyprland&logoColor=f9e2af&label=Size&labelColor=302D41&color=f9e2af">
+  </a>
+</p>
+
 > My Dotfiles Repo for Windows 11.
 
 <div align="center">
@@ -13,6 +25,14 @@
 
 ![](assets/image1.png)<br></br>
 ![](assets/image2.png)<br></br>
+
+<hr/>
+
+https://github.com/user-attachments/assets/c6e214f5-d4ca-4bf6-81e3-16e74a1a08bc
+
+https://github.com/user-attachments/assets/a177d1de-e0da-42d6-b92a-d71dc3d2807b
+
+https://github.com/user-attachments/assets/b068e898-1007-4f19-8076-7b8637e261dc
 
 <h2 id="install">🌷 Install</h2>
 
