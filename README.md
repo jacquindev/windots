@@ -1,18 +1,21 @@
 <h1 align="center">👋 windots 👋</h1>
 
+<div align="center">
 <p align="center">
   <a href="https://github.com/jacquindev/windots/commit">
     <img alt="LastCommit" src="https://img.shields.io/github/last-commit/jacquindev/windots/main?style=for-the-badge&logo=github&color=%237dcfff">
-  </a>
+  </a>&nbsp;&nbsp;
   <a href="https://github.com/jacquindev/windots/stars">
-    <img alt="Stars" src="https://img.shields.io/github/stars/jacquindev/windots?style=for-the-badge&logo=github&color=%23f7768e">
-  </a>
+    <img alt="stars" src="https://img.shields.io/github/stars/jacquindev/windots?style=for-the-badge&logo=github&color=%23f7768e">
+  </a>&nbsp;&nbsp;
   <a href="https://github.com/jacquindev/windots/">
     <img alt="RepoSize" src="https://img.shields.io/github/repo-size/jacquindev/windots?style=for-the-badge&logo=hyprland&logoColor=f9e2af&label=Size&labelColor=302D41&color=f9e2af">
-  </a>
+  </a>&nbsp;&nbsp;
+  <a href="https://github.com/jacquindev/windots/LICENSE">
+    <img alt="license" src="https://img.shields.io/github/license/jacquindev/windots?style=for-the-badge&logo=&color=CBA6F7&logoColor=CBA6F7&labelColor=302D41">
+  </a>&nbsp;&nbsp;
 </p>
-
-> My Dotfiles Repo for Windows 11.
+</div>
 
 <div align="center">
   <a href="#install"><kbd><br> 🌷 Install <br></kbd></a>&ensp;&ensp;
@@ -23,8 +26,9 @@
 
 <h2 id="preview">🌆 Preview</h2>
 
-![](assets/image1.png)<br></br>
-![](assets/image2.png)<br></br>
+![image1](https://github.com/user-attachments/assets/8592a014-081d-4130-b11c-8848f3c53af3)<br/><br/>
+![image2](https://github.com/user-attachments/assets/ba8b4031-249c-442e-9afd-939f680e1c9e)<br/><br/>
+![image3](https://github.com/user-attachments/assets/bac06b45-6de9-4941-80c1-9d1158611637)<br/><br/>
 
 <hr/>
 
@@ -104,9 +108,10 @@ Big thanks for those inspirations:
 
 <h2 id="author">👤 Author</h2></h2>
 
-👤 **Jacquin Moon**
+**Jacquin Moon**
 
 - Github: [@jacquindev](https://github.com/jacquindev)
+- Email: jacquindev@outlook.com
 
 ## 📜 License
 
