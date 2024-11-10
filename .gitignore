@@ -1,8 +1,13 @@
 *.log
+*.bak
+foo*
 
 modules.lock.json
 packages.lock.json
 db.zo
-foo*
+
+node_modules/
+yarn.lock
+package-lock.json
 
 config/lazygit/state.yml
