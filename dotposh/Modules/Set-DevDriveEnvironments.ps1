@@ -8,11 +8,11 @@ function Set-DevDriveEnvironments {
     $devDrive = Get-DevDrive
     $packagePath = "$devDrive\packages"
     $cacheSettings = @(
-        # TODO: Add your DevDrive's package cache settings here:
+        # TODO: Add/Remove your DevDrive's package cache settings here:
         @{ Command = "npm"; Name = "npm_config_cache"; Value = "$packagePath\npm"; SourcePaths = @("$env:APPDATA\npm-cache", "$env:LOCALAPPDATA\npm-cache") },
-        @{ Command = "yarn"; Name = "YARN_CACHE_FOLDER"; Value = "$packagePath\yarn"; SourcePaths = @("$env:LOCALAPPDATA\Yarn\Cache") },
+        @{ Command = "yarn"; Name = "YARN_CACHE_FOLDER"; Value = "$packagePath\npm"; SourcePaths = @("$env:LOCALAPPDATA\Yarn\Cache") },
         @{ Command = "pnpm"; Name = "PNPM_HOME"; Value = "$packagePath\pnpm"; SourcePaths = @("$env:LOCALAPPDATA\pnpm\store") },
-        @{ Command = "nuget"; Name = "NUGET_PACKAGES"; Value = "$packagePath\$env:USERNAME\.nuget\packages"; SourcePaths = @("$env:USERPROFILE\.nuget\packages") },
+        @{ Command = "nuget"; Name = "NUGET_PACKAGES"; Value = "$packagePath\nuget\packages"; SourcePaths = @("$env:USERPROFILE\.nuget\packages") },
         @{ Command = "vcpkg"; Name = "VCPKG_DEFAULT_BINARY_CACHE"; Value = "$packagePath\vcpkg"; SourcePaths = @("$env:LOCALAPPDATA\vcpkg\archives", "$env:APPDATA\vcpkg\archives") },
         @{ Command = "pip"; Name = "PIP_CACHE_DIR"; Value = "$packagePath\pip"; SourcePaths = @("$env:LOCALAPPDATA\pip\Cache") },
         @{ Command = "pipx"; Name = "PIPX_HOME"; Value = "$packagePath\pipx"; SourcePaths = @("$env:USERPROFILE\pipx") },

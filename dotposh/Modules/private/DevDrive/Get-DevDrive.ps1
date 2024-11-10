@@ -1,5 +1,3 @@
-# Source: https://github.com/ran-dall/Dev-Drive
-
 function Get-DevDrive {
     $devDrives = Get-Volume | Where-Object { $_.FileSystemType -eq 'ReFS' -and $_.DriveType -eq 'Fixed' }
     $devDriveLetters = @()
