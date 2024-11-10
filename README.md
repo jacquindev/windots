@@ -5,7 +5,7 @@
   <a href="https://github.com/jacquindev/windots/commit">
     <img alt="LastCommit" src="https://img.shields.io/github/last-commit/jacquindev/windots/main?style=for-the-badge&logo=github&color=%237dcfff">
   </a>&nbsp;&nbsp;
-  <a href="https://github.com/jacquindev/windots/stars">
+  <a href="https://github.com/jacquindev/windots/stargazers">
     <img alt="stars" src="https://img.shields.io/github/stars/jacquindev/windots?style=for-the-badge&logo=github&color=%23f7768e">
   </a>&nbsp;&nbsp;
   <a href="https://github.com/jacquindev/windots/">
