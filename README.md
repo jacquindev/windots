@@ -27,17 +27,22 @@
 
 <h2 id="preview">🌆 Preview</h2>
 
-![image](https://github.com/user-attachments/assets/ea59ed02-34b4-4f0e-ac62-fb6517817c1f)<br/><br/>
-![image1](https://github.com/user-attachments/assets/8592a014-081d-4130-b11c-8848f3c53af3)<br/><br/>
-![image2](https://github.com/user-attachments/assets/ba8b4031-249c-442e-9afd-939f680e1c9e)<br/><br/>
-![image3](https://github.com/user-attachments/assets/bac06b45-6de9-4941-80c1-9d1158611637)<br/><br/>
-![image4](https://github.com/user-attachments/assets/814adafb-fa16-4144-b429-6ec6f08b7da9)<br/><br/>
+- 2 status bar options: [Rainmeter](./windows/rainmeter/skins/catppuccin_1.4.1.rmskin) / [Yasb](./config/yasb)
+
+### Yasb's Catppuccin Statusbar
+
+![image1](https://github.com/user-attachments/assets/002f4976-1fe5-4d3f-8522-d73f21f77a32)
+![image2](https://github.com/user-attachments/assets/7ac89878-c98b-4c09-8dd5-608ee72b9c0e)
+
+### Rainmeter's Catppuccin Statusbar
+
+![image3](https://github.com/user-attachments/assets/ea59ed02-34b4-4f0e-ac62-fb6517817c1f)<br/><br/>
+![image4](https://github.com/user-attachments/assets/ba8b4031-249c-442e-9afd-939f680e1c9e)<br/><br/>
+![image5](https://github.com/user-attachments/assets/814adafb-fa16-4144-b429-6ec6f08b7da9)<br/><br/>
 
 <hr/>
 
 https://github.com/user-attachments/assets/c6e214f5-d4ca-4bf6-81e3-16e74a1a08bc
-
-https://github.com/user-attachments/assets/a177d1de-e0da-42d6-b92a-d71dc3d2807b
 
 https://github.com/user-attachments/assets/b068e898-1007-4f19-8076-7b8637e261dc
 
@@ -59,6 +64,7 @@ git clone https://github.com/jacquindev/windots.git your_location
 <h2 id="features">✨ Features</h2>
 
 - 💎 All packages to install are listed in **[appList.json](./appList.json)** - Easy to maintain!
+- 🎀 [Yasb](https://github.com/amnweb/yasb) status bar that compatible with Komorebi
 - 🎨 Main theme [Catppuccin](https://github.com/catppuccin/catppuccin) for everything!
 - 💖 Beautiful wallpapers, including [images](./windows/walls/pics/) & [videos](./windows/walls/live-walls/) for [Lively Wallpapers](https://www.rocksdanister.com/lively/)
 - 🪟 [Komorebi](./config/komorebi) / [GlazeWM](./config/glazewm/config.yaml) config
