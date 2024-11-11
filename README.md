@@ -27,7 +27,7 @@
 
 <h2 id="preview">🌆 Preview</h2>
 
-- 2 status bar options: [Rainmeter](./windows/rainmeter/skins/catppuccin_1.4.1.rmskin) / [Yasb](./config/yasb)
+- 2 status bar options: [Rainmeter](https://github.com/modkavartini/catppuccin/tree/main) / [Yasb](./config/yasb)
 
 ### Yasb's Catppuccin Statusbar
 
