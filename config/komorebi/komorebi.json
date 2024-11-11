@@ -17,11 +17,11 @@
     "unfocused_border": "Surface0",
     "single_border": "Mauve",
     "monocle_border": "Green",
-    "floating_border": "Peach",
-    "stack_border": "Sapphire",
+    "floating_border": "Sapphire",
+    "stack_border": "Peach",
     "stackbar_background": "Base",
     "stackbar_unfocused_text": "Overlay0",
-    "stackbar_focused_text": "Sapphire"
+    "stackbar_focused_text": "Peach"
   },
   "stackbar": {
     "height": 35,
@@ -38,27 +38,49 @@
     "1": "VIE0994-5&27a467dc&0&UID281",
     "2": "XYM2405-5&27a467dc&0&UID280"
   },
+  "ignore_rules": [
+    {
+      "kind": "Exe",
+      "id": "explorer.exe",
+      "matching_strategy": "Equals"
+    },
+    {
+      "kind": "Title",
+      "id": "Settings",
+      "matching_strategy": "Equals"
+    },
+    {
+      "kind": "Exe",
+      "id": "vmware.exe",
+      "matching_strategy": "Equals"
+    },
+    {
+      "kind": "Exe",
+      "id": "yasb.exe",
+      "matching_strategy": "Equals"
+    },
+    {
+      "kind": "Exe",
+      "id": "Notepad.exe",
+      "matching_strategy": "Equals"
+    }
+  ],
   "monitors": [
     {
       "workspaces": [
         {
           "name": "I",
-          "layout": "UltrawideVerticalStack",
-          "apply_window_based_work_area_offset": true
+          "layout": "UltrawideVerticalStack"
         },
         {
           "name": "II",
-          "layout": "HorizontalStack",
-          "apply_window_based_work_area_offset": true
+          "layout": "VerticalStack"
+        },
+        {
+          "name": "II",
+          "layout": "BSP"
         }
-      ],
-      "window_based_work_area_offset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 0
-      },
-      "window_based_work_area_offset_limit": 8
+      ]
     },
     {
       "workspaces": [
