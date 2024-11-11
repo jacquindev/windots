@@ -31,8 +31,8 @@
 
 ### Yasb's Catppuccin Statusbar
 
-![image1](https://github.com/user-attachments/assets/002f4976-1fe5-4d3f-8522-d73f21f77a32)
-![image2](https://github.com/user-attachments/assets/7ac89878-c98b-4c09-8dd5-608ee72b9c0e)
+![image1](https://github.com/user-attachments/assets/002f4976-1fe5-4d3f-8522-d73f21f77a32)<br/><br/>
+![image2](https://github.com/user-attachments/assets/7ac89878-c98b-4c09-8dd5-608ee72b9c0e)<br/><br/>
 
 ### Rainmeter's Catppuccin Statusbar
 
