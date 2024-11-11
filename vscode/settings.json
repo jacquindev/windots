@@ -41,7 +41,8 @@
   //   "**/package-lock.json": true
   // },
   // workbench
-  "workbench.colorTheme": "Catppuccin Macchiato",
+  "workbench.activityBar.location": "bottom",
+  "workbench.colorTheme": "Catppuccin Mocha",
   "workbench.editor.empty.hint": "hidden",
   "workbench.editor.enablePreview": true,
   "workbench.editor.labelFormat": "medium",
@@ -73,13 +74,34 @@
   "window.commandCenter": false,
   "window.menuBarVisibility": "compact",
   "window.titleBarStyle": "custom",
-  "window.title": "",
+  "window.title": " ",
   // catppuccin theme
   "catppuccin.bracketMode": "neovim",
   "catppuccin.extraBordersEnabled": true,
   "catppuccin.workbenchMode": "flat",
+  "catppuccin.customUIColors": {
+    "all": {
+      "activityBar.background": "base",
+      "activityBar.border": "base",
+      "badge.background": "base",
+      "editor.background": "base",
+      "editorGroupHeader.tabsBackground": "base",
+      "editorGroupHeader.noTabsBackground": "base",
+      "editorPane.background": "base",
+      "scrollbar.shadow": "base",
+      "scrollbarSlider.activeBackground": "base",
+      "scrollbarSlider.background": "base",
+      "sideBar.background": "base",
+      "sideBar.border": "base",
+      "sideBarSectionHeader.background": "base",
+      "sideBarTitle.background": "base",
+      "tab.inactiveBackground": "base",
+      "tab.unfocusedActiveBackground": "base",
+      "tab.unfocusedInactiveBackground": "base"
+    }
+  },
   // glassit - transparency
-  "glassit.alpha": 255,
+  "glassit.alpha": 245,
   // telemetry
   "redhat.telemetry.enabled": false,
   "telemetry.telemetryLevel": "off",
@@ -99,10 +121,65 @@
   "code-runner.ignoreSelection": true,
   "code-runner.saveFileBeforeRun": true,
   "code-runner.showExecutionMessage": false,
+  // better-comments
+  "better-comments.tags": [
+    {
+      "tag": "!",
+      "color": "#f38ba8",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "tag": "?",
+      "color": "#74c7ec",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "tag": "//",
+      "color": "#6c7086",
+      "strikethrough": true,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "todo",
+      "color": "#fab387",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "tag": "*",
+      "color": "#a6e3a1",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": true
+    }
+  ],
+  // polacode settings
+  "polacode.transparentBackground": true,
+  // per language settings
   "[json]": {
+    "editor.tabWidth": 2,
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[yaml]": {
+    "editor.tabWidth": 2
   }
 }
