@@ -4,8 +4,6 @@
 
 </div></h1>
 
-<br>
-
 <div align="center">
 <p>
   <a href="https://github.com/jacquindev/commits/main"><img alt="Last Commit" src="https://img.shields.io/github/last-commit/jacquindev/windots?style=for-the-badge&logo=github&logoColor=eba0ac&label=Last%20Commit&labelColor=302D41&color=eba0ac"></a>&nbsp;&nbsp;
@@ -19,8 +17,6 @@
 > I am using **3440x1440** monitor as my main display.
 > Please remember to adjust your settings (eg: Komorebi/GlazeWM) according to your monitor resolution.
 
-<br>
-
 <div align="center">
   <a href="#preview"><kbd> <br> 🌆 Preview <br> </kbd></a>&ensp;&ensp;
   <a href="#install"><kbd> <br> 🌷 Install <br> </kbd></a>&ensp;&ensp;
@@ -28,6 +24,8 @@
   <a href="#credits"><kbd> <br> 🎉 Credits <br> </kbd></a>&ensp;&ensp;
   <a href="#author"><kbd> <br> 👤 Author <br> </kbd></a>&ensp;&ensp;
 </div>
+
+<br>
 
 <h2 id="preview">🌆 Preview</h2>
 
