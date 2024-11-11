@@ -4,10 +4,6 @@
 
 </div></h1>
 
-> [!NOTE]
-> I am using **3440x1440** monitor as my main display.
-> Please remember to adjust your settings (eg: Komorebi/GlazeWM) according to your monitor resolution.
-
 <br>
 
 <div align="center">
@@ -18,6 +14,10 @@
   <a href="https://github.com/jacquindev/windots/LICENSE"><img src="https://img.shields.io/github/license/jacquindev/windots?style=for-the-badge&logo=&color=CBA6F7&logoColor=CBA6F7&labelColor=302D41" alt="LICENSE"></a>&nbsp;&nbsp;
 </p>  
 </div>
+
+> [!NOTE]
+> I am using **3440x1440** monitor as my main display.
+> Please remember to adjust your settings (eg: Komorebi/GlazeWM) according to your monitor resolution.
 
 <br>
 
