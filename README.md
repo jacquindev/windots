@@ -1,7 +1,5 @@
 <h1 align="center">👋 windots 👋</h1>
 
-> My Windows 11 Dotfiles Repo.
-
 > [!NOTE]
 > I am using **3440x1440** monitor as my main display.
 > Please remember to adjust your settings (eg: Komorebi/GlazeWM) according to your monitor resolution.
