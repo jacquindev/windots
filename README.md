@@ -1,4 +1,8 @@
-<h1 align="center">👋 windots 👋</h1>
+<h1 align="center"><div align="center">
+  
+  ![title](https://github.com/user-attachments/assets/3b6b4253-ee7a-412c-8177-72d5ca06be4a)
+
+</div></h1>
 
 > [!NOTE]
 > I am using **3440x1440** monitor as my main display.
