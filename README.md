@@ -66,7 +66,7 @@ git clone https://github.com/jacquindev/windots.git your_location
 - 💎 All packages to install are listed in **[appList.json](./appList.json)** - Easy to maintain!
 - 🎀 [Yasb](https://github.com/amnweb/yasb) status bar that compatible with Komorebi
 - 🎨 Main theme [Catppuccin](https://github.com/catppuccin/catppuccin) for everything!
-- 💖 Beautiful wallpapers, including [images](./windows/walls/pics/) & [videos](./windows/walls/live-walls/) for [Lively Wallpapers](https://www.rocksdanister.com/lively/)
+- 💖 Beautiful [wallpapers](https://github.com/jacquindev/windots/tree/main/windows/walls#readme), including [images](./windows/walls/pics/) & [videos](./windows/walls/live-walls/) for [Lively Wallpapers](https://www.rocksdanister.com/lively/)
 - 🪟 [Komorebi](./config/komorebi) / [GlazeWM](./config/glazewm/config.yaml) config
 - 🌸 All-In-One VSCode setup (automatically install extensions based on the **[list](./vscode/extensions.list)**)
 - ⚙️ Minimal [Rainmeter](./windows/rainmeter/) setup
