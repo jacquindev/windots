@@ -1,4 +1,5 @@
 #requires -Version 7
+
 <#
 .SYNOPSIS
     Script to setup Windows machine
@@ -19,7 +20,7 @@
     - Remember to backup your files / Create a restore point before using this script.
     - My main screen is 3440x1440. You will need to modified 'komorebi.json' to fit your needs.
     - Rainmeter skins are included in 'windows/rainmeter' folder.
-        -> Install jaxCore's skins by run the script 'JaxCore.ps1' 
+        -> Install JaxCore's skins by run the script 'JaxCore.ps1' 
     - Most of applications I am using are modified with Catppuccin Theme!
 
     Author: Jacquin Moon
@@ -394,13 +395,37 @@ function Setup {
     Write-ModuleLockFile
     Start-Process pwsh -WindowStyle Hidden -ArgumentList "-NoProfile -Command Update-Help -Scope CurrentUser"
 
+    # Setup Git
+    ''
+    Write-Host "---------------------------" -ForegroundColor "Blue"
+    Write-Host "Setup Git Name & Git Email:" -ForegroundColor "Blue"
+    Write-Host "---------------------------" -ForegroundColor "Blue"
+    if (Test-Path -Path "$Env:USERPROFILE\.gitconfig-local") {
+        if ($(Get-Content -Path "$Env:USERPROFILE\.gitconfig-local" -Raw).Contains("[user]") -eq $False) {
+            Write-GitConfigLocal
+        }
+        else {
+            Write-Host "Git Email and Name already set in local config. Skipping update..." 
+        }
+    }
+    else {
+        New-Item -Path "$Env:USERPROFILE\.gitconfig-local" -ItemType File | Out-Null
+        Write-GitConfigLocal
+    }
+    git submodule update --init --recursive
+
     # Symlinks
     ''
     Write-Host "----------------------" -ForegroundColor "Blue"
     Write-Host "Create Symbolic Links:" -ForegroundColor "Blue"
     Write-Host "----------------------" -ForegroundColor "Blue"
-    Set-SymbolicLinks -Add -Symlinks $SymLinks
-
+    if (((Test-DeveloperMode) -eq $False) -or ($(gsudo status IsElevated) -eq $False)) {
+        gsudo { Set-SymbolicLinks -Add -Symlinks $SymLinks }
+    }
+    else {
+        Set-SymbolicLinks -Add -Symlinks $SymLinks
+    }
+    
     ''
     Write-Host "----------------------------" -ForegroundColor "Blue"
     Write-Host "Setup Environment Variables:" -ForegroundColor "Blue"
@@ -554,24 +579,6 @@ function Setup {
     }
 
     ''
-    Write-Host "---------------------------" -ForegroundColor "Blue"
-    Write-Host "Setup Git Name & Git Email:" -ForegroundColor "Blue"
-    Write-Host "---------------------------" -ForegroundColor "Blue"
-    if (Test-Path -Path "$Env:USERPROFILE\.gitconfig-local") {
-        if ($(Get-Content -Path "$Env:USERPROFILE\.gitconfig-local" -Raw).Contains("[user]") -eq $False) {
-            Write-GitConfigLocal
-        }
-        else {
-            Write-Host "Git Email and Name already set in local config. Skipping update..." 
-        }
-    }
-    else {
-        New-Item -Path "$Env:USERPROFILE\.gitconfig-local" -ItemType File | Out-Null
-        Write-GitConfigLocal
-    }
-    git submodule update --init --recursive
-
-    ''
     Set-GsudoCacheMode -off
     Start-Sleep -Seconds 1
 }
@@ -623,22 +630,34 @@ function Reverse {
 ###############################################################################
 ###                              START THE SCRIPT                           ###
 ###############################################################################
-if (($PSBoundParameters.Count -eq 0) -or ($Install)) { Setup }
-elseif ($Uninstall) { 
-    ''
-    Write-Host "WARNING: This will UNINSTALL all apps that installed by this script, which" -ForegroundColor "Yellow"
-    Write-Host "         included: Scoop Packages, WinGet Packages, PowerShell Modules, " -ForegroundColor "Yellow"
-    Write-Host "         AND symlink files/folders of this 'windots' repo!!!" -ForegroundColor "Yellow"
-    ''
-    Write-Host "NOTES: This script WILL NOT UNINSTALL Scoop/Winget itself, and the" -ForegroundColor "Blue"
-    Write-Host "       ENVIRONMENT VARIABLES we have set, and this 'windots' folder." -ForegroundColor "Blue"
-    ''
-    $confirm = $(Write-Host "ARE YOU SURE TO PROCEED? (y/n) " -ForegroundColor "Red" -NoNewline; Read-Host)
-    if ($confirm -eq 'y') {
-        Reverse
-    }
-    else {
-        Write-Host "Cancelled the process. Exiting..."
-        Break
-    }
-}
+
+# Test-InternetConnection
+
+# if (($PSBoundParameters.Count -eq 0) -or ($Install)) { Setup }
+# elseif ($Uninstall) { 
+#     ''
+#     Write-Host "WARNING: This will UNINSTALL all apps that installed by this script, which" -ForegroundColor "Yellow"
+#     Write-Host "         included: Scoop Packages, WinGet Packages, PowerShell Modules, " -ForegroundColor "Yellow"
+#     Write-Host "         AND symlink files/folders of this 'windots' repo!!!" -ForegroundColor "Yellow"
+#     ''
+#     Write-Host "NOTES: This script WILL NOT UNINSTALL Scoop/Winget itself, and the" -ForegroundColor "Blue"
+#     Write-Host "       ENVIRONMENT VARIABLES we have set, and this 'windots' folder." -ForegroundColor "Blue"
+#     ''
+#     $confirm = $(Write-Host "ARE YOU SURE TO PROCEED? (y/n) " -ForegroundColor "Red" -NoNewline; Read-Host)
+#     if ($confirm -eq 'y') {
+#         Reverse
+#     }
+#     else {
+#         Write-Host "Cancelled the process. Exiting..."
+#         Break
+#     }
+# }
+
+Start-Sleep -Seconds 2
+""
+Write-Host " █████╗ ██╗     ██╗         ██████╗  ██████╗ ███╗   ██╗███████╗██╗ " -ForegroundColor "Green"
+Write-Host "██╔══██╗██║     ██║         ██╔══██╗██╔═══██╗████╗  ██║██╔════╝██║ " -ForegroundColor "Green"
+Write-Host "███████║██║     ██║         ██║  ██║██║   ██║██╔██╗ ██║█████╗  ██║ " -ForegroundColor "Green"
+Write-Host "██╔══██║██║     ██║         ██║  ██║██║   ██║██║╚██╗██║██╔══╝  ╚═╝ " -ForegroundColor "Green"
+Write-Host "██║  ██║███████╗███████╗    ██████╔╝╚██████╔╝██║ ╚████║███████╗██╗ " -ForegroundColor "Green"
+Write-Host "╚═╝  ╚═╝╚══════╝╚══════╝    ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚══════╝╚═╝ " -ForegroundColor "Green"
