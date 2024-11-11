@@ -40,9 +40,10 @@ bars:
       left:
         [
           "win_button",
+          "github",
           "apps",
           "komorebi_workspaces",
-          #"komorebi_active_layout",
+          "komorebi_active_layout",
           "active_window"
         ] 
       center: [
@@ -53,16 +54,16 @@ bars:
         [
           "media",
           "wifi",
+          "weather",
+          "volume",
           #"battery",
           #"language",
           #"ip_info",
-          #"traffic",
           "cpu",
           "disk",
           "memory",
           #"wallapers",
-          "weather",
-          "volume",
+          #"traffic",
           "power_menu"
         ]
 widgets:
@@ -300,16 +301,16 @@ widgets:
       options:
         label: "{data}"
         app_list:
-          #- {icon: "\uf489", launch: "wt"}
+          - {icon: "\uf489", launch: "wt"}
+          - {icon: "\udb82\ude1e", launch: "C:\\Users\\jqnhi\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"}
+          - {icon: "\udb80\ude39", launch: "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"}
+          - {icon: "\ueb51", launch: "quick_settings"}
+          - {icon: "\uf46a", launch: "cmd.exe /c start ms-settings:windowsupdate"}
+          - {icon: "\uf422", launch: "search"}
+          - {icon: "\uf0a2", launch: "notification_center"}
           #- {icon: "\uf413", launch: "explorer c:\\Users\\amn"}
-          #- {icon: "\udb82\ude1e", launch: "C:\\Users\\amn\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"}
-          #- {icon: "\udb80\ude39", launch: "C:\\Program Files\\Mozilla Firefox\\firefox.exe"}
           #- {icon: "\uf1ff", launch: "C:\\Users\\amn\\AppData\\Local\\Discord\\Update.exe --processStart Discord.exe"}
           #- {icon: "\ue217", launch: "C:\\Users\\amn\\AppData\\Roaming\\Telegram Desktop\\Telegram.exe"}
-          - {icon: "\uf0a2", launch: "notification_center"}
-          - {icon: "\ueb51", launch: "quick_settings"}
-          #- {icon: "\uf46a", launch: "cmd.exe /c start ms-settings:windowsupdate"}
-          - {icon: "\uf422", launch: "search"}
           #- {icon: "\udb84\udf55", launch: "widget"}
           # Currently available to use quick_settings, notification_center, search, widget, launcher (launcher will trigger ALT+A)
 
@@ -318,7 +319,7 @@ widgets:
       options:
         label: "<span>\ueba1</span>"
         label_alt: "Notifications {data}" # {data} return number of unread notification
-        token: ghp_xxxxxxxxxxx # GitHub Personal access tokens (classic) https://github.com/settings/tokens
+        token: env # GitHub Personal access tokens (classic) https://github.com/settings/tokens
         # You can set token: env, this means you have to set YASB_GITHUB_TOKEN in environment variable
         max_notification: 20 # Max number of notification displaying in menu max: 50
         only_unread: false # Show only unread or all notifications; 
