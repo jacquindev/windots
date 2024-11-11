@@ -77,6 +77,7 @@ git clone https://github.com/jacquindev/windots.git your_location
 - 🌈 [Oh-My-Posh config](./dotposh/posh-zen.toml) minimal theme (with [Spotify](https://open.spotify.com/) status if using)
 - 🦄 [PowerShell](https://github.com/PowerShell/PowerShell) setup & **[custom functions](./dotposh/Modules/)**
 - 🍄 Simple [fastfetch](https://github.com/fastfetch-cli/fastfetch) config, which I copied the config from [scottmckendry's config](https://github.com/scottmckendry/Windots/tree/main/fastfetch)
+- 🥂 Many addons for Git!
 
 <hr/>
 
