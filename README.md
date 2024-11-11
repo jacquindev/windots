@@ -9,29 +9,22 @@
 <br>
 
 <div align="center">
-<p align="center">
-  <a href="https://github.com/jacquindev/windots/commit">
-    <img alt="LastCommit" src="https://img.shields.io/github/last-commit/jacquindev/windots/main?style=for-the-badge&logo=github&color=%237dcfff">
-  </a>&nbsp;&nbsp;
-  <a href="https://github.com/jacquindev/windots/stargazers">
-    <img alt="stars" src="https://img.shields.io/github/stars/jacquindev/windots?style=for-the-badge&logo=github&color=%23f7768e">
-  </a>&nbsp;&nbsp;
-  <a href="https://github.com/jacquindev/windots/">
-    <img alt="RepoSize" src="https://img.shields.io/github/repo-size/jacquindev/windots?style=for-the-badge&logo=hyprland&logoColor=f9e2af&label=Size&labelColor=302D41&color=f9e2af">
-  </a>&nbsp;&nbsp;
-  <a href="https://github.com/jacquindev/windots/LICENSE">
-    <img alt="license" src="https://img.shields.io/github/license/jacquindev/windots?style=for-the-badge&logo=&color=CBA6F7&logoColor=CBA6F7&labelColor=302D41">
-  </a>&nbsp;&nbsp;
-</p>
+<p>
+  <a href="https://github.com/jacquindev/commits/main"><img alt="Last Commit" src="https://img.shields.io/github/last-commit/jacquindev/windots?style=for-the-badge&logo=github&logoColor=eba0ac&label=Last%20Commit&labelColor=302D41&color=eba0ac"></a>&nbsp;&nbsp;
+  <a href="https://github.com/jacquindev/windots/"><img src="https://img.shields.io/github/repo-size/jacquindev/windots?style=for-the-badge&logo=hyprland&logoColor=f9e2af&label=Size&labelColor=302D41&color=f9e2af" alt="REPO SIZE"></a>&nbsp;&nbsp;
+  <a href="https://github.com/jacquindev/windots/stargazers"><img alt="Stargazers" src="https://img.shields.io/github/stars/jacquindev/dotfiles?style=for-the-badge&logo=starship&color=C9CBFF&logoColor=D9E0EE&labelColor=302D41"></a>&nbsp;&nbsp;
+  <a href="https://github.com/jacquindev/windots/LICENSE"><img src="https://img.shields.io/github/license/jacquindev/windots?style=for-the-badge&logo=&color=CBA6F7&logoColor=CBA6F7&labelColor=302D41" alt="LICENSE"></a>&nbsp;&nbsp;
+</p>  
 </div>
 
 <br>
 
 <div align="center">
-  <a href="#install"><kbd> <br> 🌷 Install <br> </kbd></a>&ensp;&ensp;
-  <a href="#preview"><kbd> <br> 🌆 Preview <br> </kbd></a>&ensp;&ensp;
-  <a href="#features"><kbd> <br> ✨ Features <br> </kbd></a>&ensp;&ensp;
-  <a href="#author"><kbd> <br> 👤 Author <br> </kbd></a>&ensp;&ensp;
+  <a href="#preview"><kbd> <br> 🌆 Preview <br> </kbd></a>&ensp;&ensp;
+  <a href="#install"><kbd> <br> 🌷 Install <br> </kbd></a>&ensp;&ensp;
+  <a href="#features"><kbd> <br> ✨ Features <br> </kbd></a>&ensp;&ensp;
+  <a href="#credits"><kbd> <br> 🎉 Credits <br> </kbd></a>&ensp;&ensp;
+  <a href="#author"><kbd> <br> 👤 Author <br> </kbd></a>&ensp;&ensp;
 </div>
 
 <h2 id="preview">🌆 Preview</h2>
@@ -130,7 +123,7 @@ Big thanks for those inspirations:
 - [MattFTW's Dotfiles](https://github.com/Matt-FTW/dotfiles) - Most of my wallpapers are from here.
 - [DevDrive PowerShell's Scripts](https://github.com/ran-dall/Dev-Drive) - I copied most of DevDrive's functions for PowerShell here.
 
-<h2 id="author">👤 Author</h2></h2>
+<h2 id="author">👤 Author</h2>
 
 **Jacquin Moon**
 
