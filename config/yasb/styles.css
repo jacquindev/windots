@@ -378,15 +378,48 @@
 }
 
 /* GITHUB WIDGET */
-.github-widget {
+/* .github-widget {
     padding: 0 8px 0 4px;
     border-top-right-radius: 15px;
-    border-bottom-right-radius: 15px;
-}
+    border-bottom-right-radius: 15px; 
+} */
 .github-widget .icon {
     font-size: 18px;
-	color: var(--mauve)
+	color: var(--text)
 }
 .github-widget .icon.new-notification {
     color: var(--green);
+}
+
+/* Update Check Widget */
+.update-check-widget {
+    padding: 0 0px 0 0px;
+}
+.update-check-widget .icon {
+    font-size: 14px;
+}
+.update-check-widget .widget-container.winget,
+.update-check-widget .widget-container.windows {
+    background: var(--maroon);
+    margin: 7px 2px 7px 2px;
+    border-radius: 9px;
+    border: 2px solid var(--red);
+}
+.update-check-widget .widget-container.windows {
+    background: var(--lavender);
+    margin: 7px 2px 7px 2px;
+    border-radius: 9px;
+    border: 2px solid var(--blue);
+}
+.update-check-widget .widget-container.winget .icon,
+.update-check-widget .widget-container.windows .icon {
+    color: var(--base);
+    margin: 0 1px 0 6px;
+}
+.update-check-widget .widget-container.winget .label,
+.update-check-widget .widget-container.windows .label {
+    margin: 0 6px 0 1px;
+    color: var(--base);
+    font-weight: 900;
+    font-size: 14px;
 }
