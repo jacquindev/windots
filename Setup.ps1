@@ -56,6 +56,7 @@ $SymLinks = @{
     "$Env:USERPROFILE\.config\fastfetch"                                                          = ".\config\fastfetch"
     "$Env:USERPROFILE\.config\komorebi"                                                           = ".\config\komorebi"
     "$Env:USERPROFILE\.config\whkdrc"                                                             = ".\config\whkdrc"
+    "$Env:USERPROFILE\.config\yasb"                                                               = ".\config\yasb"
     "$Env:USERPROFILE\.config\yazi"                                                               = ".\config\yazi"
     "$Env:USERPROFILE\.config\delta"                                                              = ".\config\delta"
     "$Env:USERPROFILE\.config\gh-dash"                                                            = ".\config\gh-dash"
