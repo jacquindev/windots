@@ -78,7 +78,6 @@
   "catppuccin.bracketMode": "neovim",
   "catppuccin.extraBordersEnabled": true,
   "catppuccin.workbenchMode": "flat",
-  "catppuccin.accentColor": "mauve",
   // glassit - transparency
   "glassit.alpha": 255,
   // telemetry
