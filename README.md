@@ -1,5 +1,11 @@
 <h1 align="center">👋 windots 👋</h1>
 
+> My Windows 11 Dotfiles Repo.
+
+> [!NOTE]
+> I am using **3440x1440** monitor as my main display.
+> Please remember to adjust your settings (eg: Komorebi/GlazeWM) according to your monitor resolution.
+
 <br>
 
 <div align="center">
@@ -60,6 +66,17 @@ git clone https://github.com/jacquindev/windots.git your_location
 ```
 
 <h2 id="features">✨ Features</h2>
+
+- 💎 All packages to install are listed in **[appList.json](./appList.json)** - Easy to maintain!
+- 🎨 Main theme [Catppuccin](https://github.com/catppuccin/catppuccin) for everything!
+- 💖 Beautiful wallpapers, including [images](./windows/walls/pics/) & [videos](./windows/walls/live-walls/) for [Lively Wallpapers](https://www.rocksdanister.com/lively/)
+- 🪟 [Komorebi](./config/komorebi) / [GlazeWM](./config/glazewm/config.yaml) config
+- 🌸 All-In-One VSCode setup (automatically install extensions based on the **[list](./vscode/extensions.list)**)
+- ⚙️ Minimal [Rainmeter](./windows/rainmeter/) setup
+- \>\_ Sleek Windows Terminal config
+- 🌈 [Oh-My-Posh config](./dotposh/posh-zen.toml) minimal theme (with [Spotify](https://open.spotify.com/) status if using)
+- 🦄 [PowerShell](https://github.com/PowerShell/PowerShell) setup & **[custom functions](./dotposh/Modules/)**
+- 🍄 Simple [fastfetch](https://github.com/fastfetch-cli/fastfetch) config, which I copied the config from [scottmckendry's config](https://github.com/scottmckendry/Windots/tree/main/fastfetch)
 
 <hr/>
 
