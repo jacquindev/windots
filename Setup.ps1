@@ -483,6 +483,28 @@ function Setup {
         }
     }
 
+    # spicetify marketplace
+    if (Get-Command spicetify -ErrorAction SilentlyContinue) {
+        ''
+        Write-Host "--------------------------------------------" -ForegroundColor "Blue"
+        Write-Host "Install spicetify's Marketplace for Spotify:" -ForegroundColor "Blue"
+        Write-Host "--------------------------------------------" -ForegroundColor "Blue"
+        $customAppsFolder = "$env:APPDATA\spicetify\CustomApps"
+        if (Test-Path -PathType Container -Path $customAppsFolder) {
+            if (!(Test-Path -PathType Container -Path "$customAppsFolder\marketplace")) {
+                Invoke-WebRequest -UseBasicParsing "https://raw.githubusercontent.com/spicetify/spicetify-marketplace/main/resources/install.ps1" | Invoke-Expression | Out-Null
+                Write-Host "spicetify: " -ForegroundColor "Green" -NoNewline
+                Write-Host "marketplace " -ForegroundColor "Yellow" -NoNewline
+                Write-Host "installed."
+            }
+            else {
+                Write-Host "spicetify: " -ForegroundColor "Green" -NoNewline
+                Write-Host "marketplace " -ForegroundColor "Yellow" -NoNewline
+                Write-Host "already exists. Skipping..."
+            }
+        }
+    } 
+
     # NodeJS
     # Since we installed nvm using scoop, nvm dir would be:
     if ((!(Get-Command npm -ErrorAction SilentlyContinue)) -and (Get-Command nvm -ErrorAction SilentlyContinue)) {
