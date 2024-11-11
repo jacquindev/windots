@@ -65,7 +65,7 @@ gaps:
   outer_gap:
     top: '60px'
     right: '20px'
-    bottom: '15px'
+    bottom: '20px'
     left: '20px'
 
 window_effects:
@@ -75,7 +75,7 @@ window_effects:
     # ** Exclusive to Windows 11 due to API limitations.
     border:
       enabled: true
-      color: *mauve
+      color: *sapphire
 
     # Remove the title bar from the window's frame. Note that this can
     # cause rendering issues for some applications.
@@ -126,26 +126,25 @@ window_behavior:
 
 workspaces:
   - name: '1'
-    display_name: ''
+    display_name: '  Main'
     keep_alive: true
+    bind_to_monitor: 0
   - name: '2'
-    display_name: ''
-    keep_alive: true
+    display_name: '󰅩  Code'
+    keep_alive: false
+    bind_to_monitor: 0
   - name: '3'
-    display_name: ''
-    keep_alive: true
+    display_name: '󰉍  Download'
+    keep_alive: false
+    bind_to_monitor: 1
   - name: '4'
-    display_name: ''
+    display_name: '󰖟  Browsers'
+    keep_alive: false
+    bind_to_monitor: 1
   - name: '5'
-    display_name: ''
-  - name: '6'
-    display_name: ''
-  - name: '7'
-    display_name: ''
-  - name: '8'
-    display_name: ''
-  - name: '9'
-    display_name: ''
+    display_name: '󰿎  Media'
+    keep_alive: false
+    bind_to_monitor: 2
 
 window_rules:
   - commands: ['ignore']
@@ -168,14 +167,30 @@ window_rules:
       # Ignore rules for Rainmeters
       - window_process: { equals: 'Rainmeter' }
 
-      # Task Manager requires admin privileges to manage and should be ignored unless running
-      # the WM as admin.
-      - window_process: { equals: 'Taskmgr' }
+      - window_process: { equals: '/Taskmgr|ScreenClippingHost/' }
     
   - commands: ['set-floating']
     match:
       - window_process: { equals: 'Flow.Launcher' }
-        window_title: { equals: 'Settings' }
+      - window_process: { equals: 'explorer' }
+      - window_process: { equals: 'SnippingTool' }
+      - window_process: { equals: 'Clipchamp' }
+      - window_process: { equals: 'Taskmgr' }
+
+  - commands: ['move --workspace 1']
+    match: 
+      - window_process: { equals: 'Code' }
+      - window_process: { equals: 'Obsidian' }
+      - window_process: { equals: 'Notepad++' }
+
+  - commands: ['move --workspace 2']
+    match:
+      - window_process: { equals: 'msedge' }
+      - window_process: { equals: 'zen' }
+  
+  - commands: ['move --workspace 3']
+    match:
+      - window_process: { equals: 'spotify' }
 
 binding_modes:
   # When enabled, the focused window can be resized via arrow keys or HJKL.
@@ -285,8 +300,11 @@ keybindings:
   # Launch CMD terminal. Alternatively, use `shell-exec wt` or
   # `shell-exec %ProgramFiles%/Git/git-bash.exe` to start Windows
   # Terminal and Git Bash respectively.
-  - commands: ['shell-exec cmd']
+  - commands: ['shell-exec wt']
     bindings: ['alt+enter']
+
+  - commands: ['shell-exec %LOCALAPPDATA%/FlowLauncher/Flow.Launcher.exe']
+    bindings: ['alt+space']
 
   # Focus the next/previous workspace defined in `workspaces` config.
   - commands: ['focus --next-workspace']
@@ -311,12 +329,6 @@ keybindings:
     bindings: ['alt+5']
   - commands: ['focus --workspace 6']
     bindings: ['alt+6']
-  - commands: ['focus --workspace 7']
-    bindings: ['alt+7']
-  - commands: ['focus --workspace 8']
-    bindings: ['alt+8']
-  - commands: ['focus --workspace 9']
-    bindings: ['alt+9']
 
   # Move the focused window's parent workspace to a monitor in a given
   # direction.
@@ -342,9 +354,4 @@ keybindings:
     bindings: ['alt+shift+5']
   - commands: ['move --workspace 6', 'focus --workspace 6']
     bindings: ['alt+shift+6']
-  - commands: ['move --workspace 7', 'focus --workspace 7']
-    bindings: ['alt+shift+7']
-  - commands: ['move --workspace 8', 'focus --workspace 8']
-    bindings: ['alt+shift+8']
-  - commands: ['move --workspace 9', 'focus --workspace 9']
-    bindings: ['alt+shift+9']
+
