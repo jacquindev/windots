@@ -1,23 +1,71 @@
-theme:
-  activeBorderColor:
-    - '#cba6f7'
-    - bold
-  inactiveBorderColor:
-    - '#a6adc8'
-  optionsTextColor:
-    - '#89b4fa'
-  selectedLineBgColor:
-    - '#313244'
-  cherryPickedCommitBgColor:
-    - '#45475a'
-  cherryPickedCommitFgColor:
-    - '#cba6f7'
-  unstagedChangesColor:
-    - '#f38ba8'
-  defaultFgColor:
-    - '#cdd6f4'
-  searchingActiveBorderColor:
-    - '#f9e2af'
+gui:
+  theme:
+    activeBorderColor:
+      - '#cba6f7'
+      - bold
+    inactiveBorderColor:
+      - '#a6adc8'
+    optionsTextColor:
+      - '#89b4fa'
+    selectedLineBgColor:
+      - '#313244'
+    cherryPickedCommitBgColor:
+      - '#45475a'
+    cherryPickedCommitFgColor:
+      - '#cba6f7'
+    unstagedChangesColor:
+      - '#f38ba8'
+    defaultFgColor:
+      - '#cdd6f4'
+    searchingActiveBorderColor:
+      - '#f9e2af'
+  authorColors:
+    '*': '#b4befe'
+  mouseEvents: true
+  nerdFontsVersion: '3'
+  mainPanelSplitMode: flexible
+  commitLength:
+    show: true
+  splitDiff: auto
 
-authorColors:
-  '*': '#b4befe'
+git:
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never
+    useConfig: false
+  autoFetch: true
+  autoRefresh: true
+  branchLogCmd: git log --graph --color=always --abbrev-commit --decorate --date=relative --pretty=medium {{branchName}} --
+  allBranchesLogCmd: git log --graph --all --color=always --abbrev-commit --decorate --date=relative  --pretty=medium
+  overrideGpg: false
+  disableForcePushing: false
+  parseEmoji: false
+  log:
+    order: topo-order
+    showGraph: 'always'
+    showWholeGraph: false
+
+update:
+  method: prompt
+  days: 14
+
+refresher:
+  refreshInterval: 10
+  fetchInterval: 60
+
+confirmOnQuit: false
+
+os:
+  editPreset: 'code'
+
+customCommands:
+  - key: 'b'
+    command: 'gh browse'
+    context: 'files'
+  - key: 'b'
+    command: 'gh browse "{{.SelectedLocalCommit.Sha}}"'
+    context: 'commits'
+
+notARepository: skip
+
+promptToReturnFromSubprocess: true
