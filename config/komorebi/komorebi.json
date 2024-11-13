@@ -1,6 +1,12 @@
 {
-  "$schema": "https://raw.githubusercontent.com/LGUG2Z/komorebi/v0.1.30/schema.json",
+  "$schema": "https://raw.githubusercontent.com/LGUG2Z/komorebi/master/schema.json",
   "app_specific_configuration_path": "$Env:USERPROFILE/.config/komorebi/applications.json",
+  "animation": {
+    "enabled": true,
+    "duration": 400,
+    "style": "EaseOutBack",
+    "fps": 120
+  },
   "window_hiding_behaviour": "Cloak",
   "cross_monitor_move_behaviour": "Insert",
   "mouse_follows_focus": false,
@@ -50,6 +56,11 @@
       "matching_strategy": "Equals"
     },
     {
+      "kind": "Title",
+      "id": "Microsoft Store",
+      "matching_strategy": "Equals"
+    },
+    {
       "kind": "Exe",
       "id": "vmware.exe",
       "matching_strategy": "Equals"
@@ -69,40 +80,51 @@
     {
       "workspaces": [
         {
-          "name": "I",
+          "name": "1"
+        },
+        {
+          "name": "2",
           "layout": "UltrawideVerticalStack"
         },
         {
-          "name": "II",
-          "layout": "VerticalStack"
+          "name": "3",
+          "layout": "BSP"
         },
         {
-          "name": "II",
-          "layout": "BSP"
+          "name": "4",
+          "layout": "VerticalStack"
         }
       ]
     },
     {
       "workspaces": [
         {
-          "name": "I",
+          "name": "1",
+          "layout": "BSP"
+        },
+        {
+          "name": "2",
           "layout": "VerticalStack"
         },
         {
-          "name": "II",
-          "layout": "BSP"
+          "name": "3",
+          "layout": "Grid"
         }
       ]
     },
     {
       "workspaces": [
         {
-          "name": "I",
+          "name": "1",
+          "layout": "BSP"
+        },
+        {
+          "name": "2",
           "layout": "VerticalStack"
         },
         {
-          "name": "II",
-          "layout": "BSP"
+          "name": "3",
+          "layout": "Grid"
         }
       ]
     }
