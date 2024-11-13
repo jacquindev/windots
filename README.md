@@ -20,6 +20,7 @@
 <div align="center">
   <a href="#preview"><kbd> <br> 🌆 Preview <br> </kbd></a>&ensp;&ensp;
   <a href="#install"><kbd> <br> 🌷 Install <br> </kbd></a>&ensp;&ensp;
+  <a href="#extras"><kbd> <br> 🧱 Extras <br> </kbd></a>&ensp;&ensp;
   <a href="#features"><kbd> <br> ✨ Features <br> </kbd></a>&ensp;&ensp;
   <a href="#credits"><kbd> <br> 🎉 Credits <br> </kbd></a>&ensp;&ensp;
   <a href="#author"><kbd> <br> 👤 Author <br> </kbd></a>&ensp;&ensp;
@@ -41,6 +42,14 @@
 ![image3](https://github.com/user-attachments/assets/ea59ed02-34b4-4f0e-ac62-fb6517817c1f)<br/><br/>
 ![image4](https://github.com/user-attachments/assets/ba8b4031-249c-442e-9afd-939f680e1c9e)<br/><br/>
 ![image5](https://github.com/user-attachments/assets/814adafb-fa16-4144-b429-6ec6f08b7da9)<br/><br/>
+
+- Transparent File Explorer
+
+### [ExplorerBlurMica](https://github.com/Maplespe/ExplorerBlurMica) + [Catppuccin Themes](https://www.deviantart.com/niivu/art/Catppuccin-for-Windows-11-1076249390)
+
+![minishowcase](https://github.com/user-attachments/assets/51857bc3-28d0-4669-9497-313561ba6818)
+
+###
 
 <hr/>
 
@@ -65,6 +74,18 @@ git clone https://github.com/jacquindev/windots.git your_location
 
 > [!NOTE]
 > Before running the `Setup.ps1` script, please check the [appList.json](./appList.json) to **ADD/REMOVE** the apps you would like to install.
+
+<h3 id="extras">⛏🧱 Extra Setup (optional)</h3>
+
+Follow the below links to download and learn to setup
+
+| **[Catppuccin Cursors](https://www.deviantart.com/niivu/art/Catppuccin-Cursors-921387705)** | **[Catppuccin Icons & File Explorer](https://www.deviantart.com/niivu/art/Catppuccin-for-Windows-11-1076249390)** |
+|---|---|
+| <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/dd78c78e-d2e1-42b8-9d08-bc5df634a6c6/df8kjax-7eca14bc-1c84-4bff-90ff-da28d49dfee3.png/v1/fit/w_828,h_466,q_70,strp/catppuccin_cursors_by_niivu_df8kjax-414w-2x.jpg" alt="cursors" style="width:480px;height:270px"> | <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/dd78c78e-d2e1-42b8-9d08-bc5df634a6c6/dhsrrce-38389e58-1c0f-4ce8-81d1-04f52474a590.png/v1/fit/w_828,h_466,q_70,strp/catppuccin_for_windows_11_by_niivu_dhsrrce-414w-2x.jpg" alt="themes" style="width:480px;height:270px"> |
+
+| **[Catppuccin Rainmeter's Skin](https://github.com/modkavartini/catppuccin)** | **[ExplorerBlurMica](https://github.com/Maplespe/ExplorerBlurMica)** |
+|---|---|
+| <img src="https://github.com/modkavartini/catppuccin/blob/main/assets/compositeFull.png" alt="compositeFull" style="width:480px;height:270px"> |<img src="https://github.com/Maplespe/ExplorerBlurMica/blob/main/screenshot/230909.png" alt="explorerBlurMica" style="width:480px;height:270px"> |
 
 <h2 id="features">✨ Features</h2>
 
