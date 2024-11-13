@@ -57,6 +57,9 @@ https://github.com/user-attachments/assets/b068e898-1007-4f19-8076-7b8637e261dc
 git clone https://github.com/jacquindev/windots.git your_location
 ```
 
+> [!NOTE]
+> Before running the `Setup.ps1` script, please check the [appList.json](./appList.json) to ADD/REMOVE the apps you would like to install.
+
 - In your PowerShell Terminal, run: `.\Setup.ps1`
 
 ```pwsh
