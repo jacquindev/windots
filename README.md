@@ -1,8 +1,13 @@
-<h1 align="center"><div align="center">
+<h3 align="center">
+<div align="center">
   
   ![title](https://github.com/user-attachments/assets/3b6b4253-ee7a-412c-8177-72d5ca06be4a)
 
-</div></h1>
+A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppuccin</a> Theme
+</div>
+</h3>
+
+<hr/>
 
 <div align="center">
 <p>
