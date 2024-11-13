@@ -65,7 +65,7 @@ $SymLinks = @{
     # "$Env:USERPROFILE\.glzr\glazewm\config.yaml"                                                  = ".\config\glazewm\config.yaml"
     "$Env:APPDATA\bat"                                                                            = ".\config\bat"
     "$Env:LOCALAPPDATA\lazygit"                                                                   = ".\config\lazygit"
-    "$Env:LOCALAPPDATA\nvim"                                                                      = ".\config\nvim"
+    # "$Env:LOCALAPPDATA\nvim"                                                                      = ".\config\nvim"
     "$Env:APPDATA\Code\User\settings.json"                                                        = ".\vscode\settings.json"
     "$Env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" = ".\windows\settings.json"
     "$Env:USERPROFILE\.gitconfig"                                                                 = ".\home\.gitconfig"
@@ -73,9 +73,37 @@ $SymLinks = @{
 }
 
 
-###############################################################################
-###                              HELPER FUNCTIONS                           ###
-###############################################################################
+###########################################################################################################
+###                                             HELPERS FUNCTIONS                                       ###
+###########################################################################################################
+
+function Write-PrettyOutput {
+    param (
+        [Alias('p')][string]$ProcessName,
+        [Alias('e')][string]$EntryName,
+        [Alias('m')][string]$Message
+    )
+    Write-Host "$ProcessName" -ForegroundColor "Green" -NoNewline
+    Write-Host " ▏ " -ForegroundColor "DarkGray" -NoNewline
+    Write-Host "$EntryName" -ForegroundColor "Yellow" -NoNewline
+    Write-Host " $Message"
+}
+
+function Write-PrettyTitle {
+    param (
+        [string]$Title
+    )
+    
+    $charCount = $Title.Length
+    $line = ""
+    for ($i = 0; $i -lt $charCount; $i++) {
+        $line = $line.Insert($i, '―') 
+    }
+    Write-Host "$line" -ForegroundColor "Blue"
+    Write-Host "$Title" -ForegroundColor "Blue"
+    Write-Host "$line" -ForegroundColor "Blue"
+}
+
 function Set-WinGetApps {
     param (
         [array]$AppList,
@@ -88,27 +116,19 @@ function Set-WinGetApps {
         if (![String]::Join("", $installed).Contains($app)) {
             if ($Install) {
                 winget install --exact --silent --accept-source-agreements --accept-package-agreements $app --source winget
-                Write-Host "WinGet: " -ForegroundColor "Green" -NoNewline
-                Write-Host "$app " -ForegroundColor "Yellow" -NoNewline
-                Write-Host "installed."
+                Write-PrettyOutput -p "WinGet" -e "$app" -m "installed."
             }
             elseif ($Uninstall) {
-                Write-Host "WinGet: " -ForegroundColor "Green" -NoNewline
-                Write-Host "$app " -ForegroundColor "Yellow" -NoNewline
-                Write-Host "is not available to uninstall. Skipping..."
+                Write-PrettyOutput -p "WinGet" -e "$app" -m "is not available to uninstall. Skipping..."
             }
         }
         else {
             if ($Install) {
-                Write-Host "WinGet: " -ForegroundColor "Green" -NoNewline
-                Write-Host "$app " -ForegroundColor "Yellow" -NoNewline
-                Write-Host "already installed. Skipping..."
+                Write-PrettyOutput -p "WinGet" -e "$app" -m "already installed. Skipping..."
             }
             elseif ($Uninstall) {
                 winget uninstall --exact --silent --accept-source-agreements $app
-                Write-Host "WinGet: " -ForegroundColor "Green" -NoNewline 
-                Write-Host "$app " -ForegroundColor "Yellow" -NoNewline
-                Write-Host "uninstalled."
+                Write-PrettyOutput -p "WinGet" -e "$app" -m "uninstalled."
             }
         }
     }
@@ -128,9 +148,7 @@ function Set-ScoopApps {
             if ($Install) {
                 if ($CurrentUser) {
                     scoop install $app | Out-Null
-                    Write-Host "Scoop: " -ForegroundColor "Green" -NoNewline
-                    Write-Host "$app " -ForegroundColor "Yellow" -NoNewline
-                    Write-Host "installed."
+                    Write-PrettyOutput -p "Scoop" -e "$app" -m "installed."
                 }
                 elseif ($AllUsers) {
                     if ($(gsudo status IsElevated) -eq $False) {
@@ -142,22 +160,16 @@ function Set-ScoopApps {
                 }
             }
             elseif ($Uninstall) {
-                Write-Host "Scoop: " -NoNewline -ForegroundColor "Green"
-                Write-Host "$app " -NoNewline -ForegroundColor "Yellow"
-                Write-Host "is not available to uninstall. Skipping..." 
+                Write-PrettyOutput -p "Scoop" -e "$app" -m "is not available to uninstall. Skipping..."
             }
         }
         else {
             if ($Install) {
-                Write-Host "Scoop: " -NoNewline -ForegroundColor "Green"
-                Write-Host "$app " -NoNewline -ForegroundColor "Yellow"
-                Write-Host "already installed. Skipping..."
+                Write-PrettyOutput -p "Scoop" -e "$app" -m "already installed. Skipping..."
             }
             elseif ($Uninstall) {
                 scoop uninstall $Package --purge | Out-Null
-                Write-Host "Scoop: " -ForegroundColor "Blue" -NoNewline
-                Write-Host "$app " -ForegroundColor "Yellow" -NoNewline
-                Write-Host "uninstalled."
+                Write-PrettyOutput -p "Scoop" -e "$app" -m "uninstalled."
             }
         }
     }
@@ -174,27 +186,19 @@ function Set-ScoopBucket {
     if (!(Test-Path -PathType Container -Path "$BucketDir\$Bucket")) {
         if ($Add) {
             scoop bucket add $Bucket
-            Write-Host "Bucket: " -ForegroundColor "Green" -NoNewline
-            Write-Host "$Bucket " -ForegroundColor "Yellow" -NoNewline
-            Write-Host "added for Scoop."
+            Write-PrettyOutput -p "Scoop Bucket" -e "$Bucket" -m "added for Scoop."
         }
         elseif ($Remove) {
-            Write-Host "Bucket: " -ForegroundColor "Green" -NoNewline
-            Write-Host "$Bucket " -ForegroundColor "Yellow" -NoNewline
-            Write-Host "is not available to remove. Skipping..."
+            Write-PrettyOutput -p "Scoop Bucket" -e "$Bucket" -m "is not available to remove. Skipping..."
         }
     }
     else {
         if ($Add) {
-            Write-Host "Bucket: " -NoNewline -ForegroundColor "Green"
-            Write-Host "$Bucket " -NoNewline -ForegroundColor "Yellow"
-            Write-Host "already added for Scoop. Skipping..."
+            Write-PrettyOutput -p "Scoop Bucket" -e "$Bucket" -m "already added for Scoop. Skipping..."
         }
         elseif ($Remove) {
-            Write-Host "Bucket: " -ForegroundColor "Green" -NoNewline
-            Write-Host "$Bucket " -ForegroundColor "Yellow" -NoNewline
-            Write-Host "removed for Scoop."
             scoop bucket rm $Bucket
+            Write-PrettyOutput -p "Scoop Bucket" -e "$Bucket" -m "removed for Scoop."
         }
     }
 }
@@ -209,28 +213,20 @@ function Set-PoshModules {
     foreach ($module in $ModuleList) {
         if (!(Get-Module -ListAvailable -Name $module -ErrorAction SilentlyContinue)) {
             if ($Install) {
-                Write-Host "Module: " -ForegroundColor "Green" -NoNewline
-                Write-Host "$Module " -ForegroundColor "Yellow" -NoNewline
-                Write-Host "is being installed" 
                 Install-Module -Name $Module -AllowClobber -Scope CurrentUser -Force
+                Write-PrettyOutput -p "Module" -e "$Module" -m "installed."
             }
             elseif ($Uninstall) {
-                Write-Host "Module: " -ForegroundColor "Green" -NoNewline
-                Write-Host "$Module " -ForegroundColor "Yellow" -NoNewline
-                Write-Host "is not available. Skipping..."
+                Write-PrettyOutput -p "Module" -e "$Module" -m "is not available. Skipping..."
             }
         }
         else {
             if ($Install) {
-                Write-Host "Module: " -ForegroundColor "Green" -NoNewline
-                Write-Host "$Module " -ForegroundColor "Yellow" -NoNewline
-                Write-Host "already installed. Skipping..."
+                Write-PrettyOutput -p "Module" -e "$Module" -m "installed."
             }
             elseif ($Uninstall) {
                 Uninstall-Module -Name $Module -Force
-                Write-Host "Module: " -ForegroundColor "Blue" -NoNewline
-                Write-Host "$Module " -ForegroundColor "Yellow" -NoNewline
-                Write-Host "uninstalled." 
+                Write-PrettyOutput -p "Module" -e "$Module" -m "uninstalled."
             }
         }
     }
@@ -241,6 +237,24 @@ function Write-ModuleLockFile {
     Select-Object Name, Version, Author, InstalledDate, Description |
     ConvertTo-Json -Depth 100 |
     Out-File "$PSScriptRoot\modules.lock.json" -Encoding utf8 -Force
+    ''
+    Write-Host "==> " -ForegroundColor "Cyan" -NoNewline
+    Write-Host "PowerShell Modules installed was written in " -NoNewline
+    Write-Host "$PSScriptRoot\modules.lock.json" -ForegroundColor "Cyan"
+}
+
+function Test-DeveloperMode {
+    $RegistryKeyPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock"
+    if ((Test-Path $RegistryKeyPath) -and (Get-ItemProperty -Path $RegistryKeyPath | Select-Object -ExpandProperty AllowDevelopmentWithoutDevLicense)) {
+        return $true
+    }
+    else {
+        return $false
+    }
+}
+
+function Test-IsElevated {
+    return (New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
 
 function Set-SymbolicLinks {
@@ -252,23 +266,27 @@ function Set-SymbolicLinks {
 
     foreach ($symlink in $Symlinks.GetEnumerator()) {
         $symlinkFile = Get-Item -Path $symlink.Key -ErrorAction SilentlyContinue
+        $symlinkKey = $symlink.Key
         if ($Add) {
-            Write-Host "Symlink: " -ForegroundColor "Green" -NoNewline
-            Write-Host "added for $($symlink.Key)" -ForegroundColor "Gray"
-            $symlinkFile | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
-            New-Item -ItemType SymbolicLink -Path $symlink.Key -Target (Resolve-Path $symlink.Value) -Force | Out-Null
-            Start-Sleep -Seconds 1
+            $symLinkTarget = Resolve-Path $symlink.Value
+            if (Test-Path -Path $symlinkTarget) {
+                $symlinkFile | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
+                if (((Test-DeveloperMode) -eq $False) -and ((Test-IsElevated) -eq $False)) {
+                    gsudo { New-Item -ItemType SymbolicLink -Path $symlinkKey -Target $symLinkTarget -Force | Out-Null }
+                }
+                else {
+                    New-Item -ItemType SymbolicLink -Path $symlinkKey -Target $symLinkTarget -Force | Out-Null
+                }
+                Write-PrettyOutput -p "Symlink" -e "$symlinkKey" -m "added."
+            }
         }
         elseif ($Remove) {
             if (($symlinkFile) -and (($symlinkFile.LinkType) -eq "SymbolicLink")) {
-                Write-Host "Symlink: " -ForegroundColor "Blue" -NoNewline
-                Write-Host "removing $($symlink.Key)" -ForegroundColor "Gray"
-                Remove-Item "$($symlink.Key)" -Force -Recurse -ErrorAction SilentlyContinue
+                Remove-Item "$symlinkKey" -Force -Recurse -ErrorAction SilentlyContinue
+                Write-PrettyOutput -p "Symlink" -e "$symlinkKey" -m "removed."
             }
             else {
-                Write-Host "Symlink: " -ForegroundColor "Blue" -NoNewline
-                Write-Host "$($symlink.Key) " -NoNewline -ForegroundColor "Yellow"
-                Write-Host "is not a symlink / is not available to remove." 
+                Write-PrettyOutput -p "Symlink" -e "$symlinkKey" -m "is not a symlink / is not available to remove." 
             }
         }
     }
@@ -278,16 +296,12 @@ function Set-GsudoCacheMode {
     param([switch]$on, [switch]$off)
     if (Get-Command gsudo -ErrorAction SilentlyContinue) {
         if ($on) { 
-            Write-Host "-----------------------" -ForegroundColor "Cyan"
-            Write-Host "Enable gsudo CacheMode:" -ForegroundColor "Cyan"
-            Write-Host "-----------------------" -ForegroundColor "Cyan"
+            Write-PrettyTitle "Enable Gsudo CacheMode"
             Start-Sleep -Seconds 5
             & gsudo cache on 
         }
         if ($off) { 
-            Write-Host "------------------------" -ForegroundColor "Cyan"
-            Write-Host "Disable gsudo CacheMode:" -ForegroundColor "Cyan"
-            Write-Host "------------------------" -ForegroundColor "Cyan"
+            Write-PrettyTitle "Disable Gsudo CacheMode"
             Start-Sleep -Seconds 5
             & gsudo cache off 
         }
@@ -316,18 +330,16 @@ function Set-EnvironmentVariable {
         [System.Environment]::SetEnvironmentVariable("$Value", "$Path", "User")
     }
     else {
-        Write-Host "Environment Variable: " -ForegroundColor "Green" -NoNewline
-        Write-Host "$Value " -NoNewline -ForegroundColor "Yellow"
-        Write-Host "already set! Skipping..." -ForegroundColor "Gray"
+        Write-PrettyOutput -p "Environment Variable" -e "$Value" -m "already set! Skipping..."
     }
 }
 
 function Test-InternetConnection {
     $testconnection = Test-Connection -ComputerName www.google.com -Count 1 -Quiet -ErrorAction Stop 
     if ($testconnection -eq $False) {
-        Write-Host "---------------------------------" -ForegroundColor "Yellow"
+        Write-Host "―――――――――――――――――――――――――――――――――" -ForegroundColor "Yellow"
         Write-Warning "NO INTERNET CONNECTION AVAILABLE!"
-        Write-Host "---------------------------------" -ForegroundColor "Yellow"
+        Write-Host "―――――――――――――――――――――――――――――――――" -ForegroundColor "Yellow"
         Write-Host "Please recheck your internet connection and rerun this script." -ForegroundColor "Red"
         Write-Host "Exiting..."
         Start-Sleeps -Seconds 1
@@ -335,27 +347,20 @@ function Test-InternetConnection {
     }
 }
 
-function Test-DeveloperMode {
-    $RegistryKeyPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock"
-    if (-not (Test-Path -Path $RegistryKeyPath)) { return $False }
-}
 
-
-###################################################################################
-###                                     MAIN FUNCTIONS                          ###
-###################################################################################
+###################################################################################################
+###                                             MAIN FUNCTIONS                                  ###
+###################################################################################################
 function Setup {
     # Winget
     ''
-    Write-Host "------------------------" -ForegroundColor "Blue"
-    Write-Host "Install WinGet Packages:" -ForegroundColor "Blue"
-    Write-Host "------------------------" -ForegroundColor "Blue"
+    Write-PrettyTitle "Install WinGet Packages"
     Set-WinGetApps -Install -AppList $WingetApps
     $wingetLockFile = "$PSScriptRoot\packages.lock.json"
     if (Test-Path $wingetLockFile) {
         Remove-Item $wingetLockFile -Force -Recurse -ErrorAction SilentlyContinue
     }
-    winget export -o "$PSScriptRoot\packages.lock.json" | Out-Null
+    winget export -o "$wingetLockFile" | Out-Null
     Write-Host ""
     Write-Host "==> " -NoNewline -ForegroundColor "Cyan"
     Write-Host "Packages installed by WinGet was written in " -NoNewline
@@ -366,10 +371,8 @@ function Setup {
 
     # Scoop
     ''
-    Write-Host "-----------------------" -ForegroundColor "Blue"
-    Write-Host "Install Scoop Packages:" -ForegroundColor "Blue"
-    Write-Host "-----------------------" -ForegroundColor "Blue"
-    
+    Write-PrettyTitle "Install Scoop Packages"
+
     if (!(Get-Command scoop -ErrorAction SilentlyContinue)) {
         Write-Host "Installing Scoop..." -ForegroundColor "Yellow"
         if ($(gsudo status IsElevated) -eq $False) {
@@ -389,18 +392,14 @@ function Setup {
 
     # Powershell Modules
     ''
-    Write-Host "---------------------------" -ForegroundColor "Blue"
-    Write-Host "Install PowerShell Modules:" -ForegroundColor "Blue"
-    Write-Host "---------------------------" -ForegroundColor "Blue"
+    Write-PrettyTitle "Install PowerShell Modules"
     Set-PoshModules -Install -ModuleList $PoshModules
     Write-ModuleLockFile
     Start-Process pwsh -WindowStyle Hidden -ArgumentList "-NoProfile -Command Update-Help -Scope CurrentUser"
 
     # Setup Git
     ''
-    Write-Host "---------------------------" -ForegroundColor "Blue"
-    Write-Host "Setup Git Name & Git Email:" -ForegroundColor "Blue"
-    Write-Host "---------------------------" -ForegroundColor "Blue"
+    Write-PrettyTitle "Setup Git Name & Email"
     if (Test-Path -Path "$Env:USERPROFILE\.gitconfig-local") {
         if ($(Get-Content -Path "$Env:USERPROFILE\.gitconfig-local" -Raw).Contains("[user]") -eq $False) {
             Write-GitConfigLocal
@@ -418,15 +417,12 @@ function Setup {
 
     # Symlinks
     ''
-    Write-Host "----------------------" -ForegroundColor "Blue"
-    Write-Host "Create Symbolic Links:" -ForegroundColor "Blue"
-    Write-Host "----------------------" -ForegroundColor "Blue"
+    Write-PrettyTitle "Create Symbolic Links"
     Set-SymbolicLinks -Add -Symlinks $SymLinks
+    Start-Sleep -Seconds 1
     
     ''
-    Write-Host "----------------------------" -ForegroundColor "Blue"
-    Write-Host "Setup Environment Variables:" -ForegroundColor "Blue"
-    Write-Host "----------------------------" -ForegroundColor "BLue"
+    Write-PrettyTitle "Setup Environment Variables"
     # Yazi
     if (Get-Command yazi -ErrorAction SilentlyContinue) {
         $GitInstalledDir = Split-Path "$(Get-Command git.exe | Select-Object -ExpandProperty Definition)" | Split-Path
@@ -447,9 +443,7 @@ function Setup {
     # Bat
     if (Get-Command bat -ErrorAction SilentlyContinue) {
         ''
-        Write-Host "-----------------------" -ForegroundColor "Blue"
-        Write-Host "Setup Bat Cache Themes:" -ForegroundColor "BLue"
-        Write-Host "-----------------------" -ForegroundColor "Blue"
+        Write-PrettyTitle "Setup Bat Cache Themes"
         bat cache --clear
         bat cache --build
     }
@@ -460,9 +454,7 @@ function Setup {
         $btopThemeDir = "$scoopDir\apps\btop\current\themes"
         if (Test-Path -PathType Container $btopThemeDir) {
             ''
-            Write-Host "------------------------------" -ForegroundColor "Blue"
-            Write-Host "Add Catppuccin Theme for BTOP:" -ForegroundColor "Blue"
-            Write-Host "------------------------------" -ForegroundColor "Blue"
+            Write-PrettyTitle "Add Catppuccin Theme for BTOP"
             $catppuccinThemes = (Get-ChildItem -Path $btopThemeDir -Recurse | Where-Object { $_.FullName -match 'catppuccin' }).Name
             if (!($catppuccinThemes)) {
                 $catppuccinThemeNames = @('catppuccin_frappe', 'catppuccin_latte', 'catppuccin_macchiato', 'catppuccin_mocha')
@@ -475,9 +467,7 @@ function Setup {
                 }
             }
             else {
-                Write-Host "Btop: " -ForegroundColor "Green" -NoNewline
-                Write-Host "Catppuccin Themes " -ForegroundColor "Yellow" -NoNewline
-                Write-Host "already installed! Skipping..."
+                Write-PrettyOutput -p "Btop" -e "Catppuccin Themes" -m "already installed! Skipping..."
             }
         }
     }
@@ -486,9 +476,7 @@ function Setup {
     $flowLauncherThemeFolder = "$Env:APPDATA\FlowLauncher\Themes"
     if (Test-Path -PathType Container -Path "$flowLauncherThemeFolder") {
         ''
-        Write-Host "--------------------------------------" -ForegroundColor "Blue"
-        Write-Host "Add Catppuccin Theme for FlowLauncher:" -ForegroundColor "Blue"
-        Write-Host "--------------------------------------" -ForegroundColor "Blue"
+        Write-PrettyTitle "Add Catppuccin Theme for FlowLauncher"
         $flowThemes = (Get-ChildItem -Path $flowLauncherThemeFolder -Recurse | Where-Object { $_.FullName -match 'Catppuccin' }).Name
         if (!($flowThemes)) {
             @('Frappe', 'Latte', 'Macchiato', 'Mocha') | ForEach-Object {
@@ -500,30 +488,22 @@ function Setup {
             }
         }
         else {
-            Write-Host "FlowLauncher: " -ForegroundColor "Green" -NoNewline
-            Write-Host "Catppuccin Themes " -ForegroundColor "Yellow" -NoNewline
-            Write-Host "already installed! Skipping..."
+            Write-PrettyOutput -p "FlowLauncher" -e "Catppuccin Themes" -m "already installed! Skipping..."
         }
     }
 
     # spicetify marketplace
     if (Get-Command spicetify -ErrorAction SilentlyContinue) {
         ''
-        Write-Host "--------------------------------------------" -ForegroundColor "Blue"
-        Write-Host "Install spicetify's Marketplace for Spotify:" -ForegroundColor "Blue"
-        Write-Host "--------------------------------------------" -ForegroundColor "Blue"
+        Write-PrettyTitle "Install Spicetify's Marketplace"
         $customAppsFolder = "$env:APPDATA\spicetify\CustomApps"
         if (Test-Path -PathType Container -Path $customAppsFolder) {
             if (!(Test-Path -PathType Container -Path "$customAppsFolder\marketplace")) {
                 Invoke-WebRequest -UseBasicParsing "https://raw.githubusercontent.com/spicetify/spicetify-marketplace/main/resources/install.ps1" | Invoke-Expression | Out-Null
-                Write-Host "spicetify: " -ForegroundColor "Green" -NoNewline
-                Write-Host "marketplace " -ForegroundColor "Yellow" -NoNewline
-                Write-Host "installed."
+                Write-PrettyOutput -p "spicetify" -e "marketplace" -m "installed."
             }
             else {
-                Write-Host "spicetify: " -ForegroundColor "Green" -NoNewline
-                Write-Host "marketplace " -ForegroundColor "Yellow" -NoNewline
-                Write-Host "already exists. Skipping..."
+                Write-PrettyOutput -p "spicetify" -e "marketplace" -m "already exists. Skipping..."
             }
         }
     } 
@@ -532,9 +512,7 @@ function Setup {
     # Since we installed nvm using scoop, nvm dir would be:
     if ((!(Get-Command npm -ErrorAction SilentlyContinue)) -and (Get-Command nvm -ErrorAction SilentlyContinue)) {
         ''
-        Write-Host "--------------------------------" -ForegroundColor "Blue"
-        Write-Host "Install NodeJS, NPM, YARN, etc: " -ForegroundColor "Blue"
-        Write-Host "--------------------------------" -ForegroundColor "Blue"
+        Write-PrettyTitle "Install NodeJS, NPM, YARN, etc"
         $ltsOrLatest = $(Write-Host "NodeJS not found. Install lts (y) or latest (n)? "-ForegroundColor "Cyan" -NoNewline; Read-Host)
         if ($ltsOrLatest -eq 'y') {
             nvm install lts
@@ -549,30 +527,78 @@ function Setup {
     }
     elseif (Get-Command npm -ErrorAction SilentlyContinue) {
         ''
-        Write-Host "----------------------------" -ForegroundColor "Blue"
-        Write-Host "Install NPM Global Packages:" -ForegroundColor "Blue"
-        Write-Host "----------------------------" -ForegroundColor "Blue"
+        Write-PrettyTitle "Install NPM Global Packages"
         foreach ($package in $npmPackages) {
             npm install --global --silent $package
-            Write-Host "npm: " -ForegroundColor "Green" -NoNewline
-            Write-Host "$package " -ForegroundColor "Yellow" -NoNewline
-            Write-Host "installed."
+            Write-PrettyOutput -p "npm" -e "$package" -m "installed."
         }
     }
 
     # VSCode Extensions
     if (Get-Command code -ErrorAction SilentlyContinue) {
         ''
-        Write-Host "------------------------------" -ForegroundColor "Blue"
-        Write-Host "Visual Studio Code Extensions:" -ForegroundColor "Blue"
-        Write-Host "------------------------------" -ForegroundColor "Blue"
+        Write-PrettyTitle "Visual Studio Code Extensions"
         $extensionList = Get-Content -Path "$PSScriptRoot\vscode\extensions.list"
         foreach ($extension in $extensionList) {
             code --install-extension $extension | Out-Null
-            Write-Host "VSCode Extension: " -ForegroundColor "Green" -NoNewline
-            Write-Host "$extension " -ForegroundColor "Yellow" -NoNewline
-            Write-Host "installed"
+            Write-PrettyOutput -p "VSCode Extension" -e "$extension" -m "installed."
         }
+    }
+
+    # Run komorebic start --whkd
+    if (Get-Command komorebic -ErrorAction SilentlyContinue) {
+        ''
+        Write-PrettyTitle "Komorebi with WHKD"
+        $komorebiProcess = Get-Process -Name komorebi -ErrorAction SilentlyContinue
+        if ($null -eq $komorebiProcess) {
+            $startKomorebiConfirm = $(Write-Host "Komorebi found. Run Komorebi now (y) or later (n)? " -ForegroundColor "Cyan" -NoNewline; Read-Host)
+            if ($startKomorebiConfirm -eq 'y') {
+                try {
+                    & komorebic start --whkd > $null 2>&1
+                    Write-PrettyOutput -p "Komorebic" -e "Komorebi with WHKD" -m "started."
+                }
+                catch {
+                    Write-Host "Komorebi: " -ForegroundColor "Green" -NoNewline
+                    Write-Host "Failed to start komorebic: " -NoNewline
+                    Write-Host "$_" -ForegroundColor "Red" -NoNewline
+                }
+            }
+            else {
+                Write-PrettyOutput -p "Komorebic" -e "Komorebi" -m "skipped process."
+            }
+        }
+        else {
+            Write-PrettyOutput -p "Komorebic" -e "Komorebi" -m "is already running! Skipping..."
+        }
+    }
+
+    # Run yasb
+    ''
+    Write-PrettyTitle "YASB Status Bar"
+    $yasbProcess = Get-Process -Name yasb -ErrorAction SilentlyContinue
+    if ($null -eq $yasbProcess) {
+        $yasbShortcutPath = Join-Path -Path $env:APPDATA -ChildPath "Microsoft\Windows\Start Menu\Programs\Yasb.lnk"
+        if (Test-Path $yasbShortcutPath) {
+            $confirmYasbRun = $(Write-Host "Found Yasb. Run now? (y/n) " -ForegroundColor "Cyan" -NoNewline; Read-Host)
+            if ($confirmYasbRun -eq 'y') {
+                Start-Process -FilePath $yasbShortcutPath > $null 2>&1
+                Write-Host "Yasb: " -ForegroundColor "Green" -NoNewline
+                Write-Host "Starting status bar..." -NoNewline
+                Write-Host " OK" -ForegroundColor "Green"
+            }
+            else {
+                Write-Host "Yasb: " -ForegroundColor "Green" -NoNewline
+                Write-Host "Skipping..."
+            }
+        }
+        else {
+            Write-Host "Yasb: " -ForegroundColor "Green" -NoNewline
+            Write-Host "Shortcut not found at " -NoNewLine
+            Write-Host "$yasbShortcutPath" -ForegroundColor Red
+        }
+    }
+    else {
+        Write-PrettyOutput -p "Yasb" -e "" -m "is already running. Skipping..."
     }
 
     ''
@@ -588,9 +614,7 @@ function Reverse {
 
     # Scoop
     ''
-    Write-Host "--------------------------" -ForegroundColor "Blue"
-    Write-Host "Uninstall WinGet Packages:" -ForegroundColor "Blue"
-    Write-Host "--------------------------" -ForegroundColor "Blue"
+    Write-PrettyTitle "Uninstall Scoop Packages"
     Set-ScoopApps -Uninstall -AppList $ScoopApps -CurrentUser
     Set-ScoopApps -Uninstall -AppList $ScoopGlobalApps -AllUsers
     foreach ($bucket in $ScoopBuckets) {
@@ -603,23 +627,17 @@ function Reverse {
 
     # WinGet
     ''
-    Write-Host "--------------------------" -ForegroundColor "Blue"
-    Write-Host "Uninstall WinGet Packages:" -ForegroundColor "Blue"
-    Write-Host "--------------------------" -ForegroundColor "Blue"
+    Write-PrettyTitle "Uninstall WinGet Packages"
     Set-WinGetApps -Uninstall -AppList $WingetApps
 
     # PowerShell Modules
     ''
-    Write-Host "-----------------------------" -ForegroundColor "Blue"
-    Write-Host "Uninstall PowerShell Modules:" -ForegroundColor "Blue"
-    Write-Host "-----------------------------" -ForegroundColor "Blue"
+    Write-PrettyTitle "Uninstall PowerShell Modules"
     Set-PoshModules -Uninstall -ModuleList $PoshModules
 
     # Symlinks
     ''
-    Write-Host "----------------------" -ForegroundColor "Blue"
-    Write-Host "Create Symbolic Links:" -ForegroundColor "Blue"
-    Write-Host "----------------------" -ForegroundColor "Blue"
+    Write-PrettyTitle "Create Symbolic Links"
     Set-SymbolicLinks -Remove -Symlinks $SymLinks
 }
 
@@ -650,11 +668,25 @@ elseif ($Uninstall) {
     }
 }
 
+
 Start-Sleep -Seconds 2
+
 ""
-Write-Host " █████╗ ██╗     ██╗         ██████╗  ██████╗ ███╗   ██╗███████╗██╗ " -ForegroundColor "Green"
-Write-Host "██╔══██╗██║     ██║         ██╔══██╗██╔═══██╗████╗  ██║██╔════╝██║ " -ForegroundColor "Green"
-Write-Host "███████║██║     ██║         ██║  ██║██║   ██║██╔██╗ ██║█████╗  ██║ " -ForegroundColor "Green"
-Write-Host "██╔══██║██║     ██║         ██║  ██║██║   ██║██║╚██╗██║██╔══╝  ╚═╝ " -ForegroundColor "Green"
-Write-Host "██║  ██║███████╗███████╗    ██████╔╝╚██████╔╝██║ ╚████║███████╗██╗ " -ForegroundColor "Green"
-Write-Host "╚═╝  ╚═╝╚══════╝╚══════╝    ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚══════╝╚═╝ " -ForegroundColor "Green"
+Write-Host "┌────────────────────────────────────────────────────────────────────────────────┐" -ForegroundColor "Green"
+Write-Host "│                                                                                │" -ForegroundColor "Green"
+Write-Host "│        █████╗ ██╗     ██╗         ██████╗  ██████╗ ███╗   ██╗███████╗ ██╗      │" -ForegroundColor "Green"
+Write-Host "│       ██╔══██╗██║     ██║         ██╔══██╗██╔═══██╗████╗  ██║██╔════╝ ██║      │" -ForegroundColor "Green"
+Write-Host "│       ███████║██║     ██║         ██║  ██║██║   ██║██╔██╗ ██║█████╗   ██║      │" -ForegroundColor "Green"
+Write-Host "│       ██╔══██║██║     ██║         ██║  ██║██║   ██║██║╚██╗██║██╔══╝   ╚═╝      │" -ForegroundColor "Green"
+Write-Host "│       ██║  ██║███████╗███████╗    ██████╔╝╚██████╔╝██║ ╚████║███████╗ ██╗      │" -ForegroundColor "Green"
+Write-Host "│       ╚═╝  ╚═╝╚══════╝╚══════╝    ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚══════╝ ╚═╝      │" -ForegroundColor "Green"
+Write-Host "│                                                                                │" -ForegroundColor "Green"
+Write-Host "└────────────────────────────────────────────────────────────────────────────────┘" -ForegroundColor "Green"
+
+""
+Write-Host "For more information, please visit " -NoNewline
+Write-Host "https://github.com/jacquindev/windots" -ForegroundColor "Blue"
+Write-Host "- Submit an issue via: " -NoNewline
+Write-Host "https://github.com/jacquindev/windots/issues/new" -ForegroundColor "Blue"
+Write-Host "- Contact me via email: " -NoNewline
+Write-Host "jacquindev@outlook.com" -ForegroundColor "Blue"
