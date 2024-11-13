@@ -65,6 +65,7 @@ $SymLinks = @{
     # "$Env:USERPROFILE\.glzr\glazewm\config.yaml"                                                  = ".\config\glazewm\config.yaml"
     "$Env:APPDATA\bat"                                                                            = ".\config\bat"
     "$Env:LOCALAPPDATA\lazygit"                                                                   = ".\config\lazygit"
+    "$Env:LOCALAPPDATA\nvim"                                                                      = ".\config\nvim"
     "$Env:APPDATA\Code\User\settings.json"                                                        = ".\vscode\settings.json"
     "$Env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" = ".\windows\settings.json"
     "$Env:USERPROFILE\.gitconfig"                                                                 = ".\home\.gitconfig"
@@ -405,7 +406,8 @@ function Setup {
             Write-GitConfigLocal
         }
         else {
-            Write-Host "Git Email and Name already set in local config. Skipping update..." 
+            Write-Host "Git Email and Name already set in " -NoNewLine
+            Write-Host "$Env:USERPROFILE\.gitconfig-local" -ForegroundColor "Cyan"
         }
     }
     else {
@@ -419,12 +421,7 @@ function Setup {
     Write-Host "----------------------" -ForegroundColor "Blue"
     Write-Host "Create Symbolic Links:" -ForegroundColor "Blue"
     Write-Host "----------------------" -ForegroundColor "Blue"
-    if (((Test-DeveloperMode) -eq $False) -or ($(gsudo status IsElevated) -eq $False)) {
-        gsudo { Set-SymbolicLinks -Add -Symlinks $SymLinks }
-    }
-    else {
-        Set-SymbolicLinks -Add -Symlinks $SymLinks
-    }
+    Set-SymbolicLinks -Add -Symlinks $SymLinks
     
     ''
     Write-Host "----------------------------" -ForegroundColor "Blue"
@@ -631,27 +628,27 @@ function Reverse {
 ###                              START THE SCRIPT                           ###
 ###############################################################################
 
-# Test-InternetConnection
+Test-InternetConnection
 
-# if (($PSBoundParameters.Count -eq 0) -or ($Install)) { Setup }
-# elseif ($Uninstall) { 
-#     ''
-#     Write-Host "WARNING: This will UNINSTALL all apps that installed by this script, which" -ForegroundColor "Yellow"
-#     Write-Host "         included: Scoop Packages, WinGet Packages, PowerShell Modules, " -ForegroundColor "Yellow"
-#     Write-Host "         AND symlink files/folders of this 'windots' repo!!!" -ForegroundColor "Yellow"
-#     ''
-#     Write-Host "NOTES: This script WILL NOT UNINSTALL Scoop/Winget itself, and the" -ForegroundColor "Blue"
-#     Write-Host "       ENVIRONMENT VARIABLES we have set, and this 'windots' folder." -ForegroundColor "Blue"
-#     ''
-#     $confirm = $(Write-Host "ARE YOU SURE TO PROCEED? (y/n) " -ForegroundColor "Red" -NoNewline; Read-Host)
-#     if ($confirm -eq 'y') {
-#         Reverse
-#     }
-#     else {
-#         Write-Host "Cancelled the process. Exiting..."
-#         Break
-#     }
-# }
+if (($PSBoundParameters.Count -eq 0) -or ($Install)) { Setup }
+elseif ($Uninstall) { 
+    ''
+    Write-Host "WARNING: This will UNINSTALL all apps that installed by this script, which" -ForegroundColor "Yellow"
+    Write-Host "         included: Scoop Packages, WinGet Packages, PowerShell Modules, " -ForegroundColor "Yellow"
+    Write-Host "         AND symlink files/folders of this 'windots' repo!!!" -ForegroundColor "Yellow"
+    ''
+    Write-Host "NOTES: This script WILL NOT UNINSTALL Scoop/Winget itself, and the" -ForegroundColor "Blue"
+    Write-Host "       ENVIRONMENT VARIABLES we have set, and this 'windots' folder." -ForegroundColor "Blue"
+    ''
+    $confirm = $(Write-Host "ARE YOU SURE TO PROCEED? (y/n) " -ForegroundColor "Red" -NoNewline; Read-Host)
+    if ($confirm -eq 'y') {
+        Reverse
+    }
+    else {
+        Write-Host "Cancelled the process. Exiting..."
+        Break
+    }
+}
 
 Start-Sleep -Seconds 2
 ""
