@@ -60,6 +60,11 @@
 </tr>
 <tr>
   <td>
+    <img alt="buttons" src="./pics/buttons.png" width="780" height="450"/>
+  </td>
+</tr>
+<tr>
+  <td>
     <img alt="cabin-2" src="./pics/cabin-2.png" width="780" height="450"/>
   </td>
 </tr>
@@ -76,6 +81,11 @@
 <tr>
   <td>
     <img alt="car" src="./pics/car.jpg" width="780" height="450"/>
+  </td>
+</tr>
+<tr>
+  <td>
+    <img alt="cat-waves" src="./pics/cat-waves.png" width="780" height="450"/>
   </td>
 </tr>
 <tr>
@@ -130,6 +140,11 @@
 </tr>
 <tr>
   <td>
+    <img alt="flatppuccin_macchiato" src="./pics/flatppuccin_macchiato.png" width="780" height="450"/>
+  </td>
+</tr>
+<tr>
+  <td>
     <img alt="fuji" src="./pics/fuji.png" width="780" height="450"/>
   </td>
 </tr>
@@ -161,6 +176,16 @@
 <tr>
   <td>
     <img alt="glitch" src="./pics/glitch.png" width="780" height="450"/>
+  </td>
+</tr>
+<tr>
+  <td>
+    <img alt="gradient-synth-cat" src="./pics/gradient-synth-cat.png" width="780" height="450"/>
+  </td>
+</tr>
+<tr>
+  <td>
+    <img alt="hashtags-black" src="./pics/hashtags-black.png" width="780" height="450"/>
   </td>
 </tr>
 <tr>
@@ -321,6 +346,11 @@
 <tr>
   <td>
     <img alt="sword" src="./pics/sword.jpg" width="780" height="450"/>
+  </td>
+</tr>
+<tr>
+  <td>
+    <img alt="tetris" src="./pics/tetris.png" width="780" height="450"/>
   </td>
 </tr>
 <tr>
