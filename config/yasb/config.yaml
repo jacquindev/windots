@@ -7,7 +7,7 @@ debug: false # Enable debug mode to see more logs
 komorebi:
   start_command: "komorebic start --whkd"
   stop_command: "komorebic stop --whkd"
-  reload_command: "komorebic reload-configuration"
+  reload_command: "komorebic stop --whkd && komorebic start --whkd"
   
 # This is the main configuration file for Yet Another Status Bar (YASB)
 bars:
@@ -20,39 +20,37 @@ bars:
       position: "top"
       center: false
     blur_effect:
-      enabled: false 
-      acrylic: false 
+      enabled: false
+      acrylic: false
       dark_mode: false
-      round_corners: false
+      round_corners: true
       border_color: None
     window_flags:
       always_on_top: false
       windows_app_bar: true
     dimensions:
       width: "100%"
-      height: 36
+      height: 32
     padding:
-      top: 4
-      left: 0
-      bottom: 4
-      right: 0
+      top: 2
+      left: 15
+      bottom: 2
+      right: 15
     widgets:
       left:
         [
-          "win_button",
-          "github",
-          "apps",
+          #"win_button",          
           "komorebi_workspaces",
-          "komorebi_active_layout",
-          "active_window"
+          "media",
+          #"komorebi_active_layout",
+          #"active_window"
         ] 
       center: [
           "clock",
-          #"github",
         ]
       right:
         [
-          "media",
+          #"github",
           "wifi",
           "weather",
           "volume",
@@ -60,10 +58,11 @@ bars:
           #"language",
           #"ip_info",
           "cpu",
-          "disk",
+          #"disk",
           "memory",
           #"wallapers",
           #"traffic",
+          #"apps",
           "power_menu"
         ]
 widgets:
@@ -72,7 +71,7 @@ widgets:
       options:
           label: "{volume_label} {space[used][percent]}"
           label_alt: "{volume_label} {space[used][gb]} / {space[total][gb]}"
-          volume_label: "C"
+          #volume_label: "C"
           update_interval: 60 # Update interval in seconds
           callbacks:
             on_middle: "do_nothing"
@@ -81,23 +80,23 @@ widgets:
   media:
       type: "yasb.media.MediaWidget"
       options:
-        label: "{title} - {artist}"
-        label_alt: "{title}"
+        label: "<span>\uf001</span> {title} - {artist}"
+        label_alt: "<span>\uf001</span> {title}"
         max_field_size:
-          label: 20
-          label_alt: 30
+          label: 30
+          label_alt: 24
         show_thumbnail: true
         controls_only: false
         controls_left: true
         hide_empty: true
         thumbnail_alpha: 80
         thumbnail_padding: 8
-        thumbnail_corner_radius: 16 # Set to 0 for square corners
+        thumbnail_corner_radius: 15 # Set to 0 for square corners
         icons:
-          prev_track: "\ue892"
-          next_track: "\ue893"
-          play: "\ue768"
-          pause: "\ue769"
+          prev_track: "" #"\ue892"
+          next_track: "" #"\ue893"
+          play: "" #"\ue768"
+          pause: "" #"\ue769"
 
   active_window:
       type: "yasb.active_window.ActiveWindowWidget"
@@ -242,10 +241,10 @@ widgets:
       options:
         label: "<span>{icon}</span> {temp_c}"
         label_alt: "{location}: Min {min_temp_c}, Max {max_temp_c}, Humidity {humidity}"
-        api_key: '3bf4cf9a7c3f40d6b31174128242807' # Get your free API key from https://www.weatherapi.com/
+        api_key: 'dc830d76d08245e3b7135513241311' # Get your free API key from https://www.weatherapi.com/
         update_interval: 600 # Update interval in seconds, Min 600 seconds
         hide_decimal: true
-        location: 'Los Angeles, CA, USA' # You can use "USA Los Angeles 90006" {COUNTRY CITY ZIP_CODE}, or just city.
+        location: 'Ho Chi Minh City' # You can use "USA Los Angeles 90006" {COUNTRY CITY ZIP_CODE}, or just city.
         callbacks:
           on_left: "toggle_label"
         icons: 
@@ -301,14 +300,15 @@ widgets:
       options:
         label: "{data}"
         app_list:
-          - {icon: "\uf489", launch: "wt"}
+          - {icon: "\uf282", launch: "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"}
+          #- {icon: "\udb80\ude39", launch: "C:\\Program Files\\Mozilla Firefox\\firefox.exe"}
           - {icon: "\udb82\ude1e", launch: "C:\\Users\\jqnhi\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"}
-          - {icon: "\udb80\ude39", launch: "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"}
+          - {icon: "\uf489", launch: "wt"}
+          - {icon: "\uf413", launch: "explorer"}
+          - {icon: "\uf0a2", launch: "notification_center"}
           - {icon: "\ueb51", launch: "quick_settings"}
           - {icon: "\uf46a", launch: "cmd.exe /c start ms-settings:windowsupdate"}
           - {icon: "\uf422", launch: "search"}
-          - {icon: "\uf0a2", launch: "notification_center"}
-          #- {icon: "\uf413", launch: "explorer c:\\Users\\amn"}
           #- {icon: "\uf1ff", launch: "C:\\Users\\amn\\AppData\\Local\\Discord\\Update.exe --processStart Discord.exe"}
           #- {icon: "\ue217", launch: "C:\\Users\\amn\\AppData\\Roaming\\Telegram Desktop\\Telegram.exe"}
           #- {icon: "\udb84\udf55", launch: "widget"}
@@ -351,8 +351,8 @@ widgets:
   win_button:
       type: "yasb.custom.CustomWidget"
       options:
-        label: "\ue62a"
-        label_alt: "\ue62a"
+        label: "<span>\uf40e</span>"
+        label_alt: "<span>\uf40e</span>"
         class_name: "system-widget"
         callbacks:
           on_left: "exec start_menu"
