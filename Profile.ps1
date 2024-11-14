@@ -67,7 +67,7 @@ if (Get-Command yazi -ErrorAction SilentlyContinue) {
 
 # zoxide
 if (Get-Command zoxide -ErrorAction SilentlyContinue) {
-    Invoke-Expression (& { (zoxide init powershell | Out-String) })
+    Invoke-Expression (& { (zoxide init powershell --cmd cd | Out-String) })
 }
 
 # fastfetch
