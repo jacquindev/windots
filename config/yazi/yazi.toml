@@ -19,8 +19,8 @@ title_format = "Yazi: {cwd}"
 [preview]
 wrap = "no"
 tab_size = 2
-max_width = 1920
-max_height = 1080
+max_width = 960
+max_height = 540
 cache_dir = ""
 image_delay = 30
 image_filter = "triangle"
