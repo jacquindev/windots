@@ -92,6 +92,34 @@ Follow the below links to download and learn to setup
 |---|---|
 | <img src="https://github.com/modkavartini/catppuccin/blob/main/assets/compositeFull.png" alt="compositeFull" style="width:480px;height:270px"> |<img src="https://github.com/Maplespe/ExplorerBlurMica/blob/main/screenshot/230909.png" alt="explorerBlurMica" style="width:480px;height:270px"> |
 
+<h4 align="center">Spicetify Setup</h4>
+
+<div align="center">
+<table>
+<tr>
+<th>Addons</th>
+<th>Name</th>
+</tr>
+<tr>
+<td>Extensions</td>
+<td>
+<a href="https://github.com/surfbryce/beautiful-lyrics">Beautiful Lyrics</a>&nbsp;
+<a href="https://github.com/spicetify/cli">Bookmark</a>&nbsp;
+<a href="https://github.com/huhridge/huh-spicetify-extensions">Full App Display</a>&nbsp;
+<a href="https://github.com/spicetify/cli">Shuffle+</a>&nbsp;
+<a href="https://github.com/spicetify/cli">Trash Bin</a>&nbsp;
+</td>
+</tr>
+<td>Themes</td>
+<td>
+<a href="https://github.com/Comfy-Themes/Spicetify">Comfy Themes</a>&nbsp;
+</td>
+<tr>
+</tr>
+</table>
+</div>
+
+
 <h2 id="features">✨ Features</h2>
 
 - 💎 All packages to install are listed in **[appList.json](./appList.json)** - Easy to maintain!
