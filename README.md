@@ -103,16 +103,17 @@ Follow the below links to download and learn to setup
 <tr>
 <td>Extensions</td>
 <td>
-<a href="https://github.com/surfbryce/beautiful-lyrics">Beautiful Lyrics</a>&nbsp;
-<a href="https://github.com/spicetify/cli">Bookmark</a>&nbsp;
-<a href="https://github.com/huhridge/huh-spicetify-extensions">Full App Display</a>&nbsp;
-<a href="https://github.com/spicetify/cli">Shuffle+</a>&nbsp;
-<a href="https://github.com/spicetify/cli">Trash Bin</a>&nbsp;
+  <a href="https://github.com/surfbryce/beautiful-lyrics">Beautiful Lyrics</a>&nbsp;
+  <a href="https://github.com/spicetify/cli">Bookmark</a>&nbsp;
+  <a href="https://github.com/huhridge/huh-spicetify-extensions">Full App Display</a>&nbsp;
+  <a href="https://github.com/spicetify/cli">Shuffle+</a>&nbsp;
+  <a href="https://github.com/spicetify/cli">Trash Bin</a>&nbsp;
 </td>
 </tr>
 <td>Themes</td>
 <td>
-<a href="https://github.com/Comfy-Themes/Spicetify">Comfy Themes</a>&nbsp;
+  <a href="https://github.com/Comfy-Themes/Spicetify">Comfy Themes</a>&nbsp;
+  <a href="./config/spicetify/comfy.js">⚙️</a>
 </td>
 <tr>
 </tr>
