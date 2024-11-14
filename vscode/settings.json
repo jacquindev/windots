@@ -181,5 +181,8 @@
   },
   "[yaml]": {
     "editor.tabWidth": 2
+  },
+  "[log]": {
+    "editor.largeFileOptimizations": false
   }
 }
