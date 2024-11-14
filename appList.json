@@ -15,7 +15,7 @@
       "Microsoft.PowerShell",
       "Microsoft.PowerToys",
       "Microsoft.VisualStudioCode",
-      "Microsoft.WindowsTerminal",
+      "Microsoft.WindowsTerminal.Preview",
       // "Neovim.Neovim",
       // "Notepad++.Notepad++",
       // "Mozilla.Firefox",
