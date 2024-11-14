@@ -81,11 +81,13 @@ function Write-PrettyOutput {
     param (
         [Alias('p')][string]$ProcessName,
         [Alias('e')][string]$EntryName,
+        [Alias('x')][string]$Extra,
         [Alias('m')][string]$Message
     )
     Write-Host "$ProcessName" -ForegroundColor "Green" -NoNewline
     Write-Host " ▏ " -ForegroundColor "DarkGray" -NoNewline
     Write-Host "$EntryName" -ForegroundColor "Yellow" -NoNewline
+    Write-Host " $Extra" -ForegroundColor "Magenta" -NoNewline
     Write-Host " $Message"
 }
 
@@ -99,6 +101,7 @@ function Write-PrettyTitle {
     for ($i = 0; $i -lt $charCount; $i++) {
         $line = $line.Insert($i, '―') 
     }
+    ""
     Write-Host "$line" -ForegroundColor "Blue"
     Write-Host "$Title" -ForegroundColor "Blue"
     Write-Host "$line" -ForegroundColor "Blue"
@@ -353,7 +356,6 @@ function Test-InternetConnection {
 ###################################################################################################
 function Setup {
     # Winget
-    ''
     Write-PrettyTitle "Install WinGet Packages"
     Set-WinGetApps -Install -AppList $WingetApps
     $wingetLockFile = "$PSScriptRoot\packages.lock.json"
@@ -365,12 +367,12 @@ function Setup {
     Write-Host "==> " -NoNewline -ForegroundColor "Cyan"
     Write-Host "Packages installed by WinGet was written in " -NoNewline
     Write-Host "$wingetLockFile" -ForegroundColor "Cyan" 
-    ''
+
+    # Gsudo cache mode on
     Set-GsudoCacheMode -on
     Start-Sleep -Seconds 1
 
     # Scoop
-    ''
     Write-PrettyTitle "Install Scoop Packages"
 
     if (!(Get-Command scoop -ErrorAction SilentlyContinue)) {
@@ -391,14 +393,12 @@ function Setup {
     Set-ScoopApps -Install -AppList $ScoopGlobalApps -AllUsers
 
     # Powershell Modules
-    ''
     Write-PrettyTitle "Install PowerShell Modules"
     Set-PoshModules -Install -ModuleList $PoshModules
     Write-ModuleLockFile
     Start-Process pwsh -WindowStyle Hidden -ArgumentList "-NoProfile -Command Update-Help -Scope CurrentUser"
 
     # Setup Git
-    ''
     Write-PrettyTitle "Setup Git Name & Email"
     if (Test-Path -Path "$Env:USERPROFILE\.gitconfig-local") {
         if ($(Get-Content -Path "$Env:USERPROFILE\.gitconfig-local" -Raw).Contains("[user]") -eq $False) {
@@ -416,12 +416,11 @@ function Setup {
     git submodule update --init --recursive
 
     # Symlinks
-    ''
     Write-PrettyTitle "Create Symbolic Links"
     Set-SymbolicLinks -Add -Symlinks $SymLinks
     Start-Sleep -Seconds 1
     
-    ''
+    # Environment variables
     Write-PrettyTitle "Setup Environment Variables"
     # Yazi
     if (Get-Command yazi -ErrorAction SilentlyContinue) {
@@ -442,7 +441,6 @@ function Setup {
 
     # Bat
     if (Get-Command bat -ErrorAction SilentlyContinue) {
-        ''
         Write-PrettyTitle "Setup Bat Cache Themes"
         bat cache --clear
         bat cache --build
@@ -453,17 +451,13 @@ function Setup {
         # !! Since we installed btop with scoop, so the themes folder would be:
         $btopThemeDir = "$scoopDir\apps\btop\current\themes"
         if (Test-Path -PathType Container $btopThemeDir) {
-            ''
             Write-PrettyTitle "Add Catppuccin Theme for BTOP"
             $catppuccinThemes = (Get-ChildItem -Path $btopThemeDir -Recurse | Where-Object { $_.FullName -match 'catppuccin' }).Name
             if (!($catppuccinThemes)) {
                 $catppuccinThemeNames = @('catppuccin_frappe', 'catppuccin_latte', 'catppuccin_macchiato', 'catppuccin_mocha')
                 foreach ($theme in $catppuccinThemeNames) {
-                    Write-Host "Btop: " -ForegroundColor "Green" -NoNewline
-                    Write-Host "Catppuccin Theme: " -ForegroundColor "Yellow" -NoNewline
-                    Write-Host "$theme " -ForegroundColor "Magenta" -NoNewline
-                    Write-Host "is being installed..."
                     Install-File -Dir $btopThemeDir -Url "https://raw.githubusercontent.com/catppuccin/btop/refs/heads/main/themes/$theme.theme"
+                    Write-PrettyOutput -p "Btop" -e "Catppuccin Theme" -x "$theme" -m "installed."
                 }
             }
             else {
@@ -475,16 +469,12 @@ function Setup {
     # flow-launcher theme
     $flowLauncherThemeFolder = "$Env:APPDATA\FlowLauncher\Themes"
     if (Test-Path -PathType Container -Path "$flowLauncherThemeFolder") {
-        ''
         Write-PrettyTitle "Add Catppuccin Theme for FlowLauncher"
         $flowThemes = (Get-ChildItem -Path $flowLauncherThemeFolder -Recurse | Where-Object { $_.FullName -match 'Catppuccin' }).Name
         if (!($flowThemes)) {
             @('Frappe', 'Latte', 'Macchiato', 'Mocha') | ForEach-Object {
-                Write-Host "FlowLauncher: " -ForegroundColor "Green" -NoNewline
-                Write-Host "Catppuccin Theme: " -ForegroundColor "Yellow" -NoNewline
-                Write-Host "Catppuccin $_ " -ForegroundColor "Magenta" -NoNewline
-                Write-Host "is being installed..."
                 Install-File -Dir $flowLauncherThemeFolder -Url "https://raw.githubusercontent.com/catppuccin/flow-launcher/refs/heads/main/themes/Catppuccin%20$_.xaml"
+                Write-PrettyOutput -p "FlowLauncher" -e "Catppuccin Theme" -x "Catppuccin $_" -m "installed."
             }
         }
         else {
@@ -494,7 +484,6 @@ function Setup {
 
     # spicetify marketplace
     if (Get-Command spicetify -ErrorAction SilentlyContinue) {
-        ''
         Write-PrettyTitle "Install Spicetify's Marketplace"
         $customAppsFolder = "$env:APPDATA\spicetify\CustomApps"
         if (Test-Path -PathType Container -Path $customAppsFolder) {
@@ -511,7 +500,6 @@ function Setup {
     # NodeJS
     # Since we installed nvm using scoop, nvm dir would be:
     if ((!(Get-Command npm -ErrorAction SilentlyContinue)) -and (Get-Command nvm -ErrorAction SilentlyContinue)) {
-        ''
         Write-PrettyTitle "Install NodeJS, NPM, YARN, etc"
         $ltsOrLatest = $(Write-Host "NodeJS not found. Install lts (y) or latest (n)? "-ForegroundColor "Cyan" -NoNewline; Read-Host)
         if ($ltsOrLatest -eq 'y') {
@@ -526,7 +514,6 @@ function Setup {
         npm config set userconfig="$env:USERPROFILE\.config\npm\.npmrc" --global
     }
     elseif (Get-Command npm -ErrorAction SilentlyContinue) {
-        ''
         Write-PrettyTitle "Install NPM Global Packages"
         foreach ($package in $npmPackages) {
             npm install --global --silent $package
@@ -536,7 +523,6 @@ function Setup {
 
     # VSCode Extensions
     if (Get-Command code -ErrorAction SilentlyContinue) {
-        ''
         Write-PrettyTitle "Visual Studio Code Extensions"
         $extensionList = Get-Content -Path "$PSScriptRoot\vscode\extensions.list"
         foreach ($extension in $extensionList) {
@@ -547,7 +533,6 @@ function Setup {
 
     # Run komorebic start --whkd
     if (Get-Command komorebic -ErrorAction SilentlyContinue) {
-        ''
         Write-PrettyTitle "Komorebi with WHKD"
         $komorebiProcess = Get-Process -Name komorebi -ErrorAction SilentlyContinue
         if ($null -eq $komorebiProcess) {
@@ -573,7 +558,6 @@ function Setup {
     }
 
     # Run yasb
-    ''
     Write-PrettyTitle "YASB Status Bar"
     $yasbProcess = Get-Process -Name yasb -ErrorAction SilentlyContinue
     if ($null -eq $yasbProcess) {
@@ -582,38 +566,31 @@ function Setup {
             $confirmYasbRun = $(Write-Host "Found Yasb. Run now? (y/n) " -ForegroundColor "Cyan" -NoNewline; Read-Host)
             if ($confirmYasbRun -eq 'y') {
                 Start-Process -FilePath $yasbShortcutPath > $null 2>&1
-                Write-Host "Yasb: " -ForegroundColor "Green" -NoNewline
-                Write-Host "Starting status bar..." -NoNewline
-                Write-Host " OK" -ForegroundColor "Green"
+                Write-PrettyOutput -p "Yasb" -e "status bar" -m "started."
             }
             else {
-                Write-Host "Yasb: " -ForegroundColor "Green" -NoNewline
-                Write-Host "Skipping..."
+                Write-PrettyOutput -p "Yasb" -e "status bar" -m "skipping process..."
             }
         }
         else {
-            Write-Host "Yasb: " -ForegroundColor "Green" -NoNewline
-            Write-Host "Shortcut not found at " -NoNewLine
-            Write-Host "$yasbShortcutPath" -ForegroundColor Red
+            Write-PrettyOutput -p "Yasb" -e "$yasbShortCutPath" -m "not found."
         }
     }
     else {
-        Write-PrettyOutput -p "Yasb" -e "" -m "is already running. Skipping..."
+        Write-PrettyOutput -p "Yasb" -e "status bar" -m "is already running. Skipping..."
     }
 
-    ''
+    # Gsudo cache mode off
     Set-GsudoCacheMode -off
     Start-Sleep -Seconds 1
 }
 
 
 function Reverse {
-    ''
     Set-GsudoCacheMode -on
     Start-Sleep -Seconds 1
 
     # Scoop
-    ''
     Write-PrettyTitle "Uninstall Scoop Packages"
     Set-ScoopApps -Uninstall -AppList $ScoopApps -CurrentUser
     Set-ScoopApps -Uninstall -AppList $ScoopGlobalApps -AllUsers
@@ -621,22 +598,18 @@ function Reverse {
         Set-ScoopBucket -Remove -Bucket $bucket
     }
 
-    ''
     Set-GsudoCacheMode -off
     Start-Sleep -Seconds 1
 
     # WinGet
-    ''
     Write-PrettyTitle "Uninstall WinGet Packages"
     Set-WinGetApps -Uninstall -AppList $WingetApps
 
     # PowerShell Modules
-    ''
     Write-PrettyTitle "Uninstall PowerShell Modules"
     Set-PoshModules -Uninstall -ModuleList $PoshModules
 
     # Symlinks
-    ''
     Write-PrettyTitle "Create Symbolic Links"
     Set-SymbolicLinks -Remove -Symlinks $SymLinks
 }
