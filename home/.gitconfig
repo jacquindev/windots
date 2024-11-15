@@ -3,6 +3,7 @@
 [alias]
     a = add
     aa = add --all
+    b = branch
     cm = commit -m 
     co = checkout
     get = !git fetch --prune && git pull --rebase && git submodule update --init --recursive
