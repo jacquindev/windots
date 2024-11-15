@@ -86,7 +86,22 @@ git clone https://github.com/jacquindev/windots.git your_location
 
 Follow the below links to download and learn to how to setup:
 
-<h4 align="center">Spicetify Setup</h4>
+<h4 align="center"> 🌈 Catppuccin Themes 🎨</h4>
+
+<div align="center">
+<table>
+<tr>
+  <td><a href="https://www.deviantart.com/niivu/art/Catppuccin-Cursors-921387705">Cursors</a></td>
+  <td><img src="./assets/cursors.png" alt="cursors"></td>
+</tr>
+<tr>
+  <td><a href="https://www.deviantart.com/niivu/art/Catppuccin-for-Windows-11-1076249390">Themes</a></td>
+  <td><img src="./assets/themes.png" alt="thems"></td>
+</tr>
+</table>
+</div>
+
+<h4 align="center">🎸 Spicetify Setup 🎧</h4>
 
 <div align="center">
 <table>
