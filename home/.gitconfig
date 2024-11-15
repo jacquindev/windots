@@ -1,5 +1,20 @@
 [am]
     threeWay = true
+[alias]
+    a = add
+    aa = add --all
+    cm = commit -m 
+    co = checkout
+    get = !git fetch --prune && git pull --rebase && git submodule update --init --recursive
+    last = log -1 HEAD --stat
+    lg = log --oneline --graph --decorate --date=short
+    ll = log --graph --topo-order --date=short --abbrev-commit --decorate --all --boundary --pretty=format:'%Cblue%ad %C(auto)%h%Creset -%C(auto)%d%Creset %s %Cblue[%aN]%Creset %Cblue%G?%Creset'
+    ls = ls-files
+    ls-ignored = ls-files --ignored --others --exclude-standard
+    m = merge
+    st = status
+    what = show --no-patch --pretty='tformat:%h (%s, %ad)' --date=short
+    who = shortlog --summary --numbered --no-merges
 [core]
     editor = code --wait
     longpaths = true
