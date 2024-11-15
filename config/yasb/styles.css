@@ -39,8 +39,6 @@
 .yasb-bar {
     padding: 0;
     margin: 0;
-    background-color: var(--base);
-    border-radius: 15px;
 }
 
 /* WIDGET */
@@ -51,8 +49,10 @@
 	padding: 1px 8px 1px 8px;
 }
 .active-window-widget {
-    margin: 0 8px;
+    margin: 0;
     padding: 0 8px;
+    border-radius: 15px;
+    background-color: var(--base);
 }
 .container-left,
 .container-center,
@@ -64,6 +64,8 @@
 /* KOMOREBI */
 .komorebi-workspaces {
     padding: 0 4px 0 8px;
+    background-color: var(--base);
+    border-radius: 15px;
 }
 .komorebi-workspaces .ws-btn {
     width: 12px;
@@ -94,8 +96,10 @@
 
 /* APP WIDGETS */
 .apps-widget {
-    margin: 0 8px 0 1px;
+    margin: 0 8px;
     padding: 0 8px;
+    border-radius: 15px;
+    background-color: var(--base);
 }
 
 /*POWER MENU WIDGET*/
@@ -108,6 +112,8 @@
 }
 .power-menu-widget {
     padding: 0 12px;
+    background-color: var(--base);
+    border-radius: 15px;
 }
 .power-menu-widget .label {
     color: var(--red);
@@ -167,7 +173,15 @@
 
 .volume-widget, .memory-widget, .disk-widget, .cpu-widget, .weather-widget {
     padding: 0 8px;
+    background-color: var(--base);
 }
+
+.memory-widget {
+    margin: 0 8px 0 0;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
 .volume-widget .icon,
 .memory-widget .icon,
 .disk-widget .icon,
@@ -194,6 +208,9 @@
 /* WIFI WIDGET */
 .wifi-widget {
     padding: 0 8px 0 12px;
+    background-color: var(--base);
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
 }
 .wifi-widget .icon {
     color: var(--blue);
@@ -202,7 +219,9 @@
 
 /* GITHUB WIDGET */
 .github-widget {
-    padding: 0 8px;
+    margin: 0;
+    padding: 0;
+    background-color: var(--base);
 }
 .github-widget .icon {
 	color: var(--lavender);
@@ -215,6 +234,7 @@
 .clock-widget {
     padding: 0 10px;
     border-radius: 15px;
+    background-color: var(--base);
 }
 
 /* WEATHER WIDGET */
@@ -245,19 +265,25 @@
 /* MEDIA WIDGET */
 .media-widget {
 	padding: 0 8px;
-    margin: 0;
+    margin: 0 8px;
+    background-color: var(--base);
+    border-radius: 15px;
 }
 .media-widget .label {
-    padding: 0;
-    padding-right: 4px;
+    padding: 0 8px;
 	background-color: transparent;
     color: var(--lavender);
     font-style: italic;
 }
 .media-widget .btn {
-	padding: 0;
-	margin: 0 -6px;
-    padding-left: 4px;
+    padding: 0 3px 0 0;
+	margin: 0;
+    color: var(--subtext0);
+    font-family: Segoe Fluent Icons;
+}
+.media-widget .btn.play {
+	background-color: var(--mantle);
+	border-radius: 15px;
 }
 .media-widget .btn:hover {
     color: var(--peach);
