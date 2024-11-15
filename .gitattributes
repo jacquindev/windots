@@ -3,4 +3,4 @@
 *.png filter=lfs diff=lfs merge=lfs -text
 *.jpg filter=lfs diff=lfs merge=lfs -text
 config/spotify-tui/client.yml filter=git-crypt diff=git-crypt
-secrets/ filter=git-crypt diff=git-crypt
+secrets/** filter=git-crypt diff=git-crypt
