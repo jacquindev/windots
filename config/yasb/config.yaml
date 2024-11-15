@@ -39,19 +39,20 @@ bars:
     widgets:
       left:
         [
-          #"win_button",          
+          #"win_button",
           "komorebi_workspaces",
-          "media",
+          "apps",
           #"komorebi_active_layout",
-          #"active_window"
+          "active_window"
         ] 
       center: [
           "clock",
         ]
       right:
         [
-          #"github",
+          "media",
           "wifi",
+          #"github",
           "weather",
           "volume",
           #"battery",
@@ -62,7 +63,6 @@ bars:
           "memory",
           #"wallpapers",
           #"traffic",
-          #"apps",
           "power_menu"
         ]
 widgets:
@@ -93,10 +93,10 @@ widgets:
         thumbnail_padding: 8
         thumbnail_corner_radius: 15 # Set to 0 for square corners
         icons:
-          prev_track: "" #"\ue892"
-          next_track: "" #"\ue893"
-          play: "" #"\ue768"
-          pause: "" #"\ue769"
+          prev_track: "\ue892"
+          next_track: "\ue893"
+          play: "\ue768"
+          pause: "\ue769"
 
   active_window:
       type: "yasb.active_window.ActiveWindowWidget"
@@ -302,9 +302,9 @@ widgets:
         app_list:
           - {icon: "\uf282", launch: "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"}
           #- {icon: "\udb80\ude39", launch: "C:\\Program Files\\Mozilla Firefox\\firefox.exe"}
-          - {icon: "\udb82\ude1e", launch: "C:\\Users\\jqnhi\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"}
-          - {icon: "\uf489", launch: "wt"}
-          - {icon: "\uf413", launch: "explorer"}
+          #- {icon: "\udb82\ude1e", launch: "C:\\Users\\jqnhi\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"}
+          #- {icon: "\uf489", launch: "wt"}
+          #- {icon: "\uf413", launch: "explorer"}
           - {icon: "\uf0a2", launch: "notification_center"}
           - {icon: "\ueb51", launch: "quick_settings"}
           - {icon: "\uf46a", launch: "cmd.exe /c start ms-settings:windowsupdate"}
