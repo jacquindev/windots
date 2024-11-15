@@ -26,6 +26,9 @@ if (Get-Command 'oh-my-posh' -ErrorAction SilentlyContinue) {
     } | Out-Null
 }
 
+# Set alias for `Git` before import `Posh-Git` module
+Set-Alias -Name 'g' -Value 'git'
+
 # Posh Modules
 $PoshModules = @('posh-git', 'powershell-yaml', 'Microsoft.PowerShell.SecretManagement', 'Microsoft.PowerShell.SecretStore', 'Terminal-Icons')
 foreach ($module in $PoshModules) {
