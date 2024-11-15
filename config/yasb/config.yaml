@@ -60,7 +60,7 @@ bars:
           "cpu",
           #"disk",
           "memory",
-          #"wallapers",
+          #"wallpapers",
           #"traffic",
           #"apps",
           "power_menu"
