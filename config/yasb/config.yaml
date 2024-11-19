@@ -241,7 +241,7 @@ widgets:
       options:
         label: "<span>{icon}</span> {temp_c}"
         label_alt: "{location}: Min {min_temp_c}, Max {max_temp_c}, Humidity {humidity}"
-        api_key: 'dc830d76d08245e3b7135513241311' # Get your free API key from https://www.weatherapi.com/
+        api_key: '591cc55a04834a34823215135241811' # Get your free API key from https://www.weatherapi.com/
         update_interval: 600 # Update interval in seconds, Min 600 seconds
         hide_decimal: true
         location: 'Ho Chi Minh City' # You can use "USA Los Angeles 90006" {COUNTRY CITY ZIP_CODE}, or just city.
@@ -302,7 +302,7 @@ widgets:
         app_list:
           - {icon: "\uf282", launch: "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"}
           #- {icon: "\udb80\ude39", launch: "C:\\Program Files\\Mozilla Firefox\\firefox.exe"}
-          #- {icon: "\udb82\ude1e", launch: "C:\\Users\\jqnhi\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"}
+          - {icon: "\udb82\ude1e", launch: "C:\\Users\\jqnhi\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"}
           #- {icon: "\uf489", launch: "wt"}
           #- {icon: "\uf413", launch: "explorer"}
           - {icon: "\uf0a2", launch: "notification_center"}
