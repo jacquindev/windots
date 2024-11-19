@@ -3,9 +3,12 @@
   "editor.bracketPairColorization.enabled": true,
   "editor.codeLens": true,
   "editor.colorDecorators": true,
-  "editor.confirmDragAndDrop": false,
   "editor.cursorBlinking": "smooth",
   "editor.cursorSmoothCaretAnimation": "on",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.shellcheck": "explicit",
+    "source.fixAll.eslint": "explicit"
+  },
   "editor.fontFamily": "'FantasqueSansM Nerd Font', 'JetBrainsMono Nerd Font'",
   "editor.fontLigatures": true,
   "editor.fontSize": 14,
@@ -61,7 +64,7 @@
   "terminal.integrated.cursorStyle": "line",
   "terminal.integrated.cursorStyleInactive": "line",
   "terminal.integrated.cursorWidth": 1,
-  "terminal.integrated.enableMultiLinePasteWarning": false,
+  "terminal.integrated.enableMultiLinePasteWarning": "auto",
   "terminal.integrated.enableVisualBell": true,
   "terminal.integrated.minimumContrastRatio": 1,
   "terminal.integrated.shellIntegration.decorationsEnabled": "never",
@@ -94,7 +97,6 @@
       "sideBar.background": "base",
       "sideBar.border": "base",
       "sideBarSectionHeader.background": "base",
-      "sideBarTitle.background": "base",
       "tab.inactiveBackground": "base",
       "tab.unfocusedActiveBackground": "base",
       "tab.unfocusedInactiveBackground": "base"
@@ -121,6 +123,17 @@
   "code-runner.ignoreSelection": true,
   "code-runner.saveFileBeforeRun": true,
   "code-runner.showExecutionMessage": false,
+  // polacode settings
+  "polacode.transparentBackground": true,
+  // tabnine
+  "tabnine.experimentalAutoImports": true,
+  // shellcheck
+  "shellcheck.enable": true,
+  "shellcheck.enableQuickFix": true,
+  "shellcheck.useWorkspaceRootAsCwd": true,
+  // prettier
+  "prettier.useTabs": true,
+  "prettier.useEditorConfig": true,
   // better-comments
   "better-comments.tags": [
     {
@@ -169,20 +182,28 @@
       "italic": true
     }
   ],
-  // polacode settings
-  "polacode.transparentBackground": true,
   // per language settings
   "[json]": {
-    "editor.tabWidth": 2,
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[yaml]": {
-    "editor.tabWidth": 2
+    "editor.tabSize": 2
+  },
+  "[lua]": {
+    "editor.tabSize": 2,
+    "editor.defaultFormatter": "sumneko.lua"
   },
   "[log]": {
     "editor.largeFileOptimizations": false
+  },
+  "[shellscript]": {
+    "editor.tabSize": 2,
+    "editor.defaultFormatter": "foxundermoon.shell-format"
   }
 }
