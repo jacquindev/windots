@@ -50,6 +50,7 @@ $ScoopApps = $listApps.scoop.user
 $ScoopGlobalApps = $listApps.scoop.global
 $PoshModules = $listApps.modules
 $npmPackages = $listApps.npm
+$nerdFonts = $listApps.nerdfont
 
 $SymLinks = @{
     $PROFILE.CurrentUserAllHosts                                                                  = ".\Profile.ps1"
@@ -260,6 +261,50 @@ function Test-IsElevated {
     return (New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
 
+function Install-NerdFonts {
+    param (
+        [ValidateSet('CurrentUser', 'AllUsers')]
+        [string]$Scope = 'CurrentUser',
+
+        [switch]$Scoop,
+        [switch]$Script
+    )
+    if ($Scoop) {
+        foreach ($font in $nerdFonts) {
+            $fontDisplayName = $font.DisplayName
+            $fontScoopName = $font.ScoopName
+            foreach ($fontName in $($fontScoopName)) {
+                if (!(scoop info $fontName).Installed) {
+                    if ($Scope -eq 'AllUsers') {
+                        if ((Test-IsElevated) -eq $False) {
+                            gsudo scoop install $fontName --global | Out-Null
+                        }
+                        else { scoop install $fontName --global | Out-Null }
+                    }
+                    else {
+                        scoop install $fontName
+                    }
+                }
+            }
+            Write-PrettyOutput -p "Nerd Font" -e "$fontDisplayName" -x "using Scoop" -m "installed."
+        }
+    }
+    elseif ($Script) {
+        foreach ($font in $nerdFonts) {
+            $fontName = $font.ShortName
+            $fontFullName = $font.DisplayName
+            if ($Scope -eq 'AllUsers') {
+                Start-Process -FilePath pwsh -ArgumentList "& ([scriptblock]::Create((Invoke-WebRequest 'https://to.loredo.me/Install-NerdFont.ps1'))) -Name $fontName -Scope AllUsers -Confirm:$false" -Verb RunAs -Wait -WindowStyle Hidden
+            }
+            else {
+                Start-Process -FilePath pwsh -ArgumentList "&([scriptblock]::Create((Invoke-WebRequest 'https://to.loredo.me/Install-NerdFont.ps1'))) -Name $fontName -Confirm:$false" -Wait -WindowStyle Hidden
+            }
+            Start-Sleep -Seconds 1
+            Write-PrettyOutput -p "Nerd Font" -e "$fontFullName" -x "using Script" -m "installed."
+        }
+    }
+}
+
 function Set-SymbolicLinks {
     param (
         [hashtable]$Symlinks,
@@ -345,7 +390,7 @@ function Test-InternetConnection {
         Write-Host "―――――――――――――――――――――――――――――――――" -ForegroundColor "Yellow"
         Write-Host "Please recheck your internet connection and rerun this script." -ForegroundColor "Red"
         Write-Host "Exiting..."
-        Start-Sleeps -Seconds 1
+        Start-Sleep -Seconds 1
         Break
     }
 }
@@ -439,9 +484,32 @@ function Setup {
         Set-EnvironmentVariable -Value "KOMOREBI_CONFIG_HOME" -Path "$Env:USERPROFILE\.config\komorebi"
     }
 
+    # Nerd Font
+    Write-PrettyTitle "Install Nerd Fonts"
+    $nerdFontConfirm = $(Write-Host "Install Nerd Fonts now (y) or later (n)? " -ForegroundColor "Cyan" -NoNewline; Read-Host)
+    if ($nerdFontConfirm -eq 'y') {
+        $whichUser = $(Write-Host "1) Install Nerd Fonts for AllUsers (y) or CurrentUser (n)? " -NoNewline; Read-Host)
+        $whichInstaller = $(Write-Host "2) Install Nerd Fonts using Script (y) or Scoop (n)? " -NoNewline; Read-Host)
+        ""
+        if ($whichUser -eq 'y') {
+            if ($whichInstaller -eq 'y') {
+                Install-NerdFonts -Scope AllUsers -Script
+            }
+            else { Install-NerdFonts -Scope AllUsers -Scoop }
+        }
+        else {
+            if ($whichInstaller -eq 'y') {
+                Install-NerdFonts -Scope CurrentUser -Script
+            }
+            else {
+                Install-NerdFonts -Scope CurrentUser -Scoop
+            }
+        }
+    }
+
     # Bat
     if (Get-Command bat -ErrorAction SilentlyContinue) {
-        Write-PrettyTitle "Setup Bat Cache Themes"
+        Write-PrettyTitle "Setup Bat (batcat)"
         bat cache --clear
         bat cache --build
     }
