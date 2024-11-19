@@ -12,6 +12,7 @@
       "JanDeDobbeleer.OhMyPosh",
       // "Obsidian.Obsidian",
       // "Microsoft.OpenJDK.21",
+      "Docker.DockerDesktop",
       "Microsoft.PowerShell",
       "Microsoft.PowerToys",
       "Microsoft.VisualStudioCode",
@@ -51,6 +52,7 @@
         "innounp",
         "jq",
         "lazygit",
+        "lazydocker",
         "less",
         "nvm",
         "ripgrep",
@@ -91,6 +93,31 @@
       // "PSWebSearch",
       "Terminal-Icons"
     ],
-    "npm": ["commitizen", "cz-git", "git-open", "git-recent"]
+    "npm": ["commitizen", "cz-git", "git-open", "git-recent"],
+    "nerdfont": [
+      {
+        "DisplayName": "FantasqueSansMono Nerd Font",
+        "ShortName": "fantasque-sans-mono",
+        "ScoopName": [
+          "FantasqueSansMono-NF-Mono",
+          "FantasqueSansMono-NF-Propo",
+          "FantasqueSansMono-NF"
+        ]
+      },
+      {
+        "DisplayName": "FiraCode Nerd Font",
+        "ShortName": "fira-code",
+        "ScoopName": ["FiraCode-NF-Mono", "FiraCode-NF-Propo", "FiraCode-NF"]
+      },
+      {
+        "DisplayName": "JetBrainsMono Nerd Font",
+        "ShortName": "jetbrains-mono",
+        "ScoopName": [
+          "JetBrainsMono-NF-Mono",
+          "JetBrainsMono-NF-Propo",
+          "JetBrainsMono-NF"
+        ]
+      }
+    ]
   }
 }
