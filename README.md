@@ -70,7 +70,7 @@ https://github.com/user-attachments/assets/b068e898-1007-4f19-8076-7b8637e261dc
 <h2 id="install">🌷 Install</h2>
 
 - Simply clone this repo to `your_location`
-- `cd` in `your_location`
+- `cd` into `your_location`
 
 ```bash
 git clone https://github.com/jacquindev/windots.git your_location
