@@ -1,123 +1,123 @@
 // PLEASE READ THIS FILE CAREFULLY BEFORE RUNNING `Setup.ps1` !!!
 // You can ADD or REMOVE apps in this file before running the `Setup.ps1` script with your preferred applications.
 {
-  "$schema": "./schema.json",
-  "source": {
-    "winget": [
-      "chrisant996.Clink",
-      "gerardog.gsudo",
-      "Git.Git",
-      "GitHub.GitHubDesktop",
-      "ImageMagick.ImageMagick",
-      "JanDeDobbeleer.OhMyPosh",
-      // "Obsidian.Obsidian",
-      // "Microsoft.OpenJDK.21",
-      "Docker.DockerDesktop",
-      "Microsoft.PowerShell",
-      "Microsoft.PowerToys",
-      "Microsoft.VisualStudioCode",
-      "Microsoft.WindowsTerminal.Preview",
-      // "Neovim.Neovim",
-      // "Notepad++.Notepad++",
-      // "Mozilla.Firefox",
-      // "Zen-Team.Zen-Browser.Optimized",
-      "Proton.ProtonVPN",
-      "Spotify.Spotify",
-      // "glzr-io.glazewm",
-      "AmN.yasb",
-      "Flow-Launcher.Flow-Launcher",
-      "LGUG2Z.komorebi",
-      "LGUG2Z.whkd",
-      "Rainmeter.Rainmeter"
-      // "rocksdanister.LivelyWallpaper",
-      // "Stardock.Start11"
-    ],
-    "scoop": {
-      "bucket": ["extras", "java", "sysinternals"],
-      "user": [
-        "aria2",
-        "bat",
-        "bfg",
-        "btop",
-        "delta",
-        "eza",
-        "fastfetch",
-        "fd",
-        "fzf",
-        "gh",
-        "git-crypt",
-        "git-filter-repo",
-        "git-lfs",
-        "git-sizer",
-        "innounp",
-        "jq",
-        "lazygit",
-        "lazydocker",
-        "less",
-        "nvm",
-        "ripgrep",
-        "scoop-completion",
-        "secureuxtheme",
-        "spicetify-cli",
-        // "topgrade",
-        "wixtoolset",
-        "yazi",
-        "zoxide"
-      ],
-      "global": [
-        "7zip",
-        "cacert",
-        "openjdk",
-        "procmon",
-        "pskill",
-        "pslist",
-        "sed",
-        "wget"
-      ]
-    },
-    "modules": [
-      // "BetterCredentials",
-      "BurntToast",
-      "CompletionPredictor",
-      // "DotNetVersionLister",
-      "Microsoft.PowerShell.SecretManagement",
-      "Microsoft.PowerShell.SecretStore",
-      "posh-alias",
-      "posh-git",
-      "powershell-yaml",
-      // "PoshRSJob",
-      "PSFzf",
-      "PSParseHTML",
-      "PSProfiler",
-      "PSScriptTools",
-      // "PSWebSearch",
-      "Terminal-Icons"
-    ],
-    "npm": ["commitizen", "cz-git", "git-open", "git-recent"],
-    "nerdfont": [
-      {
-        "DisplayName": "FantasqueSansMono Nerd Font",
-        "ShortName": "fantasque-sans-mono",
-        "ScoopName": [
-          "FantasqueSansMono-NF-Mono",
-          "FantasqueSansMono-NF-Propo",
-          "FantasqueSansMono-NF"
-        ]
-      },
-      {
-        "DisplayName": "FiraCode Nerd Font",
-        "ShortName": "fira-code",
-        "ScoopName": ["FiraCode-NF-Mono", "FiraCode-NF-Propo", "FiraCode-NF"]
-      },
-      {
-        "DisplayName": "JetBrainsMono Nerd Font",
-        "ShortName": "jetbrains-mono",
-        "ScoopName": [
-          "JetBrainsMono-NF-Mono",
-          "JetBrainsMono-NF-Propo",
-          "JetBrainsMono-NF"
-        ]
-      }
-    ]
-  }
+	"$schema": "./schema.json",
+	"source": {
+		"winget": [
+			"chrisant996.Clink",
+			"gerardog.gsudo",
+			"Git.Git",
+			"GitHub.GitHubDesktop",
+			"ImageMagick.ImageMagick",
+			"JanDeDobbeleer.OhMyPosh",
+			// "Obsidian.Obsidian",
+			// "Microsoft.OpenJDK.21",
+			"Docker.DockerDesktop",
+			"Microsoft.PowerShell",
+			"Microsoft.PowerToys",
+			"Microsoft.VisualStudioCode",
+			"Microsoft.WindowsTerminal.Preview",
+			// "Neovim.Neovim",
+			// "Notepad++.Notepad++",
+			// "Mozilla.Firefox",
+			// "Zen-Team.Zen-Browser.Optimized",
+			"Proton.ProtonVPN",
+			"Spotify.Spotify",
+			// "glzr-io.glazewm",
+			"AmN.yasb",
+			"Flow-Launcher.Flow-Launcher",
+			"LGUG2Z.komorebi",
+			"LGUG2Z.whkd",
+			"Rainmeter.Rainmeter"
+			// "rocksdanister.LivelyWallpaper",
+			// "Stardock.Start11"
+		],
+		"scoop": {
+			"bucket": ["extras", "java", "sysinternals"],
+			"user": [
+				"aria2",
+				"bat",
+				"bfg",
+				"btop",
+				"delta",
+				"eza",
+				"fastfetch",
+				"fd",
+				"fzf",
+				"gh",
+				"git-crypt",
+				"git-filter-repo",
+				"git-lfs",
+				"git-sizer",
+				"innounp",
+				"jq",
+				"lazygit",
+				"lazydocker",
+				"less",
+				"nvm",
+				"ripgrep",
+				"scoop-completion",
+				"secureuxtheme",
+				"spicetify-cli",
+				// "topgrade",
+				"wixtoolset",
+				"yazi",
+				"zoxide"
+			],
+			"global": [
+				"7zip",
+				"cacert",
+				"openjdk",
+				"procmon",
+				"pskill",
+				"pslist",
+				"sed",
+				"wget"
+			]
+		},
+		"modules": [
+			// "BetterCredentials",
+			"BurntToast",
+			"CompletionPredictor",
+			// "DotNetVersionLister",
+			"Microsoft.PowerShell.SecretManagement",
+			"Microsoft.PowerShell.SecretStore",
+			"posh-alias",
+			"posh-git",
+			"powershell-yaml",
+			// "PoshRSJob",
+			"PSFzf",
+			"PSParseHTML",
+			"PSProfiler",
+			"PSScriptTools",
+			// "PSWebSearch",
+			"Terminal-Icons"
+		],
+		"npm": ["commitizen", "cz-git", "git-open", "git-recent"],
+		"nerdfont": [
+			{
+				"DisplayName": "FantasqueSansMono Nerd Font",
+				"ShortName": "fantasque-sans-mono",
+				"ScoopName": [
+					"FantasqueSansMono-NF-Mono",
+					"FantasqueSansMono-NF-Propo",
+					"FantasqueSansMono-NF"
+				]
+			},
+			{
+				"DisplayName": "FiraCode Nerd Font",
+				"ShortName": "fira-code",
+				"ScoopName": ["FiraCode-NF-Mono", "FiraCode-NF-Propo", "FiraCode-NF"]
+			},
+			{
+				"DisplayName": "JetBrainsMono Nerd Font",
+				"ShortName": "jetbrains-mono",
+				"ScoopName": [
+					"JetBrainsMono-NF-Mono",
+					"JetBrainsMono-NF-Propo",
+					"JetBrainsMono-NF"
+				]
+			}
+		]
+	}
 }
