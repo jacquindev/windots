@@ -89,7 +89,7 @@ git clone https://github.com/jacquindev/windots.git your_location
 - In your **`Command Prompt`** console, type:
 
   ```cmd
-  clink installscripts "your_location\clink\clink-completions"
+  clink installscripts "your_location\clink\clink-custom"
   clink installscripts "your_location\clink\clink-completions"
   clink installscripts "your_location\clink\clink-gizmos"
   ```
