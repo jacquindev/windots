@@ -70,7 +70,8 @@ $SymLinks = @{
     "$Env:APPDATA\Code\User\settings.json"                                                        = ".\vscode\settings.json"
     "$Env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" = ".\windows\settings.json"
     "$Env:USERPROFILE\.gitconfig"                                                                 = ".\home\.gitconfig"
-    "$ENv:USERPROFILE\.czrc"                                                                      = ".\home\.czrc"
+    "$Env:USERPROFILE\.czrc"                                                                      = ".\home\.czrc"
+    "$Env:USERPROFILE\.bashrc"                                                                    = ".\home\.bashrc"
 }
 
 
