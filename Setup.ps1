@@ -87,9 +87,9 @@ function Write-PrettyOutput {
     )
     Write-Host "$ProcessName" -ForegroundColor "Green" -NoNewline
     Write-Host " ▏ " -ForegroundColor "DarkGray" -NoNewline
-    Write-Host "$EntryName" -ForegroundColor "Yellow" -NoNewline
-    Write-Host " $Extra" -ForegroundColor "Magenta" -NoNewline
-    Write-Host " $Message"
+    Write-Host "$EntryName " -ForegroundColor "Yellow" -NoNewline
+    Write-Host "$Extra " -ForegroundColor "Magenta" -NoNewline
+    Write-Host "$Message"
 }
 
 function Write-PrettyTitle {
@@ -486,7 +486,7 @@ function Setup {
 
     # Nerd Font
     Write-PrettyTitle "Install Nerd Fonts"
-    $nerdFontConfirm = $(Write-Host "Install Nerd Fonts now (y) or later (n)? " -ForegroundColor "Cyan" -NoNewline; Read-Host)
+    $nerdFontConfirm = $(Write-Host "Install Nerd Fonts now (y/n)? " -ForegroundColor "Cyan" -NoNewline; Read-Host)
     if ($nerdFontConfirm -eq 'y') {
         $whichUser = $(Write-Host "1) Install Nerd Fonts for AllUsers (y) or CurrentUser (n)? " -NoNewline; Read-Host)
         $whichInstaller = $(Write-Host "2) Install Nerd Fonts using Script (y) or Scoop (n)? " -NoNewline; Read-Host)
