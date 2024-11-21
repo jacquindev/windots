@@ -2,7 +2,7 @@
 	path = config/yazi/flavors/tokyo-night.yazi
 	url = https://github.com/BennyOe/tokyo-night.yazi.git
 [submodule "clink/clink-completions"]
-    	path = clink/clink-completions
+    path = clink/clink-completions
 	url = https://github.com/vladimir-kotikov/clink-completions.git
 [submodule "clink/clink-gizmos"]
 	path = clink/clink-gizmos
