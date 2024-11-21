@@ -34,6 +34,7 @@ A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppu
 </div>
 
 <br>
+<hr>
 
 <h2 id="preview">🌆 Preview</h2>
 
@@ -82,8 +83,11 @@ git clone https://github.com/jacquindev/windots.git your_location
 > [!NOTE]
 > Before running the `Setup.ps1` script, please check the [appList.json](./appList.json) to **ADD/REMOVE** the apps you would like to install.
 
-### 😎 Clink Setup
+<br>
 
+<details open>
+<summary><b>😎 Clink Setup</b></summary>
+  
 - In your **`Command Prompt`** console, type:
 
   ```cmd
@@ -91,17 +95,26 @@ git clone https://github.com/jacquindev/windots.git your_location
   clink installscripts "your_location\clink\clink-completions"
   clink installscripts "your_location\clink\clink-gizmos"
   ```
-
 - Replace _`your_location`_ with full path to where you cloned this repository.
 
-<br>
-<hr>
+</details>
 
+<br>
+
+<details open>
+<summary><b>🌟 WSL Setup</b></summary>
+<br>
+
+- Any configurations related to **WSL** are maintained in this repo: 👉👉 **[dotfiles](https://github.com/jacquindev/dotfiles)** 👈👈
+
+</details>
+
+<br>
 <h3 id="extras">⛏🧱 Extra Setup (optional)</h3>
 
 Follow the below links to download and learn to how to setup:
 
-<details open>
+<details>
 <summary><b>🌈 Catppuccin Themes 🎨</b></summary>
 <br>
 <div align="center">
@@ -118,7 +131,7 @@ Follow the below links to download and learn to how to setup:
 </div>
 </details>
 
-<details open>
+<details>
 <summary><b>🎸 Spicetify Setup 🎧</b></summary>
 <br>
 <div align="left">
@@ -148,7 +161,6 @@ Follow the below links to download and learn to how to setup:
 </div>
 </details>
 
-<br>
 <hr>
 
 <h2 id="features">✨ Features</h2>
@@ -166,10 +178,8 @@ Follow the below links to download and learn to how to setup:
 - 🍄 Simple [fastfetch](https://github.com/fastfetch-cli/fastfetch) config, which I copied the config from [scottmckendry's config](https://github.com/scottmckendry/Windots/tree/main/fastfetch)
 - 🥂 Many addons for Git!
 
-<br>
 <details>
 <summary><b>🖥️ CLI/TUI Apps</b></summary>
-<br>
 
 | Entry                 | App                                                                                           |
 | --------------------- | --------------------------------------------------------------------------------------------- |
@@ -184,7 +194,6 @@ Follow the below links to download and learn to how to setup:
 
 <details>
 <summary><b>🌎 Replacement</b></summary>
-<br>
 
 | Entry | App                                                                      |
 | ----- | ------------------------------------------------------------------------ |
@@ -213,7 +222,6 @@ Follow the below links to download and learn to how to setup:
 
 <details>
 <summary><b>🖱️ GUI Apps</b></summary>
-<br>
 
 | Entry            | App                                            |
 | ---------------- | ---------------------------------------------- |
@@ -224,7 +232,6 @@ Follow the below links to download and learn to how to setup:
 </details>
 <details>
 <summary><b>📝 Text Editor / Note Taking</b></summary>
-<br>
 
 - [Notepad++](https://notepad-plus-plus.org/)
 - [Obsidian](https://obsidian.md/)
@@ -232,7 +239,6 @@ Follow the below links to download and learn to how to setup:
 
 </details>
 
-<br>
 <hr>
 <h2 id="credits">🎉 Credits</h2>
 
@@ -243,7 +249,6 @@ Big thanks for those inspirations:
 - [MattFTW's Dotfiles](https://github.com/Matt-FTW/dotfiles) - Most of my wallpapers are from here.
 - [DevDrive PowerShell's Scripts](https://github.com/ran-dall/Dev-Drive) - I copied most of DevDrive's functions for PowerShell here.
 
-<br>
 <hr>
 <h2 id="author">👤 Author</h2>
 
@@ -252,13 +257,13 @@ Big thanks for those inspirations:
 - Github: [@jacquindev](https://github.com/jacquindev)
 - Email: jacquindev@outlook.com
 
-<br>
 <hr>
 <h2 id="license">📜 License</h2>
 
+This repository is released under the [MIT License](https://github.com/jacquindev/windots/blob/main/LICENSE).
+
 Feel free to use and modify these dotfiles to suit your needs.
 
-<br>
 <hr>
 <h2>Show your support</h2>
 
