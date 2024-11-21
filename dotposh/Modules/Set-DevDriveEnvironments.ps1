@@ -1,87 +1,175 @@
-# Source: https://github.com/ran-dall/Dev-Drive/blob/main/SetupDevDrivePackageCache.ps1
+function Get-DevDrive {
+    $devDrives = Get-Volume | Where-Object { $_.FileSystemType -eq 'ReFS' -and $_.DriveType -eq 'Fixed' }
+    $devDriveLetters = @()
+    
+    foreach ($drive in $devDrives) {
+        $driveLetter = "$($drive.DriveLetter):"
+        $devDriveLetters += $driveLetter
+    }
+    
+    if ($devDriveLetters.Count -eq 0) {
+        Write-Output "No Dev Drive found on the system."
+        return $null
+    }
+    elseif ($devDriveLetters.Count -eq 1) {
+        return $devDriveLetters[0]
+    }
+    else {
+        Write-Host "Multiple Dev Drives found:"
+        for ($i = 0; $i -lt $devDriveLetters.Count; $i++) {
+            Write-Host "[$i] $($devDriveLetters[$i])"
+        }
+        $selection = Read-Host "Please select the drive you want to configure by entering the corresponding number"
+        if ($selection -match '^\d+$' -and [int]$selection -lt $devDriveLetters.Count) {
+            return $devDriveLetters[$selection]
+        }
+        else {
+            Write-Output "Invalid selection. Exiting script."
+            return $null
+        }
+    }
+}
+
+function Write-Success {
+    param (
+        [string]$Entry1,
+        [string]$Entry2,
+        [string]$Entry3,
+        [string]$Text
+    )
+    Write-Host "$Entry1 " -ForegroundColor "Green" -NoNewline
+    Write-Host ": " -ForegroundColor "DarkGray" -NoNewline
+    Write-Host "$Entry2 " -ForegroundColor "Yellow" -NoNewline
+    Write-Host "$Text"
+}
+
+function Write-Error {
+    param (
+        [string]$Entry1,
+        [string]$Entry2,
+        [string]$Text
+    )
+    Write-Host "$Entry1" -ForegroundColor "Red" -NoNewline
+    Write-Host ": " -ForegroundColor "DarkGray" -NoNewline
+    Write-Host "$Entry2 " -ForegroundColor "DarkYellow" -NoNewline
+    Write-Host "$Text"
+}
+
+function New-DirectoryIfNotExist {
+    param ([string]$Path)
+    if (!(Test-Path -PathType Container -Path $Path)) {
+        New-Item -Path $Path -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
+        if ($LASTEXITCODE -eq 0) {
+            Write-Success -Entry1 "Directory" -Entry2 "$Path" -Text "created successfully."
+        }
+        else {
+            Write-Error -Entry1 "Directory" -Entry2 "$Path" -Text "failed to create."
+        }
+    }
+    else {
+        Write-Error -Entry1 "Directory" -Entry2 "$Path" -Text "already exists. Skipping..."
+    }
+}
+
+function Set-EnvironmentVariableIfNotExist {
+    param (
+        [string]$Name,
+        [string]$Value
+    )
+    if (!([System.Environment]::GetEnvironmentVariable("$Name"))) {
+        [System.Environment]::SetEnvironmentVariable("$Name", "$Value", "User")
+        if ($LASTEXITCODE -eq 0) {
+            Write-Success -Entry1 "Environment Variable" -Entry2 "$Name ==> $Value" -Text "was set."
+        }
+        else {
+            Write-Error -Entry1 "Environment Variable" -Entry2 "$Name ==> $Value" -Text "failed to set."
+        }
+    }
+    else {
+        Write-Error -Entry1 "Environment Variable" -Entry2 "$Name ==> $Value" -Text "already set. Skipping..."
+    }
+}
+
+function Move-CacheContents {
+    param (
+        [string]$ContentPath,
+        [string]$Destination
+    )
+    if (Test-Path -PathType Container -Path $ContentPath) {
+        Move-Item -Path "$ContentPath\*" -Destination "$Destination" -Force
+        Remove-Item -Path $ContentPath -Recurse -Force -ErrorAction SilentlyContinue
+        if ($LASTEXITCODE -eq 0) {
+            Write-Success -Entry1 "Contents" -Entry2 "$ContentPath ==> $Destination" -Text "moved."
+        }
+        else {
+            Write-Error -Entry1 "Contents" -Entry2 "$ContentPath ==> $Destination" -Text "failed to moved."
+        }
+    }
+    else { 
+        Write-Error -Entry1 "Contents" -Entry2 "$ContentPath ==> $Destination" -Text "already moved / no content to move."
+    }
+}
 
 function Set-DevDriveEnvironments {
-
-    . "$PSScriptRoot\private\DevDrive\Get-DevDrive.ps1"
-    . "$PSScriptRoot\private\DevDrive\Set-DevDriveEnvironmentVariables.ps1"
-
     $devDrive = Get-DevDrive
     $packagePath = "$devDrive\packages"
     $cacheSettings = @(
-        # TODO: Add/Remove your DevDrive's package cache settings here:
-        @{ Command = "npm"; Name = "npm_config_cache"; Value = "$packagePath\npm"; SourcePaths = @("$env:APPDATA\npm-cache", "$env:LOCALAPPDATA\npm-cache") },
-        @{ Command = "yarn"; Name = "YARN_CACHE_FOLDER"; Value = "$packagePath\npm"; SourcePaths = @("$env:LOCALAPPDATA\Yarn\Cache") },
-        @{ Command = "pnpm"; Name = "PNPM_HOME"; Value = "$packagePath\pnpm"; SourcePaths = @("$env:LOCALAPPDATA\pnpm\store") },
-        @{ Command = "nuget"; Name = "NUGET_PACKAGES"; Value = "$packagePath\nuget\packages"; SourcePaths = @("$env:USERPROFILE\.nuget\packages") },
-        @{ Command = "vcpkg"; Name = "VCPKG_DEFAULT_BINARY_CACHE"; Value = "$packagePath\vcpkg"; SourcePaths = @("$env:LOCALAPPDATA\vcpkg\archives", "$env:APPDATA\vcpkg\archives") },
-        @{ Command = "pip"; Name = "PIP_CACHE_DIR"; Value = "$packagePath\pip"; SourcePaths = @("$env:LOCALAPPDATA\pip\Cache") },
-        @{ Command = "pipx"; Name = "PIPX_HOME"; Value = "$packagePath\pipx"; SourcePaths = @("$env:USERPROFILE\pipx") },
-        @{ Command = "cargo"; Name = "CARGO_HOME"; Value = "$packagePath\cargo"; SourcePaths = @("$env:USERPROFILE\.cargo") },
-        @{ Command = "rustup"; Name = "RUSTUP_HOME"; Value = "$packagePath\rustup"; SourcePaths = @("$env:USERPROFILE\.rustup") },
-        @{ Command = "gradle"; Name = "GRADLE_USER_HOME"; Value = "$packagePath\gradle"; SourcePaths = @("$env:USERPROFILE\.gradle") }
+        @{ Command = "npm"; Value = "npm_config_cache"; ValuePath = "$packagePath\npm"; SourcePaths = @("$env:APPDATA\npm-cache". "$env:LOCALAPPDATA\npm-cache") },
+        @{ Command = "yarn"; Value = "YARN_CACHE_FOLDER"; ValuePath = "$packagePath\npm"; SourcePaths = @("$env:LOCALAPPDATA\Yarn\Cache") },
+        @{ Command = "pnpm"; Value = "PNPM_HOME"; ValuePath = "$packagePath\pnpm"; SourcePaths = @("$env:LOCALAPPDATA\pnpm\store") },
+        @{ Command = "pip"; Value = "PIP_CACHE_DIR"; ValuePath = "$packagePath\pip"; SourcePaths = @("$env:USERPROFILE\pipx") },
+        @{ Command = "cargo"; Value = "CARGO_HOME"; ValuePath = "$packagePath\cargo"; SourcePaths = @("$env:USERPROFILE\.cargo") },
+        @{ Command = "rustup"; Value = "RUSTUP_HOME"; ValuePath = "$packagePath\rustup"; SourcePaths = @("$env:USERPROFILE\.rustup") },
+        @{ Command = "gradle"; Value = "GRADLE_USER_HOME"; ValuePath = "$packagePath\gradle"; SourcePaths = @("$env:USERPROFILE\.gradle") },
+        @{ Command = "nuget"; Value = "NUGET_PACKAGES"; ValuePath = "$packagePath\nuget\packages"; SourcePaths = @("$env:USERPROFILE\.nuget\packages") },
+        @{ Command = "vcpkg"; Value = "VCPKG_DEFAULT_BINARY_CACHE"; ValuePath = "$packagePath\vcpkg"; SourcePaths = @("$env:LOCALAPPDATA\vcpkg\archives", "$env:APPDATA\vcpkg\archives") }
     )
 
     New-DirectoryIfNotExist -Path $packagePath
 
     foreach ($setting in $cacheSettings) {
         $command = $setting.Command
-        $packagePath = $setting.Value
-        $envName = $setting.Name
-        $sourcePath = $setting.SourcePaths
+        $name = $setting.Value
+        $value = $setting.ValuePath
+        $sources = $setting.Paths
+
         if (Get-Command $command -ErrorAction SilentlyContinue) {
             # Create a directory if it doesn't exist
-            New-DirectoryIfNotExist -Path $packagePath
-            # Set an environment variable 
-            Set-EnvironmentVariableIfNotExist -Name $envName -Value $packagePath
-
+            New-DirectoryIfNotExist -Path $value
+            # Set an environment variable
+            Set-EnvironmentVariableIfNotExist -Name $name -Value $value
             # Move contents from the old directory to new directory
-            foreach ($path in $sourcePath) {
-                Move-CacheContents -ContentPath $path -Destination $packagePath
+            foreach ($source in $sources) {
+                Move-CacheContents -ContentPath $source -Destination $value
             }
         }
     }
 
-    # Extra pipx
+    # Extras
+    # pipx
     if (Get-Command pipx -ErrorAction SilentlyContinue) {
         $extraPipxSettings = @(
-            @{Name = "PIPX_BIN_DIR"; Value = "$packagePath\pipx\bin" }
-            @{Name = "PIPX_MAN_DIR"; Value = "$packagePath\pipx\man" }
+            @{ Value = "PIPX_BIN_DIR"; ValuePath = "$packagePath\pipx\bin" },
+            @{ Value = "PIPX_MAN_DIR"; ValuePath = "$packagePath\pipx\man" }
         )
-        foreach ($setting in $extraPipxSettings) {
-            Set-EnvironmentVariableIfNotExist -Name $($setting.Name) -Value $($setting.Value)
+        foreach ($pipxSetting in $extraPipxSettings) {
+            Set-EnvironmentVariableIfNotExist -Name $($pipxSetting.Value) -Value $($pipxSetting.ValuePath)
         }
     }
 
-    # Extra NuGet
-    if (Get-Command nuget -ErrorAction SilentlyContinue) {
-        $nugetDir = "$packagePath\nuget"
-        New-DirectoryIfNotExist -Path $nugetDir
-
-        $extraNuGetSettings = @(
-            @{ Name = "NUGET_HTTP_CACHE_PATH"; Value = "$nugetDir\v3-cache"; SourcePath = "$env:LOCALAPPDATA\NuGet\v3-cache" },
-            @{ Name = "NUGET_PLUGINS_CACHE_PATH"; Value = "$nugetDir\plugins-cache"; SourcePath = "$env:LOCALAPPDATA\NuGet\plugins-cache" }
-        )
-        foreach ($setting in $extraNuGetSettings) {
-            New-DirectoryIfNotExist -Path $($setting.Value)
-            Set-EnvironmentVariableIfNotExist -Name $($setting.Name) -Value $($setting.Value)
-            Move-CacheContents -ContentPath $($setting.SourcePath) -Destination $($setting.Value)
-        }
-    }
-
-    # Maven Settings
+    # maven
     if (Get-Command mvn -ErrorAction SilentlyContinue) {
         $mavenRepoLocal = "$packagePath\maven"
         $mavenOpts = [System.Environment]::GetEnvironmentVariable('MAVEN_OPTS', [System.EnvironmentVariableTarget]::User)
         $escapedMavenRepoLocal = [regex]::Escape($mavenRepoLocal)
         $mavenPath = "$Env:USERPROFILE\.m2\repository"
-    
+
         New-DirectoryIfNotExist -Path $mavenRepoLocal
 
         if ($mavenOpts -notmatch "-Dmaven\.repo\.local=$escapedMavenRepoLocal") {
             $newMavenOpts = "-Dmaven.repo.local=$mavenRepoLocal $mavenOpts"
             Set-EnvironmentVariableIfNotExist -Name "MAVEN_OPTS" -Value $newMavenOpts
         }
-
         Move-CacheContents -ContentPath $mavenPath -Destination $mavenRepoLocal
     }
 }
