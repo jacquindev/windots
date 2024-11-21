@@ -82,6 +82,24 @@ git clone https://github.com/jacquindev/windots.git your_location
 > [!NOTE]
 > Before running the `Setup.ps1` script, please check the [appList.json](./appList.json) to **ADD/REMOVE** the apps you would like to install.
 
+<br/>
+
+### 😎 Clink Setup
+
+- In your **`Command Prompt`** console, type:
+
+  ```cmd
+  clink installscripts "your_location\clink\clink-completions"
+  clink installscripts "your_location\clink\clink-completions"
+  clink installscripts "your_location\clink\clink-gizmos"
+  ```
+
+- Replace _`your_location`_ with full path to where you cloned this repository.
+
+<br/>
+
+<hr/>
+
 <h3 id="extras">⛏🧱 Extra Setup (optional)</h3>
 
 Follow the below links to download and learn to how to setup:
