@@ -63,6 +63,7 @@ $SymLinks = @{
     "$Env:USERPROFILE\.config\delta"                                                              = ".\config\delta"
     "$Env:USERPROFILE\.config\gh-dash"                                                            = ".\config\gh-dash"
     "$Env:USERPROFILE\.config\npm"                                                                = ".\config\npm"
+    "$Env:USERPROFILE\.config\spotify-tui\config.yml"                                             = ".\config\spotify-tui\config.yml"
     # "$Env:USERPROFILE\.glzr\glazewm\config.yaml"                                                  = ".\config\glazewm\config.yaml"
     "$Env:APPDATA\bat"                                                                            = ".\config\bat"
     "$Env:LOCALAPPDATA\lazygit"                                                                   = ".\config\lazygit"
