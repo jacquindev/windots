@@ -9,7 +9,7 @@ A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppu
 </div>
 </h3>
 
-<hr/>
+<hr>
 
 <div align="center">
 <p>
@@ -20,7 +20,7 @@ A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppu
 </p>  
 </div>
 
-> [!NOTE]
+> [!NOTE]<br>
 > I am using **3440x1440** monitor as my main display.
 > Please remember to adjust your settings (eg: Komorebi/GlazeWM) according to your monitor resolution.
 
@@ -56,13 +56,13 @@ A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppu
 
 ![fileexplorer](./assets/fileexplorer.png)
 
-###
-
-<hr/>
+<hr>
 
 https://github.com/user-attachments/assets/c6e214f5-d4ca-4bf6-81e3-16e74a1a08bc
 
 https://github.com/user-attachments/assets/b068e898-1007-4f19-8076-7b8637e261dc
+
+<hr>
 
 <h2 id="install">🌷 Install</h2>
 
@@ -82,8 +82,6 @@ git clone https://github.com/jacquindev/windots.git your_location
 > [!NOTE]
 > Before running the `Setup.ps1` script, please check the [appList.json](./appList.json) to **ADD/REMOVE** the apps you would like to install.
 
-<br/>
-
 ### 😎 Clink Setup
 
 - In your **`Command Prompt`** console, type:
@@ -96,16 +94,16 @@ git clone https://github.com/jacquindev/windots.git your_location
 
 - Replace _`your_location`_ with full path to where you cloned this repository.
 
-<br/>
-
-<hr/>
+<br>
+<hr>
 
 <h3 id="extras">⛏🧱 Extra Setup (optional)</h3>
 
 Follow the below links to download and learn to how to setup:
 
-<h4 align="center"> 🌈 Catppuccin Themes 🎨</h4>
-
+<details open>
+<summary><b>🌈 Catppuccin Themes 🎨</b></summary>
+<br>
 <div align="center">
 <table>
 <tr>
@@ -118,10 +116,12 @@ Follow the below links to download and learn to how to setup:
 </tr>
 </table>
 </div>
+</details>
 
-<h4 align="center">🎸 Spicetify Setup 🎧</h4>
-
-<div align="center">
+<details open>
+<summary><b>🎸 Spicetify Setup 🎧</b></summary>
+<br>
+<div align="left">
 <table>
 <tr>
 <th>Addons</th>
@@ -146,6 +146,10 @@ Follow the below links to download and learn to how to setup:
 </tr>
 </table>
 </div>
+</details>
+
+<br>
+<hr>
 
 <h2 id="features">✨ Features</h2>
 
@@ -162,9 +166,10 @@ Follow the below links to download and learn to how to setup:
 - 🍄 Simple [fastfetch](https://github.com/fastfetch-cli/fastfetch) config, which I copied the config from [scottmckendry's config](https://github.com/scottmckendry/Windots/tree/main/fastfetch)
 - 🥂 Many addons for Git!
 
-<hr/>
-
-### 🖥️ CLI/TUI Apps
+<br>
+<details>
+<summary><b>🖥️ CLI/TUI Apps</b></summary>
+<br>
 
 | Entry                 | App                                                                                           |
 | --------------------- | --------------------------------------------------------------------------------------------- |
@@ -175,7 +180,11 @@ Follow the below links to download and learn to how to setup:
 | **System Fetch**      | [fastfetch](https://github.com/fastfetch-cli/fastfetch) [⚙️](./config/fastfetch/config.jsonc) |
 | **Git TUI**           | [lazygit](https://github.com/jesseduffield/lazygit) [⚙️](./config/lazygit/config.yml)         |
 
-#### 🌎 Replacement
+</details>
+
+<details>
+<summary><b>🌎 Replacement</b></summary>
+<br>
 
 | Entry | App                                                                      |
 | ----- | ------------------------------------------------------------------------ |
@@ -185,12 +194,26 @@ Follow the below links to download and learn to how to setup:
 | find  | [fd](https://github.com/sharkdp/fd)                                      |
 | grep  | [ripgrep](https://github.com/sharkdp/ripgrep)                            |
 
-#### 🎧 Spotify
+</details>
 
-- [Spicetify](https://spicetify.app/)
-- [spotify-tui](https://github.com/Rigellute/spotify-tui) [⚙️](./config/spotify-tui/config.yml)
+<details>
+<summary><b>🎧 Spotify</b></summary>
+<br>
+<table style="width:100%">
+<tr>
+  <th><a href="https://spicetify.app/">spicetify</a></th>
+  <th><a href="https://github.com/Rigellute/spotify-tui">spotify-tui</a> <a href="./config/spotify-tui/config.yml">⚙️</a></th>
+</tr>
+<tr style="height:400px,width:630px">
+  <td><video alt="spicetify" src="https://github.com/user-attachments/assets/a622561e-1c6e-421a-87fe-4ef675c0a54f"></video></td>
+  <td><video alt="spotify-tui" src="https://github.com/user-attachments/assets/577c96b1-4e57-4864-b19c-48b06a10c3c5"></video></td>
+</tr>
+</table>
+</details>
 
-### 🖱️ GUI Apps
+<details>
+<summary><b>🖱️ GUI Apps</b></summary>
+<br>
 
 | Entry            | App                                            |
 | ---------------- | ---------------------------------------------- |
@@ -198,12 +221,19 @@ Follow the below links to download and learn to how to setup:
 | **Music Player** | [Spotify](https://open.spotify.com/)           |
 | **Web Browser**  | [Zen Browser](https://www.zen-browser.com/)    |
 
-#### 📝 Text Editor / Note Taking
+</details>
+<details>
+<summary><b>📝 Text Editor / Note Taking</b></summary>
+<br>
 
 - [Notepad++](https://notepad-plus-plus.org/)
 - [Obsidian](https://obsidian.md/)
 - [VSCode](https://code.visualstudio.com/) [⚙️](./vscode/settings.json)
 
+</details>
+
+<br>
+<hr>
 <h2 id="credits">🎉 Credits</h2>
 
 Big thanks for those inspirations:
@@ -213,6 +243,8 @@ Big thanks for those inspirations:
 - [MattFTW's Dotfiles](https://github.com/Matt-FTW/dotfiles) - Most of my wallpapers are from here.
 - [DevDrive PowerShell's Scripts](https://github.com/ran-dall/Dev-Drive) - I copied most of DevDrive's functions for PowerShell here.
 
+<br>
+<hr>
 <h2 id="author">👤 Author</h2>
 
 **Jacquin Moon**
@@ -220,10 +252,14 @@ Big thanks for those inspirations:
 - Github: [@jacquindev](https://github.com/jacquindev)
 - Email: jacquindev@outlook.com
 
-## 📜 License
+<br>
+<hr>
+<h2 id="license">📜 License</h2>
 
 Feel free to use and modify these dotfiles to suit your needs.
 
-## Show your support
+<br>
+<hr>
+<h2>Show your support</h2>
 
 Give a ⭐️ if this project helped you!
