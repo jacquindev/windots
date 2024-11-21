@@ -97,13 +97,13 @@ function Move-CacheContents {
     )
     if (Test-Path -PathType Container -Path $ContentPath) {
         Move-Item -Path "$ContentPath\*" -Destination "$Destination" -Force
-        Remove-Item -Path $ContentPath -Recurse -Force -ErrorAction SilentlyContinue
         if ($LASTEXITCODE -eq 0) {
             Write-Success -Entry1 "Contents" -Entry2 "$ContentPath ==> $Destination" -Text "moved."
         }
         else {
             Write-Error -Entry1 "Contents" -Entry2 "$ContentPath ==> $Destination" -Text "failed to moved."
         }
+        Remove-Item -Path $ContentPath -Recurse -Force -ErrorAction SilentlyContinue
     }
     else { 
         Write-Error -Entry1 "Contents" -Entry2 "$ContentPath ==> $Destination" -Text "already moved / no content to move."
@@ -117,7 +117,7 @@ function Set-DevDriveEnvironments {
         @{ Command = "npm"; Value = "npm_config_cache"; ValuePath = "$packagePath\npm"; SourcePaths = @("$env:APPDATA\npm-cache". "$env:LOCALAPPDATA\npm-cache") },
         @{ Command = "yarn"; Value = "YARN_CACHE_FOLDER"; ValuePath = "$packagePath\npm"; SourcePaths = @("$env:LOCALAPPDATA\Yarn\Cache") },
         @{ Command = "pnpm"; Value = "PNPM_HOME"; ValuePath = "$packagePath\pnpm"; SourcePaths = @("$env:LOCALAPPDATA\pnpm\store") },
-        @{ Command = "pip"; Value = "PIP_CACHE_DIR"; ValuePath = "$packagePath\pip"; SourcePaths = @("$env:LOCALAPPDATA\pip\Cache") },
+        @{ Command = "pip"; Value = "PIP_CACHE_DIR"; ValuePath = "$packagePath\pip"; SourcePaths = @("$env:LOCALAPPDATA\pip\cache") },
         @{ Command = "pipx"; Value = "PIPX_HOME"; ValuePath = "$packagePath\pipx"; SourcePaths = @("$env:USERPROFILE\pipx") },
         @{ Command = "cargo"; Value = "CARGO_HOME"; ValuePath = "$packagePath\cargo"; SourcePaths = @("$env:USERPROFILE\.cargo") },
         @{ Command = "rustup"; Value = "RUSTUP_HOME"; ValuePath = "$packagePath\rustup"; SourcePaths = @("$env:USERPROFILE\.rustup") },
@@ -132,7 +132,7 @@ function Set-DevDriveEnvironments {
         $command = $setting.Command
         $name = $setting.Value
         $value = $setting.ValuePath
-        $sources = $setting.Paths
+        $sources = $setting.SourcePaths
 
         if (Get-Command $command -ErrorAction SilentlyContinue) {
             # Create a directory if it doesn't exist
