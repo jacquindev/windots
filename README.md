@@ -6,6 +6,7 @@
 <br>
 
 A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppuccin</a> Theme 
+<a href="https://twitter.com/intent/tweet?text=Windows%2011%20Dotfiles%20Infused%20With%20Catppuccin%20Theme&url=https://github.com/jacquindev/windots"><img src="https://img.shields.io/badge/Tweet-share-8AADF4?style=social&logo=x&logoColor=8AADF4&labelColor=302D41&color=8AADF4" alt="TWITTER"></a>&nbsp;&nbsp;
 
 </div>
 </h3>
@@ -18,7 +19,6 @@ A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppu
   <a href="https://github.com/jacquindev/windots/"><img src="https://img.shields.io/github/repo-size/jacquindev/windots?style=for-the-badge&logo=hyprland&logoColor=F9E2AF&label=Size&labelColor=302D41&color=F9E2AF" alt="REPO SIZE"></a>&nbsp;&nbsp;
   <a href="https://github.com/jacquindev/windots/LICENSE"><img src="https://img.shields.io/github/license/jacquindev/windots?style=for-the-badge&logo=&color=CBA6F7&logoColor=CBA6F7&labelColor=302D41" alt="LICENSE"></a>&nbsp;&nbsp;
   <a href="https://github.com/jacquindev/windots/stargazers"><img alt="Stargazers" src="https://img.shields.io/github/stars/jacquindev/windots?style=for-the-badge&logo=starship&color=B7BDF8&logoColor=B7BDF8&labelColor=302D41"></a>&nbsp;&nbsp;
-  <a href="https://twitter.com/intent/tweet?text=Windows%2011%20Dotfiles%20Infused%20With%20Catppuccin%20Theme&url=https://github.com/jacquindev/windots"><img src="https://img.shields.io/badge/twitter-share-8AADF4?style=for-the-badge&logo=x&logoColor=8AADF4&labelColor=302D41&color=8AADF4" alt="TWITTER"></a>&nbsp;&nbsp;
 </p> 
 </div>
 
