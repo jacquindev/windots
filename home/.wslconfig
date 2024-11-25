@@ -1,0 +1,13 @@
+[wsl2]
+
+memory=4GB
+processors=4
+swap=8GB
+swapfile=G:\\wsl\\swap\\swap.vhdx
+networkingMode=mirrored
+
+[experimental]
+autoMemoryReclaim=dropcache
+bestEffortDnsParsing=true
+dnsTunnelingIpAddress=10.2.0.1      # Proton VPN
+hostAddressLoopback=true
