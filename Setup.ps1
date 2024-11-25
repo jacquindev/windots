@@ -73,6 +73,7 @@ $SymLinks = @{
     "$Env:USERPROFILE\.gitconfig"                                                                 = ".\home\.gitconfig"
     "$Env:USERPROFILE\.czrc"                                                                      = ".\home\.czrc"
     "$Env:USERPROFILE\.bashrc"                                                                    = ".\home\.bashrc"
+    "$Env:USERPROFILE\.wslconfig"                                                                 = ".\home\.wslconfig"
 }
 
 
