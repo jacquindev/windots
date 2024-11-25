@@ -43,6 +43,10 @@ alias ux='chmod u+x'                   # ---x------ (user: --x, group: -, other:
 # git
 alias g='git'
 \. /mingw64/share/git/completion/git-completion.bash
+# Enable tab completion for 'g' as an alias for 'git'
+if type _git &>/dev/null; then
+  complete -o default -o nospace -F _git g
+fi
 
 if command -v lazygit >/dev/null 2>&1; then
   alias lg='lazygit'
