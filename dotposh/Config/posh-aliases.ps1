@@ -185,3 +185,18 @@ Add-Alias profiles 'Get-PSProfile {$_.exists -eq "True"} | Format-List'
 
 Add-Alias HKLM: 'Set-Location HKLM:'
 Add-Alias HKCU: 'Set-Location HKCU:'
+
+
+# ----------------------------------------------------------------------------------- #
+# Dotfiles related
+${function:dotu} = {
+    $currentLocation = "$(Get-Location)"
+    Write-Host "Updating windots..."
+    Set-Location "$env:DOTFILES"
+    git stash | Out-Null
+    git pull | Out-Null
+    git stash pop | Out-Null
+    Start-Process pwsh -WindowStyle Hidden -ArgumentList "./Setup.ps1"
+    Set-Location $currentLocation
+    . $PROFILE.CurrentUserAllHosts
+}
