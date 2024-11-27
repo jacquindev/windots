@@ -108,6 +108,12 @@
 				"Packages": ["git-recent"]
 			}
 		],
+		"github_extension": [
+			"dlvhdr/gh-dash",
+			"seachicken/gh-poi",
+			"yuler/gh-download",
+			"yusukebe/gh-markdown-preview"
+		],
 		"nerdfont": [
 			{
 				"DisplayName": "FantasqueSansMono Nerd Font",
