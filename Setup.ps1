@@ -447,7 +447,7 @@ function Setup {
     Start-Process pwsh -WindowStyle Hidden -ArgumentList "-NoProfile -Command Update-Help -Scope CurrentUser"
 
     # Setup Git
-    Write-PrettyTitle "Setup Git Name & Email"
+    Write-PrettyTitle "Setup Git"
     if (Test-Path -Path "$Env:USERPROFILE\.gitconfig-local") {
         if ($(Get-Content -Path "$Env:USERPROFILE\.gitconfig-local" -Raw).Contains("[user]") -eq $False) {
             Write-GitConfigLocal
@@ -462,6 +462,17 @@ function Setup {
         Write-GitConfigLocal
     }
     git submodule update --init --recursive
+    # Setup GitHub CLI
+    if (Get-Command gh -ErrorAction SilentlyContinue) {
+        if (!(Test-Path -Path "$env:APPDATA\GitHub CLI\hosts.yml")) {
+            gh auth login 
+        }
+        $GH_EXTENSIONS = ('dlvhdr/gh-dash', 'yusukebe/gh-markdown-preview', 'yuler/gh-download')
+        foreach ($ext in $GH_EXTENSIONS) {
+            gh extension install "$ext" --force >$null 2>&1
+            Write-PrettyOutput -p "git" -e "github extension:" -x "$ext" -m "installed."
+        }
+    }
 
     # Symlinks
     Write-PrettyTitle "Create Symbolic Links"
