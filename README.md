@@ -5,7 +5,7 @@
 <br>
 <br>
 
-A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppuccin</a> Theme 
+A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppuccin</a> Theme
 <a href="https://twitter.com/intent/tweet?text=Windows%2011%20Dotfiles%20Infused%20With%20Catppuccin%20Theme&url=https://github.com/jacquindev/windots"><img src="https://img.shields.io/badge/Tweet-share-8AADF4?style=social&logo=x&logoColor=8AADF4&labelColor=302D41&color=8AADF4" alt="TWITTER"></a>&nbsp;&nbsp;
 
 </div>
@@ -92,11 +92,12 @@ git clone https://github.com/jacquindev/windots.git your_location
   
 - In your **`Command Prompt`** console, type:
 
-  ```cmd
-  clink installscripts "your_location\clink\clink-custom"
-  clink installscripts "your_location\clink\clink-completions"
-  clink installscripts "your_location\clink\clink-gizmos"
-  ```
+```cmd
+clink installscripts "your_location\clink\clink-custom"
+clink installscripts "your_location\clink\clink-completions"
+clink installscripts "your_location\clink\clink-gizmos"
+```
+
 - Replace _`your_location`_ with full path to where you cloned this repository.
 
 </details>
@@ -230,6 +231,26 @@ Follow the below links to download and learn to how to setup:
 | **App Launcher** | [Flow Launcher](https://www.flowlauncher.com/) |
 | **Music Player** | [Spotify](https://open.spotify.com/)           |
 | **Web Browser**  | [Zen Browser](https://www.zen-browser.com/)    |
+
+</details>
+<details>
+<summary>&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
+  <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/>
+</svg>&nbsp;&nbsp;<b>Git Addons</b></summary>
+
+| Installer | CLI             | Link                                                                                          |
+| --------- | --------------- | --------------------------------------------------------------------------------------------- |
+| winget    | git             | **[Git For Windows](https://gitforwindows.org/)**                                             |
+| winget    |                 | **[GitHub Desktop](https://github.com/apps/desktop)**                                         |
+| scoop     | gh              | **[GitHub CLI](https://github.com/cli/cli)**                                                  |
+| scoop     | git-crypt       | **[Git Encryption](https://github.com/AGWA/git-crypt)**                                       |
+| scoop     | git-filter-repo | **[Git Filter Repo](https://github.com/newren/git-filter-repo)**                              |
+| scoop     | git-lfs         | **[Git Large File Storage](https://git-lfs.com/)**                                            |
+| scoop     | git-sizer       | **[Git Sizer](https://github.com/github/git-sizer)**                                          |
+| scoop     | bfg             | **[BFG Repo-Cleaner](https://rtyley.github.io/bfg-repo-cleaner/)**                            |
+| npm       | git-cz          | **[commitizen](https://github.com/commitizen/cz-cli)** + **[cz-git](https://cz-git.qbb.sh/)** |
+| npm       | git-open        | **[git-open: Open Repo in Browser](https://github.com/paulirish/git-open)**                   |
+| npm       | git-recent      | **[git-recent: See Latest Local Git Branches](https://github.com/paulirish/git-recent)**      |
 
 </details>
 <details>
