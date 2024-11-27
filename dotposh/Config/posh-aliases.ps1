@@ -196,7 +196,7 @@ function Update-Dotfiles {
     git stash | Out-Null
     git pull | Out-Null
     git stash pop | Out-Null
-    Start-Process pwsh -WindowStyle Hidden -ArgumentList "./Setup.ps1"
+    Start-Process pwsh -ArgumentList "./Setup.ps1" -Verb RunAs -WindowStyle Hidden -Wait
     Set-Location $currentLocation
     . $PROFILE.CurrentUserAllHosts
 }
