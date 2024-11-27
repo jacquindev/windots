@@ -65,6 +65,7 @@ $SymLinks = @{
     "$Env:USERPROFILE\.config\gh-dash"                                                            = ".\config\gh-dash"
     "$Env:USERPROFILE\.config\npm"                                                                = ".\config\npm"
     "$Env:USERPROFILE\.config\spotify-tui\config.yml"                                             = ".\config\spotify-tui\config.yml"
+    "$Env:USERPROFILE\.config\bash"                                                               = ".\config\bash"
     # "$Env:USERPROFILE\.glzr\glazewm\config.yaml"                                                  = ".\config\glazewm\config.yaml"
     "$Env:APPDATA\bat"                                                                            = ".\config\bat"
     "$Env:LOCALAPPDATA\lazygit"                                                                   = ".\config\lazygit"
@@ -73,6 +74,7 @@ $SymLinks = @{
     "$Env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" = ".\windows\settings.json"
     "$Env:USERPROFILE\.gitconfig"                                                                 = ".\home\.gitconfig"
     "$Env:USERPROFILE\.czrc"                                                                      = ".\home\.czrc"
+    "$Env:USERPROFILE\.bash_profile"                                                              = ".\home\.bash_profile"
     "$Env:USERPROFILE\.bashrc"                                                                    = ".\home\.bashrc"
     "$Env:USERPROFILE\.wslconfig"                                                                 = ".\home\.wslconfig"
 }
@@ -125,7 +127,7 @@ function Main {
 
     # Git Setup
     if (Get-Command git -ErrorAction SilentlyContinue) {
-        Write-PrettyTitle "Git"
+        Write-PrettyTitle "Git Setup"
         if (Test-Path -Path "$Env:USERPROFILE\.gitconfig-local") {
             if ($(Get-Content -Path "$Env:USERPROFILE\.gitconfig-local" -Raw).Contains("[user]") -eq $False) {
                 Write-GitConfigLocal
@@ -149,12 +151,19 @@ function Main {
         }
         $installed = (gh extension list)
         foreach ($ext in $ghExtensions) {
-            if (-not ($installed | Select-String "$ext")) {
-                gh extension install "$ext" --force | Out-Null
-                Write-PrettyOutput -Process "git" -Entry "github extension:" -Extra "$ext" -Message "installed."
+            $extName = $ext.Name
+            $extRepo = $ext.Repo
+            if (-not ($installed | Select-String "$extRepo")) {
+                if (Get-Command gum -ErrorAction SilentlyContinue) {
+                    gum spin --title="Installing extension $extName..." -- gh extension install "$extRepo" --force
+                }
+                else {
+                    gh extension install "$extRepo" --force >$null 2>&1
+                }
+                Write-PrettyOutput -Process "github" -Entry "extension:" -Extra "$extName" -Message "installed."
             }
             else {
-                Write-PrettyOutput -Process "git" -Entry "github extension:" -Extra "$ext" -Message "installed."
+                Write-PrettyOutput -Process "github" -Entry "extension:" -Extra "$extName" -Message "installed."
             }
         }
     }
@@ -249,8 +258,15 @@ function Main {
     # Bat
     if (Get-Command bat -ErrorAction SilentlyContinue) {
         Write-PrettyTitle "Bat Theme"
-        bat cache --clear > $null
-        bat cache --build 
+        if (Get-Command gum -ErrorAction SilentlyContinue) {
+            gum spin --title="Building bat theme..." -- bat cache --clear
+            gum spin --title="Building bat theme..." -- bat cache --build
+        }
+        else {
+            bat cache --clear >$null 2>&1
+            bat cache --build >$null 2>&1
+        }
+        Write-PrettyInfo -Message "Bat config file can be found at" -Info "$PSScriptRoot\config\bat\config"
     }
 
     # Btop
@@ -326,7 +342,12 @@ function Main {
                 $packages = $pkg.Packages
                 if (!(Get-Command $cmd -ErrorAction SilentlyContinue)) {
                     foreach ($package in $packages) {
-                        npm install --global --silent $package
+                        if (Get-Command gum -ErrorAction SilentlyContinue) {
+                            gum spin --title="Installing $package..." -- npm install --global $package
+                        }
+                        else {
+                            npm install --global --silent $package
+                        }
                         Write-PrettyOutput -Process "nvm" -Entry "npm:" -Extra "$package" -Message "installed."
                     }
                 }
@@ -337,6 +358,20 @@ function Main {
                 }
             }
         }
+    }
+
+    # yazi
+    if ((Get-Command yazi -ErrorAction SilentlyContinue) -and (Get-Command ya -ErrorAction SilentlyContinue)) {
+        Write-PrettyTitle "Yazi Plugins"
+        if (Get-Command gum -ErrorAction SilentlyContinue) {
+            gum spin --title="Installing yazi plugins..." -- ya pack -i
+            gum spin --title="Updating yazi plugins..." -- ya pack -u
+        }
+        else {
+            ya pack -i >$null 2>&1
+            ya pack -u >$null 2>&1
+        }
+        Write-PrettyInfo -Message "Installed Yazi Plugins can be found at" -Info "$PSScriptRoot\config\yazi\package.toml"
     }
 
     if (Get-Command komorebic -ErrorAction SilentlyContinue) {
@@ -356,7 +391,6 @@ function Main {
             Write-PrettyOutput -Process "komorebi" -Entry "komorebi with WHKD" -Message "already running..."
         }
     }
-
 
     if (Get-Command yasb -ErrorAction SilentlyContinue) {
         Write-PrettyTitle "YASB Status Bar"
