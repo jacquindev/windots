@@ -1,6 +1,7 @@
 #requires -Version 7
+#requires -runasadministrator
 
-# spell-checker: disable
+# cSpell:disable
 
 <#
 .SYNOPSIS
