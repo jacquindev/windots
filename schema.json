@@ -64,16 +64,20 @@
 				},
 				"npm": {
 					"type": "array",
+					"description": "List of npm global packages",
+					"required": ["Command", "Packages"],
 					"items": {
 						"anyOf": [
 							{
 								"type": "object",
 								"properties": {
 									"Command": {
-										"type": "string"
+										"type": "string",
+										"description": "Command installed by 'npm install --global'"
 									},
 									"Packages": {
-										"type": "array"
+										"type": "array",
+										"description": "List of packages installed by 'npm install --global'"
 									}
 								}
 							}
