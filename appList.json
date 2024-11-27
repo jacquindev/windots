@@ -110,6 +110,8 @@
 		],
 		"github_extension": [
 			"dlvhdr/gh-dash",
+			"gennaro-tedesco/gh-s",
+			"Link-/gh-token",
 			"seachicken/gh-poi",
 			"yuler/gh-download",
 			"yusukebe/gh-markdown-preview"
