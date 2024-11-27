@@ -66,9 +66,10 @@ A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppu
 
 <hr>
 
-https://github.com/user-attachments/assets/c6e214f5-d4ca-4bf6-81e3-16e74a1a08bc
-
-https://github.com/user-attachments/assets/b068e898-1007-4f19-8076-7b8637e261dc
+<div align="center">
+  <video src="https://github.com/user-attachments/assets/c6e214f5-d4ca-4bf6-81e3-16e74a1a08bc"></video>
+  <video src="https://github.com/user-attachments/assets/b068e898-1007-4f19-8076-7b8637e261dc"></video>
+</div>
 
 <hr>
 
