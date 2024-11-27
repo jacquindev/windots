@@ -219,7 +219,7 @@ function Install-Vagrant-Plugins {
     $installed = (vagrant plugin list)
     foreach ($plugin in $List) {
         if (!($installed | Select-String "$plugin")) {
-            gum spin --title="Instaling vagrant plugin $plugin..." -- vagrant install $plugin
+            gum spin --title="Instaling plugin $plugin..." -- vagrant plugin install $plugin
             Write-PrettyOutput -Process "vagrant" -Entry "plugin:" -Entry2 "$plugin" -Message "installed successfully." -Extra
         }
         else {
@@ -292,17 +292,6 @@ function Download-File {
     else {
         Invoke-WebRequest -Uri "$Url" -OutFile "$Directory"
     }
-}
-
-function Write-GitConfigLocal {
-    param ([string]$Path)
-    $gitUserName = (gum input --prompt="Input Git Name: " --placeholder="Your Name")
-    $gitUserMail = (gum input --prompt="Input Git Email: " --placeholder="youremail@domain.com")
-
-    "[user]" | Out-File -FilePath "$Path" -Append
-    "    $gitUserName" | Out-File -FilePath "$Path" -Append
-    "    $gitUserMail" | Out-File -FilePath "$Path" -Append
-    Write-PrettyInfo -Message "Git Email and Name set successfully in" -Info "$Path"
 }
 
 ###################################################################################################
