@@ -587,8 +587,17 @@ function Setup {
     elseif (Get-Command npm -ErrorAction SilentlyContinue) {
         Write-PrettyTitle "Install NPM Global Packages"
         foreach ($package in $npmPackages) {
-            npm install --global --silent $package
-            Write-PrettyOutput -p "npm" -e "$package" -m "installed."
+            $cmd = $package.Command
+            $packages = $package.Packages
+            if (!(Get-Command $cmd -ErrorAction SilentlyContinue)) {
+                foreach ($pkg in $packages) {
+                    npm install --global --silent $pkg
+                    Write-PrettyOutput -p "npm" -e "$pkg" -m "installed."
+                }
+            }
+            else {
+                Write-PrettyOutput -p "npm" -e "$cmd" -m "already installed."
+            }
         }
     }
 
