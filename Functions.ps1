@@ -1,3 +1,8 @@
+#requires -Version 7
+#requires -RunAsAdministrator
+
+# cSpell:disable
+
 function Test-IsElevated {
     return (New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
@@ -9,33 +14,6 @@ function Test-DeveloperMode {
     }
     else {
         return $false
-    }
-}
-
-function Test-InternetConnection {
-    $testconnection = Test-Connection -ComputerName www.google.com -Count 1 -Quiet -ErrorAction Stop 
-    if ($testconnection -eq $False) {
-        Write-Host "―――――――――――――――――――――――――――――――――" -ForegroundColor "Yellow"
-        Write-Warning "NO INTERNET CONNECTION AVAILABLE!"
-        Write-Host "―――――――――――――――――――――――――――――――――" -ForegroundColor "Yellow"
-        Write-Host "Please recheck your internet connection and rerun this script." -ForegroundColor "Red"
-        Write-Host "Exiting..."
-        Start-Sleep -Seconds 1
-        Break
-    }
-}
-
-
-function Install-File {
-    param (
-        [string]$Dir,
-        [string]$Url
-    )
-    if (Get-Command wget.exe -ErrorAction SilentlyContinue) {
-        & wget.exe --quiet -P "$Dir" "$Url"
-    }
-    else {
-        Invoke-WebRequest -Uri "$Url" -OutFile "$Dir"
     }
 }
 
@@ -55,225 +33,214 @@ function Set-GsudoCacheMode {
     } 
 }
 
+###################################################################################################
+###                                         OUTPUT FUNCTIONS                                    ###
+###################################################################################################
 function Write-PrettyTitle {
-    param([string]$Title)
+    param ([string]$Title)
 
     $charCount = $Title.Length
     $line = ""
     for ($i = 0; $i -lt $charCount; $i++) {
         $line = $line.Insert($i, '―')
     }
-    ""
-    Write-Host "$line" -ForegroundColor "Blue"
-    Write-Host "$Title" -ForegroundColor "Blue"
-    Write-Host "$line" -ForegroundColor "Blue"
+    ''
+    Write-Host "$line" -ForegroundColor Blue
+    Write-Host "$Title" -ForegroundColor Blue
+    Write-Host "$line" -ForegroundColor Blue
 }
 
 function Write-PrettyOutput {
-    param(
-        [string]$Process,
-        [string]$Entry,
-        [switch]$Extra,
-        [string]$Entry2,
-        [string]$Message
+    param (
+        [Alias('p')][string]$Process,
+        [Alias('e')][string]$Entry,
+        [Alias('x')][switch]$Extra,
+        [Alias('s')][string]$Entry2,
+        [Alias('m')][string]$Message
     )
 
     if ($Extra) {
-        Write-Host "$Process" -ForegroundColor "Green" -NoNewline
-        Write-Host "  ▏ " -ForegroundColor "DarkGray" -NoNewline
-        Write-Host "$Entry" -ForegroundColor "Magenta" -NoNewline
-        Write-Host " $Entry2 " -ForegroundColor "Yellow" -NoNewline
+        Write-Host "$Process" -ForegroundColor Green -NoNewline
+        Write-Host "  ▏ " -ForegroundColor DarkGray -NoNewline
+        Write-Host "$Entry" -ForegroundColor Magenta -NoNewline
+        Write-Host " $Entry2 " -ForegroundColor Yellow -NoNewline
         Write-Host "$Message"
     }
     else {
-        Write-Host "$Process" -ForegroundColor "Green" -NoNewline
-        Write-Host "  ▏ " -ForegroundColor "DarkGray" -NoNewline
-        Write-Host "$Entry" -ForegroundColor "Yellow" -NoNewline
+        Write-Host "$Process" -ForegroundColor Green -NoNewline
+        Write-Host "  ▏ " -ForegroundColor DarkGray -NoNewline
+        Write-Host "$Entry" -ForegroundColor Yellow -NoNewline
         Write-Host " $Message"
     }
-
 }
 
 function Write-PrettyInfo {
     param (
-        [string]$Message,
-        [string]$Info
+        [Alias('m')][string]$Message,
+        [Alias('i')][string]$Info
     )
-    Write-Host ""
-    Write-Host "==> " -NoNewline -ForegroundColor "Cyan"
-    Write-Host "$Message " -NoNewline
-    Write-Host "$Info" -ForegroundColor "Cyan" 
+    Write-Host "==>" -ForegroundColor Cyan -NoNewline
+    Write-Host " $Message " -NoNewline
+    Write-Host "$Info" -ForegroundColor Magenta
 }
 
+###################################################################################################
+###                                        INSTALL FUNCTIONS                                    ###
+###################################################################################################
+# Winget
 function Install-WingetApps {
-    param (
-        [array]$AppList
-    )
+    param ([array]$List)
 
-    foreach ($app in $AppList) {
+    foreach ($app in $List) {
         $installed = winget list --exact --accept-source-agreements -q $app
         if (![String]::Join("", $installed).Contains($app)) {
-            winget install --exact --silent --accept-source-agreements --accept-package-agreements $app --source winget
+            gum spin --title="Installing $app..." -- winget install --exact --silent --accept-package-agreements --accept-source-agreements $app -s winget
+            Write-PrettyOutput -Process "winget" -Entry "$app" -Message "installed sucessfully."
         }
         else {
-            Write-PrettyOutput -Process "winget" -Entry "$app" -Message "already installed."
+            Write-PrettyOutput -Process "winget" -Entry "$app" -Message "already installed! Skipping..."
         }
     }
 }
 
-function Remove-WingetApps {
-    param (
-        [array]$AppList
-    )
+function Enable-ScoopBuckets {
+    param ([array]$List)
 
-    foreach ($app in $AppList) {
-        $installed = winget list --exact --accept-source-agreements -q $app
-        if ([String]::Join("", $installed).Contains($app)) {
-            winget uninstall --exact --silent  $app --source winget 
+    $scoopBucketDir = "$(Split-Path (Get-Command scoop.ps1).Source | Split-Path)\buckets"
+    foreach ($bucket in $List) {
+        if (!(Test-Path -PathType Container -Path "$scoopBucketDir\$bucket")) {
+            gum spin --title="Adding $bucket to Scoop..." -- scoop bucket add $bucket
+            Write-PrettyOutput -Process "scoop" -Entry "bucket:" -Entry2 "$bucket" -Message "added for scoop." -Extra
         }
         else {
-            Write-PrettyOutput -Process "winget" -Entry "$app" -Message "is not available to uninstall."
+            Write-PrettyOutput -Process "scoop" -Entry "bucket:" -Entry2 "$bucket" -Message "already added! Skipping..." -Extra
         }
     }
 }
 
+# Scoop
 function Install-ScoopApps {
     param (
-        [array]$AppList,
-        [ValidateSet('AllUsers', 'CurrentUser')][string]$Scope = "CurrentUser"
+        [array]$List,
+        [ValidateSet('AllUsers', 'CurrentUser')][string]$Scope = 'CurrentUser'
     )
-    foreach ($app in $AppList) {
+
+    foreach ($app in $List) {
         if (!(scoop info $app).Installed) {
-            if ($Scope -eq 'CurrentUser') {
-                scoop install $app | Out-Null
-            }
-            elseif ($Scope -eq 'AllUsers') {
+            if ($Scope -eq 'AllUsers') {
                 if ($(gsudo status IsElevated) -eq $False) {
-                    gsudo scoop install $app --global | Out-Null
+                    gum spin --title="Installing $app globally..." -- gsudo scoop install $app --global
                 }
                 else {
-                    scoop install $app --global | Out-Null
+                    gum spin --title="Installing $app globally..." -- scoop install $app --global
                 }
+                Write-PrettyOutput -Process "scoop" -Entry "app:" -Entry2 "$app" -Message "globally installed successfully." -Extra
+            }
+            else {
+                gum spin --title="Installing $app..." -- scoop install $app
+                Write-PrettyOutput -Process "scoop" -Entry "app:" -Entry2 "$app" -Message "installed successfully." -Extra
             }
         }
         else {
-            Write-PrettyOutput -Process "scoop" -Entry "app:" -Extra "$app" -Message "already installed."
+            Write-PrettyOutput -Process "scoop" -Entry "app:" -Entry2 "$app" -Message "already installed! Skipping..." -Extra
         }
     }
 }
 
-function Remove-ScoopApps {
-    param (
-        [array]$AppList,
-        [ValidateSet('AllUsers', 'CurrentUser')][string]$Scope = "CurrentUser"
-    )
-    foreach ($app in $AppList) {
-        if ((scoop info $app).Installed) {
-            if ($Scope -eq 'CurrentUser') {
-                scoop uninstall $app | Out-Null
-            }
-            elseif ($Scope -eq 'AllUsers') {
-                if ($(gsudo status IsElevated) -eq $False) {
-                    gsudo scoop uninstall $app --global | Out-Null
-                }
-                else {
-                    scoop uninstall $app --global | Out-Null
-                }
-            }
-        }
-        else {
-            Write-PrettyOutput -Process "scoop" -Entry "app:" -Extra "$app" -Message "is not available to uninstall."
-        }
-    }
-}
+function Install-Modules {
+    param ([array]$List)
 
-function Enable-ScoopBucket {
-    param ([string]$Bucket)
-    $scoopDir = Split-Path (Get-Command scoop.ps1).Source | Split-Path
-    $BucketDir = "$scoopDir\buckets"
-    if (!(Test-Path -PathType Container -Path "$BucketDir\$Bucket")) {
-        scoop bucket add $Bucket | Out-Null
-        Write-PrettyOutput -Process "scoop" -Entry "bucket:" -Extra "$Bucket" -Message "added for scoop."
-    }
-    else {
-        Write-PrettyOutput -Process "scoop" -Entry "bucket:" -Extra "$Bucket" -Message "already for scoop."
-    }
-}
-
-function Disable-ScoopBucket {
-    param ([string]$Bucket)
-    $scoopDir = Split-Path (Get-Command scoop.ps1).Source | Split-Path
-    $BucketDir = "$scoopDir\buckets"
-    if (Test-Path -PathType Container -Path "$BucketDir\$Bucket") {
-        scoop bucket remove $Bucket | Out-Null
-        Write-PrettyOutput -Process "scoop" -Entry "bucket:" -Extra "$Bucket" -Message "removed for scoop."
-    }
-    else {
-        Write-PrettyOutput -Process "scoop" -Entry "bucket:" -Extra "$Bucket" -Message "is not available to remove."
-    }
-}
-
-function Install-PoshModules {
-    param ([array]$ModuleList)
-    foreach ($module in $ModuleList) {
+    foreach ($module in $List) {
         if (!(Get-Module -ListAvailable -Name $module -ErrorAction SilentlyContinue)) {
-            Install-Module -Name $module -AllowClobber -Scope CurrentUser -Force
-            Write-PrettyOutput -Process "pwsh" -Entry "module:" -Extra "$Module" -Message "installed."
+            Install-Module -Name $module -AllowClobber -Scope CurrentUser -Force | Out-Null
+            Write-PrettyOutput -Process "pwsh" -Entry "module:" -Entry2 "$module" -Message "installed successfully." -Extra
         }
         else {
-            Write-PrettyOutput -Process "pwsh" -Entry "module:" -Extra "$Module" -Message "already installed."
+            Write-PrettyOutput -Process "pwsh" -Entry "module:" -Entry2 "$module" -Message "already installed! Skipping..." -Extra
         }
     }
 }
 
-function Remove-PoshModules {
-    param ([array]$ModuleList)
-    foreach ($module in $ModuleList) {
-        if (Get-Module -ListAvailable -Name $module -ErrorAction SilentlyContinue) {
-            Uninstall-Module -Name $module 
-            Write-PrettyOutput -Process "pwsh" -Entry "module:" -Extra "$Module" -Message "uninstalled."
-        }
-        else {
-            Write-PrettyOutput -Process "pwsh" -Entry "module:" -Extra "$Module" -Message "is not available to uninstall."
-        }
-    }
-}
+function Install-VSCode-Extensions {
+    param ([array]$List)
 
-function Install-CodeExtensions {
-    param ([array]$ExtensionList)
     $installed = (code --list-extensions)
-    foreach ($extension in $ExtensionList) {
-        if (-not ($installed | Select-String $extension)) {
-            code --install-extension $extension | Out-Null
-            Write-PrettyOutput -Process "vscode" -Entry "extension:" -Extra "$extension" -Message "installed."
+    foreach ($ext in $List) {
+        if (-not ($installed | Select-String $ext)) {
+            gum spin --title="Installing extension $ext..." -- code --install-extension $ext --force
+            Write-PrettyOutput -Process "vscode" -Entry "extension:" -Entry2 "$ext" -Message "installed successfully." -Extra
         }
         else {
-            Write-PrettyOutput -Process "vscode" -Entry "extension:" -Extra "$extension" -Message "already installed."
+            Write-PrettyOutput -Process "vscode" -Entry "extension:" -Entry2 "$ext" -Message "already installed. Skipping..." -Extra
         }
     }
 }
 
-function Remove-CodeExtensions {
-    param ([array]$ExtensionList)
-    $installed = (code --list-extensions)
-    foreach ($extension in $ExtensionList) {
-        if ($installed | Select-String $extension) {
-            code --uninstall-extension $extension | Out-Null
-            Write-PrettyOutput -Process "vscode" -Entry "extension:" -Extra "$extension" -Message "uninstalled."
+function Install-GitHub-Extensions {
+    param ([array]$List)
+
+    $installed = (gh extension list)
+    foreach ($ext in $List) {
+        $extName = $ext.Name
+        $extRepo = $ext.Repo
+        if (-not ($installed | Select-String "$extRepo")) {
+            gum spin --title="Installing extension $extName..." -- gh extension install "$extRepo" --force
+            Write-PrettyOutput -Process "github" -Entry "extension:" -Entry2 "$extName" -Message "installed successfully."
         }
         else {
-            Write-PrettyOutput -Process "vscode" -Entry "extension:" -Extra "$extension" -Message "is not available to uninstall."
+            Write-PrettyOutput -Process "github" -Entry "extension:" -Entry2 "$extName" -Message "already installed. Skipping..." -Extra
         }
     }
 }
 
-function Set-SymbolicLinks {
+function Install-NPM-Packages {
+    param ([array]$List)
+
+    foreach ($pkg in $List) {
+        $command = $pkg.Command
+        $packages = $pkg.Packages
+        if (!(Get-Command $command -ErrorAction SilentlyContinue)) {
+            foreach ($package in $packages) {
+                gum spin --title="Installing $package..." -- npm install --global --silent $package
+                Write-PrettyOutput -Process "nvm" -Entry "npm:" -Entry2 "$package" -Message "installed successfully." -Extra
+            }
+        }
+        else {
+            foreach ($package in $packages) {
+                Write-PrettyOutput -Process "nvm" -Entry "npm:" -Entry2 "$package" -Message "already installed. Skipping..." -Extra
+            }
+        }
+    }
+}
+
+function Install-NerdFonts {
+    param (
+        [array]$List
+    )
+    [void][System.Reflection.Assembly]::LoadWithPartialName("System.Drawing")
+    $installedFonts = (New-Object System.Drawing.Text.InstalledFontCollection).Families
+    foreach ($font in $List) {
+        $fontName = $font.DisplayName
+        $fontShortName = $font.ShortName
+        if (!($installedFonts | Select-String "$fontName")) {
+            & ([scriptblock]::Create((Invoke-WebRequest 'https://to.loredo.me/Install-NerdFont.ps1'))) -Confirm:$false -Scope AllUsers -Name $fontShortName
+            Write-PrettyOutput -Process "nerd font" -Entry "$fontName" -Message "installed successfully."
+        }
+        else {
+            Write-PrettyOutput -Process "nerd font" -Entry "$fontName" -Message "already installed. Skipping..."
+        }
+    }
+}
+
+
+function Set-Symlinks {
     param ([hashtable]$Symlinks)
 
-    foreach ($symlink in $Symlinks.GetEnumerator()) {
-        $symlinkFile = Get-Item -Path $symlink.Key -ErrorAction SilentlyContinue
-        $symlinkKey = $symlink.Key
-        $symLinkTarget = Resolve-Path $symlink.Value
+    foreach ($link in $Symlinks.GetEnumerator()) {
+        $symlinkKey = $link.Key
+        $symlinkFile = Get-Item -Path $symlinkKey -ErrorAction SilentlyContinue
+        $symlinkTarget = Resolve-Path $link.Value
+
         if (Test-Path -Path $symlinkTarget) {
             $symlinkFile | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
             if (((Test-DeveloperMode) -eq $False) -and ((Test-IsElevated) -eq $False)) {
@@ -282,28 +249,36 @@ function Set-SymbolicLinks {
             else {
                 New-Item -ItemType SymbolicLink -Path $symlinkKey -Target $symLinkTarget -Force | Out-Null
             }
-            Write-PrettyOutput -Process "symlink" -Entry "$symlinkKey" -Message "added."
+            Write-PrettyOutput "symlink" -Entry "$symlinkKey" -Entry2 "=> $symlinkTarget" -Message "added." -Extra
         }
     }
 }
 
-function Remove-SymbolicLinks {
-    param ([hashtable]$Symlinks)
-    foreach ($symlink in $Symlinks.GetEnumerator()) {
-        $symlinkFile = Get-Item -Path $symlink.Key -ErrorAction SilentlyContinue
-        $symlinkKey = $symlink.Key
-        $symLinkTarget = Resolve-Path $symlink.Value
-        if (Test-Path -Path $symlinkTarget) {
-            $symlinkFile | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
-            Write-PrettyOutput -Process "symlink" -Entry "$symlinkKey" -Message "removed."
-        }
-        else {
-            Write-PrettyOutput -Process "symlink" -Entry "$symlinkKey" -Message "is not available to remove."
-        }
+function Set-EnvironmentVariable {
+    param ([string]$Value, [string]$Path)
+
+    if (!([System.Environment]::GetEnvironmentVariable("$Value"))) {
+        [System.Environment]::SetEnvironmentVariable("$Value", "$Path", "User")
+        Write-PrettyOutput -Process "env" -Entry "$Value" -Entry2 "=> $Path" -Message "added." -Extra
+    }
+    else {
+        Write-PrettyOutput -Process "env" -Entry "$Value" -Entry2 "=> $Path" -Message "already set." -Extra
     }
 }
 
-# git config
+function Download-File {
+    param (
+        [string]$Directory,
+        [string]$Url
+    )
+    if (Get-Command wget.exe -ErrorAction SilentlyContinue) {
+        & wget.exe --quiet -P "$Directory" "$Url"
+    }
+    else {
+        Invoke-WebRequest -Uri "$Url" -OutFile "$Directory"
+    }
+}
+
 function Write-GitConfigLocal {
     $gitUserName = $(Write-Host "Input Git Name: " -ForegroundColor Magenta -NoNewline; Read-Host)
     $gitUserMail = $(Write-Host "Input Git Email: " -ForegroundColor Magenta -NoNewline; Read-Host)
@@ -315,69 +290,6 @@ function Write-GitConfigLocal {
     Write-PrettyInfo -Message "Git Email and Name set successfully in" -Info "$Env:USERPROFILE\.gitconfig-local"
 }
 
-function Set-EnvironmentVariable {
-    param ([string]$Value, [string]$Path)
-
-    if (!([System.Environment]::GetEnvironmentVariable("$Value"))) {
-        [System.Environment]::SetEnvironmentVariable("$Value", "$Path", "User")
-        Write-PrettyOutput -Process "env" -Entry "$Value =>" -Extra "$Path" -Message "added."
-    }
-    else {
-        Write-PrettyOutput -Process "env" -Entry "$Value =>" -Extra "$Path" -Message "already set."
-    }
-}
-
-function Remove-EnvironmentVariable {
-    param ([string]$Value)
-    if ([System.Environment]::GetEnvironmentVariable("$Value")) {
-        [System.Environment]::SetEnvironmentVariable("$Value", $null, "User")
-        Write-PrettyOutput -Process "env" -Entry "$Value" -Message "removed."
-    }
-    else {
-        Write-PrettyOutput -Process "env" -Entry "$Value" -Message "is not available to remove."
-    }
-}
-
-function Install-NerdFonts {
-    param (
-        [ValidateSet('CurrentUser', 'AllUsers')]
-        [string]$Scope = 'CurrentUser',
-
-        [switch]$Scoop,
-        [switch]$Script
-    )
-    if ($Scoop) {
-        foreach ($font in $nerdFonts) {
-            $fontDisplayName = $font.DisplayName
-            $fontScoopName = $font.ScoopName
-            foreach ($fontName in $($fontScoopName)) {
-                if (!(scoop info $fontName).Installed) {
-                    if ($Scope -eq 'AllUsers') {
-                        if ((Test-IsElevated) -eq $False) {
-                            gsudo scoop install $fontName --global | Out-Null
-                        }
-                        else { scoop install $fontName --global | Out-Null }
-                    }
-                    else {
-                        scoop install $fontName
-                    }
-                }
-            }
-            Write-PrettyOutput -Process "Nerd Font" -Entry "$fontFullName" -Extra -Entry2 "using scoop" -Message "installed."
-        }
-    }
-    elseif ($Script) {
-        foreach ($font in $nerdFonts) {
-            $fontName = $font.ShortName
-            $fontFullName = $font.DisplayName
-            if ($Scope -eq 'AllUsers') {
-                Start-Process -FilePath pwsh -ArgumentList "& ([scriptblock]::Create((Invoke-WebRequest 'https://to.loredo.me/Install-NerdFont.ps1'))) -Name $fontName -Scope AllUsers -Confirm:$false" -Verb RunAs -Wait -WindowStyle Hidden
-            }
-            else {
-                Start-Process -FilePath pwsh -ArgumentList "&([scriptblock]::Create((Invoke-WebRequest 'https://to.loredo.me/Install-NerdFont.ps1'))) -Name $fontName -Confirm:$false" -Wait -WindowStyle Hidden
-            }
-            Start-Sleep -Seconds 1
-            Write-PrettyOutput -Process "Nerd Font" -Entry "$fontFullName" -Extra -Entry2 "using Script" -Message "installed."
-        }
-    }
-}
+###################################################################################################
+###                                      UNINSTALL FUNCTIONS                                    ###
+###################################################################################################

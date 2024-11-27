@@ -87,7 +87,7 @@
 				"nerdfont": {
 					"type": "array",
 					"description": "List of NerdFont fonts",
-					"required": ["DisplayName"],
+					"required": ["DisplayName", "ShortName"],
 					"items": {
 						"anyOf": [
 							{
@@ -100,10 +100,6 @@
 									"ShortName": {
 										"type": "string",
 										"description": "Name of Nerd Font of 'Invoke-NerdFontInstaller.ps1' script"
-									},
-									"ScoopName": {
-										"type": "array",
-										"description": "List of Scoop app name for Nerd Fonts"
 									}
 								}
 							}
