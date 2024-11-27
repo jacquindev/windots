@@ -36,11 +36,6 @@ if (Get-Module -ListAvailable -Name Azure -ErrorAction SilentlyContinue) {
     }
 }
 
-# gh cli
-if (Get-Command gh -ErrorAction SilentlyContinue) {
-    gh completion -s powershell | Out-String | Invoke-Expression
-}
-
 # scoop
 if (Get-Command scoop -ErrorAction SilentlyContinue) {
     if (-not (Get-Module -ListAvailable -Name "scoop-completion" -ErrorAction SilentlyContinue)) {

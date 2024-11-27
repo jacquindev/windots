@@ -189,7 +189,7 @@ Add-Alias HKCU: 'Set-Location HKCU:'
 
 # ----------------------------------------------------------------------------------- #
 # Dotfiles related
-${function:dotu} = {
+function Update-Dotfiles {
     $currentLocation = "$(Get-Location)"
     Write-Host "Updating windots..."
     Set-Location "$env:DOTFILES"
@@ -200,3 +200,6 @@ ${function:dotu} = {
     Set-Location $currentLocation
     . $PROFILE.CurrentUserAllHosts
 }
+Set-Alias -Name 'dotu' -Value 'Update-Dotfiles'
+
+
