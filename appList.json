@@ -13,16 +13,26 @@
 			"GitHub.GitHubDesktop",
 			"ImageMagick.ImageMagick",
 			"JanDeDobbeleer.OhMyPosh",
-			"LGUG2Z.komorebi",
-			"LGUG2Z.whkd",
 			"Microsoft.PowerShell",
 			"Microsoft.PowerToys",
-			"Microsoft.VisualStudioCode",
 			"Microsoft.WindowsTerminal.Preview",
-			"Obsidian.Obsidian",
 			"Proton.ProtonVPN",
-			// Windows Tweak Appearance Tools
+
+			// Editors:
+			"Microsoft.VisualStudioCode",
+			// "Neovim.Neovim",
+			"Notepad++.Notepad++",
+			"Obsidian.Obsidian",
+			
+			// Browsers:
+			// "Mozilla.Firefox",
+			// "Zen-Team.Zen-Browser",
+			
+			// Windows Tweak Appearance Tools:
 			"AmN.yasb",
+			// "glzr-io.glazewm",
+			"LGUG2Z.komorebi",
+			"LGUG2Z.whkd",
 			"Rainmeter.Rainmeter",
 			"rocksdanister.LivelyWallpaper",
 			"Spotify.Spotify",
