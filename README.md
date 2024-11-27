@@ -249,6 +249,7 @@ Follow the below links to download and learn to how to setup:
 | scoop     | **[git-filter-repo](https://github.com/newren/git-filter-repo)**                              | Quickly rewrite git repository history (filter-branch replacement) |
 | scoop     | **[git-lfs](https://git-lfs.com/)**                                                           | Improve then handling of large files                               |
 | scoop     | **[git-sizer](https://github.com/github/git-sizer)**                                          | Compute various size metrics for a Git repository                  |
+| scoop     | **[gitleaks](https://github.com/gitleaks/gitleaks)**                                          | Detect secrets like passwords, API keys, and tokens                |
 | scoop     | **[bfg](https://rtyley.github.io/bfg-repo-cleaner/)**                                         | Remove large or troublesome blobs (required **java** installed)    |
 | npm       | **[commitizen](https://github.com/commitizen/cz-cli)** + **[cz-git](https://cz-git.qbb.sh/)** | Write better Git commits                                           |
 | npm       | **[git-open](https://github.com/paulirish/git-open)**                                         | Open the GitHub page or website for a repository in your browser   |
