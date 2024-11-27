@@ -183,7 +183,7 @@ Follow the below links to download and learn to how to setup:
 - ⚙️ [Rainmeter](./windows/rainmeter/) setup
 - \>\_ Sleek [Windows Terminal config](./windows/settings.json)
 - 🌈 Oh-My-Posh [minimal theme](./dotposh/posh-zen.toml) (with Spotify status if playing!)
-- 🦄 **Super fast ** PowerShell startup time *(load asynchronously)* + **[custom functions](./dotposh/Modules/)**
+- 🦄 **Super fast** PowerShell startup time *(load asynchronously)* + **[custom functions](./dotposh/Modules/)**
 - 🍄 Simple fastfetch configuration, which I copied from [scottmckendry's config](https://github.com/scottmckendry/Windots/tree/main/fastfetch)
 - 🥂 Many addons for Git!
 
