@@ -33,7 +33,6 @@
     hyperlinks = true
     hyperlinks-file-link-format = "vscode://file/{path}:{line}"
 [include]
-    path = ~/.gitconfig-local
     path = ~/.config/delta/themes/themes.gitconfig
 [interactive]
     diffFilter = delta --color-only
@@ -59,3 +58,6 @@
     smudge = git-lfs smudge -- %f
     process = git-lfs filter-process
     required = true
+[user]
+	name = Jacquin Moon
+	email = jacquindev@outlook.com

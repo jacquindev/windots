@@ -162,9 +162,38 @@ function Install {
     Install-NerdFonts -List $nerdFonts
     Start-Sleep -Seconds 1
 
+    # Git & GitHub CLI setup
+    Write-PrettyTitle "GIT SETUP"
+    $gitUserName = (git config --global user.name)
+    $gitUserMail = (git config --global user.email)
+    
+    if ($null -eq $gitUserName) {
+        $gitUserName = (gum input --prompt="Input Git Name: " --placeholder="Your Name")
+    }
+    if ($null -eq $gitUserMail) {
+        $gitUserMail = (gum input --prompt="Input Git Email: " --placeholder="yourmail@domain.com")
+    }
+    
+    if (Get-Command gh -ErrorAction SilentlyContinue) {
+        if (!(Test-Path -PathType Leaf -Path "$env:APPDATA\GitHub CLI\hosts.yml")) {
+            gh auth login
+        }
+        Install-GitHub-Extensions -List $githubExtensions
+    }
+
+    Set-Location "$PSScriptRoot"
+    git submodule update --init --recursive
+    
+
     # Symlinks
     Write-PrettyTitle "SYMBOLIC LINKS"
     Set-Symlinks -Symlinks $symbolicLinks
+
+    git config --global --unset user.email | Out-Null
+    git config --global --unset user.name | Out-Null
+    git config --global user.name $gitUserName | Out-Null
+    git config --global user.email $gitUserMail | Out-Null
+    
 
     # Powershell Modules
     Write-PrettyTitle "POWERSHELL MODULES"
@@ -180,44 +209,18 @@ function Install {
         Write-PrettyInfo -Message "VSCode Extensions List can be found at" -Info "$PSScriptRoot\vscode\extensions.list"
     }
 
-    # Git & GitHub CLI setup
-    if (Get-Command git -ErrorAction SilentlyContinue) {
-        Write-PrettyTitle "GIT SETUP"
-        if (Test-Path -Path "$env:USERPROFILE\.gitconfig-local") {
-            if ($(Get-Content -Path "$env:USERPROFILE\.gitconfig-local" -Raw).Contains("[user]") -eq $False) {
-                Write-GitConfigLocal -Path "$env:USERPROFILE\.gitconfig-local"
-            }
-            else {
-                Write-PrettyInfo -Message "Git Email and Name already set in" -Info "$env:USERPROFILE\.gitconfig-local"
-            }
-        }
-        else {
-            New-Item -Path "$env:USERPROFILE\.gitconfig-local" -ItemType File | Out-Null
-            Write-GitConfigLocal -Path "$env:USERPROFILE\.gitconfig-local"
-        }
-        Set-Location "$PSScriptRoot"
-        git submodule update --init --recursive
-
-        if (Get-Command gh -ErrorAction SilentlyContinue) {
-            if (!(Test-Path -PathType Leaf -Path "$env:APPDATA\GitHub CLI\hosts.yml")) {
-                gh auth login
-            }
-            Install-GitHub-Extensions -List $githubExtensions
-        }
-    }
-
     # NodeJS setup
     if (Get-Command nvm -ErrorAction SilentlyContinue) {
         Write-PrettyTitle "NVM (Node Version Manager)"
         if (!(Get-Command npm -ErrorAction SilentlyContinue)) {
             $ltsOrLatest = $(Write-Host "NodeJS not found. Install LTS (y) or latest (n)? "-ForegroundColor Magenta -NoNewline; Read-Host)
             if ($ltsOrLatest -eq 'y') {
-                gum spin --title="Installing LTS Node..." -- nvm install lts
-                gum spin --title="Installing LTS Node..." -- nvm use lts
+                nvm install lts
+                nvm use lts
             }
             else {
-                gum spin --title="Installing latest Node..." -- nvm install latest
-                gum spin --title="Installing latest Node..." -- nvm use latest
+                nvm install latest
+                nvm use latest
             }
             corepack enable
             npm config set userconfig="$env:USERPROFILE\.config\npm\.npmrc" --global
@@ -239,6 +242,7 @@ function Install {
     if (Get-Command eza -ErrorAction SilentlyContinue) { 
         Write-PrettyTitle "EZA CONFIG ENVIRONMENT VARIABLE"
         Set-EnvironmentVariable -Value "EZA_CONFIG_DIR" -Path "$Env:USERPROFILE\.config\eza"
+        Start-Sleep -Seconds 1
     }
 
     # BTOP
@@ -256,6 +260,7 @@ function Install {
             }
         }
         Remove-Variable catppuccinThemes, btopThemeDir
+        Start-Sleep -Seconds 1
     }
 
     # flow launcher
@@ -275,6 +280,7 @@ function Install {
             }
         }
         Remove-Variable flowThemeDir, catppuccinThemes
+        Start-Sleep -Seconds 1
     }
 
     # spicetify
@@ -290,6 +296,7 @@ function Install {
                 Write-PrettyOutput -Process "spicetify" -Entry "custom app:" -Entry2 "marketplace" -Message "already installed." -Extra
             }
         }
+        Start-Sleep -Seconds 1
     }
     
     if (Get-Command yazi -ErrorAction SilentlyContinue) {
@@ -300,10 +307,12 @@ function Install {
         Set-EnvironmentVariable -Value "YAZI_FILE_ONE" -Path "$GitFileExePath"
         Set-EnvironmentVariable -Value "YAZI_CONFIG_HOME" -Path "$Env:USERPROFILE\.config\yazi"
         Remove-Variable GitInstalledDir, GitFileExePath
+        Start-Sleep -Seconds 1
         # yazi plugins
         gum spin --title="Installing yazi plugins..." -- ya pack -i
         gum spin --title="Updating yazi plugins..." -- ya pack -u
         Write-PrettyInfo -Message "Installed Yazi Plugins can be found at" -Info "$PSScriptRoot\config\yazi\package.toml"
+        Start-Sleep -Seconds 1
     }
 
     if (Get-Command komorebic -ErrorAction SilentlyContinue) {
@@ -311,6 +320,7 @@ function Install {
 
         # komorebi environment variable
         Set-EnvironmentVariable -Value "KOMOREBI_CONFIG_HOME" -Path "$Env:USERPROFILE\.config\komorebi"
+        Start-Sleep -Seconds 1
         
         # start komorebi
         $komorebiProcess = Get-Process -Name komorebi -ErrorAction SilentlyContinue
@@ -327,6 +337,7 @@ function Install {
         else {
             Write-PrettyOutput -Process "komorebi" -Entry "komorebi with WHKD" -Message "already running..."
         }
+        Start-Sleep -Seconds 1
     }
 
     if (Get-Command yasb -ErrorAction SilentlyContinue) {
@@ -351,6 +362,7 @@ function Install {
         else {
             Write-PrettyOutput -Process "yasb" -Entry "status bar" -Message "already running..."
         }
+        Start-Sleep -Seconds 1
     }
 
     # vagrant
