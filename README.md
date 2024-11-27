@@ -38,6 +38,11 @@ A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppu
 <br>
 <hr>
 
+## ✨ Prerequisites
+
+- **[Git for Windows](https://gitforwindows.org/)**
+- **[PowerShell 7](https://github.com/PowerShell/PowerShell)**
+
 <h2 id="preview">🌆 Preview</h2>
 
 - 2 status bar options: [Rainmeter](https://github.com/modkavartini/catppuccin/tree/main) / [Yasb](./config/yasb)
@@ -238,7 +243,6 @@ Follow the below links to download and learn to how to setup:
 
 | Installer | Link                                                                                          | Description                                                        |
 | --------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| winget    | **[Git for Windows](https://gitforwindows.org/)**                                             | Git BASH, Git GUI, Shell Integration, Git Credential Manager       |
 | winget    | **[GitHub Desktop](https://github.com/apps/desktop)**                                         | Simple collaboration from your desktop                             |
 | scoop     | **[gh](https://github.com/cli/cli)**                                                          | Bring GitHub to the command line                                   |
 | scoop     | **[git-crypt](https://github.com/AGWA/git-crypt)**                                            | Transparent file encryption in Git                                 |
