@@ -50,3 +50,8 @@ fi
 if command_exists pnpm; then
   source <(pnpm completion bash)
 fi
+
+# vagrant
+if command_exists vagrant; then
+  . "C:/Program Files/Vagrant/embedded/gems/gems/vagrant-2.4.3/contrib/bash/completion.sh"
+fi
