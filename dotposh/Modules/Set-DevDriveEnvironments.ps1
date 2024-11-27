@@ -92,6 +92,25 @@ function Set-EnvironmentVariableIfNotExist {
     }
 }
 
+function Add-ToPath {
+    param (
+        [string]$Path
+    )
+    $EnvPath = [System.Environment]::GetEnvironmentVariable('path', "User")
+    if ($EnvPath | Where-Object { $_ -like "*$Path*" } ) {
+        Write-Error -Entry1 "Path" -Entry2 "$Path" -Text "already added to PATH."
+    }
+    else {
+        [System.Environment]::SetEnvironmentVariable('path', "$Path;" + [System.Environment]::GetEnvironmentVariable('path', "User"), "User")
+        if ($LASTEXITCODE -eq 0) {
+            Write-Success -Entry1 "Path" -Entry2 "$Path" -Text "added to PATH successfully."
+        }
+        else {
+            Write-Error -Entry1 "Path" -Entry2 "$Path" -Text "failed to add to PATH."
+        }
+    }
+}
+
 function Move-CacheContents {
     param (
         [string]$ContentPath,
@@ -149,6 +168,11 @@ function Set-DevDriveEnvironments {
     }
 
     # Extras
+    # pnpm
+    if (Get-Command pnpm -ErrorAction SilentlyContinue) {
+        Add-ToPath -Path "$packagePath\pnpm"
+    }
+
     # pipx
     if (Get-Command pipx -ErrorAction SilentlyContinue) {
         $extraPipxSettings = @(
