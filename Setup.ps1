@@ -23,8 +23,15 @@
 #>
 
 #######################################################################################################
-###                                             PREREQUESITES                                       ###
+###                                             PREREQUISITES                                       ###
 #######################################################################################################
+# set current working directory location
+Set-Location $PSScriptRoot
+[System.Environment]::CurrentDirectory = $PSScriptRoot
+
+# Helpers functions
+. "$PSScriptRoot\Functions.ps1"
+
 if ((Test-Connection -ComputerName www.google.com -Count 1 -Quiet -ErrorAction Stop) -eq $False) {
     Write-Warning "NO INTERNET CONNECTION AVAILABLE!"
     Write-Host "Please re-check your internet connection and re-run this script." -ForegroundColor "Red"
@@ -67,10 +74,6 @@ if (-not (Get-Command gum -ErrorAction SilentlyContinue)) {
 #######################################################################################################
 ###                                           HELPER VARIABLES                                      ###
 #######################################################################################################
-# set current working directory location
-Set-Location $PSScriptRoot
-[System.Environment]::CurrentDirectory = $PSScriptRoot
-
 # symlinks
 $symbolicLinks = @{
     $PROFILE.CurrentUserAllHosts                                                                  = ".\Profile.ps1"
@@ -128,9 +131,6 @@ $nerdFonts = $appList.nerdfont
 #######################################################################################################
 ###                                              MAIN SCRIPT                                        ###
 #######################################################################################################
-# Helpers functions
-. "$PSScriptRoot\Functions.ps1"
-
 # Install all function
 function Install {
     # Winget Packages
