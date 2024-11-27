@@ -23,17 +23,17 @@
 			"Oracle.VirtualBox",
 			"Hashicorp.Vagrant",
 
-			// Editors:
+			// EDITORS:
 			"Microsoft.VisualStudioCode",
 			// "Neovim.Neovim",
 			// "Notepad++.Notepad++",
 			"Obsidian.Obsidian",
 
-			// Browsers:
+			// BROWSERS:
 			// "Mozilla.Firefox",
 			// "Zen-Team.Zen-Browser",
 
-			// Windows Tweak Appearance Tools:
+			// WINDOWS TWEAK APPLICATIONS:
 			"AmN.yasb",
 			// "glzr-io.glazewm",
 			"LGUG2Z.komorebi",
@@ -47,20 +47,14 @@
 			"user": [
 				"aria2",
 				"bat",
-				"bfg",
 				"btop",
+				"charm-gum",
 				"csvlens",
 				"delta",
 				"eza",
 				"fastfetch",
 				"fd",
 				"fzf",
-				"gh",
-				"git-crypt",
-				"git-filter-repo",
-				"git-lfs",
-				"git-sizer",
-				"gitleaks",
 				"glow",
 				"innounp",
 				"jq",
@@ -76,7 +70,16 @@
 				"wixtoolset",
 				"yazi",
 				"yq",
-				"zoxide"
+				"zoxide",
+
+				// GIT ADDONS:
+				"bfg",
+				"gh",
+				"git-crypt",
+				"git-filter-repo",
+				"git-lfs",
+				"git-sizer",
+				"gitleaks"
 			],
 			"global": [
 				"7zip",
