@@ -10,9 +10,10 @@
 			"GitHub.GitHubDesktop",
 			"ImageMagick.ImageMagick",
 			"JanDeDobbeleer.OhMyPosh",
-			// "Obsidian.Obsidian",
+			"Obsidian.Obsidian",
 			// "Microsoft.OpenJDK.21",
 			"Docker.DockerDesktop",
+			"Discord.Discord",
 			"Microsoft.PowerShell",
 			"Microsoft.PowerToys",
 			"Microsoft.VisualStudioCode",
@@ -28,9 +29,9 @@
 			"Flow-Launcher.Flow-Launcher",
 			"LGUG2Z.komorebi",
 			"LGUG2Z.whkd",
-			"Rainmeter.Rainmeter"
-			// "rocksdanister.LivelyWallpaper",
-			// "Stardock.Start11"
+			"Rainmeter.Rainmeter",
+			"rocksdanister.LivelyWallpaper",
+			"Stardock.Start11"
 		],
 		"scoop": {
 			"bucket": ["extras", "java", "sysinternals"],
@@ -93,7 +94,20 @@
 			// "PSWebSearch",
 			"Terminal-Icons"
 		],
-		"npm": ["commitizen", "cz-git", "git-open", "git-recent"],
+		"npm": [
+			{
+				"Command": "git-cz",
+				"Packages": ["commitizen", "cz-git"]
+			},
+			{
+				"Command": "git-open",
+				"Packages": ["git-open"]
+			},
+			{
+				"Command": "git-recent",
+				"Packages": ["git-recent"]
+			}
+		],
 		"nerdfont": [
 			{
 				"DisplayName": "FantasqueSansMono Nerd Font",
