@@ -5,8 +5,7 @@
 	"source": {
 		"winget": [
 			"chrisant996.Clink",
-			"Discord.Discord",
-			"Docker.DockerDesktop",
+			// "Discord.Discord",
 			"Flow-Launcher.Flow-Launcher",
 			"gerardog.gsudo",
 			"Git.Git",
@@ -17,6 +16,12 @@
 			"Microsoft.PowerToys",
 			"Microsoft.WindowsTerminal.Preview",
 			"Proton.ProtonVPN",
+			"Spotify.Spotify",
+
+			// VIRTUALIZATION:
+			"Docker.DockerDesktop",
+			"Oracle.VirtualBox",
+			"Hashicorp.Vagrant",
 
 			// Editors:
 			"Microsoft.VisualStudioCode",
@@ -35,7 +40,6 @@
 			"LGUG2Z.whkd",
 			"Rainmeter.Rainmeter",
 			"rocksdanister.LivelyWallpaper",
-			"Spotify.Spotify",
 			"Stardock.Start11"
 		],
 		"scoop": {
