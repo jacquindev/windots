@@ -295,14 +295,14 @@ function Download-File {
 }
 
 function Write-GitConfigLocal {
-    $gitUserName = $(Write-Host "Input Git Name: " -ForegroundColor Magenta -NoNewline; Read-Host)
-    $gitUserMail = $(Write-Host "Input Git Email: " -ForegroundColor Magenta -NoNewline; Read-Host)
-    $file = "$Env:USERPROFILE\.gitconfig-local"
+    param ([string]$Path)
+    $gitUserName = (gum input --prompt="Input Git Name: " --placeholder="Your Name")
+    $gitUserMail = (gum input --prompt="Input Git Email: " --placeholder="youremail@domain.com")
 
-    Write-Output "[user]" | Out-File "$file" -Append
-    Write-Output "  $gitUserName" | Out-File "$file" -Append
-    Write-Output "  $gitUserMail" | Out-File "$file" -Append
-    Write-PrettyInfo -Message "Git Email and Name set successfully in" -Info "$Env:USERPROFILE\.gitconfig-local"
+    Write-Output "[user]" >> "$Path"
+    Write-Output "    $gitUserName" >> "$Path"
+    Write-Output "    $gitUserMail" >>  "$Path" 
+    Write-PrettyInfo -Message "Git Email and Name set successfully in" -Info "$Path"
 }
 
 ###################################################################################################
