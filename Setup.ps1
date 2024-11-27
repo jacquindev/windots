@@ -185,7 +185,7 @@ function Install {
         Write-PrettyTitle "GIT SETUP"
         if (Test-Path -Path "$env:USERPROFILE\.gitconfig-local") {
             if ($(Get-Content -Path "$env:USERPROFILE\.gitconfig-local" -Raw).Contains("[user]") -eq $False) {
-                Write-GitConfigLocal
+                Write-GitConfigLocal -Path "$env:USERPROFILE\.gitconfig-local"
             }
             else {
                 Write-PrettyInfo -Message "Git Email and Name already set in" -Info "$env:USERPROFILE\.gitconfig-local"
@@ -193,7 +193,7 @@ function Install {
         }
         else {
             New-Item -Path "$env:USERPROFILE\.gitconfig-local" -ItemType File | Out-Null
-            Write-GitConfigLocal
+            Write-GitConfigLocal -Path "$env:USERPROFILE\.gitconfig-local"
         }
         Set-Location "$PSScriptRoot"
         git submodule update --init --recursive
