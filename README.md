@@ -23,7 +23,7 @@ A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppu
 </div>
 
 > [!IMPORTANT]<br>
-> **Screenshots** are taken from my main monitor, which has the **resolution of 3440x1440**.<br>
+> **Screenshots** are taken on my main monitor, which has the **resolution of 3440x1440**.<br>
 > The configuration seem to work seamlessly on my **1980x1080** display as well!
 
 <div align="center">
