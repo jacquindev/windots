@@ -65,8 +65,19 @@
 				"npm": {
 					"type": "array",
 					"items": {
-						"description": "NPM Global Packages",
-						"type": "string"
+						"anyOf": [
+							{
+								"type": "object",
+								"properties": {
+									"Command": {
+										"type": "string"
+									},
+									"Packages": {
+										"type": "array"
+									}
+								}
+							}
+						]
 					}
 				},
 				"nerdfont": {
