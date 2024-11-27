@@ -22,12 +22,12 @@
 			"Microsoft.VisualStudioCode",
 			// "Neovim.Neovim",
 			// "Notepad++.Notepad++",
-			// "Obsidian.Obsidian",
-			
+			"Obsidian.Obsidian",
+
 			// Browsers:
 			// "Mozilla.Firefox",
 			// "Zen-Team.Zen-Browser",
-			
+
 			// Windows Tweak Appearance Tools:
 			"AmN.yasb",
 			// "glzr-io.glazewm",
@@ -46,7 +46,6 @@
 				"bfg",
 				"btop",
 				"csvlens",
-				"charm-gum",
 				"delta",
 				"eza",
 				"fastfetch",
@@ -90,7 +89,7 @@
 			// "BetterCredentials",
 			"BurntToast",
 			"CompletionPredictor",
-			// "DotNetVersionLister",
+			"DotNetVersionLister",
 			"Microsoft.PowerShell.SecretManagement",
 			"Microsoft.PowerShell.SecretStore",
 			"posh-alias",
@@ -150,27 +149,20 @@
 		],
 		"nerdfont": [
 			{
-				"DisplayName": "FantasqueSansMono Nerd Font",
-				"ShortName": "fantasque-sans-mono",
-				"ScoopName": [
-					"FantasqueSansMono-NF-Mono",
-					"FantasqueSansMono-NF-Propo",
-					"FantasqueSansMono-NF"
-				]
+				"DisplayName": "CodeNewRoman Nerd Font",
+				"ShortName": "code-new-roman"
+			},
+			{
+				"DisplayName": "FantasqueSansM Nerd Font",
+				"ShortName": "fantasque-sans-mono"
 			},
 			{
 				"DisplayName": "FiraCode Nerd Font",
-				"ShortName": "fira-code",
-				"ScoopName": ["FiraCode-NF-Mono", "FiraCode-NF-Propo", "FiraCode-NF"]
+				"ShortName": "fira-code"
 			},
 			{
-				"DisplayName": "JetBrainsMono Nerd Font",
-				"ShortName": "jetbrains-mono",
-				"ScoopName": [
-					"JetBrainsMono-NF-Mono",
-					"JetBrainsMono-NF-Propo",
-					"JetBrainsMono-NF"
-				]
+				"DisplayName": "JetBrainsMono NF",
+				"ShortName": "jetbrains-mono"
 			}
 		]
 	}
