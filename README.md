@@ -24,7 +24,7 @@ A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppu
 
 > [!IMPORTANT]<br>
 > **Screenshots** are taken on my main monitor, which has the **resolution of 3440x1440**.<br>
-> The configuration seem to work seamlessly on my **1980x1080** display as well!
+> Works seamlessly on my **1920x1080** monitors as well!
 
 <div align="center">
   <a href="#preview"><kbd> <br> 🌆 Preview <br> </kbd></a>&ensp;&ensp;
