@@ -22,9 +22,9 @@ A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppu
 </p> 
 </div>
 
-> [!NOTE]<br>
-> I am using **3440x1440** monitor as my main display.
-> Please remember to adjust your settings (eg: Komorebi/GlazeWM) according to your monitor resolution.
+> [!IMPORTANT]<br>
+> **Screenshots** are taken from my main monitor, which has the **resolution of 3440x1440**.<br>
+> The configuration seem to work seamlessly on my **1980x1080** display as well!
 
 <div align="center">
   <a href="#preview"><kbd> <br> 🌆 Preview <br> </kbd></a>&ensp;&ensp;
