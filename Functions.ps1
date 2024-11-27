@@ -299,9 +299,9 @@ function Write-GitConfigLocal {
     $gitUserName = (gum input --prompt="Input Git Name: " --placeholder="Your Name")
     $gitUserMail = (gum input --prompt="Input Git Email: " --placeholder="youremail@domain.com")
 
-    Write-Output "[user]" >> "$Path"
-    Write-Output "    $gitUserName" >> "$Path"
-    Write-Output "    $gitUserMail" >>  "$Path" 
+    "[user]" | Out-File -FilePath "$Path" -Append
+    "    $gitUserName" | Out-File -FilePath "$Path" -Append
+    "    $gitUserMail" | Out-File -FilePath "$Path" -Append
     Write-PrettyInfo -Message "Git Email and Name set successfully in" -Info "$Path"
 }
 
