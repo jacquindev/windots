@@ -61,7 +61,7 @@ if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
 if (-not (Get-Command gsudo -ErrorAction SilentlyContinue)) {
     Write-Warning "Command not found: gsudo."
     Write-Host "Installing gsudo..."
-    winget install gerardog.gsudo --silent --accept-source-agreements --accept-package-agreements -s winget
+    winget install --exact --silent --accept-source-agreements --accept-package-agreements "gerardog.gsudo" --source winget
 }
 
 if (-not (Get-Command gum -ErrorAction SilentlyContinue)) {
