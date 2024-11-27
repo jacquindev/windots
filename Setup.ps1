@@ -223,27 +223,27 @@ function Main {
     }
 
     # Nerd Font
-    Write-PrettyTitle "Install Nerd Fonts"
-    $nerdFontConfirm = $(Write-Host "Install Nerd Fonts now (y/n)? " -ForegroundColor "Cyan" -NoNewline; Read-Host)
-    if ($nerdFontConfirm -eq 'y') {
-        $whichUser = $(Write-Host "1) Install Nerd Fonts for AllUsers (y) or CurrentUser (n)? " -NoNewline; Read-Host)
-        $whichInstaller = $(Write-Host "2) Install Nerd Fonts using Script (y) or Scoop (n)? " -NoNewline; Read-Host)
-        ""
-        if ($whichUser -eq 'y') {
-            if ($whichInstaller -eq 'y') {
-                Install-NerdFonts -Scope AllUsers -Script
-            }
-            else { Install-NerdFonts -Scope AllUsers -Scoop }
-        }
-        else {
-            if ($whichInstaller -eq 'y') {
-                Install-NerdFonts -Scope CurrentUser -Script
-            }
-            else {
-                Install-NerdFonts -Scope CurrentUser -Scoop
-            }
-        }
-    }
+    # Write-PrettyTitle "Install Nerd Fonts"
+    # $nerdFontConfirm = $(Write-Host "Install Nerd Fonts now (y/n)? " -ForegroundColor "Cyan" -NoNewline; Read-Host)
+    # if ($nerdFontConfirm -eq 'y') {
+    #     $whichUser = $(Write-Host "1) Install Nerd Fonts for AllUsers (y) or CurrentUser (n)? " -NoNewline; Read-Host)
+    #     $whichInstaller = $(Write-Host "2) Install Nerd Fonts using Script (y) or Scoop (n)? " -NoNewline; Read-Host)
+    #     ""
+    #     if ($whichUser -eq 'y') {
+    #         if ($whichInstaller -eq 'y') {
+    #             Install-NerdFonts -Scope AllUsers -Script
+    #         }
+    #         else { Install-NerdFonts -Scope AllUsers -Scoop }
+    #     }
+    #     else {
+    #         if ($whichInstaller -eq 'y') {
+    #             Install-NerdFonts -Scope CurrentUser -Script
+    #         }
+    #         else {
+    #             Install-NerdFonts -Scope CurrentUser -Scoop
+    #         }
+    #     }
+    # }
 
     # MISC
     # Bat
