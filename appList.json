@@ -4,6 +4,7 @@
 	"$schema": "./schema.json",
 	"source": {
 		"winget": [
+			// CLI TOOLS:
 			"chrisant996.Clink",
 			"Discord.Discord",
 			"Docker.DockerDesktop",
@@ -17,25 +18,25 @@
 			"Microsoft.PowerToys",
 			"Microsoft.WindowsTerminal.Preview",
 			"Proton.ProtonVPN",
+			"Spotify.Spotify",
 
-			// Editors:
+			// EDITORS:
 			"Microsoft.VisualStudioCode",
 			// "Neovim.Neovim",
 			// "Notepad++.Notepad++",
 			"Obsidian.Obsidian",
 
-			// Browsers:
+			// BROWSERS:
 			// "Mozilla.Firefox",
 			// "Zen-Team.Zen-Browser",
 
-			// Windows Tweak Appearance Tools:
+			// WINDOWS TWEAK APPLICATIONS:
 			"AmN.yasb",
 			// "glzr-io.glazewm",
 			"LGUG2Z.komorebi",
 			"LGUG2Z.whkd",
 			"Rainmeter.Rainmeter",
 			"rocksdanister.LivelyWallpaper",
-			"Spotify.Spotify",
 			"Stardock.Start11"
 		],
 		"scoop": {
@@ -43,7 +44,6 @@
 			"user": [
 				"aria2",
 				"bat",
-				"bfg",
 				"btop",
 				"charm-gum",
 				"csvlens",
@@ -52,12 +52,6 @@
 				"fastfetch",
 				"fd",
 				"fzf",
-				"gh",
-				"git-crypt",
-				"git-filter-repo",
-				"git-lfs",
-				"git-sizer",
-				"gitleaks",
 				"glow",
 				"innounp",
 				"jq",
@@ -73,7 +67,16 @@
 				"wixtoolset",
 				"yazi",
 				"yq",
-				"zoxide"
+				"zoxide",
+
+				// GIT ADDONS:
+				"bfg",
+				"gh",
+				"git-crypt",
+				"git-filter-repo",
+				"git-lfs",
+				"git-sizer",
+				"gitleaks"
 			],
 			"global": [
 				"7zip",
