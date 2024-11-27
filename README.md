@@ -22,8 +22,7 @@ A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppu
 </p> 
 </div>
 
-> [!IMPORTANT]<br>
-> **Screenshots** are taken on my main monitor, which has the **resolution of 3440x1440**.<br>
+> [!IMPORTANT]<br> > **Screenshots** are taken on my main monitor, which has the **resolution of 3440x1440**.<br>
 > Works seamlessly on my **1920x1080** monitors as well!
 
 <div align="center">
@@ -183,7 +182,7 @@ Follow the below links to download and learn to how to setup:
 - ⚙️ [Rainmeter](./windows/rainmeter/) setup
 - \>\_ Sleek [Windows Terminal config](./windows/settings.json)
 - 🌈 Oh-My-Posh [minimal theme](./dotposh/posh-zen.toml) (with Spotify status if playing!)
-- 🦄 **Super fast** PowerShell startup time *(load asynchronously)* + **[custom functions](./dotposh/Modules/)**
+- 🦄 **Super fast** PowerShell startup time _(load asynchronously)_ + **[extra config](./dotposh/Config/)** + **[custom functions](./dotposh/Modules/)**
 - 🍄 Simple fastfetch configuration, which I copied from [scottmckendry's config](https://github.com/scottmckendry/Windots/tree/main/fastfetch)
 - 🥂 Many addons for Git!
 
