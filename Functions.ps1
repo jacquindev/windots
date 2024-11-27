@@ -201,7 +201,7 @@ function Install-NPM-Packages {
         $packages = $pkg.Packages
         if (!(Get-Command $command -ErrorAction SilentlyContinue)) {
             foreach ($package in $packages) {
-                gum spin --title="Installing $package..." -- npm install --global --silent $package
+                npm install --global --silent $package
                 Write-PrettyOutput -Process "nvm" -Entry "npm:" -Entry2 "$package" -Message "installed successfully." -Extra
             }
         }
@@ -209,6 +209,21 @@ function Install-NPM-Packages {
             foreach ($package in $packages) {
                 Write-PrettyOutput -Process "nvm" -Entry "npm:" -Entry2 "$package" -Message "already installed. Skipping..." -Extra
             }
+        }
+    }
+}
+
+function Install-Vagrant-Plugins {
+    param ([array]$List)
+
+    $installed = (vagrant plugin list)
+    foreach ($plugin in $List) {
+        if (!($installed | Select-String "$plugin")) {
+            gum spin --title="Instaling vagrant plugin $plugin..." -- vagrant install $plugin
+            Write-PrettyOutput -Process "vagrant" -Entry "plugin:" -Entry2 "$plugin" -Message "installed successfully." -Extra
+        }
+        else {
+            Write-PrettyOutput -Process "vagrant" -Entry "plugin:" -Entry2 "$plugin" -Message "already installed. Skipping..." -Extra
         }
     }
 }
@@ -284,9 +299,9 @@ function Write-GitConfigLocal {
     $gitUserMail = $(Write-Host "Input Git Email: " -ForegroundColor Magenta -NoNewline; Read-Host)
     $file = "$Env:USERPROFILE\.gitconfig-local"
 
-    Write-Output "[user]" > "$file"
-    Write-Output "  $gitUserName" > "$file"
-    Write-Output "  $gitUserMail" > "$file"
+    Write-Output "[user]" | Out-File "$file" -Append
+    Write-Output "  $gitUserName" | Out-File "$file" -Append
+    Write-Output "  $gitUserMail" | Out-File "$file" -Append
     Write-PrettyInfo -Message "Git Email and Name set successfully in" -Info "$Env:USERPROFILE\.gitconfig-local"
 }
 

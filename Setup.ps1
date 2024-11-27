@@ -157,6 +157,11 @@ function Install {
         Install-ScoopApps -List $scoopUserApps -Scope CurrentUser
     }
 
+    # Nerd Fonts
+    Write-PrettyTitle "NERD FONTS INSTALLATION"
+    Install-NerdFonts -List $nerdFonts
+    Start-Sleep -Seconds 1
+
     # Symlinks
     Write-PrettyTitle "SYMBOLIC LINKS"
     Set-Symlinks -Symlinks $symbolicLinks
@@ -167,11 +172,6 @@ function Install {
     $modulesLockFile = "$PSScriptRoot\modules.lock.json"
     Get-InstalledModule | Select-Object Name, Version, Author, InstalledDate, Description | ConvertTo-Json -Depth 100 | Out-File "$modulesLockFile" -Encoding utf8 -Force
     Write-PrettyInfo -Message "PowerShell modules installed are listed in" -Info "$modulesLockFile"
-
-    # Nerd Fonts
-    Write-PrettyTitle "NERD FONTS INSTALLATION"
-    Install-NerdFonts -List $nerdFonts
-    Start-Sleep -Seconds 1
 
     # VSCode Extensions
     if (Get-Command code -ErrorAction SilentlyContinue) {
@@ -315,7 +315,7 @@ function Install {
         # start komorebi
         $komorebiProcess = Get-Process -Name komorebi -ErrorAction SilentlyContinue
         if ($null -eq $komorebiProcess) {
-            $startKomorebi = $(Write-Host "Komorebi found. Run Komorebi now (y) or later (n)? " -ForegroundColor "Cyan" -NoNewline; Read-Host)
+            $startKomorebi = $(Write-Host "Komorebi found. Run Komorebi now (y) or later (n)? " -ForegroundColor Magenta -NoNewline; Read-Host)
             if ($startKomorebi -eq 'y') {
                 & komorebic start --whkd > $null 2>&1
                 Write-PrettyOutput -Process "komorebi" -Entry "komorebi with WHKD" -Message "started."
@@ -351,6 +351,13 @@ function Install {
         else {
             Write-PrettyOutput -Process "yasb" -Entry "status bar" -Message "already running..."
         }
+    }
+
+    # vagrant
+    if (Get-Command vagrant -ErrorAction SilentlyContinue) {
+        Write-PrettyTitle "VAGRANT PLUGINS"
+        $VagrantPlugins = @('sahara', 'vagrant-disksize', 'vagrant-docker-compose', 'vagrant-reload', 'vagrant-winnfsd')
+        Install-Vagrant-Plugins -List $VagrantPlugins
     }
 
     # Gsudo cache mode off
