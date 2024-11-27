@@ -168,17 +168,17 @@ Follow the below links to download and learn to how to setup:
 
 <h2 id="features">✨ Features</h2>
 
-- 💎 All packages to install are listed in **[appList.json](./appList.json)** - Easy to maintain!
-- 🎀 [Yasb](https://github.com/amnweb/yasb) status bar that compatible with Komorebi
+- 💫 All packages to install are listed in **[appList.json file](./appList.json)** - Easy to maintain!
 - 🎨 Main theme [Catppuccin](https://github.com/catppuccin/catppuccin) for everything!
-- 💖 Beautiful [wallpapers](https://github.com/jacquindev/windots/tree/main/windows/walls#readme), including [images](./windows/walls/pics/) & [videos](./windows/walls/live-walls/) for [Lively Wallpapers](https://www.rocksdanister.com/lively/)
+- 🎀 Minimal [Yasb](https://github.com/amnweb/yasb) status bar
+- 💖 Beautiful **_[wallpapers](https://github.com/jacquindev/windots/tree/main/windows/walls#readme)_**, and [live wallpapers](./windows/walls/live-walls/) for [Lively Wallpapers](https://www.rocksdanister.com/lively/)
 - 🪟 [Komorebi](./config/komorebi) / [GlazeWM](./config/glazewm/config.yaml) config
-- 🌸 All-In-One VSCode setup (automatically install extensions based on the **[list](./vscode/extensions.list)**)
-- ⚙️ Minimal [Rainmeter](./windows/rainmeter/) setup
-- \>\_ Sleek Windows Terminal config
-- 🌈 [Oh-My-Posh config](./dotposh/posh-zen.toml) minimal theme (with [Spotify](https://open.spotify.com/) status if using)
-- 🦄 [PowerShell](https://github.com/PowerShell/PowerShell) setup & **[custom functions](./dotposh/Modules/)**
-- 🍄 Simple [fastfetch](https://github.com/fastfetch-cli/fastfetch) config, which I copied the config from [scottmckendry's config](https://github.com/scottmckendry/Windots/tree/main/fastfetch)
+- 🌸 All-In-One VSCode setup (**_[extensions list](./vscode/extensions.list)_**)
+- ⚙️ [Rainmeter](./windows/rainmeter/) setup
+- \>\_ Sleek [Windows Terminal config](./windows/settings.json)
+- 🌈 Oh-My-Posh [minimal theme](./dotposh/posh-zen.toml) (with Spotify status if playing!)
+- 🦄 PowerShell setup & **[custom functions](./dotposh/Modules/)**
+- 🍄 Simple fastfetch configuration, which I copied from [scottmckendry's config](https://github.com/scottmckendry/Windots/tree/main/fastfetch)
 - 🥂 Many addons for Git!
 
 <details>
