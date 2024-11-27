@@ -113,8 +113,7 @@ function Install-WingetApps {
     foreach ($app in $AppList) {
         $installed = winget list --exact --accept-source-agreements -q $app
         if (![String]::Join("", $installed).Contains($app)) {
-            winget install --exact --silent --accept-source-agreements --accept-package-agreements $app --source winget | Out-Null
-            Write-PrettyOutput -Process "winget" -Entry "$app" -Message "installed."
+            winget install --exact --silent --accept-source-agreements --accept-package-agreements $app --source winget
         }
         else {
             Write-PrettyOutput -Process "winget" -Entry "$app" -Message "already installed."
@@ -130,8 +129,7 @@ function Remove-WingetApps {
     foreach ($app in $AppList) {
         $installed = winget list --exact --accept-source-agreements -q $app
         if ([String]::Join("", $installed).Contains($app)) {
-            winget uninstall --exact --silent  $app --source winget | Out-Null
-            Write-PrettyOutput -Process "winget" -Entry "$app" -Message "uninstalled."
+            winget uninstall --exact --silent  $app --source winget 
         }
         else {
             Write-PrettyOutput -Process "winget" -Entry "$app" -Message "is not available to uninstall."
@@ -148,7 +146,6 @@ function Install-ScoopApps {
         if (!(scoop info $app).Installed) {
             if ($Scope -eq 'CurrentUser') {
                 scoop install $app | Out-Null
-                Write-PrettyOutput -Process "scoop" -Entry "app:" -Extra "$app" -Message "installed."
             }
             elseif ($Scope -eq 'AllUsers') {
                 if ($(gsudo status IsElevated) -eq $False) {
@@ -174,7 +171,6 @@ function Remove-ScoopApps {
         if ((scoop info $app).Installed) {
             if ($Scope -eq 'CurrentUser') {
                 scoop uninstall $app | Out-Null
-                Write-PrettyOutput -Process "scoop" -Entry "app:" -Extra "$app" -Message "uninstalled."
             }
             elseif ($Scope -eq 'AllUsers') {
                 if ($(gsudo status IsElevated) -eq $False) {
