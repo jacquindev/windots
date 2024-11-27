@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+function command_exists() {
+  command -v "$@" >/dev/null 2>&1
+}
+
+# Git completions
+source /mingw64/share/git/completion/git-completion.bash
+
+if type _git &>/dev/null; then
+  complete -o default -o nospace -F _git g
+fi
+
+# github cli
+if command_exists gh; then
+  eval "$(gh completion -s bash)"
+fi
+
+# git-lfs
+if command_exists git-lfs; then
+  source <(git lfs completion bash)
+fi
+
+# gitleaks
+if command_exists gitleaks; then
+  source <(gitleaks completion bash)
+fi
+
+# Oh-my-posh completion
+if command_exists oh-my-posh; then
+  source <(oh-my-posh completion bash)
+fi
+
+# docker
+if command_exists docker; then
+  source <(docker completion bash)
+fi
+
+# kubectl
+if command_exists kubectl; then
+  source <(kubectl completion bash)
+fi
+
+# npm
+if command_exists npm; then
+  source <(npm completion)
+fi
+
+# pnpm
+if command_exists pnpm; then
+  source <(pnpm completion bash)
+fi

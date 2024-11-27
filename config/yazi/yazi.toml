@@ -143,6 +143,7 @@ preloaders = [
 	{ mime = "font/*", run = "font" },
 	{ mime = "application/vnd.ms-opentype", run = "font" },
 ]
+prepend_previewers = [{ name = "*.md", run = "glow" }]
 previewers = [
 	{ name = "*/", run = "folder", sync = true },
 	# Code

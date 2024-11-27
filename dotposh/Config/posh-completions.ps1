@@ -54,6 +54,11 @@ if (Get-Command npm -ErrorAction SilentlyContinue) {
     Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCount 1 -Action { Import-Module npm-completion -Global } | Out-Null
 }
 
+# pnpm
+if (Get-Command pnpm -ErrorAction SilentlyContinue) {
+    pnpm completion pwsh | Out-String | Invoke-Expression
+}
+
 # docker
 if (Get-Command docker -ErrorAction SilentlyContinue) {
     if (-not (Get-Module -ListAvailable -Name "DockerCompletion" -ErrorAction SilentlyContinue)) {
@@ -72,3 +77,4 @@ if (Get-Command kubectl -ErrorAction SilentlyContinue) {
         Register-ArgumentCompleter -CommandName k -ScriptBlock $__kubectlCompleterBlock
     } | Out-Null
 }
+

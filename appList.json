@@ -36,6 +36,7 @@
 				"bfg",
 				"btop",
 				"csvlens",
+				"charm-gum",
 				"delta",
 				"eza",
 				"fastfetch",
@@ -47,6 +48,7 @@
 				"git-lfs",
 				"git-sizer",
 				"gitleaks",
+				"glow",
 				"innounp",
 				"jq",
 				"lazygit",
@@ -107,12 +109,34 @@
 			}
 		],
 		"github_extension": [
-			"dlvhdr/gh-dash",
-			"gennaro-tedesco/gh-s",
-			"Link-/gh-token",
-			"seachicken/gh-poi",
-			"yuler/gh-download",
-			"yusukebe/gh-markdown-preview"
+			{
+				"Name": "gh-dash",
+				"Repo": "dlvhdr/gh-dash"
+			},
+			{
+				"Name": "gh-s",
+				"Repo": "gennaro-tedesco/gh-s"
+			},
+			{
+				"Name": "gh-token",
+				"Repo": "Link-/gh-token"
+			},
+			{
+				"Name": "gh-poi",
+				"Repo": "seachicken/gh-poi"
+			},
+			{
+				"Name": "gh-download",
+				"Repo": "yuler/gh-download"
+			},
+			{
+				"Name": "gh-markdown-preview",
+				"Repo": "yusukebe/gh-markdown-preview"
+			},
+			{
+				"Name": "gh-screensaver",
+				"Repo": "vilmibm/gh-screensaver"
+			}
 		],
 		"nerdfont": [
 			{

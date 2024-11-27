@@ -33,7 +33,7 @@
             "keys": "alt+shift+d"
         }
     ],
-    "centerOnLaunch": false,
+    "centerOnLaunch": true,
     "confirmCloseAllTabs": false,
     "copyFormatting": "none",
     "copyOnSelect": false,
@@ -111,6 +111,11 @@
             },
             {
                 "colorScheme": "Catppuccin Mocha",
+                "font": {
+                    "face": "JetBrainsMono Nerd Font Propo",
+                    "cellHeight": "1.3",
+                    "size": 10
+                },
                 "guid": "{51855cb2-8cce-5362-8f54-464b92b32386}",
                 "hidden": false,
                 "name": "Ubuntu",
