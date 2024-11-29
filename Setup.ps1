@@ -145,9 +145,6 @@ function Install {
         winget export -o "$wingetLockFile" | Out-Null
         Write-PrettyInfo -Message "Packages installed by winget was written in" -Info "$wingetLockFile"
     }
-
-    # Gsudo cache mode on
-    Set-GsudoCacheMode -on
     
     # Scoop Packages
     if (Get-Command scoop -ErrorAction SilentlyContinue) {
@@ -377,10 +374,6 @@ function Install {
         $VagrantPlugins = @('sahara', 'vagrant-disksize', 'vagrant-docker-compose', 'vagrant-reload', 'vagrant-winnfsd')
         Install-Vagrant-Plugins -List $VagrantPlugins
     }
-
-    # Gsudo cache mode off
-    Set-GsudoCacheMode -off
-    Start-Sleep -Seconds 1
 
     ""
 }
