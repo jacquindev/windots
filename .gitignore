@@ -4,7 +4,9 @@
 foo*
 
 modules.lock.json
-packages.lock.json
+winget.lock.json
+scoop.lock.json
+
 db.zo
 
 node_modules/
