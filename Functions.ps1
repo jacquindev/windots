@@ -1,5 +1,4 @@
 #requires -Version 7
-#requires -RunAsAdministrator
 
 # cSpell:disable
 
@@ -21,12 +20,12 @@ function Set-GsudoCacheMode {
     param([switch]$on, [switch]$off)
     if (Get-Command gsudo -ErrorAction SilentlyContinue) {
         if ($on) { 
-            Write-PrettyTitle "Enable Gsudo CacheMode"
+            # Write-PrettyTitle "Enable Gsudo CacheMode"
             Start-Sleep -Seconds 5
             & gsudo cache on 
         }
         if ($off) { 
-            Write-PrettyTitle "Disable Gsudo CacheMode"
+            # Write-PrettyTitle "Disable Gsudo CacheMode"
             Start-Sleep -Seconds 5
             & gsudo cache off 
         }
@@ -161,6 +160,16 @@ function Install-Modules {
     }
 }
 
+function Update-Modules {
+    param ([array]$List)
+
+    foreach ($module in $List) {
+        if (Get-Module -ListAvailable -Name $module -ErrorAction SilentlyContinue) {
+            Update-Module -Name $module -Scope CurrentUser -Force -PassThru | Out-Null
+        }
+    }
+}
+
 function Install-VSCode-Extensions {
     param ([array]$List)
 
@@ -175,6 +184,7 @@ function Install-VSCode-Extensions {
         }
     }
 }
+
 
 function Install-GitHub-Extensions {
     param ([array]$List)
