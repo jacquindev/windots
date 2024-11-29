@@ -213,7 +213,7 @@ function Install {
     if (Get-Command nvm -ErrorAction SilentlyContinue) {
         Write-PrettyTitle "NVM (Node Version Manager)"
         if (!(Get-Command npm -ErrorAction SilentlyContinue)) {
-            $ltsOrLatest = $(Write-Host "NodeJS not found. Install LTS (y) or latest (n)? "-ForegroundColor Magenta -NoNewline; Read-Host)
+            $ltsOrLatest = $(Write-Host "❔NodeJS not found. Install LTS (y) or latest (n)? "-ForegroundColor Cyan -NoNewline; Read-Host)
             if ($ltsOrLatest -eq 'y') {
                 nvm install lts
                 nvm use lts
@@ -325,7 +325,7 @@ function Install {
         # start komorebi
         $komorebiProcess = Get-Process -Name komorebi -ErrorAction SilentlyContinue
         if ($null -eq $komorebiProcess) {
-            $startKomorebi = $(Write-Host "Komorebi found. Run Komorebi now (y) or later (n)? " -ForegroundColor Magenta -NoNewline; Read-Host)
+            $startKomorebi = $(Write-Host "❔Komorebi found. Run Komorebi now (y) or later (n)? " -ForegroundColor Cyan -NoNewline; Read-Host)
             if ($startKomorebi -eq 'y') {
                 & komorebic start --whkd > $null 2>&1
                 Write-PrettyOutput -Process "komorebi" -Entry "komorebi with WHKD" -Message "started."
@@ -345,7 +345,7 @@ function Install {
         $yasbProcess = Get-Process -Name yasb -ErrorAction SilentlyContinue
         if ($null -eq $yasbProcess) {
             $yasbShortcutPath = Join-Path -Path $env:APPDATA -ChildPath "Microsoft\Windows\Start Menu\Programs\Yasb.lnk"
-            $confirmYasbRun = $(Write-Host "Found Yasb. Run now? (y/n) " -ForegroundColor Magenta -NoNewline; Read-Host)
+            $confirmYasbRun = $(Write-Host "❔Found Yasb. Run Yasb now? (y/n) " -ForegroundColor Cyan -NoNewline; Read-Host)
             if ($confirmYasbRun -eq 'y') {
                 if (Test-Path $yasbShortcutPath) {
                     Start-Process -FilePath $yasbShortcutPath > $null 2>&1
