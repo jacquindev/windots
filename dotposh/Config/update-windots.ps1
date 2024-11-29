@@ -1,23 +1,26 @@
 # cSpell:disable
 
 function Update-Windots {
-    [CmdletBinding()]
     $currentDir = "$(Get-Location)"
 
     Set-Location "$env:DOTFILES"
-    git stash | Out-Null
-    git pull | Out-Null
-    git stash pop | Out-Null
-
-    if ((New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -eq $False) {
-        if (Get-Command gsudo -ErrorAction SilentlyContinue) {
-            gsudo .\Setup.ps1
-        }
-        else {
-            Start-Process pwsh -ArgumentList ".\Setup.ps1" -Verb RunAs -WindowStyle Hidden -Wait
-        }
+    
+    Write-Host "Updating GitHub repository of local windots..." -ForegroundColor DarkGray
+    if (Get-Command gum -ErrorAction SilentlyContinue) {
+        gum spin --title="Stashing GitHub repo..." --title.foreground="" -- git stash
+        gum spin --title="Pulling latest updates..." --title.foreground="" -- git pull
+    }
+    else {
+        git stash | Out-Null
+        git pull | Out-Null
     }
 
+    git stash pop --quiet
+    
+    Write-Host "Capturing any new dependencies..." -ForegroundColor DarkGray
+    Start-Process pwsh -ArgumentList ".\Setup.ps1" -Verb RunAs -WindowStyle Hidden -Wait
+
+    Write-Host "Reloading PowerShell profile..." -ForegroundColor DarkGray
     Set-Location $currentDir
     . $PROFILE.CurrentUserAllHosts
 }
