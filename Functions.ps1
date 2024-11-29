@@ -79,6 +79,7 @@ function Write-PrettyInfo {
         [Alias('m')][string]$Message,
         [Alias('i')][string]$Info
     )
+    ""
     Write-Host "==>" -ForegroundColor Cyan -NoNewline
     Write-Host " $Message " -NoNewline
     Write-Host "$Info" -ForegroundColor Magenta
