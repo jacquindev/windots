@@ -105,7 +105,6 @@ function Install-WingetApps {
 
 function Enable-ScoopBuckets {
     param ([array]$List)
-
     $scoopBucketDir = "$(Split-Path (Get-Command scoop.ps1).Source | Split-Path)\buckets"
     foreach ($bucket in $List) {
         if (!(Test-Path -PathType Container -Path "$scoopBucketDir\$bucket")) {
@@ -185,7 +184,7 @@ function Install-GitHub-Extensions {
         $extRepo = $ext.Repo
         if (-not ($installed | Select-String "$extRepo")) {
             gum spin --title="Installing extension $extName..." -- gh extension install "$extRepo" --force
-            Write-PrettyOutput -Process "github" -Entry "extension:" -Entry2 "$extName" -Message "installed successfully."
+            Write-PrettyOutput -Process "github" -Entry "extension:" -Entry2 "$extName" -Message "installed successfully." -Extra
         }
         else {
             Write-PrettyOutput -Process "github" -Entry "extension:" -Entry2 "$extName" -Message "already installed. Skipping..." -Extra
