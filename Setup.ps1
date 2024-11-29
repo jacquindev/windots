@@ -138,7 +138,7 @@ function Install {
         Write-PrettyTitle "WINGET PACKAGES"
         Install-WingetApps -List $wingetApps
 
-        $wingetLockFile = "$PSScriptRoot\packages.lock.json"
+        $wingetLockFile = "$PSScriptRoot\winget.lock.json"
         if (Test-Path -PathType Leaf -Path $wingetLockFile) {
             Remove-Item $wingetLockFile -Force -Recurse -ErrorAction SilentlyContinue
         }
@@ -155,6 +155,12 @@ function Install {
         Enable-ScoopBuckets -List $scoopBuckets
         Install-ScoopApps -List $scoopGlobalApps -Scope AllUsers
         Install-ScoopApps -List $scoopUserApps -Scope CurrentUser
+        $scoopLockFile = "$PSScriptRoot\scoop.lock.json"
+        if (Test-Path -Path "$scoopLockFile") {
+            Remove-Item "$scoopLockFile" -Force -Recurse -ErrorAction SilentlyContinue
+        }
+        scoop export > "$scoopLockFile"
+        Write-PrettyInfo -Message "Packages installed by scoop was written in" -Info "$scoopLockFile"
     }
 
     # Nerd Fonts
@@ -311,7 +317,7 @@ function Install {
         # yazi plugins
         gum spin --title="Installing yazi plugins..." -- ya pack -i
         gum spin --title="Updating yazi plugins..." -- ya pack -u
-        Write-PrettyInfo -Message "Installed Yazi Plugins can be found at" -Info "$PSScriptRoot\config\yazi\package.toml"
+        Write-PrettyInfo -Message "Installed Yazi packages can be found at" -Info "$PSScriptRoot\config\yazi\package.toml"
         Start-Sleep -Seconds 1
     }
 
