@@ -366,11 +366,11 @@ function Install {
     }
 
     # vagrant
-    if (Get-Command vagrant -ErrorAction SilentlyContinue) {
-        Write-PrettyTitle "VAGRANT PLUGINS"
-        $VagrantPlugins = @('sahara', 'vagrant-disksize', 'vagrant-docker-compose', 'vagrant-reload', 'vagrant-winnfsd')
-        Install-Vagrant-Plugins -List $VagrantPlugins
-    }
+    # if (Get-Command vagrant -ErrorAction SilentlyContinue) {
+    #     Write-PrettyTitle "VAGRANT PLUGINS"
+    #     $VagrantPlugins = @('sahara', 'vagrant-disksize', 'vagrant-docker-compose', 'vagrant-reload', 'vagrant-winnfsd')
+    #     Install-Vagrant-Plugins -List $VagrantPlugins
+    # }
 
     ""
 }
