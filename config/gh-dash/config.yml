@@ -4,10 +4,11 @@ theme:
     sectionsShowCount: true
     table:
       showSeparators: true
+      compact: false
   colors:
     text:
       primary: "#cdd6f4"
-      secondary: "#fab387"
+      secondary: "#cba6f7"
       inverted: "#11111b"
       faint: "#bac2de"
       warning: "#f9e2af"
@@ -16,7 +17,7 @@ theme:
     background:
       selected: "#313244"
     border:
-      primary: "#fab387"
+      primary: "#cba6f7"
       secondary: "#45475a"
       faint: "#313244"
 
@@ -26,12 +27,16 @@ prSections:
     layout:
       author:
         hidden: true
-  - title: Needs My Review
+  - title: Review
     filters: is:open review-requested:@me
+  - title: Commented
+    filters: commenter:@me
 
 issuesSections:
   - title: Created
     filters: is:open author:@me
+  - title: Commented
+    filters: is:open commenter:@me
   - title: Assigned
     filters: is:open assignee:@me
 
@@ -50,19 +55,27 @@ defaults:
   refetchIntervalMinutes: 30
 
 repoPaths:
-  :owner/:repo: /g/repos/github.com/:owner/:repo
+  :owner/:repo: /g/repos/:owner/:repo
   jacquindev/*: /g/projects/*
+  jacquindev/windots: /g/dotfiles
 
 pager:
   diff: delta
 
 keybindings:
+  universal:
+    - key: g
+      command: >
+        cd {{.RepoPath}} && lazygit
+
   prs:
+    - key: a
+      command: >
+        cd {{.RepoPath}} && git add -A && lazygit
     - key: v
       command: >
-        cd {{.RepoPath}} &&
-        code . &&
-        gh pr checkout {{.PrNumber}}
+        gh pr review --repo {{.RepoName}} --approve --body "$(gum input --prompt='Approval Comment: ')" {{.PrNumber}}
+
   issues:
     - key: P
       command: gh issue pin {{.IssueNumber}} --repo {{.RepoName}}
