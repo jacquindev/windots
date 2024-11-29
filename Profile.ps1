@@ -55,6 +55,12 @@ Remove-Variable function
 foreach ($file in $(Get-ChildItem -Path "$env:DOTPOSH\Config\*" -Include *.ps1 -Recurse)) {
     . "$file"
 }
+Remove-Variable file
+
+foreach ($completion in $(Get-ChildItem -Path "$env:DOTPOSH\Config\posh-completions\*" -Include *.ps1 -Recurse)) {
+    . "$completion"
+}
+Remove-Variable completion
 
 # yazi
 if (Get-Command yazi -ErrorAction SilentlyContinue) {
