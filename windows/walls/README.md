@@ -55,16 +55,6 @@
 </tr>
 <tr>
   <td>
-    <img alt="buildings" src="./pics/buildings.png" width="780" height="450"/>
-  </td>
-</tr>
-<tr>
-  <td>
-    <img alt="buttons" src="./pics/buttons.png" width="780" height="450"/>
-  </td>
-</tr>
-<tr>
-  <td>
     <img alt="cabin-2" src="./pics/cabin-2.png" width="780" height="450"/>
   </td>
 </tr>
@@ -85,17 +75,7 @@
 </tr>
 <tr>
   <td>
-    <img alt="cat-waves" src="./pics/cat-waves.png" width="780" height="450"/>
-  </td>
-</tr>
-<tr>
-  <td>
     <img alt="city" src="./pics/city.png" width="780" height="450"/>
-  </td>
-</tr>
-<tr>
-  <td>
-    <img alt="colorful-planets" src="./pics/colorful-planets.jpg" width="780" height="450"/>
   </td>
 </tr>
 <tr>
@@ -130,26 +110,6 @@
 </tr>
 <tr>
   <td>
-    <img alt="dark-forest" src="./pics/dark-forest.jpg" width="780" height="450"/>
-  </td>
-</tr>
-<tr>
-  <td>
-    <img alt="dark-waves" src="./pics/dark-waves.jpg" width="780" height="450"/>
-  </td>
-</tr>
-<tr>
-  <td>
-    <img alt="flatppuccin_macchiato" src="./pics/flatppuccin_macchiato.png" width="780" height="450"/>
-  </td>
-</tr>
-<tr>
-  <td>
-    <img alt="fuji" src="./pics/fuji.png" width="780" height="450"/>
-  </td>
-</tr>
-<tr>
-  <td>
     <img alt="galaxies" src="./pics/galaxies.png" width="780" height="450"/>
   </td>
 </tr>
@@ -176,16 +136,6 @@
 <tr>
   <td>
     <img alt="glitch" src="./pics/glitch.png" width="780" height="450"/>
-  </td>
-</tr>
-<tr>
-  <td>
-    <img alt="gradient-synth-cat" src="./pics/gradient-synth-cat.png" width="780" height="450"/>
-  </td>
-</tr>
-<tr>
-  <td>
-    <img alt="hashtags-black" src="./pics/hashtags-black.png" width="780" height="450"/>
   </td>
 </tr>
 <tr>
@@ -295,11 +245,6 @@
 </tr>
 <tr>
   <td>
-    <img alt="sakura" src="./pics/sakura.png" width="780" height="450"/>
-  </td>
-</tr>
-<tr>
-  <td>
     <img alt="scenery" src="./pics/scenery.png" width="780" height="450"/>
   </td>
 </tr>
@@ -350,11 +295,6 @@
 </tr>
 <tr>
   <td>
-    <img alt="tetris" src="./pics/tetris.png" width="780" height="450"/>
-  </td>
-</tr>
-<tr>
-  <td>
     <img alt="tokyo" src="./pics/tokyo.png" width="780" height="450"/>
   </td>
 </tr>
@@ -376,11 +316,6 @@
 <tr>
   <td>
     <img alt="window-room" src="./pics/window-room.png" width="780" height="450"/>
-  </td>
-</tr>
-<tr>
-  <td>
-    <img alt="windows-error" src="./pics/windows-error.jpg" width="780" height="450"/>
   </td>
 </tr>
 <tr>
