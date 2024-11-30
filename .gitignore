@@ -1,6 +1,6 @@
 *.log
-*.bak
 *.log.*
+*.bak
 foo*
 
 modules.lock.json
@@ -14,3 +14,4 @@ yarn.lock
 package-lock.json
 
 config/lazygit/state.yml
+config/spotify-tui/.spotify_token_cache.json
