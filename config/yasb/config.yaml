@@ -53,6 +53,7 @@ bars:
           "media",
           "wifi",
           #"github",
+          #"wallpapers",
           "weather",
           "volume",
           #"battery",
@@ -61,7 +62,6 @@ bars:
           "cpu",
           #"disk",
           "memory",
-          #"wallpapers",
           #"traffic",
           "power_menu"
         ]
@@ -303,13 +303,13 @@ widgets:
           - {icon: "\uf282", launch: "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"}
           #- {icon: "\udb80\ude39", launch: "C:\\Program Files\\Mozilla Firefox\\firefox.exe"}
           - {icon: "\udb82\ude1e", launch: "C:\\Users\\jqnhi\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"}
-          #- {icon: "\uf489", launch: "wt"}
+          - {icon: "\uf1ff", launch: "C:\\Users\\jqnhi\\AppData\\Local\\Discord\\Update.exe --processStart Discord.exe"}
+          - {icon: "\uf489", launch: "wt"}
           #- {icon: "\uf413", launch: "explorer"}
           - {icon: "\uf0a2", launch: "notification_center"}
           - {icon: "\ueb51", launch: "quick_settings"}
           - {icon: "\uf46a", launch: "cmd.exe /c start ms-settings:windowsupdate"}
           - {icon: "\uf422", launch: "search"}
-          #- {icon: "\uf1ff", launch: "C:\\Users\\amn\\AppData\\Local\\Discord\\Update.exe --processStart Discord.exe"}
           #- {icon: "\ue217", launch: "C:\\Users\\amn\\AppData\\Roaming\\Telegram Desktop\\Telegram.exe"}
           #- {icon: "\udb84\udf55", launch: "widget"}
           # Currently available to use quick_settings, notification_center, search, widget, launcher (launcher will trigger ALT+A)
@@ -333,7 +333,7 @@ widgets:
       type: "yasb.wallpapers.WallpapersWidget"
       options:
         label: "<span>\udb83\ude09</span>"
-        image_path: "C:\\Users\\jqnhi\\Pictures\\walls" # Path to folder with images
+        image_path: "C:\\jqnhi\\Pictures" # Path to folder with images
         change_automatically: false # Automatically change wallpaper
         update_interval: 60 # If change_automatically is true, update interval in seconds
 
