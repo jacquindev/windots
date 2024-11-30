@@ -307,7 +307,7 @@ function Install {
         Start-Sleep -Seconds 1
         # yazi plugins
         gum spin --title="Installing yazi plugins..." -- ya pack -i
-        gum spin --title="Updating yazi plugins..." -- ya pack -u
+        #gum spin --title="Updating yazi plugins..." -- ya pack -u
         Write-PrettyInfo -Message "Installed Yazi packages can be found at" -Info "$PSScriptRoot\config\yazi\package.toml"
         Start-Sleep -Seconds 1
     }
