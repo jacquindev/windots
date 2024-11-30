@@ -3,15 +3,8 @@
 *.bak
 foo*
 
-modules.lock.json
-winget.lock.json
-scoop.lock.json
-
 db.zo
-
-node_modules/
-yarn.lock
-package-lock.json
+*.lock.json
+.spotify_token_cache.json
 
 config/lazygit/state.yml
-config/spotify-tui/.spotify_token_cache.json
