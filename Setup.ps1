@@ -80,7 +80,7 @@ $symbolicLinks = @{
     "$Env:USERPROFILE\.config\delta"                                                              = ".\config\delta"
     "$Env:USERPROFILE\.config\gh-dash"                                                            = ".\config\gh-dash"
     "$Env:USERPROFILE\.config\npm"                                                                = ".\config\npm"
-    "$Env:USERPROFILE\.config\spotify-tui\config.yml"                                             = ".\config\spotify-tui\config.yml"
+    "$Env:USERPROFILE\.config\spotify-tui"                                                        = ".\config\spotify-tui"
     "$Env:USERPROFILE\.config\bash"                                                               = ".\config\bash"
     # "$Env:USERPROFILE\.glzr\glazewm\config.yaml"                                                  = ".\config\glazewm\config.yaml"
     "$Env:APPDATA\bat"                                                                            = ".\config\bat"
@@ -222,9 +222,6 @@ function Install {
                 npm install -g npm@latest
             }
             corepack enable
-            corepack install -g yarn@latest
-            corepack install -g pnpm@latest
-            
             npm config set userconfig="$env:USERPROFILE\.config\npm\.npmrc" --global
         }
         Install-NPM-Packages -List $npmGlobalPackages
