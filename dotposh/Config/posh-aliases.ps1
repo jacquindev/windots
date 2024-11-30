@@ -10,7 +10,8 @@ function New-Directory {
     #>
     [CmdletBinding()]
     param ([Parameter(Mandatory = $True)]$Path)
-    New-Item -Path $Path -ItemType Directory; Set-Location -Path $Path
+    New-Item -Path $Path -ItemType Directory | Out-Null
+    Set-Location -Path $Path
 }
 
 function New-File {
