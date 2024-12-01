@@ -92,6 +92,7 @@ $symbolicLinks = @{
     "$Env:USERPROFILE\.czrc"                                                                      = ".\home\.czrc"
     "$Env:USERPROFILE\.bash_profile"                                                              = ".\home\.bash_profile"
     "$Env:USERPROFILE\.bashrc"                                                                    = ".\home\.bashrc"
+    "$Env:USERPROFILE\.inputrc"                                                                   = ".\home\.inputrc"
     "$Env:USERPROFILE\.wslconfig"                                                                 = ".\home\.wslconfig"
 }
 
