@@ -15,7 +15,7 @@
 # Catppuccin (syntax highlighting)
 # -----------------------------------------------------------------
 # Install Catppuccin PowerShell module if not already installed
-if (-not (Get-Module -ListAvailable -Name Catppuccin)) {
+if (-not (Get-Module -ListAvailable -Name Catppuccin -ErrorAction SilentlyContinue)) {
     Write-Host "Installing PowerShell Module Catppuccin..." -ForegroundColor "Green"
     git clone "https://github.com/catppuccin/powershell.git" "$env:USERPROFILE\Documents\PowerShell\Modules\Catppuccin"
 }
