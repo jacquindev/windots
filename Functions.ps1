@@ -151,7 +151,7 @@ function Install-Modules {
 
     foreach ($module in $List) {
         if (!(Get-Module -ListAvailable -Name $module -ErrorAction SilentlyContinue)) {
-            Install-Module -Name $module -AllowClobber -Scope CurrentUser -Force | Out-Null
+            Install-Module -Name $module -AllowClobber -Scope CurrentUser -Force
             Write-PrettyOutput -Process "pwsh" -Entry "module:" -Entry2 "$module" -Message "installed successfully." -Extra
         }
         else {
