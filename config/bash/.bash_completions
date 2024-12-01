@@ -4,11 +4,14 @@ function command_exists() {
   command -v "$@" >/dev/null 2>&1
 }
 
-# Git completions
+##############################################################################################
+
+# git
 source /mingw64/share/git/completion/git-completion.bash
 
-if type _git &>/dev/null; then
-  complete -o default -o nospace -F _git g
+# Make Bash complete the `g` alias just like `git`
+if type _git_complete &>/dev/null; then
+  __git_complete g git
 fi
 
 # github cli
@@ -26,7 +29,7 @@ if command_exists gitleaks; then
   source <(gitleaks completion bash)
 fi
 
-# Oh-my-posh completion
+# Oh-my-posh
 if command_exists oh-my-posh; then
   source <(oh-my-posh completion bash)
 fi
@@ -41,6 +44,11 @@ if command_exists kubectl; then
   source <(kubectl completion bash)
 fi
 
+# vagrant
+if command_exists vagrant; then
+  . "C:/Program Files/Vagrant/embedded/gems/gems/vagrant-2.4.3/contrib/bash/completion.sh"
+fi
+
 # npm
 if command_exists npm; then
   source <(npm completion)
@@ -51,7 +59,21 @@ if command_exists pnpm; then
   source <(pnpm completion bash)
 fi
 
-# vagrant
-if command_exists vagrant; then
-  . "C:/Program Files/Vagrant/embedded/gems/gems/vagrant-2.4.3/contrib/bash/completion.sh"
+# pip
+if command_exists pip; then
+  eval "$(pip completion --bash)"
+fi
+
+# pipenv
+if command_exists pipenv; then
+  eval "$(_PIPENV_COMPLETE=bash_source pipenv)"
+fi
+
+##############################################################################################
+unset -f command_exists
+
+# Extra completions
+if [ -d "$DOTFILES/config/bash/custom/completions" ]; then
+  for file in "$DOTFILES/config/bash/custom/completions/"*.bash; do source "$file"; done
+  unset file
 fi
