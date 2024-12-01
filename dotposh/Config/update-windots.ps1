@@ -69,6 +69,10 @@ function Update-Windots {
         gum spin --title="Updating scoop apps..." -- scoop update --all
     }
 
+    if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
+        gum spin --title="Clearning oh-my-posh cache..." -- oh-my-posh cache clear
+    }
+
     # Update vscode extensions
     if (Get-Command code -ErrorAction SilentlyContinue) {
         gum spin --title="Updating vscode extensions..." -- code --update-extensions
