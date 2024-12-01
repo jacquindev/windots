@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# cSpell:disable
+
+# Function to add to path
+# References: - https://superuser.com/questions/39751/add-directory-to-path-if-its-not-already-there
+
+export EDITOR="code"
+export VISUAL="code"
+
+export CLICOLOR=1
+export LSCOLORS=gxfxcxdxbxegedabagacad
