@@ -1,26 +1,41 @@
-# general aliases
-alias reload="exec $SHELL -l"
+# clear
 alias c='clear'
+alias cls='clear'
+
+# exit
+alias q='exit'
+alias quit='exit'
 
 alias cp='cp -i'
 alias mv='mv -i'
 alias ln='ln -i'
 alias rm='rm -i'
 alias mkdir='mkdir -p'
+
+# list declared aliases, functions, paths
+alias aliases="alias | sed 's/=.*//'"
+alias functions="declare -f | grep '^[a-z].* ()' | sed 's/{$//'"
 alias paths='echo $PATH | tr ":" "\n"'
 
+# reload shell
 alias reload='exec $SHELL -l'
 
-mkcd() {
-  mkdir "$@" && cd "$@" || exit
-}
+# clear history
+alias hist-clr='echo "" > ~/.bash_history'
 
 # common locations
 alias dotf="cd $DOTFILES"
-alias docs="cd $USERPROFILE/Documents"
-alias desktop="cd $USERPROFILE/Desktop"
-alias downloads="cd $USERPROFILE/Downloads"
-alias home="cd $USERPROFILE"
+alias docs="cd ~/Documents"
+alias desktop="cd ~/Desktop"
+alias downloads="cd ~/Downloads"
+
+# disk usage
+alias dux='du -x --max-depth=1 | sort -n'
+alias dud='du -d 1 -h'
+alias duf='du -sh *'
+
+# ip address
+alias ip="curl -s ipinfo.io | jq -r '.ip'"
 
 # chmod:
 # Stolen from: - https://github.com/ohmybash/oh-my-bash/blob/master/aliases/chmod.aliases.sh
@@ -53,7 +68,16 @@ else
   alias lm='ls -al | more'
   alias ll='ls -lAFh'
   alias la='ls -Al'
+fi
 
-  #   lr:  Full Recursive Directory Listing
-  alias lr='ls -R | grep ":$" | sed -e '\''s/:$//'\'' -e '\''s/[^-][^\/]*\//--/g'\'' -e '\''s/^/   /'\'' -e '\''s/-/|/'\'' | less'
+#   lr:  Full Recursive Directory Listing
+alias lr='ls -R | grep ":$" | sed -e '\''s/:$//'\'' -e '\''s/[^-][^\/]*\//--/g'\'' -e '\''s/^/   /'\'' -e '\''s/-/|/'\'' | less'
+
+# urlencode / urldecode
+if command -v node >/dev/null 2>&1; then
+  alias urlencode='node -e "console.log(encodeURIComponent(process.argv[1]))"'
+  alias urldecode='node -e "console.log(decodeURIComponent(process.argv[1]))"'
+else
+  alias urlencode='python3 -c "import sys; del sys.path[0]; import urllib.parse as up; print(up.quote_plus(sys.argv[1]))"'
+  alias urldecode='python3 -c "import sys; del sys.path[0]; import urllib.parse as up; print(up.unquote_plus(sys.argv[1]))"'
 fi
