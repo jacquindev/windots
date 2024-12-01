@@ -20,7 +20,8 @@ alias paths='echo $PATH | tr ":" "\n"'
 # reload shell
 alias reload='exec $SHELL -l'
 
-# clear history
+# history
+alias h='history'
 alias hist-clr='echo "" > ~/.bash_history'
 
 # common locations
