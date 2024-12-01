@@ -130,7 +130,7 @@ if (Get-Command eza -ErrorAction SilentlyContinue) {
     Remove-Item Alias:ls -Force -ErrorAction SilentlyContinue
     $_eza_params = '--icons --header --hyperlink --group --git -I="*NTUSER.DAT*|*ntuser.dat*" --group-directories-first'
 
-    Add-Alias ls "eza $_eza_params -la"
+    Add-Alias ls "eza $_eza_params"
     Add-Alias la "eza $_eza_params -al --time-style=relative --sort=modified"
     Add-Alias ld "eza $_eza_params -lDa --show-symlinks"                    # lists only directories
     Add-Alias lf "eza $_eza_params -lfa --show-symlinks"                    # lists only files (included hidden files)
