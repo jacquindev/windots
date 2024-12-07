@@ -21,7 +21,7 @@
     {
         "key": "ctrl+alt+z",
         "command": "workbench.action.toggleZenMode",
-        "when": "!isAuxilliaryWindowFocusedContext"
+        "when": "!isAuxiliaryWindowFocusedContext"
     },
     {
         "key": "ctrl+shift+=",

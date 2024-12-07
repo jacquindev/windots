@@ -8,13 +8,13 @@ komorebi:
   start_command: "komorebic start --whkd"
   stop_command: "komorebic stop --whkd"
   reload_command: "komorebic stop --whkd && komorebic start --whkd"
-  
+
 # This is the main configuration file for Yet Another Status Bar (YASB)
 bars:
   status-bar:
     enabled: true
     #screens: ['DELL P2419H (1)'] # If you want to show on specific screen
-    screens: ['*'] 
+    screens: ['*']
     class_name: "yasb-bar"
     alignment:
       position: "top"
@@ -44,7 +44,7 @@ bars:
           "apps",
           #"komorebi_active_layout",
           "active_window"
-        ] 
+        ]
       center: [
           "clock",
         ]
@@ -123,7 +123,7 @@ widgets:
       options:
         label: "{%a %d, %b %H:%M}"
         label_alt: "{%A %d %B %Y, %H:%M}"
-        #locale: 'en_EN' # Langugae for date, you can set your own, example fr_FR
+        #locale: 'en_EN' # Language for date, you can set your own, example fr_FR
         timezones: [] #Looking up time zone info from registry
         #timezones: ["America/Montreal"]
 
@@ -247,7 +247,7 @@ widgets:
         location: 'Ho Chi Minh City' # You can use "USA Los Angeles 90006" {COUNTRY CITY ZIP_CODE}, or just city.
         callbacks:
           on_left: "toggle_label"
-        icons: 
+        icons:
           sunnyDay: "\ue30d"
           clearNight: "\ue32b"
           cloudyDay: "\udb81\udd99"
@@ -282,7 +282,7 @@ widgets:
         uptime: True
         blur: False
         blur_background: True
-        animation_duration: 300 # Milisecond 
+        animation_duration: 300 # Millisecond
         button_row: 3 # Number of buttons in row, min 1 max 5
         buttons:
           lock: ["\uea75","Lock"]
@@ -322,11 +322,11 @@ widgets:
         token: env # GitHub Personal access tokens (classic) https://github.com/settings/tokens
         # You can set token: env, this means you have to set YASB_GITHUB_TOKEN in environment variable
         max_notification: 20 # Max number of notification displaying in menu max: 50
-        only_unread: false # Show only unread or all notifications; 
+        only_unread: false # Show only unread or all notifications;
         max_field_size: 54 # Max characters in title before truncation.
-        menu_width: 400 
-        menu_height: 400 
-        menu_offset: 240 
+        menu_width: 400
+        menu_height: 400
+        menu_offset: 240
         update_interval: 300 # Check for new notification in seconds
 
   wallpapers:

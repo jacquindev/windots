@@ -6,7 +6,7 @@
     .SYNOPSIS
         PSReadLine & PSFzf Configuration File.
     .DESCRIPTION
-        This script is automactically sourced by PowerShell and setup PSReadLine & PSFzf Settings
+        This script is automatically sourced by PowerShell and setup PSReadLine & PSFzf Settings
         into current process.
     .NOTES
         !! This script is already included in my PowerShell profile (.ps1), not executed directly.
@@ -62,7 +62,7 @@ Set-PSReadLineKeyHandler -Key Tab -ScriptBlock { Invoke-FzfTabCompletion }
 Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
 Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
 
-# F1 for help on the command line 
+# F1 for help on the command line
 $parameters = @{
     Key              = "F1"
     BriefDescription = "Command Help"
@@ -100,7 +100,7 @@ $parameters = @{
 }
 Set-PSReadLineKeyHandler @parameters
 
-# Reference: copy from 
+# Reference: copy from
 # - https://ianmorozoff.com/2023/01/10/predictive-intellisense-on-by-default-in-powershell-7-3/#keybinding
 $parameters1 = @{
     Key              = "F4"
@@ -186,8 +186,7 @@ $parameters3 = @{
         if ($selectionStart -ne 1) {
             [Microsoft.PowerShell.PSConsoleReadLine]::Replace($selectionStart, $selectionLength, '(' + $line.SubString($selectionStart, $selectionLength) + ')')
             [Microsoft.PowerShell.PSConsoleReadLine]::SetCursorPosition($selectionStart + $selectionLength + 2)
-        }
-        else {
+        } else {
             [Microsoft.PowerShell.PSConsoleReadLine]::Replace(0, $line.Length, '(' + $line + ')')
             [Microsoft.PowerShell.PSConsoleReadLine]::EndOfLine()
         }
@@ -210,13 +209,13 @@ $parameters4 = @{
         $errors = $null
         $cursor = $null
         [Microsoft.PowerShell.PSConsoleReadLine]::GetBufferState([ref]$ast, [ref]$tokens, [ref]$errors, [ref]$cursor)
-    
+
         $tokenToChange = $null
         foreach ($token in $tokens) {
             $extent = $token.Extent
             if ($extent.StartOffset -le $cursor -and $extent.EndOffset -ge $cursor) {
                 $tokenToChange = $token
-    
+
                 # If the cursor is at the end (it's really 1 past the end) of the previous token,
                 # we only want to change the previous token if there is no token under the cursor
                 if ($extent.EndOffset -eq $cursor -and $foreach.MoveNext()) {
@@ -228,23 +227,21 @@ $parameters4 = @{
                 break
             }
         }
-    
+
         if ($tokenToChange -ne $null) {
             $extent = $tokenToChange.Extent
             $tokenText = $extent.Text
             if ($tokenText[0] -eq '"' -and $tokenText[-1] -eq '"') {
                 # Switch to no quotes
                 $replacement = $tokenText.Substring(1, $tokenText.Length - 2)
-            }
-            elseif ($tokenText[0] -eq "'" -and $tokenText[-1] -eq "'") {
+            } elseif ($tokenText[0] -eq "'" -and $tokenText[-1] -eq "'") {
                 # Switch to double quotes
                 $replacement = '"' + $tokenText.Substring(1, $tokenText.Length - 2) + '"'
-            }
-            else {
+            } else {
                 # Add single quotes
                 $replacement = "'" + $tokenText + "'"
             }
-    
+
             [Microsoft.PowerShell.PSConsoleReadLine]::Replace(
                 $extent.StartOffset,
                 $tokenText.Length,
@@ -339,7 +336,7 @@ function _fzf_open_path {
     $Cmds = @{
         'bat'    = { bat $InputPath }
         'cat'    = { Get-Content $InputPath }
-        'cd'     = { 
+        'cd'     = {
             if (Test-Path $InputPath -PathType Leaf) { $InputPath = Split-Path $InputPath -Parent }
             Set-Location $InputPath
         }
