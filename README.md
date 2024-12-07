@@ -19,11 +19,10 @@ A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppu
   <a href="https://github.com/jacquindev/windots/"><img src="https://img.shields.io/github/repo-size/jacquindev/windots?style=for-the-badge&logo=hyprland&logoColor=F9E2AF&label=Size&labelColor=302D41&color=F9E2AF" alt="REPO SIZE"></a>&nbsp;&nbsp;
   <a href="https://github.com/jacquindev/windots/LICENSE"><img src="https://img.shields.io/github/license/jacquindev/windots?style=for-the-badge&logo=&color=CBA6F7&logoColor=CBA6F7&labelColor=302D41" alt="LICENSE"></a>&nbsp;&nbsp;
   <a href="https://github.com/jacquindev/windots/stargazers"><img alt="Stargazers" src="https://img.shields.io/github/stars/jacquindev/windots?style=for-the-badge&logo=starship&color=B7BDF8&logoColor=B7BDF8&labelColor=302D41"></a>&nbsp;&nbsp;
-</p> 
+</p>
 </div>
 
-> [!IMPORTANT]<br>
-> **Screenshots** are taken on my main monitor, which has the **resolution of 3440x1440**.<br>
+> [!IMPORTANT]<br> > **Screenshots** are taken on my main monitor, which has the **resolution of 3440x1440**.<br>
 > Works seamlessly on my **1920x1080** monitors as well!
 
 <div align="center">
@@ -95,7 +94,7 @@ git clone https://github.com/jacquindev/windots.git your_location
 
 <details open>
 <summary><b>😎 Clink Setup</b></summary>
-  
+
 - In your **`Command Prompt`** console, type:
 
 ```cmd
@@ -134,7 +133,7 @@ Follow the below links to download and learn to how to setup:
 </tr>
 <tr>
   <td><a href="https://www.deviantart.com/niivu/art/Catppuccin-for-Windows-11-1076249390">Themes</a></td>
-  <td><img src="./assets/themes.png" alt="thems"></td>
+  <td><img src="./assets/themes.png" alt="themes"></td>
 </tr>
 </table>
 </div>

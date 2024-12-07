@@ -1,5 +1,5 @@
 #requires -Module BurntToast
- 
+
 function Get-IPAddress {
     <#
     .SYNOPSIS
@@ -46,17 +46,15 @@ function Get-IPAddress {
     $LogoPath = "$PSScriptRoot\Assets\global-network.png"
 
     if ($public) {
-        $IPAddress = (Invoke-Webrequest "http://icanhazip.com/" -UseBasicParsing -DisableKeepAlive).Content.Trim()
+        $IPAddress = (Invoke-WebRequest "http://icanhazip.com/" -UseBasicParsing -DisableKeepAlive).Content.Trim()
 
         if ($interactive) {
             if (!(Get-InstalledModule -Name BurntToast -ErrorAction SilentlyContinue)) {
                 Write-Error "Please install BurntToast module to continue!"
-            }
-            else {
+            } else {
                 New-BurntToastNotification -AppLogo $LogoPath -Silent -Text "Public IP Address: ", "`u{1F60A}  $IPAddress"
             }
-        }
-        else {
+        } else {
             Write-Host "==> " -ForegroundColor "Magenta" -NoNewline
             Write-Host "Public IP Address: " -ForegroundColor "Green"
             Write-Host "`u{1F310}  $IPAddress"
@@ -70,15 +68,13 @@ function Get-IPAddress {
         if ($interactive) {
             if (!(Get-InstalledModule -Name BurntToast -ErrorAction SilentlyContinue)) {
                 Write-Error "Please install BurntToast module to continue!"
-            }
-            else {
+            } else {
                 New-BurntToastNotification -AppLogo $LogoPath -Silent -Text "Local IP Address: ", "`u{1F60A}  $IPAddress"
             }
-        }
-        else {
+        } else {
             Write-Host "==> " -ForegroundColor "Magenta" -NoNewline
             Write-Host "Local IP Address: " -ForegroundColor "Green"
-            Write-Host "`u{1F310}  $IPAddress" 
+            Write-Host "`u{1F310}  $IPAddress"
         }
     }
 }
