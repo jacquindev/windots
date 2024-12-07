@@ -1,8 +1,6 @@
 #requires -Version 7
 #requires -runasadministrator
 
-# cSpell:disable
-
 <#
 .SYNOPSIS
     Script to setup Windows machine
@@ -13,7 +11,7 @@
     - Remember to backup your files / Create a restore point before using this script.
     - My main screen is 3440x1440. You will need to modified 'komorebi.json' to fit your needs.
     - Rainmeter skins are included in 'windows/rainmeter' folder.
-        -> Install JaxCore's skins by run the script 'JaxCore.ps1' 
+        -> Install JaxCore's skins by run the script 'JaxCore.ps1'
     - Most of applications I am using are modified with Catppuccin Theme!
 
     Author: Jacquin Moon
@@ -52,8 +50,7 @@ if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
     if ((Test-IsElevated) -eq $False) {
         Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
         Invoke-RestMethod -Uri "https://get.scoop.sh" | Invoke-Expression
-    }
-    else {
+    } else {
         Invoke-Expression "& {$(Invoke-RestMethod get.scoop.sh)} -RunAsAdmin"
     }
 }
@@ -87,6 +84,7 @@ $symbolicLinks = @{
     "$Env:LOCALAPPDATA\lazygit"                                                                   = ".\config\lazygit"
     # "$Env:LOCALAPPDATA\nvim"                                                                      = ".\config\nvim"
     "$Env:APPDATA\Code\User\settings.json"                                                        = ".\vscode\settings.json"
+    "$Env:APPDATA\Code\User\keybindings.json"                                                     = ".\vscode\keybindings.json"
     "$Env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" = ".\windows\settings.json"
     "$Env:USERPROFILE\.gitconfig"                                                                 = ".\home\.gitconfig"
     "$Env:USERPROFILE\.czrc"                                                                      = ".\home\.czrc"
@@ -105,7 +103,7 @@ $scoopBuckets = $appList.scoop.bucket
 $scoopUserApps = $appList.scoop.user
 $scoopGlobalApps = $appList.scoop.global
 
-# winget 
+# winget
 $wingetApps = $appList.winget
 
 # vscode extension
@@ -121,7 +119,7 @@ $githubExtensions = $appList.github_extension
 $npmGlobalPackages = $appList.npm
 
 # nerd fonts
-$nerdFonts = $appList.nerdfont 
+$nerdFonts = $appList.nerdfont
 
 #######################################################################################################
 ###                                              MAIN SCRIPT                                        ###
@@ -140,7 +138,7 @@ function Install {
         winget export -o "$wingetLockFile" | Out-Null
         Write-PrettyInfo -Message "Packages installed by winget was written in" -Info "$wingetLockFile"
     }
-    
+
     # Scoop Packages
     if (Get-Command scoop -ErrorAction SilentlyContinue) {
         Write-PrettyTitle "SCOOP PACKAGES"
@@ -164,14 +162,14 @@ function Install {
     Write-PrettyTitle "GIT SETUP"
     $gitUserName = (git config --global user.name)
     $gitUserMail = (git config --global user.email)
-    
+
     if ($null -eq $gitUserName) {
         $gitUserName = (gum input --prompt="Input Git Name: " --placeholder="Your Name")
     }
     if ($null -eq $gitUserMail) {
         $gitUserMail = (gum input --prompt="Input Git Email: " --placeholder="yourmail@domain.com")
     }
-    
+
     if (Get-Command gh -ErrorAction SilentlyContinue) {
         if (!(Test-Path -PathType Leaf -Path "$env:APPDATA\GitHub CLI\hosts.yml")) {
             gh auth login
@@ -181,7 +179,7 @@ function Install {
 
     Set-Location "$PSScriptRoot"
     git submodule update --init --recursive
-    
+
 
     # Symlinks
     Write-PrettyTitle "SYMBOLIC LINKS"
@@ -191,7 +189,7 @@ function Install {
     git config --global --unset user.name | Out-Null
     git config --global user.name $gitUserName | Out-Null
     git config --global user.email $gitUserMail | Out-Null
-    
+
 
     # Powershell Modules
     Write-PrettyTitle "POWERSHELL MODULES"
@@ -216,8 +214,7 @@ function Install {
                 nvm install lts
                 nvm use lts
                 npm install -g npm@latest
-            }
-            else {
+            } else {
                 nvm install latest
                 nvm use latest
                 npm install -g npm@latest
@@ -237,7 +234,7 @@ function Install {
     }
 
     # Eza
-    if (Get-Command eza -ErrorAction SilentlyContinue) { 
+    if (Get-Command eza -ErrorAction SilentlyContinue) {
         Write-PrettyTitle "EZA CONFIG ENVIRONMENT VARIABLE"
         Set-EnvironmentVariable -Value "EZA_CONFIG_DIR" -Path "$Env:USERPROFILE\.config\eza"
         Start-Sleep -Seconds 1
@@ -252,8 +249,7 @@ function Install {
             if (!(Test-Path -PathType Leaf -Path "$btopThemeDir\$theme.theme")) {
                 Download-File -Directory $btopThemeDir -Url "https://raw.githubusercontent.com/catppuccin/btop/refs/heads/main/themes/$theme.theme"
                 Write-PrettyOutput -Process "btop" -Entry "theme:" -Entry2 "$theme" -Message "installed successfully." -Extra
-            }
-            else {
+            } else {
                 Write-PrettyOutput -Process "btop" -Entry "theme:" -Entry2 "$theme" -Message "already installed! Skipping..." -Extra
             }
         }
@@ -270,11 +266,11 @@ function Install {
             $themePath = "$flowThemeDir\Catppuccin $theme.xaml"
             if (!(Test-Path -Path "$themePath")) {
                 Download-File -Directory $flowThemeDir -Url "https://raw.githubusercontent.com/catppuccin/flow-launcher/refs/heads/main/themes/Catppuccin%20$theme.xaml"
-                Write-PrettyOutput -Process "FlowLauncher" -Entry "theme:" -Entry2 "Catppuccin $theme" -Message "installed successfully." -Extra 
+                Write-PrettyOutput -Process "FlowLauncher" -Entry "theme:" -Entry2 "Catppuccin $theme" -Message "installed successfully." -Extra
             }
 
             else {
-                Write-PrettyOutput -Process "FlowLauncher" -Entry "theme:" -Entry2 "Catppuccin $theme" -Message "already installed. Skipping..." -Extra 
+                Write-PrettyOutput -Process "FlowLauncher" -Entry "theme:" -Entry2 "Catppuccin $theme" -Message "already installed. Skipping..." -Extra
             }
         }
         Remove-Variable flowThemeDir, catppuccinThemes
@@ -289,14 +285,13 @@ function Install {
             if (!(Test-Path -PathType Container -Path "$customAppsFolder\marketplace")) {
                 Invoke-WebRequest -UseBasicParsing "https://raw.githubusercontent.com/spicetify/spicetify-marketplace/main/resources/install.ps1" | Invoke-Expression | Out-Null
                 Write-PrettyOutput -Process "spicetify" -Entry "custom app:" -Entry2 "marketplace" -Message "installed successfully." -Extra
-            }
-            else {
+            } else {
                 Write-PrettyOutput -Process "spicetify" -Entry "custom app:" -Entry2 "marketplace" -Message "already installed." -Extra
             }
         }
         Start-Sleep -Seconds 1
     }
-    
+
     if (Get-Command yazi -ErrorAction SilentlyContinue) {
         Write-PrettyTitle "YAZI SETUP"
         # yazi environment variables
@@ -319,7 +314,7 @@ function Install {
         # komorebi environment variable
         Set-EnvironmentVariable -Value "KOMOREBI_CONFIG_HOME" -Path "$Env:USERPROFILE\.config\komorebi"
         Start-Sleep -Seconds 1
-        
+
         # start komorebi
         $komorebiProcess = Get-Process -Name komorebi -ErrorAction SilentlyContinue
         if ($null -eq $komorebiProcess) {
@@ -327,12 +322,10 @@ function Install {
             if ($startKomorebi -eq 'y') {
                 & komorebic start --whkd > $null 2>&1
                 Write-PrettyOutput -Process "komorebi" -Entry "komorebi with WHKD" -Message "started."
-            }
-            else {
+            } else {
                 Write-PrettyOutput -Process "komorebi" -Entry "komorebi with WHKD" -Message "skipped."
             }
-        }
-        else {
+        } else {
             Write-PrettyOutput -Process "komorebi" -Entry "komorebi with WHKD" -Message "already running..."
         }
         Start-Sleep -Seconds 1
@@ -348,16 +341,13 @@ function Install {
                 if (Test-Path $yasbShortcutPath) {
                     Start-Process -FilePath $yasbShortcutPath > $null 2>&1
                     Write-PrettyOutput -Process "yasb" -Entry "status bar" -Message "started."
-                }
-                else {
+                } else {
                     Write-PrettyOutput -Process "yasb" -Entry "$yasbShortcutPath" -Message "not found to run!"
                 }
-            }
-            else {
+            } else {
                 Write-PrettyOutput -Process "yasb" -Entry "status bar" -Message "skipped."
             }
-        }
-        else {
+        } else {
             Write-PrettyOutput -Process "yasb" -Entry "status bar" -Message "already running..."
         }
         Start-Sleep -Seconds 1

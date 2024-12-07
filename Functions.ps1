@@ -1,7 +1,5 @@
 #requires -Version 7
 
-# cSpell:disable
-
 function Test-IsElevated {
     return (New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
@@ -10,8 +8,7 @@ function Test-DeveloperMode {
     $RegistryKeyPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock"
     if ((Test-Path $RegistryKeyPath) -and (Get-ItemProperty -Path $RegistryKeyPath | Select-Object -ExpandProperty AllowDevelopmentWithoutDevLicense)) {
         return $true
-    }
-    else {
+    } else {
         return $false
     }
 }
@@ -19,17 +16,17 @@ function Test-DeveloperMode {
 function Set-GsudoCacheMode {
     param([switch]$on, [switch]$off)
     if (Get-Command gsudo -ErrorAction SilentlyContinue) {
-        if ($on) { 
+        if ($on) {
             # Write-PrettyTitle "Enable Gsudo CacheMode"
             Start-Sleep -Seconds 5
-            & gsudo cache on 
+            & gsudo cache on
         }
-        if ($off) { 
+        if ($off) {
             # Write-PrettyTitle "Disable Gsudo CacheMode"
             Start-Sleep -Seconds 5
-            & gsudo cache off 
+            & gsudo cache off
         }
-    } 
+    }
 }
 
 ###################################################################################################
@@ -64,8 +61,7 @@ function Write-PrettyOutput {
         Write-Host "$Entry" -ForegroundColor Magenta -NoNewline
         Write-Host " $Entry2 " -ForegroundColor Yellow -NoNewline
         Write-Host "$Message"
-    }
-    else {
+    } else {
         Write-Host "$Process" -ForegroundColor Green -NoNewline
         Write-Host "  ▏ " -ForegroundColor DarkGray -NoNewline
         Write-Host "$Entry" -ForegroundColor Yellow -NoNewline
@@ -95,9 +91,8 @@ function Install-WingetApps {
         $installed = winget list --exact --accept-source-agreements -q $app
         if (![String]::Join("", $installed).Contains($app)) {
             gum spin --title="Installing $app..." -- winget install --exact --silent --accept-package-agreements --accept-source-agreements $app -s winget
-            Write-PrettyOutput -Process "winget" -Entry "$app" -Message "installed sucessfully."
-        }
-        else {
+            Write-PrettyOutput -Process "winget" -Entry "$app" -Message "installed successfully."
+        } else {
             Write-PrettyOutput -Process "winget" -Entry "$app" -Message "already installed! Skipping..."
         }
     }
@@ -110,8 +105,7 @@ function Enable-ScoopBuckets {
         if (!(Test-Path -PathType Container -Path "$scoopBucketDir\$bucket")) {
             gum spin --title="Adding $bucket to Scoop..." -- scoop bucket add $bucket
             Write-PrettyOutput -Process "scoop" -Entry "bucket:" -Entry2 "$bucket" -Message "added for scoop." -Extra
-        }
-        else {
+        } else {
             Write-PrettyOutput -Process "scoop" -Entry "bucket:" -Entry2 "$bucket" -Message "already added! Skipping..." -Extra
         }
     }
@@ -129,18 +123,15 @@ function Install-ScoopApps {
             if ($Scope -eq 'AllUsers') {
                 if ($(gsudo status IsElevated) -eq $False) {
                     gum spin --title="Installing $app globally..." -- gsudo scoop install $app --global
-                }
-                else {
+                } else {
                     gum spin --title="Installing $app globally..." -- scoop install $app --global
                 }
                 Write-PrettyOutput -Process "scoop" -Entry "app:" -Entry2 "$app" -Message "globally installed successfully." -Extra
-            }
-            else {
+            } else {
                 gum spin --title="Installing $app..." -- scoop install $app
                 Write-PrettyOutput -Process "scoop" -Entry "app:" -Entry2 "$app" -Message "installed successfully." -Extra
             }
-        }
-        else {
+        } else {
             Write-PrettyOutput -Process "scoop" -Entry "app:" -Entry2 "$app" -Message "already installed! Skipping..." -Extra
         }
     }
@@ -153,8 +144,7 @@ function Install-Modules {
         if (!(Get-Module -ListAvailable -Name $module -ErrorAction SilentlyContinue)) {
             Install-Module -Name $module -AllowClobber -Scope CurrentUser -Force
             Write-PrettyOutput -Process "pwsh" -Entry "module:" -Entry2 "$module" -Message "installed successfully." -Extra
-        }
-        else {
+        } else {
             Write-PrettyOutput -Process "pwsh" -Entry "module:" -Entry2 "$module" -Message "already installed! Skipping..." -Extra
         }
     }
@@ -178,8 +168,7 @@ function Install-VSCode-Extensions {
         if (-not ($installed | Select-String $ext)) {
             gum spin --title="Installing extension $ext..." -- code --install-extension $ext --force
             Write-PrettyOutput -Process "vscode" -Entry "extension:" -Entry2 "$ext" -Message "installed successfully." -Extra
-        }
-        else {
+        } else {
             Write-PrettyOutput -Process "vscode" -Entry "extension:" -Entry2 "$ext" -Message "already installed. Skipping..." -Extra
         }
     }
@@ -196,8 +185,7 @@ function Install-GitHub-Extensions {
         if (-not ($installed | Select-String "$extRepo")) {
             gum spin --title="Installing extension $extName..." -- gh extension install "$extRepo" --force
             Write-PrettyOutput -Process "github" -Entry "extension:" -Entry2 "$extName" -Message "installed successfully." -Extra
-        }
-        else {
+        } else {
             Write-PrettyOutput -Process "github" -Entry "extension:" -Entry2 "$extName" -Message "already installed. Skipping..." -Extra
         }
     }
@@ -214,8 +202,7 @@ function Install-NPM-Packages {
                 npm install --global --silent $package
                 Write-PrettyOutput -Process "nvm" -Entry "npm:" -Entry2 "$package" -Message "installed successfully." -Extra
             }
-        }
-        else {
+        } else {
             foreach ($package in $packages) {
                 Write-PrettyOutput -Process "nvm" -Entry "npm:" -Entry2 "$package" -Message "already installed. Skipping..." -Extra
             }
@@ -229,10 +216,9 @@ function Install-Vagrant-Plugins {
     $installed = (vagrant plugin list)
     foreach ($plugin in $List) {
         if (!($installed | Select-String "$plugin")) {
-            gum spin --title="Instaling plugin $plugin..." -- vagrant plugin install $plugin
+            gum spin --title="Installing plugin $plugin..." -- vagrant plugin install $plugin
             Write-PrettyOutput -Process "vagrant" -Entry "plugin:" -Entry2 "$plugin" -Message "installed successfully." -Extra
-        }
-        else {
+        } else {
             Write-PrettyOutput -Process "vagrant" -Entry "plugin:" -Entry2 "$plugin" -Message "already installed. Skipping..." -Extra
         }
     }
@@ -250,8 +236,7 @@ function Install-NerdFonts {
         if (!($installedFonts | Select-String "$fontName")) {
             & ([scriptblock]::Create((Invoke-WebRequest 'https://to.loredo.me/Install-NerdFont.ps1'))) -Confirm:$false -Scope AllUsers -Name $fontShortName
             Write-PrettyOutput -Process "nerd font" -Entry "$fontName" -Message "installed successfully."
-        }
-        else {
+        } else {
             Write-PrettyOutput -Process "nerd font" -Entry "$fontName" -Message "already installed. Skipping..."
         }
     }
@@ -270,8 +255,7 @@ function Set-Symlinks {
             $symlinkFile | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
             if (((Test-DeveloperMode) -eq $False) -and ((Test-IsElevated) -eq $False)) {
                 gsudo { New-Item -ItemType SymbolicLink -Path $symlinkKey -Target $symLinkTarget -Force | Out-Null }
-            }
-            else {
+            } else {
                 New-Item -ItemType SymbolicLink -Path $symlinkKey -Target $symLinkTarget -Force | Out-Null
             }
             Write-PrettyOutput "symlink" -Entry "$symlinkKey" -Entry2 "=> $symlinkTarget" -Message "added." -Extra
@@ -285,8 +269,7 @@ function Set-EnvironmentVariable {
     if (!([System.Environment]::GetEnvironmentVariable("$Value"))) {
         [System.Environment]::SetEnvironmentVariable("$Value", "$Path", "User")
         Write-PrettyOutput -Process "env" -Entry "$Value" -Entry2 "=> $Path" -Message "added." -Extra
-    }
-    else {
+    } else {
         Write-PrettyOutput -Process "env" -Entry "$Value" -Entry2 "=> $Path" -Message "already set." -Extra
     }
 }
@@ -298,8 +281,7 @@ function Download-File {
     )
     if (Get-Command wget.exe -ErrorAction SilentlyContinue) {
         & wget.exe --quiet -P "$Directory" "$Url"
-    }
-    else {
+    } else {
         Invoke-WebRequest -Uri "$Url" -OutFile "$Directory"
     }
 }
