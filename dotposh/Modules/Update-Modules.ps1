@@ -6,16 +6,16 @@ function Update-Modules {
     [CmdletBinding()]
     param (
         [Alias('p')][switch]$AllowPrerelease,
-        [Alias('n', 'dryrun')][switch]$WhatIf,
+        [Alias('n', '-dry-run')][switch]$WhatIf,
         [string]$Name = "*",
         [ValidateSet('AllUsers', 'CurrentUser')][string]$Scope = 'CurrentUser'
-    )   
+    )
 
     # Test elevated permissions for scope allusers
     if ($Scope -eq "AllUsers") {
         if ((Test-IsElevated) -eq $False) {
             Write-Warning "Function $($MyInvocation.MyCommand) needs admin privileges to perform actions."
-            Break 
+            Break
         }
     }
 
@@ -26,8 +26,7 @@ function Update-Modules {
         Write-Host "prerelease " -ForegroundColor "Yellow" -NoNewline
         Write-Host "versions..." -ForegroundColor "Blue"
         Write-Host "-------------------------------------------------" -ForegroundColor "Blue"
-    }
-    else {
+    } else {
         ''
         Write-Host "Updating modules to latest " -ForegroundColor "Blue" -NoNewline
         Write-Host "stable " -ForegroundColor "Yellow" -NoNewline
@@ -38,8 +37,7 @@ function Update-Modules {
     # Get all installed modules
     if ((Test-Path "$Env:DOTFILES\modules.lock.json") -and ($Name -eq "*")) {
         $CurrentModules = Get-Content "$Env:DOTFILES\modules.lock.json" | ConvertFrom-Json | Select-Object -Property Name, Version | Sort-Object Name
-    }
-    else {
+    } else {
         $CurrentModules = Get-InstalledModule -Name $Name -ErrorAction SilentlyContinue | Select-Object -Property Name, Version | Sort-Object Name
     }
 
@@ -48,10 +46,9 @@ function Update-Modules {
         ''
         Write-Host "No modules found." -ForegroundColor "Red"
         Return
-    }
-    else {
+    } else {
         ''
-        $ModulesCount = $CurrentModules.Count 
+        $ModulesCount = $CurrentModules.Count
         Write-Host "$ModulesCount " -ForegroundColor "White" -NoNewLine
         Write-Host "module(s) installed." -ForegroundColor "Green"
     }
@@ -74,12 +71,10 @@ function Update-Modules {
                         Uninstall-Module -Name $Module.Name -RequiredVersion $Version.Version -Force:$True -ErrorAction Stop -WhatIf:$WhatIf.IsPresent
                     }
                 }
-            }
-            catch {
+            } catch {
                 Write-Error "Error occurred while updating module $($Module.Name): $_"
             }
-        }
-        else {
+        } else {
             Write-Host "Already up-to-date!" -ForegroundColor "Blue"
         }
     }
