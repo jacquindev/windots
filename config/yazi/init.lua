@@ -1,177 +1,129 @@
-require("full-border"):setup({ type = ui.Border.ROUNDED })
-
-require("git"):setup()
-
-Status = {
-	LEFT = 0,
-	RIGHT = 1,
-
-	_id = "status",
-	_inc = 1000,
-	_left = {
-		{ "mode", id = 1, order = 1000 }, { "size", id = 2, order = 2000 },
-		{ "name", id = 3, order = 3000 }
-	},
-	_right = {
-		{ "permissions", id = 4, order = 1000 },
-		{ "percentage",  id = 5, order = 2000 }, { "position", id = 6, order = 3000 }
-	}
+local catppuccin_palette = {
+	rosewater = "#f4dbd6",
+	flamingo = "#f0c6c6",
+	pink = "#f5bde6",
+	mauve = "#c6a0f6",
+	red = "#ed8796",
+	maroon = "#ee99a0",
+	peach = "#f5a97f",
+	yellow = "#eed49f",
+	green = "#a6da95",
+	teal = "#8bd5ca",
+	sky = "#91d7e3",
+	sapphire = "#7dc4e4",
+	blue = "#8aadf4",
+	lavender = "#b7bdf8",
+	text = "#cad3f5",
+	subtext1 = "#b8c0e0",
+	subtext0 = "#a5adcb",
+	overlay2 = "#939ab7",
+	overlay1 = "#8087a2",
+	overlay0 = "#6e738d",
+	surface2 = "#5b6078",
+	surface1 = "#494d64",
+	surface0 = "#363a4f",
+	base = "#24273a",
+	mantle = "#1e2030",
+	crust = "#181926",
 }
 
-function Status:new(area, tab)
-	return setmetatable({ _area = area, _tab = tab }, { __index = self })
-end
+require("full-border"):setup({
+	type = ui.Border.ROUNDED,
+})
 
-function Status:style()
-	if self._tab.mode.is_select then
-		return THEME.status.mode_select
-	elseif self._tab.mode.is_unset then
-		return THEME.status.mode_unset
-	else
-		return THEME.status.mode_normal
-	end
-end
+require("zoxide"):setup({
+	update_db = true
+})
 
-function Status:mode()
-	local mode = tostring(self._tab.mode):sub(1, 3):upper()
+require("yatline"):setup({
+	section_separator = { open = "", close = "" },
+	inverse_separator = { open = "", close = "" },
+	part_separator = { open = "", close = "" },
 
-	local style = self:style()
-	return ui.Line {
-		ui.Span(THEME.status.separator_open):fg(style.bg),
-		ui.Span(" " .. mode .. " "):style(style),
-		ui.Span(THEME.status.separator_close):fg(style.bg):bg(THEME.status
-			.separator_style
-			.fg)
-	}
-end
+	style_a = {
+		fg = catppuccin_palette.mantle,
+		bg_mode = {
+			normal = catppuccin_palette.blue,
+			select = catppuccin_palette.mauve,
+			un_set = catppuccin_palette.red,
+		},
+	},
+	style_b = { bg = catppuccin_palette.surface0, fg = catppuccin_palette.text },
+	style_c = { bg = catppuccin_palette.base, fg = catppuccin_palette.text },
 
-function Status:size()
-	local h = self._tab.current.hovered
-	if not h then return ui.Line {} end
+	permissions_t_fg = catppuccin_palette.green,
+	permissions_r_fg = catppuccin_palette.yellow,
+	permissions_w_fg = catppuccin_palette.red,
+	permissions_x_fg = catppuccin_palette.sky,
+	permissions_s_fg = catppuccin_palette.lavender,
 
-	local style = self:style()
-	return ui.Line {
-		ui.Span(" " .. ya.readable_size(h:size() or h.cha.length) .. " "):fg(
-			style.bg):bg(THEME.status.separator_style.bg),
-		ui.Span(THEME.status.separator_close):fg(THEME.status.separator_style.fg)
-	}
-end
+	selected = { icon = "󰻭", fg = catppuccin_palette.yellow },
+	copied = { icon = "", fg = catppuccin_palette.green },
+	cut = { icon = "", fg = catppuccin_palette.red },
 
-function Status:name()
-	local h = self._tab.current.hovered
-	if not h then return ui.Line {} end
+	total = { icon = "", fg = catppuccin_palette.yellow },
+	succ = { icon = "", fg = catppuccin_palette.green },
+	fail = { icon = "", fg = catppuccin_palette.red },
+	found = { icon = "", fg = catppuccin_palette.blue },
+	processed = { icon = "", fg = catppuccin_palette.green },
 
-	local linked = ""
-	if h.link_to ~= nil then linked = " -> " .. tostring(h.link_to) end
-	return ui.Line(" " .. h.name .. linked)
-end
+	tab_width = 20,
+	tab_use_inverse = true,
 
-function Status:permissions()
-	local h = self._tab.current.hovered
-	if not h then return ui.Line {} end
+	show_background = false,
 
-	local perm = h.cha:permissions()
-	if not perm then return ui.Line {} end
+	display_header_line = true,
+	display_status_line = true,
 
-	local spans = {}
-	for i = 1, #perm do
-		local c = perm:sub(i, i)
-		local style = THEME.status.permissions_t
-		if c == "-" or c == "?" then
-			style = THEME.status.permissions_s
-		elseif c == "r" then
-			style = THEME.status.permissions_r
-		elseif c == "w" then
-			style = THEME.status.permissions_w
-		elseif c == "x" or c == "s" or c == "S" or c == "t" or c == "T" then
-			style = THEME.status.permissions_x
-		end
-		spans[i] = ui.Span(c):style(style)
-	end
-	return ui.Line(spans)
-end
+	header_line = {
+		left = {
+			section_a = {
+				{ type = "line", custom = false, name = "tabs", params = { "left" } },
+			},
+			section_b = {
+				{ type = "coloreds", custom = false, name = "githead" },
+			},
+			section_c = {},
+		},
+		right = {
+			section_a = {
+				{ type = "string", custom = false, name = "tab_path" },
+			},
+			section_b = {
+				{ type = "coloreds", custom = false, name = "task_workload" },
+			},
+			section_c = {
+				{ type = "coloreds", custom = false, name = "task_states" },
+			},
+		},
+	},
 
-function Status:percentage()
-	local percent = 0
-	local cursor = self._tab.current.cursor
-	local length = #self._tab.current.files
-	if cursor ~= 0 and length ~= 0 then
-		percent = math.floor((cursor + 1) * 100 / length)
-	end
+	status_line = {
+		left = {
+			section_a = {
+				{ type = "string", custom = false, name = "tab_mode" },
+			},
+			section_b = {
+				{ type = "string", custom = false, name = "hovered_size" },
+			},
+			section_c = {
+				{ type = "string",   custom = false, name = "hovered_name" },
+				{ type = "coloreds", custom = false, name = "count" },
+			},
+		},
+		right = {
+			section_a = {
+				{ type = "string", custom = false, name = "cursor_position" },
+			},
+			section_b = {
+				{ type = "string", custom = false, name = "cursor_percentage" },
+			},
+			section_c = {
+				{ type = "string",   custom = false, name = "hovered_file_extension", params = { true } },
+				{ type = "coloreds", custom = false, name = "permissions" },
+			},
+		},
+	},
+})
 
-	if percent == 0 then
-		percent = " Top "
-	elseif percent == 100 then
-		percent = " Bot "
-	else
-		percent = string.format(" %2d%% ", percent)
-	end
-
-	local style = self:style()
-	return ui.Line {
-		ui.Span(" " .. THEME.status.separator_open):fg(THEME.status
-			.separator_style.fg),
-		ui.Span(percent):fg(style.bg):bg(THEME.status.separator_style.bg)
-	}
-end
-
-function Status:position()
-	local cursor = self._tab.current.cursor
-	local length = #self._tab.current.files
-
-	local style = self:style()
-	return ui.Line {
-		ui.Span(THEME.status.separator_open):fg(style.bg):bg(THEME.status
-			.separator_style
-			.fg),
-		ui.Span(string.format(" %2d/%-2d ", cursor + 1, length)):style(style),
-		ui.Span(THEME.status.separator_close):fg(style.bg)
-	}
-end
-
-function Status:render()
-	local left = self:children_render(self.LEFT)
-	local right = self:children_render(self.RIGHT)
-	return {
-		ui.Paragraph(self._area, { left }),
-		ui.Paragraph(self._area, { right }):align(ui.Paragraph.RIGHT),
-		table.unpack(Progress:render(self._area, right:width()))
-	}
-end
-
--- Mouse events
-function Status:click(event, up) end
-
-function Status:scroll(event, step) end
-
-function Status:touch(event, step) end
-
--- Children
-function Status:children_add(fn, order, side)
-	self._inc = self._inc + 1
-	local children = side == self.RIGHT and self._right or self._left
-
-	children[#children + 1] = { fn, id = self._inc, order = order }
-	table.sort(children, function(a, b) return a.order < b.order end)
-
-	return self._inc
-end
-
-function Status:children_remove(id, side)
-	local children = side == self.RIGHT and self._right or self._left
-	for i, child in ipairs(children) do
-		if child.id == id then
-			table.remove(children, i)
-			break
-		end
-	end
-end
-
-function Status:children_render(side)
-	local lines = {}
-	for _, c in ipairs(side == self.RIGHT and self._right or self._left) do
-		lines[#lines + 1] =
-				(type(c[1]) == "string" and self[c[1]] or c[1])(self)
-	end
-	return ui.Line(lines)
-end
+require("git"):setup()

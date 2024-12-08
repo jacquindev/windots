@@ -24,6 +24,13 @@ prepend_keymap = [
     ], run = "plugin smart-filter", desc = "Smart filter" },
 ]
 
+[completion]
+prepend_keymap = [
+    { on = "<C-k>", run = "arrow -1", desc = "Move cursor up" },
+    { on = "<C-j>", run = "arrow 1", desc = "Move cursor down" },
+]
+
+
 [[input.prepend_keymap]]
 on = "<Esc>"
 run = "close"
