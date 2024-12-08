@@ -192,19 +192,31 @@ function Install-GitHub-Extensions {
 }
 
 function Install-NPM-Packages {
-    param ([array]$List)
+    param (
+        [switch]$pnpm,
+        [array]$List
+    )
 
     foreach ($pkg in $List) {
         $command = $pkg.Command
         $packages = $pkg.Packages
         if (!(Get-Command $command -ErrorAction SilentlyContinue)) {
             foreach ($package in $packages) {
-                npm install --global --silent $package
-                Write-PrettyOutput -Process "nvm" -Entry "npm:" -Entry2 "$package" -Message "installed successfully." -Extra
+                if ($pnpm) {
+                    pnpm add -g $package
+                    Write-PrettyOutput -Process "nvm" -Entry "pnpm:" -Entry2 "$package" -Message "installed successfully." -Extra
+                } else {
+                    npm install --global --silent $package
+                    Write-PrettyOutput -Process "nvm" -Entry "npm:" -Entry2 "$package" -Message "installed successfully." -Extra
+                }
             }
         } else {
             foreach ($package in $packages) {
-                Write-PrettyOutput -Process "nvm" -Entry "npm:" -Entry2 "$package" -Message "already installed. Skipping..." -Extra
+                if ($pnpm) {
+                    Write-PrettyOutput -Process "nvm" -Entry "pnpm:" -Entry2 "$package" -Message "already installed. Skipping..." -Extra
+                } else {
+                    Write-PrettyOutput -Process "nvm" -Entry "npm:" -Entry2 "$package" -Message "already installed. Skipping..." -Extra
+                }
             }
         }
     }
