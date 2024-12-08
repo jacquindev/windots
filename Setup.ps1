@@ -115,11 +115,11 @@ $poshModules = $appList.modules
 # github cli extensions
 $githubExtensions = $appList.github_extension
 
-# npm global packages
-$npmGlobalPackages = $appList.npm
-
 # nerd fonts
 $nerdFonts = $appList.nerdfont
+
+# npm global packages
+$npmGlobalPackages = $appList.npm
 
 #######################################################################################################
 ###                                              MAIN SCRIPT                                        ###
@@ -206,23 +206,51 @@ function Install {
     }
 
     # NodeJS setup
-    if (Get-Command nvm -ErrorAction SilentlyContinue) {
-        Write-PrettyTitle "NVM (Node Version Manager)"
-        if (!(Get-Command npm -ErrorAction SilentlyContinue)) {
+    # if (Get-Command nvm -ErrorAction SilentlyContinue) {
+    #     Write-PrettyTitle "NVM (Node Version Manager)"
+    #     if (!(Get-Command npm -ErrorAction SilentlyContinue)) {
+    #         $ltsOrLatest = $(Write-Host "❔ NodeJS not found. Install LTS (y) or latest (n)? "-ForegroundColor Cyan -NoNewline; Read-Host)
+    #         if ($ltsOrLatest -eq 'y') {
+    #             nvm install lts
+    #             nvm use lts
+    #             npm install -g npm@latest
+    #         } else {
+    #             nvm install latest
+    #             nvm use latest
+    #             npm install -g npm@latest
+    #         }
+    #         corepack enable
+    #         npm config set userconfig="$env:USERPROFILE\.config\npm\.npmrc" --global
+    #     }
+    #     Install-NPM-Packages -List $npmGlobalPackages
+    # }
+
+    Write-PrettyTitle "NVM (Node Version Manager)"
+    if (-not (Get-Command nvm -ErrorAction SilentlyContinue)) {
+        # Installing nvm using the installer
+        $nvmVersion = $(&"curl.exe" -s "https://api.github.com/repos/coreybutler/nvm-windows/releases/latest" | jq -r '.tag_name').Trim()
+        $nvmDownloadLink = "https://github.com/coreybutler/nvm-windows/releases/download/$nvmVersion/nvm-setup.exe"
+        $downloadFolderPath = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path
+        $nvmInstallerFile = "$downloadFolderPath/nvm-setup.exe"
+        $obj = New-Object System.Net.WebClient
+        $obj.DownloadFile($nvmDownloadLink, $nvmInstallerFile)
+        Start-Process -FilePath "$nvmInstallerFile"
+        Remove-Variable nvmVersion, nvmDownloadLink, nvmInstallerFile, downloadFolderPath, obj
+    } else {
+        if ((-not (Get-Command node -ErrorAction SilentlyContinue)) -or (-not(Get-Command npm -ErrorAction SilentlyContinue))) {
             $ltsOrLatest = $(Write-Host "❔ NodeJS not found. Install LTS (y) or latest (n)? "-ForegroundColor Cyan -NoNewline; Read-Host)
-            if ($ltsOrLatest -eq 'y') {
+            if ($ltsOrLatest.ToUpper() -eq 'Y') {
                 nvm install lts
-                nvm use lts
-                npm install -g npm@latest
             } else {
                 nvm install latest
-                nvm use latest
-                npm install -g npm@latest
             }
+            nvm use newest
             corepack enable
+            corepack prepare pnpm@latest --activate
+            npm install npm@latest
             npm config set userconfig="$env:USERPROFILE\.config\npm\.npmrc" --global
         }
-        Install-NPM-Packages -List $npmGlobalPackages
+        Install-NPM-Packages -pnpm -List $npmGlobalPackages
     }
 
     # Bat
