@@ -69,6 +69,16 @@ if command_exists pipenv; then
   eval "$(_PIPENV_COMPLETE=bash_source pipenv)"
 fi
 
+# yq
+if command_exists yq; then
+  source <(yq completion bash)
+fi
+
+# glow
+if command_exists glow; then
+  source <(glow completion bash)
+fi
+
 ##############################################################################################
 unset -f command_exists
 
