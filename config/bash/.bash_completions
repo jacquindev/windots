@@ -79,6 +79,11 @@ if command_exists glow; then
   source <(glow completion bash)
 fi
 
+# gum
+if command_exists gum; then
+  source <(gum completion bash)
+fi
+
 ##############################################################################################
 unset -f command_exists
 
