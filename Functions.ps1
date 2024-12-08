@@ -93,7 +93,7 @@ function Install-WingetApps {
             gum spin --title="Installing $app..." -- winget install --exact --silent --accept-package-agreements --accept-source-agreements $app -s winget
             Write-PrettyOutput -Process "winget" -Entry "$app" -Message "installed successfully."
         } else {
-            Write-PrettyOutput -Process "winget" -Entry "$app" -Message "already installed! Skipping..."
+            Write-PrettyOutput -Process "winget" -Entry "$app" -Message "already installed."
         }
     }
 }
@@ -106,7 +106,7 @@ function Enable-ScoopBuckets {
             gum spin --title="Adding $bucket to Scoop..." -- scoop bucket add $bucket
             Write-PrettyOutput -Process "scoop" -Entry "bucket:" -Entry2 "$bucket" -Message "added for scoop." -Extra
         } else {
-            Write-PrettyOutput -Process "scoop" -Entry "bucket:" -Entry2 "$bucket" -Message "already added! Skipping..." -Extra
+            Write-PrettyOutput -Process "scoop" -Entry "bucket:" -Entry2 "$bucket" -Message "already added." -Extra
         }
     }
 }
@@ -132,8 +132,28 @@ function Install-ScoopApps {
                 Write-PrettyOutput -Process "scoop" -Entry "app:" -Entry2 "$app" -Message "installed successfully." -Extra
             }
         } else {
-            Write-PrettyOutput -Process "scoop" -Entry "app:" -Entry2 "$app" -Message "already installed! Skipping..." -Extra
+            Write-PrettyOutput -Process "scoop" -Entry "app:" -Entry2 "$app" -Message "already installed." -Extra
         }
+    }
+}
+
+function Set-Scoop-Alias {
+    param ([string]$name, [string]$command, [string]$desc)
+    if (!($(scoop alias list).Name -eq $name)) {
+        gum spin --title="Adding alias for scoop: $nam..." -- scoop alias add $name "$command" "$desc"
+        Write-PrettyOutput -Process "scoop" -Entry "alias:" -Entry2 "$name" -Message "added." -Extra
+    } else {
+        Write-PrettyOutput -Process "scoop" -Entry "alias:" -Entry2 "$name" -Message "already set." -Extra
+    }
+}
+
+function Set-Aria2-Configuration {
+    param ($name, $value)
+    if (!($(scoop config $name) -eq $value)) {
+        gum spin --title="scoop aria2c setting: $name..." -- scoop config $name $value
+        Write-PrettyOutput -Process "scoop" -Entry "aria2c:" -Entry2 "$name" -Message "added." -Extra
+    } else {
+        Write-PrettyOutput -Process "scoop" -Entry "aria2c:" -Entry2 "$name" -Message "already set." -Extra
     }
 }
 
@@ -145,7 +165,7 @@ function Install-Modules {
             Install-Module -Name $module -AllowClobber -Scope CurrentUser -Force
             Write-PrettyOutput -Process "pwsh" -Entry "module:" -Entry2 "$module" -Message "installed successfully." -Extra
         } else {
-            Write-PrettyOutput -Process "pwsh" -Entry "module:" -Entry2 "$module" -Message "already installed! Skipping..." -Extra
+            Write-PrettyOutput -Process "pwsh" -Entry "module:" -Entry2 "$module" -Message "already installed." -Extra
         }
     }
 }
@@ -169,7 +189,7 @@ function Install-VSCode-Extensions {
             gum spin --title="Installing extension $ext..." -- code --install-extension $ext --force
             Write-PrettyOutput -Process "vscode" -Entry "extension:" -Entry2 "$ext" -Message "installed successfully." -Extra
         } else {
-            Write-PrettyOutput -Process "vscode" -Entry "extension:" -Entry2 "$ext" -Message "already installed. Skipping..." -Extra
+            Write-PrettyOutput -Process "vscode" -Entry "extension:" -Entry2 "$ext" -Message "already installed." -Extra
         }
     }
 }
@@ -186,7 +206,7 @@ function Install-GitHub-Extensions {
             gum spin --title="Installing extension $extName..." -- gh extension install "$extRepo" --force
             Write-PrettyOutput -Process "github" -Entry "extension:" -Entry2 "$extName" -Message "installed successfully." -Extra
         } else {
-            Write-PrettyOutput -Process "github" -Entry "extension:" -Entry2 "$extName" -Message "already installed. Skipping..." -Extra
+            Write-PrettyOutput -Process "github" -Entry "extension:" -Entry2 "$extName" -Message "already installed." -Extra
         }
     }
 }
@@ -213,9 +233,9 @@ function Install-NPM-Packages {
         } else {
             foreach ($package in $packages) {
                 if ($pnpm) {
-                    Write-PrettyOutput -Process "nvm" -Entry "pnpm:" -Entry2 "$package" -Message "already installed. Skipping..." -Extra
+                    Write-PrettyOutput -Process "nvm" -Entry "pnpm:" -Entry2 "$package" -Message "already installed." -Extra
                 } else {
-                    Write-PrettyOutput -Process "nvm" -Entry "npm:" -Entry2 "$package" -Message "already installed. Skipping..." -Extra
+                    Write-PrettyOutput -Process "nvm" -Entry "npm:" -Entry2 "$package" -Message "already installed." -Extra
                 }
             }
         }
@@ -231,7 +251,7 @@ function Install-Vagrant-Plugins {
             gum spin --title="Installing plugin $plugin..." -- vagrant plugin install $plugin
             Write-PrettyOutput -Process "vagrant" -Entry "plugin:" -Entry2 "$plugin" -Message "installed successfully." -Extra
         } else {
-            Write-PrettyOutput -Process "vagrant" -Entry "plugin:" -Entry2 "$plugin" -Message "already installed. Skipping..." -Extra
+            Write-PrettyOutput -Process "vagrant" -Entry "plugin:" -Entry2 "$plugin" -Message "already installed." -Extra
         }
     }
 }
@@ -249,7 +269,7 @@ function Install-NerdFonts {
             & ([scriptblock]::Create((Invoke-WebRequest 'https://to.loredo.me/Install-NerdFont.ps1'))) -Confirm:$false -Scope AllUsers -Name $fontShortName
             Write-PrettyOutput -Process "nerd font" -Entry "$fontName" -Message "installed successfully."
         } else {
-            Write-PrettyOutput -Process "nerd font" -Entry "$fontName" -Message "already installed. Skipping..."
+            Write-PrettyOutput -Process "nerd font" -Entry "$fontName" -Message "already installed."
         }
     }
 }
