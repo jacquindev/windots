@@ -31,8 +31,8 @@ function Find-File {
     #>
     [CmdletBinding()]
     param ([Parameter(ValueFromPipeline, Mandatory = $true, Position = 0)][string]$SearchTerm)
-    $result = Get-ChildItem -Recurse -Filter "*$SearchTerm*" -ErrorAction SilentlyContinue
-    $result | Format-Table -AutoSize
+    $result = Get-ChildItem -Recurse -Filter "*$SearchTerm*" -File -ErrorAction SilentlyContinue
+    $result.FullName
 }
 
 function Find-String {
@@ -45,10 +45,11 @@ function Find-String {
         [Parameter(Mandatory = $true, Position = 0)]
         [string]$SearchTerm,
         [Parameter(ValueFromPipeline, Mandatory = $false, Position = 1)]
-        [string]$Directory,
+        [Alias('d')][string]$Directory,
         [Parameter(Mandatory = $false)]
-        [switch]$Recurse
+        [Alias('f')][switch]$Recurse
     )
+
     if ($Directory) {
         if ($Recurse) { Get-ChildItem -Recurse $Directory | Select-String $SearchTerm; return }
         Get-ChildItem $Directory | Select-String $SearchTerm
