@@ -95,8 +95,8 @@ function Remove-MyItem {
     param (
         [Parameter(Mandatory = $false)]
         [switch]$rf,
-        [Parameter(Mandatory = $true, Position = 0)]
-        [string]$Path
+        [Parameter(Mandatory = $true, Position = 0, ValueFromRemainingArguments = $true)]
+        [string[]]$Path
     )
     Remove-Item $Path -Recurse:$rf -Force:$rf
 }
@@ -112,11 +112,6 @@ Set-Alias -Name 'which' -Value 'Get-CommandInfo'
 
 #Remove-Item Alias:rm -Force -ErrorAction SilentlyContinue
 Set-Alias -Name 'rm' -Value 'Remove-MyItem'
-
-# lazygit
-if (Get-Command lazygit -ErrorAction SilentlyContinue) {
-    Set-Alias -Name 'lg' -Value 'lazygit'
-}
 
 # ----------------------------------------------------------------------------------- #
 # We need 'posh-alias' module to add the following aliases.
@@ -134,7 +129,7 @@ if (Get-Command eza -ErrorAction SilentlyContinue) {
     Add-Alias la "eza $_eza_params -al --time-style=relative --sort=modified"
     Add-Alias ld "eza $_eza_params -lDa --show-symlinks"                    # lists only directories
     Add-Alias lf "eza $_eza_params -lfa --show-symlinks"                    # lists only files (included hidden files)
-    Add-Alias ll "eza $_eza_params -lbhHigUmuSa"                            # Lists everything in details of date             
+    Add-Alias ll "eza $_eza_params -lbhHigUmuSa"                            # Lists everything in details of date
     Add-Alias lt "eza $_eza_params -lT"                                     # Tree view of detailed information
     Add-Alias tree "eza $_eza_params --tree"                                # Tree view
 }
@@ -161,8 +156,7 @@ Add-Alias edge 'Start-Process microsoft-edge:'
 # Source: - https://stackoverflow.com/questions/11546069/refreshing-restarting-powershell-session-w-out-exiting
 if (Test-Path -Path $PROFILE) {
     Add-Alias reload '. $PROFILE'
-}
-else {
+} else {
     Add-Alias reload '. $PROFILE.CurrentUserAllHosts'
 }
 Add-Alias restart 'Get-Process -Id $PID | Select-Object -ExpandProperty Path | ForEach-Object { Invoke-Command { & "$_" } -NoNewScope }'
@@ -170,8 +164,7 @@ Add-Alias restart 'Get-Process -Id $PID | Select-Object -ExpandProperty Path | F
 # windows system
 if (Get-Command fastfetch -ErrorAction SilentlyContinue) {
     Add-Alias sysinfo 'fastfetch -c all'
-}
-else {
+} else {
     Add-Alias sysinfo 'Get-ComputerInfo'
 }
 
