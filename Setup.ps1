@@ -206,25 +206,6 @@ function Install {
     }
 
     # NodeJS setup
-    # if (Get-Command nvm -ErrorAction SilentlyContinue) {
-    #     Write-PrettyTitle "NVM (Node Version Manager)"
-    #     if (!(Get-Command npm -ErrorAction SilentlyContinue)) {
-    #         $ltsOrLatest = $(Write-Host "❔ NodeJS not found. Install LTS (y) or latest (n)? "-ForegroundColor Cyan -NoNewline; Read-Host)
-    #         if ($ltsOrLatest -eq 'y') {
-    #             nvm install lts
-    #             nvm use lts
-    #             npm install -g npm@latest
-    #         } else {
-    #             nvm install latest
-    #             nvm use latest
-    #             npm install -g npm@latest
-    #         }
-    #         corepack enable
-    #         npm config set userconfig="$env:USERPROFILE\.config\npm\.npmrc" --global
-    #     }
-    #     Install-NPM-Packages -List $npmGlobalPackages
-    # }
-
     Write-PrettyTitle "NVM (Node Version Manager)"
     if (-not (Get-Command nvm -ErrorAction SilentlyContinue)) {
         # Installing nvm using the installer
