@@ -5,7 +5,7 @@
 	"source": {
 		"winget": [
 			"chrisant996.Clink",
-			// "Discord.Discord",
+			"Discord.Discord",
 			"Flow-Launcher.Flow-Launcher",
 			"gerardog.gsudo",
 			"Git.Git",
@@ -59,14 +59,12 @@
 				"innounp",
 				"jq",
 				"lazygit",
-				"lazydocker",
+				//"lazydocker",
 				"less",
-				// "nvm",
 				"ripgrep",
 				"scoop-completion",
 				"secureuxtheme",
 				"spicetify-cli",
-				// "topgrade",
 				"wixtoolset",
 				"yazi",
 				"yq",
@@ -93,7 +91,6 @@
 			]
 		},
 		"modules": [
-			// "BetterCredentials",
 			"BurntToast",
 			"CompletionPredictor",
 			"DotNetVersionLister",
@@ -102,12 +99,10 @@
 			"posh-alias",
 			"posh-git",
 			"powershell-yaml",
-			// "PoshRSJob",
 			"PSFzf",
 			"PSParseHTML",
 			"PSProfiler",
 			"PSScriptTools",
-			// "PSWebSearch",
 			"Terminal-Icons"
 		],
 		"npm": [
