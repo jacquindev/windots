@@ -6,6 +6,7 @@ bierner.markdown-mermaid
 bierner.markdown-preview-github-styles
 bierner.markdown-yaml-preamble
 catppuccin.catppuccin-vsc
+chakrounanas.turbo-console-log
 christian-kohler.path-intellisense
 codezombiech.gitignore
 davidanson.vscode-markdownlint
@@ -14,6 +15,7 @@ donjayamanne.githistory
 dotjoshjohnson.xml
 eamodio.gitlens
 editorconfig.editorconfig
+emilast.logfilehighlighter
 esbenp.prettier-vscode
 formulahendry.auto-close-tag
 formulahendry.auto-rename-tag
@@ -24,6 +26,10 @@ github.vscode-pull-request-github
 mechatroner.rainbow-csv
 mhutchie.git-graph
 mikestead.dotenv
+ms-azuretools.vscode-docker
+ms-python.debugpy
+ms-python.python
+ms-python.vscode-pylance
 ms-vscode-remote.remote-containers
 ms-vscode-remote.remote-wsl
 ms-vscode.makefile-tools
@@ -37,6 +43,7 @@ redhat.vscode-yaml
 ritwickdey.liveserver
 s-nlf-fh.glassit
 streetsidesoftware.code-spell-checker
+sumneko.lua
 tamasfe.even-better-toml
 usernamehw.errorlens
 visualstudioexptteam.intellicode-api-usage-examples
