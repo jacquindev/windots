@@ -7,9 +7,11 @@ if (Get-Command nvm -ErrorAction SilentlyContinue) {
 	)
 
 	$script:NvmSubcommands = @{
-		arch = '32 64'
-		list = 'available'
-		ls   = 'available'
+		install = 'latest lts'
+		arch    = '32 64'
+		list    = 'available'
+		ls      = 'available'
+		use     = 'latest lts newest'
 	}
 
 	function script:NvmExpandCmdParams($cmds, $cmd, $filter) {
@@ -33,7 +35,9 @@ if (Get-Command nvm -ErrorAction SilentlyContinue) {
 		if ($use) {
 			$versions += $NvmSubcommands["use"] -split ' '
 		}
-		$versions += Get-ChildItem -Filter '*v*' -Path "$env:NVM_HOME\nodejs" -Directory -Name | Where-Object { $_ -like "$filter*" }
+		$versions += (Get-ChildItem -Recurse -Filter '*v*' -Path "$env:NVM_HOME" -Directory -ErrorAction SilentlyContinue |
+			Where-Object { $_.FullName -notmatch 'node_modules' }).Name
+
 		$versions -like "$filter*"
 	}
 
