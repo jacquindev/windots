@@ -142,7 +142,21 @@ function Install {
     # Scoop Packages
     if (Get-Command scoop -ErrorAction SilentlyContinue) {
         Write-PrettyTitle "SCOOP PACKAGES"
+        if (!(Get-Command aria2c.exe -ErrorAction SilentlyContinue)) {
+            gum spin --title="Installing aria2c..." -- scoop install aria2c
+        }
+        # aria2 config
+        Set-Aria2-Configuration 'aria2-enabled' 'True'
+        Set-Aria2-Configuration 'aria2-warning-enabled' 'False'
+        Set-Aria2-Configuration 'aria2-max-connection-per-server' '10'
+        # scoop aliases
+        Set-Scoop-Alias 'ls' 'scoop list $args' 'List all installed apps, or the apps matching the supplied query'
+        Set-Scoop-Alias 'rm' 'scoop uninstall $args[0] && scoop cache rm $args[0]' 'Uninstall an app and clean its cache files'
+        Set-Scoop-Alias 'st' 'scoop status $args' 'Show status and check for new app versions'
+        Set-Scoop-Alias 'up' 'scoop cache rm * && scoop update * && scoop cleanup *' 'Clean all cache files, update all apps, and cleanup all old versions'
+        # scoop buckets
         Enable-ScoopBuckets -List $scoopBuckets
+        # scoop applications
         Install-ScoopApps -List $scoopGlobalApps -Scope AllUsers
         Install-ScoopApps -List $scoopUserApps -Scope CurrentUser
         $scoopLockFile = "$PSScriptRoot\scoop.lock.json"
