@@ -49,7 +49,7 @@ A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppu
 ### Yasb's Catppuccin Statusbar
 
 ![yasb1](./assets/yasb1.png)<br/><br/>
-![yasb2](./assets/yasb2.png)<br/><br/>
+![yasb3](./assets/yasb3.png)<br/><br/>
 
 ### Rainmeter's Catppuccin Statusbar
 
