@@ -3,20 +3,18 @@
 function Get-DevDrive {
     $devDrives = Get-Volume | Where-Object { $_.FileSystemType -eq 'ReFS' -and $_.DriveType -eq 'Fixed' }
     $devDriveLetters = @()
-    
+
     foreach ($drive in $devDrives) {
         $driveLetter = "$($drive.DriveLetter):"
         $devDriveLetters += $driveLetter
     }
-    
+
     if ($devDriveLetters.Count -eq 0) {
         Write-Output "No Dev Drive found on the system."
         return $null
-    }
-    elseif ($devDriveLetters.Count -eq 1) {
+    } elseif ($devDriveLetters.Count -eq 1) {
         return $devDriveLetters[0]
-    }
-    else {
+    } else {
         Write-Host "Multiple Dev Drives found:"
         for ($i = 0; $i -lt $devDriveLetters.Count; $i++) {
             Write-Host "[$i] $($devDriveLetters[$i])"
@@ -24,8 +22,7 @@ function Get-DevDrive {
         $selection = Read-Host "Please select the drive you want to configure by entering the corresponding number"
         if ($selection -match '^\d+$' -and [int]$selection -lt $devDriveLetters.Count) {
             return $devDriveLetters[$selection]
-        }
-        else {
+        } else {
             Write-Output "Invalid selection. Exiting script."
             return $null
         }
@@ -63,12 +60,10 @@ function New-DirectoryIfNotExist {
         New-Item -Path $Path -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
         if ($LASTEXITCODE -eq 0) {
             Write-Success -Entry1 "Directory" -Entry2 "$Path" -Text "created successfully."
-        }
-        else {
+        } else {
             Write-Error -Entry1 "Directory" -Entry2 "$Path" -Text "failed to create."
         }
-    }
-    else {
+    } else {
         Write-Error -Entry1 "Directory" -Entry2 "$Path" -Text "already exists. Skipping..."
     }
 }
@@ -82,12 +77,10 @@ function Set-EnvironmentVariableIfNotExist {
         [System.Environment]::SetEnvironmentVariable("$Name", "$Value", "User")
         if ($LASTEXITCODE -eq 0) {
             Write-Success -Entry1 "Environment Variable" -Entry2 "$Name ==> $Value" -Text "was set."
-        }
-        else {
+        } else {
             Write-Error -Entry1 "Environment Variable" -Entry2 "$Name ==> $Value" -Text "failed to set."
         }
-    }
-    else {
+    } else {
         Write-Error -Entry1 "Environment Variable" -Entry2 "$Name ==> $Value" -Text "already set. Skipping..."
     }
 }
@@ -99,13 +92,11 @@ function Add-ToPath {
     $EnvPath = [System.Environment]::GetEnvironmentVariable('path', "User")
     if ($EnvPath | Where-Object { $_ -like "*$Path*" } ) {
         Write-Error -Entry1 "Path" -Entry2 "$Path" -Text "already added to PATH."
-    }
-    else {
+    } else {
         [System.Environment]::SetEnvironmentVariable('path', "$Path;" + [System.Environment]::GetEnvironmentVariable('path', "User"), "User")
         if ($LASTEXITCODE -eq 0) {
             Write-Success -Entry1 "Path" -Entry2 "$Path" -Text "added to PATH successfully."
-        }
-        else {
+        } else {
             Write-Error -Entry1 "Path" -Entry2 "$Path" -Text "failed to add to PATH."
         }
     }
@@ -120,13 +111,11 @@ function Move-CacheContents {
         Move-Item -Path "$ContentPath\*" -Destination "$Destination" -Force
         if ($LASTEXITCODE -eq 0) {
             Write-Success -Entry1 "Contents" -Entry2 "$ContentPath ==> $Destination" -Text "moved."
-        }
-        else {
+        } else {
             Write-Error -Entry1 "Contents" -Entry2 "$ContentPath ==> $Destination" -Text "failed to moved."
         }
         Remove-Item -Path $ContentPath -Recurse -Force -ErrorAction SilentlyContinue
-    }
-    else { 
+    } else {
         Write-Error -Entry1 "Contents" -Entry2 "$ContentPath ==> $Destination" -Text "already moved / no content to move."
     }
 }
@@ -141,7 +130,7 @@ function Set-DevDriveEnvironments {
         @{ Command = "pip"; Value = "PIP_CACHE_DIR"; ValuePath = "$packagePath\pip"; SourcePaths = @("$env:LOCALAPPDATA\pip\cache") },
         @{ Command = "pipx"; Value = "PIPX_HOME"; ValuePath = "$packagePath\pipx"; SourcePaths = @("$env:USERPROFILE\pipx") },
         @{ Command = "cargo"; Value = "CARGO_HOME"; ValuePath = "$packagePath\cargo"; SourcePaths = @("$env:USERPROFILE\.cargo") },
-        @{ Command = "rustup"; Value = "RUSTUP_HOME"; ValuePath = "$packagePath\rustup"; SourcePaths = @("$env:USERPROFILE\.rustup") },
+        #@{ Command = "rustup"; Value = "RUSTUP_HOME"; ValuePath = "$packagePath\rustup"; SourcePaths = @("$env:USERPROFILE\.rustup") },
         @{ Command = "gradle"; Value = "GRADLE_USER_HOME"; ValuePath = "$packagePath\gradle"; SourcePaths = @("$env:USERPROFILE\.gradle") },
         @{ Command = "nuget"; Value = "NUGET_PACKAGES"; ValuePath = "$packagePath\nuget\packages"; SourcePaths = @("$env:USERPROFILE\.nuget\packages") },
         @{ Command = "vcpkg"; Value = "VCPKG_DEFAULT_BINARY_CACHE"; ValuePath = "$packagePath\vcpkg"; SourcePaths = @("$env:LOCALAPPDATA\vcpkg\archives", "$env:APPDATA\vcpkg\archives") }
