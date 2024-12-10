@@ -50,13 +50,13 @@
 		LINK: https://rustup.rs/
 		-> (Optional but recommended): `cargo-binstall`
 	- Get-DevDrive -> Custom PowerShell function
-		LINK: https://github.com/jacquindev/windots/blob/main/dotposh/Modules/Set-DevDriveEnvironments.ps1)
+		LINK: https://github.com/jacquindev/windots/blob/main/dotposh/Modules/Set-DevDriveEnvironments.ps1
 	- PSToml -> PowerShell Module
 		LINK: https://github.com/jborean93/PSToml
 	- gum -> Better command interaction
 		LINK: https://github.com/charmbracelet/gum
 
-	- For README.md file, required 'readme-template.md' file, locally stored in (dotposh/Modules/Assets/)
+	- For README.md file, required 'readme-template.md' file, locally stored in 'dotposh/Modules/Assets/'
 		LINK: https://raw.githubusercontent.com/jacquindev/windots/refs/heads/main/dotposh/Modules/Assets/readme-template.md
 
 	** INTERNET CONNECTION IS ALSO REQUIRED **
@@ -143,7 +143,7 @@ function Initialize-Project {
 		"node" {
 			# .gitignore
 			$gitignoreNode = (Invoke-WebRequest -Uri "https://www.toptal.com/developers/gitignore/api/node").Content
-			Add-Content -Path "$gitIgnore" -Value "$gitignoreNode"
+			Set-Content -Path "$gitIgnore" -Value "$gitignoreNode"
 			Remove-Variable gitignoreNode
 
 			# Initialize project with package manager
@@ -168,7 +168,7 @@ function Initialize-Project {
 		# powershell
 		"powershell" {
 			$gitignorePowershell = (Invoke-WebRequest -Uri "https://www.toptal.com/developers/gitignore/api/powershell").Content
-			Add-Content -Path "$gitIgnore" -Value "$gitignorePowershell"
+			Set-Content -Path "$gitIgnore" -Value "$gitignorePowershell"
 			Remove-Variable gitignorePowershell
 
 			if (!(Get-Module -ListAvailable -Name 'PSScriptAnalyzer' -ErrorAction SilentlyContinue)) {
@@ -178,7 +178,7 @@ function Initialize-Project {
 		# python
 		"python" {
 			$gitignorePython = (Invoke-WebRequest -Uri "https://www.toptal.com/developers/gitignore/api/python").Content
-			Add-Content -Path "$gitIgnore" -Value "$gitignorePython"
+			Set-Content -Path "$gitIgnore" -Value "$gitignorePython"
 			Remove-Variable gitignorePython
 
 			if (!(Get-Command pipx -ErrorAction SilentlyContinue)) { Write-Warning "Command not found: pipx. Please install and rerun this script"; break }
@@ -277,7 +277,7 @@ function Initialize-Project {
 		# rust
 		"rust" {
 			$gitignoreRust = (Invoke-WebRequest -Uri "https://www.toptal.com/developers/gitignore/api/rust,rust-analyzer").Content
-			Add-Content -Path "$gitIgnore" -Value "$gitignoreRust"
+			Set-Content -Path "$gitIgnore" -Value "$gitignoreRust"
 			Remove-Variable gitignoreRust
 
 			$tomlCargo = "$projectLocation/Cargo.toml"
