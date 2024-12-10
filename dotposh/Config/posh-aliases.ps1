@@ -157,7 +157,8 @@ Add-Alias edge 'Start-Process microsoft-edge:'
 # Source: - https://stackoverflow.com/questions/11546069/refreshing-restarting-powershell-session-w-out-exiting
 if (Test-Path -Path $PROFILE) {
     Add-Alias reload '. $PROFILE'
-} else {
+}
+if (Test-Path -Path $PROFILE.CurrentUserAllHosts) {
     Add-Alias reload '. $PROFILE.CurrentUserAllHosts'
 }
 Add-Alias restart 'Get-Process -Id $PID | Select-Object -ExpandProperty Path | ForEach-Object { Invoke-Command { & "$_" } -NoNewScope }'
