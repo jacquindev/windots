@@ -112,7 +112,8 @@ function Initialize-ProjectGit {
 		[string]$desc,
 		[string]$license,
 		[string]$userId,
-		[switch]$ghRepo
+		[switch]$ghRepo,
+		[switch]$crypt
 	)
 
 	# Make sure you are in right directory
@@ -142,7 +143,7 @@ function Initialize-ProjectGit {
 				Write-Success -Entry1 "OK" -Entry2 "$projectsRoot\$projectName" -Text "exists & initialized with git."
 			}
 			{ ((!$gitRepoRemote) -and (!$gitRepoLocal)) } {
-				mkcd "$projectsRoot\$projectName"
+				Set-Location "$projectsRoot\$projectName"
 				git init -q; git branch -M main
 				gh repo create $projectName --private --source=. --remote=origin --description="$desc"
 				Write-GhRepoCreateInformation
@@ -171,59 +172,61 @@ function Initialize-ProjectGit {
 				Write-Host "$projectName" -ForegroundColor Cyan -NoNewline
 				Write-Host " at location " -NoNewline
 				Write-Host "$projectsRoot" -ForegroundColor Magenta
-				mkcd "$projectsRoot\$projectName"
+				Set-Location "$projectsRoot\$projectName"
 				git init -q; git branch -M main
 			}
 		}
 	}
 
-	if (!(Get-Command 'git-crypt' -ErrorAction SilentlyContinue)) { Write-Warning "Command not found: git-crypt. Please install to use this feature."; return }
+	if ($crypt) {
+		if (!(Get-Command 'git-crypt' -ErrorAction SilentlyContinue)) { Write-Warning "Command not found: git-crypt. Please install to use this feature."; return }
 
-	# Create a multi-project keys repository
-	$keyDir = "$projectsRoot\.git-crypt-keys"
-	if (!(Test-Path $keyDir -PathType Container)) {
-		Write-Host "KeyPath not found: $keyDir " -ForegroundColor Yellow -NoNewline; Write-Host "(default)" -ForegroundColor DarkGray
-		$keyDirPrompt = $(Write-Host "Create (default) KeyPath Location (y) or (custom) KeyPath Location (n)? " -NoNewline -ForegroundColor Cyan; Read-Host)
-		if ($keyDirPrompt.ToUpper() -eq 'Y') {
-			New-Item -ItemType Directory -Path $keyDir -Force -ErrorAction SilentlyContinue | Out-Null
-			Write-Success -Entry1 "SUCCESS" -Entry2 "$keyDir" -Text "(default) created successfully."
-		} else {
-			$customKeyDir = (gum input --prompt="Input the absolute path to your Keys Directory: ").Trim()
-			if (!(Test-Path $customKeyDir -PathType Container)) {
-				Write-Host "You set KeyPath: " -NoNewline
-				Write-Host "$customKeyDir" -ForegroundColor Yellow -NoNewline
-				Write-Host " (custom). This will be used to store all off your projects' git-crypt keys."
+		# Create a multi-project keys repository
+		$keyDir = "$projectsRoot\.git-crypt-keys"
+		if (!(Test-Path $keyDir -PathType Container)) {
+			Write-Host "KeyPath not found: $keyDir " -ForegroundColor Yellow -NoNewline; Write-Host "(default)" -ForegroundColor DarkGray
+			$keyDirPrompt = $(Write-Host "Create (default) KeyPath Location (y) or (custom) KeyPath Location (n)? " -NoNewline -ForegroundColor Cyan; Read-Host)
+			if ($keyDirPrompt.ToUpper() -eq 'Y') {
+				New-Item -ItemType Directory -Path $keyDir -Force -ErrorAction SilentlyContinue | Out-Null
+				Write-Success -Entry1 "SUCCESS" -Entry2 "$keyDir" -Text "(default) created successfully."
+			} else {
+				$customKeyDir = (gum input --prompt="Input the absolute path to your Keys Directory: ").Trim()
+				if (!(Test-Path $customKeyDir -PathType Container)) {
+					Write-Host "You set KeyPath: " -NoNewline
+					Write-Host "$customKeyDir" -ForegroundColor Yellow -NoNewline
+					Write-Host " (custom). This will be used to store all off your projects' git-crypt keys."
 
-				try {
-					gum confirm "Proceed now? (y/n) " && (New-Item -ItemType Directory -Path $customKeyDir -Force -ErrorAction SilentlyContinue | Out-Null) || Exit 0
-					$keyDir = "$customKeyDir"
-				} catch {
-					Write-Error "$_"; Exit 1
+					try {
+						gum confirm "Proceed now? (y/n) " && (New-Item -ItemType Directory -Path $customKeyDir -Force -ErrorAction SilentlyContinue | Out-Null) || Exit 0
+						$keyDir = "$customKeyDir"
+					} catch {
+						Write-Error "$_"; Exit 1
+					}
 				}
 			}
 		}
-	}
 
-	$perProjectKey = "$keyDir\$projectName"
-	$perProjectKeyFile = Test-Path "$perProjectKey" -PathType Leaf
-	$perProjectKeyInit = Test-Path "$projectsRoot\$projectName\.git\git-crypt" -PathType Container
+		$perProjectKey = "$keyDir\$projectName"
+		$perProjectKeyFile = Test-Path "$perProjectKey" -PathType Leaf
+		$perProjectKeyInit = Test-Path "$projectsRoot\$projectName\.git\git-crypt" -PathType Container
 
-	Set-Location "$projectsRoot\$projectName"
+		Set-Location "$projectsRoot\$projectName"
 
-	switch ($true) {
-		{ ($perProjectKeyInit -and $perProjectKeyFile) } { git stash >$null 2>&1; git pull -u origin main >$null 2>&1 ; git-crypt unlock "$perProjectKey" }
-		{ (!$perProjectKeyFile -and $perProjectKeyInit) } { git-crypt export-key "$perProjectKey" }
-		{ (!$perProjectKeyInit -and $perProjectKeyFile) } { git-crypt init; git-crypt unlock "$perProjectKey" }
-		{ ((!$perProjectKeyFile) -and (!$perProjectKeyInit)) } { git-crypt init; git-crypt export-key "$perProjectKey" }
-	}
+		switch ($true) {
+			{ ($perProjectKeyInit -and $perProjectKeyFile) } { git stash >$null 2>&1; git pull -u origin main >$null 2>&1 ; git-crypt unlock "$perProjectKey" }
+			{ (!$perProjectKeyFile -and $perProjectKeyInit) } { git-crypt export-key "$perProjectKey" }
+			{ (!$perProjectKeyInit -and $perProjectKeyFile) } { git-crypt init; git-crypt unlock "$perProjectKey" }
+			{ ((!$perProjectKeyFile) -and (!$perProjectKeyInit)) } { git-crypt init; git-crypt export-key "$perProjectKey" }
+		}
 
-	$gitAttributesExists = (Test-Path "$projectsRoot\$projectName\.gitattributes" -PathType Leaf)
-	if (!$gitAttributesExists) {
-		New-Item -Path "$projectsRoot\$projectName\.gitattributes" -ItemType File -Force -ErrorAction SilentlyContinue | Out-Null
-		@"
+		$gitAttributesExists = (Test-Path "$projectsRoot\$projectName\.gitattributes" -PathType Leaf)
+		if (!$gitAttributesExists) {
+			New-Item -Path "$projectsRoot\$projectName\.gitattributes" -ItemType File -Force -ErrorAction SilentlyContinue | Out-Null
+			@"
 *.env filter=git-crypt diff=git-crypt
 *.key filter=git-crypt diff=git-crypt
 "@ | Set-Content "$projectsRoot\$projectName\.gitattributes"
+		}
 	}
 }
 
@@ -294,8 +297,8 @@ function Initialize-ProjectPerLangNode {
 	param ([string]$projectName, [switch]$tailwind, [switch]$typescript)
 
 	$projectsRoot = "$(Get-DevDrive)\projects"
-	$frameworks = (gum choose --header="Choose a Framework:" "Astro" "Angular" "NextJS" "Laravel" "Remix" "Parcel" "Svelte" "Vite" "Unknown").Trim()
 	$pkgManager = (gum choose --header="Choose a Package Manager:" "bun" "npm" "pnpm" "yarn").Trim()
+	$frameworks = (gum choose --header="Choose a Framework:" "Astro" "Angular" "NextJS" "Laravel" "Remix" "Parcel" "SvelteKit" "Vite" "Unknown").Trim()
 
 	switch ($pkgManager) {
 		"bun" { if (!(Get-Command 'bun' -ErrorAction SilentlyContinue)) { Write-Warning "Command not found: bun. Please install to use this feature."; break } }
@@ -304,49 +307,129 @@ function Initialize-ProjectPerLangNode {
 		"yarn" { if (!(Get-Command 'yarn' -ErrorAction SilentlyContinue)) { Write-Warning "Command not found: yarn. Please install to use this feature."; break } }
 	}
 
+	$tableHeading = (gum style --bold --italic --border="rounded" --padding="0 4" --align="center" --foreground="#cba6f7" --border-foreground="#89b4fa" "PROJECT'S LANGUAGE SETTINGS CONFIGURATION")
+	$tableHeading
+	$table = New-Object System.Data.DataTable
+	[void]$table.Columns.Add("ENTRY")
+	[void]$table.Columns.Add("VALUE")
+	[void]$table.Rows.Add("Location", "$projectsRoot\$projectName")
+	[void]$table.Rows.Add("Framework", "$frameworks")
+	[void]$table.Rows.Add("PackageManager", "$pkgManager")
+	$table | Format-Table
+	Write-Host "----------------------------------------------------" -ForegroundColor DarkGray
+	Remove-Variable tableHeading, table
+
 	Set-Location "$projectsRoot"
 
 	switch ($frameworks) {
 		"Astro" {
 			Set-Location "$projectsRoot"
 			switch ($pkgManager) {
-				"bun" { $cmd = "bunx create astro $projectsName --git --fancy --install" }
-				"npm" { $cmd = "npx create-astro@latest $projectsName --git --fancy --install -y" }
-				"pnpm" { $cmd = "pnpm create astro@latest $projectsName --git --fancy --install" }
-				"yarn" { $cmd = "yarn create astro $projectsName --git --fancy --install" }
+				"bun" { $cmd = "bunx create astro $projectName --git --fancy --install" }
+				"npm" { $cmd = "npx create-astro@latest $projectName --git --fancy --install" }
+				"pnpm" { $cmd = "pnpm create astro@latest $projectName --git --fancy --install" }
+				"yarn" { $cmd = "yarn create astro $projectName --git --fancy --install" }
 			}
-			if ($tailwind) { if ($pkgManager -eq 'npm') { $cmd += " -- --add tailwind" } else { $cmd += " --add tailwind" } }
-
 			Invoke-Expression $cmd
 
 			$projectLocation = "$projectsRoot\$projectName"
 			Set-Location "$projectLocation"
 
-			switch ($pkgManager) {
-				"bun" { bun add -d $types/bun; bunx astro add mdx astro-auto-import astro-icon --yes }
-				"npm" { npx astro add mdx astro-auto-import astro-icon --yes }
-				"pnpm" { pnpm astro add mdx astro-auto-import astro-icon --yes }
-				"yarn" { yarn astro add mdx astro-auto-import astro-icon --yes }
-			}
-
+			''
 			if ($typescript) {
+				$tsname = (gum style --foreground="#74c7ec" --italic --bold "TypeScript")
 				switch ($pkgManager) {
-					"bun" { bun add -d @types/bun; bun add @astrojs/ts-plugin }
-					"npm" { npm install @astrojs/ts-plugin }
-					"pnpm" { pnpm add @astrojs/ts-plugin }
-					"yarn" { yarn add @astrojs/ts-plugin }
+					"bun" {
+						gum spin --title="Integrating Astro with $tsname ..." -- bun add -d @types/bun
+						gum spin --title="Integrating Astro with $tsname ..." -- bun add @astrojs/ts-plugin
+					}
+					"npm" { gum spin --title="Integrating Astro with $tsname ..." -- npm install @astrojs/ts-plugin }
+					"pnpm" { gum spin --title="Integrating Astro with $tsname ..." -- pnpm add @astrojs/ts-plugin }
+					"yarn" { gum spin --title="Integrating Astro with $tsname ..." -- yarn add @astrojs/ts-plugin }
 				}
+
 				$tsconfig = "$projectLocation\tsconfig.json"
 				$json = Get-Content $tsconfig | ConvertFrom-Json
-				if (!$json.compilerOptions -or !$json.compilerOptions.plugins) {
-					$json | Add-Member -MemberType NoteProperty -Name "compilerOptions" -Value ([PSCustomObject]@{
-							plugins              = [array]@( @{ name = "@astrojs/ts-plugin" } )
-							verbatimModuleSyntax = $true
-						})
+				if (!$json.compilerOptions) {
+					$json | Add-Member -Name "compilerOptions" -Value @{ plugins = @("@astrojs/ts-plugin") } -MemberType NoteProperty
+					Set-Content $tsconfig -Value ($json | ConvertTo-Json -Depth 100)
 				}
-				Set-Content "$tsconfigJson" -Value ($json | ConvertTo-Json -Depth 100)
-				Remove-Variable tsconfigJson
+				Remove-Variable tsname, tsconfig, json
 			}
+
+			if ($tailwind) {
+				$tailwindname = (gum style --foreground="#74c7ec" --italic --bold "TailwindCSS")
+				switch ($pkgManager) {
+					"bun" { gum spin --title="Integrating Astro with $tailwindname ..." -- bunx astro add tailwind --yes }
+					"npm" { gum spin --title="Integrating Astro with $tailwindname ..." -- npx astro add tailwind --yes }
+					"pnpm" { gum spin --title="Integrating Astro with $tailwindname ..." -- pnpm astro add tailwind --yes }
+					"yarn" { gum spin --title="Integrating Astro with $tailwindname ..." -- yarn astro add tailwind --yes }
+				}
+				Remove-Variable tailwindname
+			}
+
+			$promptIntegration = $(Write-Host "Adding Astro Integrations? (y/n) " -NoNewline -ForegroundColor Cyan; Read-Host)
+			if ($promptIntegration.ToUpper() -eq 'Y') {
+				$astroPkgs = @()
+				$uiFrameworks = (gum choose --limit=1 --header="Astro UI Framework:" "Alpine.js" "Preact" "React" "SolidJS" "Svelte" "Vue").Trim()
+				$adapters = (gum choose --limit=1 --header="Astro SSR Adapter" "Cloudflare" "Netlify" "Node" "Vercel").Trim()
+				$extras = (gum choose --no-limit --header="Extra Official Integrations:" "DB" "Markdoc" "MDX" "PartyTown" "SiteMap").Trim()
+				$unofficials = (gum choose --no-limit --header="Some Unofficial Integrations:" "astro-auto-import" "astro-icon" "astro-seo" "auth-astro" "@playform/compress" "@sentry/astro").Trim()
+				switch ($uiFrameworks) {
+					"Alpine.js" { $astroPkgs += @('alpinejs') }
+					"Preact" { $astroPkgs += @('preact') }
+					"React" { $astroPkgs += @('react') }
+					"SolidJS" { $astroPkgs += @('solid') }
+					"Svelte" { $astroPkgs += @('svelte') }
+					"Vue" { $astroPkgs += @('vue') }
+				}
+				switch ($adapters) {
+					"Cloudflare" { $astroPkgs += @('cloudflare') }
+					"Netlify" { $astroPkgs += @('netlify') }
+					"Node" { $astroPkgs += @('node') }
+					"Vercel" { $astroPkgs += @('vercel') }
+				}
+				switch ($extras) {
+					{ $_ -match "DB" } { $astroPkgs += @('db') }
+					{ $_ -match "Markdoc" } { $astroPkgs += @('markdoc') }
+					{ $_ -match "MDX" } { $astroPkgs += @('mdx') }
+					{ $_ -match "PartyTown" } { $astroPkgs += @('partytown') }
+					{ $_ -match "SiteMap" } { $astroPkgs += @('sitemap') }
+				}
+
+				$unofficialPkgs = @()
+				switch ($unofficials) {
+					{ $_ -match "astro-auto-import" } { $unofficialPkgs += @('astro-auto-import') }
+					{ $_ -match "astro-icon" } { $unofficialPkgs += @('astro-icon') }
+					{ $_ -match "astro-seo" } { $unofficialPkgs += @('astro-seo') }
+					{ $_ -match "auth-astro" } { $unofficialPkgs += @('auth-astro') }
+					{ $_ -match "@sentry/astro" } { $astroPkgs += @('@sentry/astro') }
+					{ $_ -match "@playform/compress" } { $astroPkgs += @('@playform/compress') }
+				}
+
+				foreach ($pkg in $astroPkgs) {
+					$pkgName = (gum style --foreground="#74c7ec" --italic --bold "$pkg")
+					switch ($pkgManager) {
+						"bun" { gum spin --title="Adding Astro Integration: $pkgName ..." -- bunx astro add $pkg --yes }
+						"npm" { gum spin --title="Adding Astro Integration: $pkgName ..." -- npx astro add $pkg --yes }
+						"pnpm" { gum spin --title="Adding Astro Integration: $pkgName ..." -- pnpm astro add $pkg --yes }
+						"yarn" { gum spin --title="Adding Astro Integration: $pkgName ..." -- yarn astro add $pkg --yes }
+					}
+					Remove-Variable pkgName
+				}
+
+				foreach ($pkg in $unofficialPkgs) {
+					switch ($pkgManager) {
+						"bun" { bunx astro add $pkg --yes }
+						"npm" { npx astro add $pkg --yes }
+						"pnpm" { pnpm astro add $pkg --yes }
+						"yarn" { yarn astro add $pkg --yes }
+					}
+				}
+				Write-Host "For more information about Astro Integrations, please visit: " -NoNewline
+				Write-Host "https://docs.astro.build/en/guides/integrations-guide/" -ForegroundColor Blue
+			}
+
 			''
 			Write-Host "For more information, see https://docs.astro.build/en/getting-started/" -ForegroundColor Blue
 			Remove-Variable cmd
@@ -357,7 +440,7 @@ function Initialize-ProjectPerLangNode {
 
 			Set-Location "$projectsRoot"
 
-			$cmd = ng new "$projectName"
+			$cmd = "ng new $projectName"
 
 			switch ($pkgManager) {
 				"bun" { $cmd += " --package-manager bun" }
@@ -366,18 +449,57 @@ function Initialize-ProjectPerLangNode {
 				"yarn" { $cmd += " --package-manager yarn" }
 			}
 
+			$serverRouting = (gum choose --header="Create Server Application using Server Routing & App Engine APIs? " "True" "False").Trim()
+			$ssr = (gum choose --header="Create Application with Server-Side Rendering (SSR) and Static Site Generation (SSG/Prerendering)? " "True" "False" ).Trim()
+			$style = (gum choose --header="Files Styling (Extension or Preprocessor):" "CSS" "SCSS" "SASS" "LESS").Trim()
+			$view = (gum choose --header="View Encapsulation Strategy to use:" "None" "Emulated" "ShadowDom").Trim()
+
+			switch ($serverRouting) {
+				"True" { $cmd += " --server-routing true" }
+				"False" { $cmd += " --server-routing false" }
+			}
+			switch ($ssr) {
+				"True" { $cmd += " --ssr true" }
+				"False" { $cmd += " --ssr false" }
+			}
+			switch ($style) {
+				"CSS" { $cmd += " --style css" }
+				"SCSS" { $cmd += " --style scss" }
+				"SASS" { $cmd += " --style sass" }
+				"LESS" { $cmd += " --style less" }
+			}
+			switch ($view) {
+				"None" { $cmd += " --view-encapsulation None" }
+				"Emulated" { $cmd += " --view-encapsulation Emulated" }
+				"ShadowDom" { $cmd += " --view-encapsulation ShadowDom" }
+			}
+
 			Invoke-Expression $cmd
 
 			$projectLocation = "$projectsRoot\$projectName"
 			Set-Location "$projectLocation"
 
 			if ($tailwind) {
+				$tailwindname = (gum style --foreground="#74c7ec" --italic --bold "TailwindCSS")
 				switch ($pkgManager) {
-					"bun" { bun add -d tailwindcss postcss autoprefixer; bunx tailwindcss init }
-					"npm" { npm install --save-dev tailwindcss postcss autoprefixer; npx tailwindcss init }
-					"pnpm" { pnpm add -D tailwindcss postcss autoprefixer; npx tailwindcss init }
-					"yarn" { yarn add -D tailwindcss postcss autoprefixer; yarn tailwindcss init }
+					"bun" {
+						gum spin --title="Integrating Angular with $tailwindname ..." -- bun add -d tailwindcss postcss autoprefixer
+						bunx tailwindcss init
+					}
+					"npm" {
+						gum spin --title="Integrating Angular with $tailwindname ..." -- npm install --save-dev tailwindcss postcss autoprefixer
+						npx tailwindcss init
+					}
+					"pnpm" {
+						gum spin --title="Integrating Angular with $tailwindname ..." -- pnpm add -D tailwindcss postcss autoprefixer
+						npx tailwindcss init
+					}
+					"yarn" {
+						gum spin --title="Integrating Angular with $tailwindname ..." -- yarn add -D tailwindcss postcss autoprefixer
+						yarn tailwindcss init
+					}
 				}
+				Remove-Variable tailwindname
 			}
 
 			''
@@ -387,8 +509,8 @@ function Initialize-ProjectPerLangNode {
 
 		"NextJS" {
 			$cmd = "npx create-next-app@latest $projectName --eslint"
-			if ($typescript) { $cmd += " --typescript" }
-			if ($tailwind) { $cmd += " --tailwind-css" }
+			if ($typescript) { $cmd += " --typescript" } else { $cmd += " --javascript" }
+			if ($tailwind) { $cmd += " --tailwind" }
 
 			switch ($pkgManager) {
 				"bun" { $cmd += " --use-bun" }
@@ -403,7 +525,6 @@ function Initialize-ProjectPerLangNode {
 			$projectLocation = "$projectsRoot\$projectName"
 			Set-Location "$projectLocation"
 
-			''
 			Write-Host "For more information, see https://nextjs.org/docs" -ForegroundColor Blue
 			Remove-Variable cmd
 		}
@@ -437,6 +558,7 @@ function Initialize-ProjectPerLangNode {
 						"Vue with Inertia" { $cmd += " --stack=vue" }
 						"API Only" { $cmd += " --stack=api" }
 					}
+					if ($typescript) { $cmd += " --typescript" }
 				}
 				"Jetstream" {
 					$cmd += " --git --jet --dark"
@@ -447,12 +569,10 @@ function Initialize-ProjectPerLangNode {
 					}
 				}
 			}
-
 			switch ($laravelTestFramework) {
 				"Pest" { $cmd += " --pest" }
 				"PHPUnit" { $cmd += " --phpunit" }
 			}
-
 			switch ($laravelDatabase) {
 				"SQLite" { $cmd += " --database=sqlite" }
 				"MySQL" { $cmd += " --database=mysql" }
@@ -461,81 +581,120 @@ function Initialize-ProjectPerLangNode {
 				"SQL Server" { $cmd += " --database=sqlsrv" }
 			}
 
-			if ($typescript -and ($laravelStarterKit -eq 'Breeze')) {	$cmd += " --typescript" }
-
 			$cmd += " --no-interaction"
-
 			Invoke-Expression $cmd
+			Remove-Variable cmd
 
 			$projectLocation = "$projectsRoot\$projectName"
 			Set-Location "$projectLocation"
 
+			$prettyName = (gum style --foreground="#74c7ec" --italic --bold "$projectName")
+			switch ($pkgManager) {
+				"bun" { gum spin --title="Setting up Laravel Project: $prettyName ..." -- bun install }
+				"npm" { gum spin --title="Setting up Laravel Project: $prettyName ..." -- npm install -y }
+				"pnpm" { gum spin --title="Setting up Laravel Project: $prettyName ..." -- pnpm install }
+				"yarn" { gum spin --title="Setting up Laravel Project: $prettyName ..." -- yarn install }
+			}
+			Remove-Variable prettyName
+
 			if ($typescript -and (-not ($laravelStarterKit -eq 'Breeze'))) {
+				$tsname = (gum style --foreground="#74c7ec" --italic --bold "TypeScript")
 				switch ($pkgManager) {
-					"bun" { bun add -d @types/bun @types/node ts-loader typescript }
-					"npm" { npm install --save-dev @types/node ts-loader typescript }
-					"pnpm" { pnpm add -D @types/node ts-loader typescript }
-					"yarn" { yarn add -D @types/node ts-loader typescript }
+					"bun" { gum spin --title="Integrating Laravel with $tsname ..." -- bun add -d @types/bun @types/node ts-loader typescript }
+					"npm" { gum spin --title="Integrating Laravel with $tsname ..." -- npm install --save-dev @types/node ts-loader typescript }
+					"pnpm" { gum spin --title="Integrating Laravel with $tsname ..." -- pnpm add -D @types/node ts-loader typescript }
+					"yarn" { gum spin --title="Integrating Laravel with $tsname ..." -- yarn add -D @types/node ts-loader typescript }
 				}
+				Remove-Variable tsname
+
 				if (!(Test-Path "$projectLocation\tsconfig.json")) {
 					switch ($pkgManager) {
 						"bun" { bunx tsc --init }
 						"npm" { npx tsc --init }
-						"pnpm" { npx tsc --init }
+						"pnpm" { pnpm tsc --init }
 						"yarn" { yarn tsc --init }
 					}
 				}
 
-				$tsconfigJson = "$projectLocation\tsconfig.json"
-				$json = Get-Content $tsconfigJson | ConvertFrom-Json
-				$json.compilerOptions = [PSCustomObject]@{
-					target            = "EsNext"
-					module            = "EsNext"
-					jsx               = "preserve"
-					strict            = $true
-					sourceMap         = $true
-					resolveJsonModule = $true
-					esModuleInterop   = $true
-					allowJs           = $true
-					lib               = [array]@("esnext", "dom")
-					types             = [array]@("@types/node")
-					paths             = @{ "@/*" = [array]@("./resources/js/*") }
-					outDir            = "./public/build/assets"
-				}
-				$json.typeRoots = [array]@("./node_modules/@types", "resources/js/types")
-				$json.include = [array]@(
-					"resources/js/**/*.ts",
-					"resources/js/**/*.d.ts",
-					"resources/js/**/*.vue"
-				)
-				$json.exclude = [array]@("node_modules", "public")
-				if ($null -eq $($json.compilerOptions)) { $json | Add-Member -Name "compilerOptions" -Value "$($json.compilerOptions)" -MemberType NoteProperty }
-				if ($null -eq $($json.typeRoots)) { $json | Add-Member -Name "typeRoots" -Value "$($json.typeRoots)" -MemberType NoteProperty }
-				if ($null -eq $($json.include)) { $json | Add-Member -Name "include" -Value "$($json.include)" -MemberType NoteProperty }
-				if ($null -eq $($json.exclude)) { $json | Add-Member -Name "exclude" -Value "$($json.exclude)" -MemberType NoteProperty }
-				Set-Content "$tsconfigJson" -Value ($json | ConvertTo-Json -Depth 100)
+				# $tsconfigJson = "$projectLocation\tsconfig.json"
+				# $json = Get-Content $tsconfigJson | ConvertFrom-Json
+				# $json.compilerOptions = [PSCustomObject]@{
+				# 	target            = "EsNext"
+				# 	module            = "EsNext"
+				# 	jsx               = "preserve"
+				# 	strict            = $true
+				# 	sourceMap         = $true
+				# 	resolveJsonModule = $true
+				# 	esModuleInterop   = $true
+				# 	allowJs           = $true
+				# 	lib               = [array]@("esnext", "dom")
+				# 	types             = [array]@("@types/node")
+				# 	paths             = @{ "@/*" = [array]@("./resources/js/*") }
+				# 	outDir            = "./public/build/assets"
+				# }
+				# $json.typeRoots = [array]@("./node_modules/@types", "resources/js/types")
+				# $json.include = [array]@(
+				# 	"resources/js/**/*.ts",
+				# 	"resources/js/**/*.d.ts",
+				# 	"resources/js/**/*.vue"
+				# )
+				# $json.exclude = [array]@("node_modules", "public")
+				# if ($null -eq $($json.compilerOptions)) { $json | Add-Member -Name "compilerOptions" -Value "$($json.compilerOptions)" -MemberType NoteProperty }
+				# if ($null -eq $($json.typeRoots)) { $json | Add-Member -Name "typeRoots" -Value "$($json.typeRoots)" -MemberType NoteProperty }
+				# if ($null -eq $($json.include)) { $json | Add-Member -Name "include" -Value "$($json.include)" -MemberType NoteProperty }
+				# if ($null -eq $($json.exclude)) { $json | Add-Member -Name "exclude" -Value "$($json.exclude)" -MemberType NoteProperty }
+				# Set-Content "$tsconfigJson" -Value ($json | ConvertTo-Json -Depth 100)
 
 				Get-ChildItem -Path "$projectLocation\resources\js" -Filter *.js -ErrorAction SilentlyContinue | Rename-Item -NewName { $_.Name -replace '.js', '.ts' }
 
 				$viteConfigJs = Get-Content "$projectLocation\vite.config.js"
 				$viewsPhp = Get-Content "$projectLocation\resources\views\*.php"
 				if ($viteConfigJs -match 'resources/js/app.js') { $viewConfiJs -replace 'resources/js/app.js', 'resources/js/app.ts' | Set-Content "$projectLocation\vite.config.js" }
-				if ($viewsPhp -match 'resources/js/app.js') { $viewsPhp -replace 'resouces/js/app.js', 'resources/js/app.ts' | Set-Content "$projectLocation\resources\views\*.php" }
+				if ($viewsPhp -match 'resources/js/app.js') { $viewsPhp -replace 'resources/js/app.js', 'resources/js/app.ts' | Set-Content "$projectLocation\resources\views\*.php" }
 			}
+
+			$getSail = $(Write-Host "Install Sail Into Your Current Application? (y/n) " -NoNewline -ForegroundColor Cyan; Read-Host)
+			if ($getSail.ToUpper() -eq 'Y') {
+				composer require laravel/sail --dev
+				php artisan sail:install --devcontainer --quiet
+			}
+
+			$extra = $(Write-Host "Add Extra Services to your application? (y/n) " -NoNewline -ForegroundColor Cyan; Read-Host)
+			if (($extra.ToUpper() -eq 'Y') -and ($getSail.ToUpper() -eq 'Y')) {
+				$services = @()
+				$extraServices = (gum choose --no-limit --header="Choose Extra Services to Install:" "mysql" "pgsql" "mariadb" "mongodb" "redis" "memcached" "meilisearch" "typesense" "minio" "mailpit" "selenium" "soketi").Trim()
+				switch ($extraServices) {
+					{ $_ -match "mysql" } { $services += @('mysql') }
+					{ $_ -match "pgsql" } { $services += @('pgsql') }
+					{ $_ -match "mariadb" } { $services += @('mariadb') }
+					{ $_ -match "mongodb" } { $services += @('mongodb') }
+					{ $_ -match "redis" } { $services += @('redis') }
+					{ $_ -match "memcached" } { $services += @('memcached') }
+					{ $_ -match "meilisearch" } { $services += @('meilisearch') }
+					{ $_ -match "typesense" } { $services += @('typesense') }
+					{ $_ -match "minio" } { $services += @('minio') }
+					{ $_ -match "mailpit" } { $services += @('mailpit') }
+					{ $_ -match "selenium" } { $services += @('selenium') }
+					{ $_ -match "soketi" } { $services += @('soketi') }
+				}
+				foreach ($service in $services) {
+					php artisan sail:add $service --silent --no-interaction
+				}
+			}
+			Remove-Variable extra, getSail
 
 			''
 			Write-Host "For more information, see https://laravel.com/docs/11.x" -ForegroundColor Blue
-			Remove-Variable cmd
 		}
 
 		"Remix" {
 			Set-Location "$projectsRoot"
 
 			switch ($pkgManager) {
-				"bun" { $cmd = "bunx create remix $projectName --install --git-init --yes" }
-				"npm" { $cmd = "npx create-remix@latest $projectName --install --git-init --yes" }
-				"pnpm" { $cmd = "pnpm create remix $projectName --install --git-init --yes" }
-				"yarn" { $cmd = "yarn create remix $projectName --install --git-init --yes" }
+				"bun" { $cmd = "bunx create remix $projectName" }
+				"npm" { $cmd = "npx create-remix@latest $projectName" }
+				"pnpm" { $cmd = "pnpm create remix $projectName" }
+				"yarn" { $cmd = "yarn create remix $projectName" }
 			}
 
 			if (!($typescript)) {
@@ -627,7 +786,7 @@ function Initialize-ProjectPerLangNode {
 			Write-Host "For more information, see https://parceljs.org/docs/" -ForegroundColor Blue
 		}
 
-		"Svelte" {
+		"SvelteKit" {
 			Set-Location "$projectsRoot"
 			$cmd = "npx sv create $projectName"
 			$svelteTemplate = (gum choose --limit=1 --header="Choose a Template to Scaffold:" "minimal" "demo" "library").Trim()
@@ -638,56 +797,59 @@ function Initialize-ProjectPerLangNode {
 			}
 			if ($typescript) { $cmd += " --types ts" }
 			$cmd += " --no-add-ons --no-install"
-			Invoke-Expression $cmd
+			Invoke-Expression $cmd | Out-Null
 
 			$projectLocation = "$projectsRoot\$projectName"
 			Set-Location "$projectLocation"
+			Write-Success -Entry1 "OK" -Entry2 "$projectName" -Text "created."
 
 			if ($tailwind) {
 				$cmd1 = "npx sv add --tailwindcss"
-				$tailwindPlugins = (gum choose --no-limit --header="Choose TailwindCSS Plugins:" "none" "typography" "forms" "container-queries").Trim()
+				$tailwindPlugins = (gum choose --no-limit --header="Choose TailwindCSS Plugins:" "typography" "forms" "container-queries").Trim()
 				switch ($tailwindPlugins) {
-					"none" { $cmd1 = "$cmd1" }
 					"typography" { $cmd1 += " typography" }
 					"forms" { $cmd1 += " forms" }
 					"container-queries" { $cmd1 += " container-queries" }
 				}
 				$cmd1 += " --no-install"
-				Invoke-Expression $cmd1
+				Invoke-Expression $cmd1 | Out-Null
+				Write-Success -Entry1 "OK" -Entry2 "$projectName" -Text "added TailwindCSS."
 			}
 
 			switch ($pkgManager) {
-				"bun" { bun install --silent }
-				"npm" { npm install -q }
-				"pnpm" { pnpm install -s }
-				"yarn" { yarn install }
+				"bun" { gum spin --title="Setting up Svelte Project $projectName..." -- bun install }
+				"npm" { gum spin --title="Setting up Svelte Project $projectName..." -- npm install -y }
+				"pnpm" { gum spin --title="Setting up Svelte Project $projectName..." -- pnpm install }
+				"yarn" { gum spin --title="Setting up Svelte Project $projectName..." -- yarn install }
 			}
 
 			# Svelte Integrations
+			''
 			$additionalIntegrations = $(Write-Host "Set up your Svelte Project with Additional Integrations? (y/n) " -ForegroundColor Cyan -NoNewline; Read-Host)
 			if ($additionalIntegrations.ToUpper() -eq 'Y') {
-				$index = (gum choose --no-limit --header="Choose Additional Integrations Topics" "1. Builtin SvelteKit Adders" "2. Svelte Packages" "3. svelte-preprocess").Trim()
+				$index = (gum choose --no-limit --header="Choose Additional Integrations Topics:" "1. Builtin SvelteKit Adders" "2. Svelte Packages" "3. svelte-preprocess").Trim()
 				switch ($index) {
 					{ $_ -match "1. Builtin SvelteKit Adders" } {
 						''
 						Write-Host "Builtin SvelteKit Adders" -ForegroundColor Green
 						Write-Host "------------------------" -ForegroundColor Green
 						$addersCmd = "npx sv add"
-						$adders = (gum choose --no-limit --header="Choose SvelteKit Integrations:" "prettier" "eslint" "vitest" "playwright" "lucia" "drizzle" "paraglide" "mdsvex" "storybook").Trim()
+						$adders = (gum choose --no-limit --header="Choose SvelteKit Integrations:" "prettier" "eslint" "vitest" "playwright" "mdsvex" "storybook" "lucia" "drizzle" "paraglide").Trim()
 						switch ($adders) {
 							{ $_ -match "prettier" } { $addersCmd += " prettier" }
 							{ $_ -match "eslint" } { $addersCmd += " eslint" }
 							{ $_ -match "vitest" } { $addersCmd += " vitest" }
 							{ $_ -match "playwright" } { $addersCmd += " playwright" }
+							{ $_ -match "mdsvex" } { $addersCmd += " mdsvex" }
+							{ $_ -match "storybook" } { $addersCmd += " storybook" }
 							{ $_ -match "lucia" } {
 								$demoIncluded = (gum choose --limit=1 --header="Lucia: Include a demo?" "Yes" "No").Trim()
 								if ($demoIncluded -eq 'Yes') { $addersCmd += " --lucia demo" }
 								else { $addersCmd += " --lucia no-demo" }
 							}
 							{ $_ -match "drizzle" } {
-								$dbCmd = " --drizzle"
+								$dbCmd = "--drizzle"
 								$databaseType = (gum choose --limit=1 --header="Choose a Database Type:" "PostgreSQL" "MySQL" "SQLite").Trim()
-								$useDocker = (gum choose --limit=1 --header="Integrate Database with Docker?" "Yes" "No").Trim()
 								switch ($databaseType) {
 									"PostgreSQL" {
 										$dbCmd += " postgresql"
@@ -696,6 +858,7 @@ function Initialize-ProjectPerLangNode {
 											"Postgres.JS" { $dbCmd += " postgres.js" }
 											"Neon" { $dbCmd += " neon" }
 										}
+										$addersCmd += " $dbCmd"
 									}
 									"MySQL" {
 										$dbCmd += " mysql"
@@ -704,6 +867,7 @@ function Initialize-ProjectPerLangNode {
 											"mysql2" { $dbCmd += " mysql2" }
 											"PlanetScale" { $dbCmd += " planetscale" }
 										}
+										$addersCmd += " $dbCmd"
 									}
 									"SQLite" {
 										$dbCmd += " sqlite"
@@ -713,18 +877,20 @@ function Initialize-ProjectPerLangNode {
 											"libSQL" { $dbCmd += " libsql" }
 											"Turso" { $dbCmd += " turso" }
 										}
+										$addersCmd += " $dbCmd"
 									}
 								}
-								if ($useDocker -eq 'Yes') { $dbCmd += " docker" } else { $dbCmd += " no-docker" }
-								$addersCmd += "$dbCmd"
+								$dockerExists = Get-Command docker -ErrorAction SilentlyContinue
+								if ($dockerExists) {
+									$useDocker = (gum choose --limit=1 --header="Integrate Database with Docker?" "Yes" "No").Trim()
+									if ($useDocker -eq 'Yes') { $addersCmd += " docker" } else { $addersCmd += " no-docker" }
+								}
 							}
 							{ $_ -match "paraglide" } {
 								$demoIncluded = (gum choose --limit=1 --header="Paraglide: Include a demo?" "Yes" "No").Trim()
 								if ($demoIncluded -eq 'Yes') { $addersCmd += " --paraglide demo" }
 								else { $addersCmd += " --paraglide no-demo" }
 							}
-							{ $_ -match "mdsvex" } { $addersCmd += " mdsvex" }
-							{ $_ -match "storybook" } { $addersCmd += " storybook" }
 						}
 						$addersCmd += " --no-install"
 						Invoke-Expression $addersCmd
@@ -748,12 +914,17 @@ function Initialize-ProjectPerLangNode {
 							{ $_ -match "Tanstack Virtual" } { $sveltePackages += '@tanstack/svelte-virtual' } # https://tanstack.com/virtual/latest/docs/framework/svelte/svelte-virtual
 							{ $_ -match "Tanstack Query" } { $sveltePackages += '@tanstack/svelte-query' } # https://tanstack.com/query/latest/docs/framework/svelte/overview
 						}
-						switch ($pkgManager) {
-							"bun" { bun add $sveltePackages }
-							"npm" { npm install $sveltePackages }
-							"pnpm" { pnpm add $sveltePackages }
-							"yarn" { yarn add $sveltePackages }
+
+						foreach ($pkg in $sveltePackages) {
+							switch ($pkgManager) {
+								"bun" { gum spin --title="Adding Svelte Package $pkg..." -- bun add $pkg }
+								"npm" { gum spin --title="Adding Svelte Package $pkg..." -- npm install $pkg }
+								"pnpm" { gum spin --title="Adding Svelte Package $pkg..." -- pnpm add $pkg }
+								"yarn" { gum spin --title="Adding Svelte Package $pkg..." -- yarn add $pkg }
+							}
+							Write-Success -Entry1 "OK" -Entry2 "$pkg" -Text "installed."
 						}
+
 						Remove-Variable sveltePackages
 					}
 
@@ -776,14 +947,18 @@ function Initialize-ProjectPerLangNode {
 						$sveltePackages += @('autoprefixer')
 						if ($typescript) { $sveltePackages += @('typescript', '@rollup/plugin-typescript') }
 
-						switch ($pkgManager) {
-							"bun" { bun add -d $sveltePackages }
-							"npm" { npm i -D $sveltePackages }
-							"pnpm" { pnpm add -D $sveltePackages }
-							"yarn" { yarn add -D $sveltePackages }
+						foreach ($pkg in $sveltePackages) {
+							switch ($pkgManager) {
+								"bun" { gum spin --title="Adding Dependencies $pkg..." -- bun add -d $pkg }
+								"npm" { gum spin --title="Adding Dependencies $pkg..." -- npm i -D $pkg }
+								"pnpm" { gum spin --title="Adding Dependencies $pkg..." --  pnpm add -D $pkg }
+								"yarn" { gum spin --title="Adding Dependencies $pkg..." -- yarn add -D $pkg }
+							}
+							Write-Success -Entry1 "OK" -Entry2 "$pkg" -Text "added."
 						}
+						Remove-Variable sveltePackages
 						''
-						Write-Host "Extra steps are required to setup, please see " -NoNewline
+						Write-Host "Extra steps are required to setup, please see " -ForegroundColor Red -NoNewline
 						Write-Host "https://github.com/sveltejs/svelte-preprocess/blob/main/docs/getting-started.md" -ForegroundColor Blue
 					}
 				}
@@ -797,9 +972,9 @@ function Initialize-ProjectPerLangNode {
 			Set-Location "$projectsRoot"
 
 			if ($typescript) {
-				$viteTemplates = gum choose "Choose a Vite Template:" "vanilla" "vue" "react" "preact" "lit" "svelte" "solid" "qwik"
-			} else {
 				$viteTemplates = gum choose "Choose a Vite Template:" "vanilla-ts" "vue-ts" "react-ts" "preact-ts" "lit-ts" "svelte-ts" "solid-ts" "qwik-ts"
+			} else {
+				$viteTemplates = gum choose "Choose a Vite Template:" "vanilla" "vue" "react" "preact" "lit" "svelte" "solid" "qwik"
 			}
 
 			switch ($pkgManager) {
@@ -810,8 +985,14 @@ function Initialize-ProjectPerLangNode {
 			}
 
 			Set-Location "$projectsRoot\$projectName"
+			switch ($pkgManager) {
+				"bun" { bun install }
+				"npm" { npm install -y }
+				"pnpm" { pnpm install }
+				"yarn" { yarn install }
+			}
 			''
-			Write-Host "For more information, see https://vite.dev/guide/" -ForegroundColor Green
+			Write-Host "For more information, see https://vite.dev/guide/" -ForegroundColor Blue
 		}
 
 		"Unknown" {
@@ -887,7 +1068,7 @@ function Initialize-ProjectPerLangPython {
 				}
 			}
 			Invoke-Expression $cmd
-			Remove-Variable cmd p poetryPlugin
+			Remove-Variable cmd
 
 			# New poetry project
 			if (!(Test-Path "$projectsRoot\$projectName" -PathType Container)) {
@@ -1014,6 +1195,9 @@ function Initialize-Project {
 		[Parameter(HelpMessage = 'Whether or not to project GitHub Repository')]
 		[Alias('g')][switch]$GitHub,
 
+		[Parameter(HelpMessage = 'Whether or not to use git-crypt to encrypt the project')]
+		[Alias('c')][switch]$Crypt,
+
 		[Parameter(HelpMessage = 'Whether or not to open the project in Visual Studio Code Editor')]
 		[Alias('v')][switch]$VSCode
 	)
@@ -1022,6 +1206,11 @@ function Initialize-Project {
 	# Use DevDrive to store projects directories
 	$mainProjectsDir = "$(Get-DevDrive)\projects"
 	if (-not (Test-Path -Path $mainProjectsDir -PathType Container)) { New-Item -ItemType Directory -Path "$mainProjectsDir" -Force -ErrorAction SilentlyContinue | Out-Null }
+
+	if (Test-Path "$mainProjectsDir\$Project" -PathType Container) {
+		Write-Success -Entry1 "Project" -Entry2 "$Project" -Text "already exists."
+		break
+	}
 
 	# gum
 	$gumExists = Get-Command gum -ErrorAction SilentlyContinue
@@ -1055,7 +1244,7 @@ function Initialize-Project {
 	[void]$table.Rows.Add("UserID", "$UserID")
 	[void]$table.Rows.Add("Description", "$Description")
 	$table | Format-Table
-	Write-Host "-----------------------------------------------" -ForegroundColor DarkGray
+	Write-Host "----------------------------------------------------" -ForegroundColor DarkGray
 
 	switch ($Language) {
 		'node' {
@@ -1148,6 +1337,7 @@ function Initialize-Project {
 	# git
 	$invokeGit = "Initialize-ProjectGit -projectName $Project -author $Author -desc $Description -license $License -userid $UserID"
 	if ($GitHub) { $invokeGit += " -ghRepo" }
+	if ($Crypt) { $invokeGit += " -crypt" }
 	Invoke-Expression $invokeGit
 
 	$newReadme = "Initialize-ProjectReadme -projectName $Project"
@@ -1157,12 +1347,9 @@ function Initialize-Project {
 		else { gum confirm "Found README.md in your project root. Show now? (y/n) " && Get-Content $readme }
 
 		$prompt = $(Write-Host "Overwrite current README.md file? (y/n) " -ForegroundColor Cyan -NoNewline; Read-Host)
-		if ($prompt.ToUpper() -eq 'Y') {
-			$newReadme += " -force"
-		}
+		if ($prompt.ToUpper() -eq 'Y') { $newReadme += " -force" }
 	}
 	Invoke-Expression $newReadme
-
 
 	# vscode
 	if ($VSCode) { Open-ProjectDirInVSCode -projectName $Project }
