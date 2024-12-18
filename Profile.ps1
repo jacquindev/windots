@@ -15,6 +15,7 @@ $Env:DOTFILES = Split-Path (Get-ChildItem $PSScriptRoot | Where-Object FullName 
 $Env:DOTPOSH = "$Env:DOTFILES\dotposh"
 $Env:EDITOR = "code"
 $Env:_ZO_DATA_DIR = "$Env:DOTFILES"
+$Env:UV_LINK_MODE = "copy"
 
 # Asynchrous processes
 # Oh-my-posh prompt
@@ -38,15 +39,15 @@ foreach ($module in $PoshModules) {
 # gsudo Module
 if (Get-Command gsudo -ErrorAction SilentlyContinue) {
     Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCount 1 -Action {
-        $gsudoPath = Split-Path (Get-Command gsudo.exe).Path 
-        Import-Module "$gsudoPath\gsudoModule.psd1" 
+        $gsudoPath = Split-Path (Get-Command gsudo.exe).Path
+        Import-Module "$gsudoPath\gsudoModule.psd1"
     } | Out-Null
 }
 
 # Import Dotposh Modules
 foreach ($function in $(Get-ChildItem -Path "$env:DOTPOSH\Modules\*.ps1" -File).Name) {
     Import-Module "$env:DOTPOSH\Modules\$function" -Global -ErrorAction SilentlyContinue
-} 
+}
 Remove-Variable function
 
 # Source config files
