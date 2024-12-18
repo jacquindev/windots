@@ -4,7 +4,7 @@ Initialize new project in DevDrive Folder with specified settings.
 .DESCRIPTION
 - Initialize your project with tools:
 		- Node (npm | pnpm | yarn)
-		- Python (poetry | PDM | hatch | rye) & activate virtual environment
+		- Python (poetry | PDM | uv | rye) & activate virtual environment
 		- Rust (cargo)
 - Create new GitHub repo (private) with your project name
 - Add .gitignore file with template source from: https://www.toptal.com/developers/gitignore
@@ -253,6 +253,7 @@ function Initialize-ProjectGitignore {
 		"python" { $gitignoreContent = (Invoke-WebRequest -Uri "https://www.toptal.com/developers/gitignore/api/python").Content }
 		"powershell" { $gitignoreContent = (Invoke-WebRequest -Uri "https://www.toptal.com/developers/gitignore/api/powershell").Content	}
 		"rust" {	$gitignoreContent = (Invoke-WebRequest -Uri "https://www.toptal.com/developers/gitignore/api/rust-analyzer,rust").Content }
+		Default { return }
 	}
 	Set-Content "$gitignoreFile" -Value "$gitignoreContent"
 }
@@ -307,17 +308,10 @@ function Initialize-ProjectPerLangNode {
 		"yarn" { if (!(Get-Command 'yarn' -ErrorAction SilentlyContinue)) { Write-Warning "Command not found: yarn. Please install to use this feature."; break } }
 	}
 
-	$tableHeading = (gum style --bold --italic --border="rounded" --padding="0 4" --align="center" --foreground="#cba6f7" --border-foreground="#89b4fa" "PROJECT'S LANGUAGE SETTINGS CONFIGURATION")
-	$tableHeading
-	$table = New-Object System.Data.DataTable
-	[void]$table.Columns.Add("ENTRY")
-	[void]$table.Columns.Add("VALUE")
-	[void]$table.Rows.Add("Location", "$projectsRoot\$projectName")
-	[void]$table.Rows.Add("Framework", "$frameworks")
+	# Print table information
 	[void]$table.Rows.Add("PackageManager", "$pkgManager")
-	$table | Format-Table
-	Write-Host "----------------------------------------------------" -ForegroundColor DarkGray
-	Remove-Variable tableHeading, table
+	[void]$table.Rows.Add("Framework", "$frameworks")
+	[void]$table.Rows.Add("TypeScript", "$typescript")
 
 	Set-Location "$projectsRoot"
 
@@ -329,6 +323,7 @@ function Initialize-ProjectPerLangNode {
 				"npm" { $cmd = "npx create-astro@latest $projectName --git --fancy --install" }
 				"pnpm" { $cmd = "pnpm create astro@latest $projectName --git --fancy --install" }
 				"yarn" { $cmd = "yarn create astro $projectName --git --fancy --install" }
+				Default { return }
 			}
 			Invoke-Expression $cmd
 
@@ -346,6 +341,7 @@ function Initialize-ProjectPerLangNode {
 					"npm" { gum spin --title="Integrating Astro with $tsname ..." -- npm install @astrojs/ts-plugin }
 					"pnpm" { gum spin --title="Integrating Astro with $tsname ..." -- pnpm add @astrojs/ts-plugin }
 					"yarn" { gum spin --title="Integrating Astro with $tsname ..." -- yarn add @astrojs/ts-plugin }
+					Default { return }
 				}
 
 				$tsconfig = "$projectLocation\tsconfig.json"
@@ -364,6 +360,7 @@ function Initialize-ProjectPerLangNode {
 					"npm" { gum spin --title="Integrating Astro with $tailwindname ..." -- npx astro add tailwind --yes }
 					"pnpm" { gum spin --title="Integrating Astro with $tailwindname ..." -- pnpm astro add tailwind --yes }
 					"yarn" { gum spin --title="Integrating Astro with $tailwindname ..." -- yarn astro add tailwind --yes }
+					Default { return }
 				}
 				Remove-Variable tailwindname
 			}
@@ -382,12 +379,14 @@ function Initialize-ProjectPerLangNode {
 					"SolidJS" { $astroPkgs += @('solid') }
 					"Svelte" { $astroPkgs += @('svelte') }
 					"Vue" { $astroPkgs += @('vue') }
+					Default { return }
 				}
 				switch ($adapters) {
 					"Cloudflare" { $astroPkgs += @('cloudflare') }
 					"Netlify" { $astroPkgs += @('netlify') }
 					"Node" { $astroPkgs += @('node') }
 					"Vercel" { $astroPkgs += @('vercel') }
+					Default { return }
 				}
 				switch ($extras) {
 					{ $_ -match "DB" } { $astroPkgs += @('db') }
@@ -395,6 +394,7 @@ function Initialize-ProjectPerLangNode {
 					{ $_ -match "MDX" } { $astroPkgs += @('mdx') }
 					{ $_ -match "PartyTown" } { $astroPkgs += @('partytown') }
 					{ $_ -match "SiteMap" } { $astroPkgs += @('sitemap') }
+					Default { return }
 				}
 
 				$unofficialPkgs = @()
@@ -405,6 +405,7 @@ function Initialize-ProjectPerLangNode {
 					{ $_ -match "auth-astro" } { $unofficialPkgs += @('auth-astro') }
 					{ $_ -match "@sentry/astro" } { $astroPkgs += @('@sentry/astro') }
 					{ $_ -match "@playform/compress" } { $astroPkgs += @('@playform/compress') }
+					Default { return }
 				}
 
 				foreach ($pkg in $astroPkgs) {
@@ -414,6 +415,7 @@ function Initialize-ProjectPerLangNode {
 						"npm" { gum spin --title="Adding Astro Integration: $pkgName ..." -- npx astro add $pkg --yes }
 						"pnpm" { gum spin --title="Adding Astro Integration: $pkgName ..." -- pnpm astro add $pkg --yes }
 						"yarn" { gum spin --title="Adding Astro Integration: $pkgName ..." -- yarn astro add $pkg --yes }
+						Default { return }
 					}
 					Remove-Variable pkgName
 				}
@@ -424,13 +426,26 @@ function Initialize-ProjectPerLangNode {
 						"npm" { npx astro add $pkg --yes }
 						"pnpm" { pnpm astro add $pkg --yes }
 						"yarn" { yarn astro add $pkg --yes }
+						Default { return }
 					}
 				}
 				Write-Host "For more information about Astro Integrations, please visit: " -NoNewline
 				Write-Host "https://docs.astro.build/en/guides/integrations-guide/" -ForegroundColor Blue
 			}
 
+			$astroPackages = @()
+			if ($null -ne $astroPkgs) { $astroPackages += $astroPkgs }
+			if ($null -ne $unofficialPkgs) { $astroPackages += $unofficialPkgs }
+			$astroPackages = $astroPackages -join ','
+			[void]$table.Rows.Add("Integrations", "$astroPackages")
+
+
 			''
+			Write-Host "-----------------------------------------------------------------------------------" -ForegroundColor DarkGray
+			$tableHeading = (gum style --bold --italic --border="rounded" --padding="0 4" --align="center" --foreground="#cba6f7" --border-foreground="#89b4fa" "PROJECT'S PER LANGUAGE SETTINGS CONFIGURATION")
+			$tableHeading
+			$table | Format-Table -AutoSize -Wrap
+
 			Write-Host "For more information, see https://docs.astro.build/en/getting-started/" -ForegroundColor Blue
 			Remove-Variable cmd
 		}
@@ -447,6 +462,7 @@ function Initialize-ProjectPerLangNode {
 				"npm" { $cmd += " --package-manager npm" }
 				"pnpm" { $cmd += " --package-manager pnpm" }
 				"yarn" { $cmd += " --package-manager yarn" }
+				Default { return }
 			}
 
 			$serverRouting = (gum choose --header="Create Server Application using Server Routing & App Engine APIs? " "True" "False").Trim()
@@ -457,21 +473,25 @@ function Initialize-ProjectPerLangNode {
 			switch ($serverRouting) {
 				"True" { $cmd += " --server-routing true" }
 				"False" { $cmd += " --server-routing false" }
+				Default { return }
 			}
 			switch ($ssr) {
 				"True" { $cmd += " --ssr true" }
 				"False" { $cmd += " --ssr false" }
+				Default { return }
 			}
 			switch ($style) {
 				"CSS" { $cmd += " --style css" }
 				"SCSS" { $cmd += " --style scss" }
 				"SASS" { $cmd += " --style sass" }
 				"LESS" { $cmd += " --style less" }
+				Default { return }
 			}
 			switch ($view) {
 				"None" { $cmd += " --view-encapsulation None" }
 				"Emulated" { $cmd += " --view-encapsulation Emulated" }
 				"ShadowDom" { $cmd += " --view-encapsulation ShadowDom" }
+				Default { return }
 			}
 
 			Invoke-Expression $cmd
@@ -498,11 +518,22 @@ function Initialize-ProjectPerLangNode {
 						gum spin --title="Integrating Angular with $tailwindname ..." -- yarn add -D tailwindcss postcss autoprefixer
 						yarn tailwindcss init
 					}
+					Default { return }
 				}
 				Remove-Variable tailwindname
 			}
 
+			[void]$table.Rows.Add("Server Routing", "$serverRouting")
+			[void]$table.Rows.Add("SSR", "$ssr")
+			[void]$table.Rows.Add("Style", "$style")
+			[void]$table.Rows.Add("Encapsulation", "$view")
+
 			''
+			Write-Host "-----------------------------------------------------------------------------------" -ForegroundColor DarkGray
+			$tableHeading = (gum style --bold --italic --border="rounded" --padding="0 4" --align="center" --foreground="#cba6f7" --border-foreground="#89b4fa" "PROJECT'S PER LANGUAGE SETTINGS CONFIGURATION")
+			$tableHeading
+			$table | Format-Table -AutoSize -Wrap
+
 			Write-Host "For more information, see https://angular.dev/overview" -ForegroundColor Blue
 			Remove-Variable cmd
 		}
@@ -517,6 +548,7 @@ function Initialize-ProjectPerLangNode {
 				"npm" { $cmd += " --use-npm" }
 				"pnpm" { $cmd += " --use-pnpm" }
 				"yarn" { $cmd += " --use-yarn" }
+				Default { return }
 			}
 
 			Set-Location "$projectsRoot"
@@ -524,6 +556,12 @@ function Initialize-ProjectPerLangNode {
 
 			$projectLocation = "$projectsRoot\$projectName"
 			Set-Location "$projectLocation"
+
+			''
+			Write-Host "-----------------------------------------------------------------------------------" -ForegroundColor DarkGray
+			$tableHeading = (gum style --bold --italic --border="rounded" --padding="0 4" --align="center" --foreground="#cba6f7" --border-foreground="#89b4fa" "PROJECT'S PER LANGUAGE SETTINGS CONFIGURATION")
+			$tableHeading
+			$table | Format-Table -AutoSize -Wrap
 
 			Write-Host "For more information, see https://nextjs.org/docs" -ForegroundColor Blue
 			Remove-Variable cmd
@@ -568,10 +606,12 @@ function Initialize-ProjectPerLangNode {
 						"Vue with Inertia" { $cmd += " --stack=inertia" }
 					}
 				}
+				Default { return }
 			}
 			switch ($laravelTestFramework) {
 				"Pest" { $cmd += " --pest" }
 				"PHPUnit" { $cmd += " --phpunit" }
+				Default { return }
 			}
 			switch ($laravelDatabase) {
 				"SQLite" { $cmd += " --database=sqlite" }
@@ -579,6 +619,7 @@ function Initialize-ProjectPerLangNode {
 				"MariaDB" { $cmd += " --database=mariadb" }
 				"PostgreSQL" { $cmd += " --database=pgsql" }
 				"SQL Server" { $cmd += " --database=sqlsrv" }
+				Default { return }
 			}
 
 			$cmd += " --no-interaction"
@@ -594,6 +635,7 @@ function Initialize-ProjectPerLangNode {
 				"npm" { gum spin --title="Setting up Laravel Project: $prettyName ..." -- npm install -y }
 				"pnpm" { gum spin --title="Setting up Laravel Project: $prettyName ..." -- pnpm install }
 				"yarn" { gum spin --title="Setting up Laravel Project: $prettyName ..." -- yarn install }
+				Default { return }
 			}
 			Remove-Variable prettyName
 
@@ -604,6 +646,7 @@ function Initialize-ProjectPerLangNode {
 					"npm" { gum spin --title="Integrating Laravel with $tsname ..." -- npm install --save-dev @types/node ts-loader typescript }
 					"pnpm" { gum spin --title="Integrating Laravel with $tsname ..." -- pnpm add -D @types/node ts-loader typescript }
 					"yarn" { gum spin --title="Integrating Laravel with $tsname ..." -- yarn add -D @types/node ts-loader typescript }
+					Default { return }
 				}
 				Remove-Variable tsname
 
@@ -676,14 +719,26 @@ function Initialize-ProjectPerLangNode {
 					{ $_ -match "mailpit" } { $services += @('mailpit') }
 					{ $_ -match "selenium" } { $services += @('selenium') }
 					{ $_ -match "soketi" } { $services += @('soketi') }
+					Default { return }
 				}
 				foreach ($service in $services) {
 					php artisan sail:add $service --silent --no-interaction
 				}
 			}
-			Remove-Variable extra, getSail
+
+			if ($laravelStarterKit -eq 'None') { $prettyStarter = $False } else { $prettyStarter = $laravelStarterKit }
+			if ($getSail.ToUpper() -eq 'Y') { $prettySail = $True } else { $prettySail = $False }
+			[void]$table.Rows.Add("Starter Kit", "$prettyStarter")
+			[void]$table.Rows.Add("Test Framework", "$laravelTestFramework")
+			[void]$table.Rows.Add("Database", "$laravelDatabase")
+			[void]$table.Rows.Add("Install Sail?", "$prettySail")
 
 			''
+			Write-Host "-----------------------------------------------------------------------------------" -ForegroundColor DarkGray
+			$tableHeading = (gum style --bold --italic --border="rounded" --padding="0 4" --align="center" --foreground="#cba6f7" --border-foreground="#89b4fa" "PROJECT'S PER LANGUAGE SETTINGS CONFIGURATION")
+			$tableHeading
+			$table | Format-Table -AutoSize -Wrap
+
 			Write-Host "For more information, see https://laravel.com/docs/11.x" -ForegroundColor Blue
 		}
 
@@ -695,6 +750,7 @@ function Initialize-ProjectPerLangNode {
 				"npm" { $cmd = "npx create-remix@latest $projectName" }
 				"pnpm" { $cmd = "pnpm create remix $projectName" }
 				"yarn" { $cmd = "yarn create remix $projectName" }
+				Default { return }
 			}
 
 			if (!($typescript)) {
@@ -724,10 +780,15 @@ function Initialize-ProjectPerLangNode {
 						yarn add -D tailwindcss postcss autoprefixer
 						if ($typescript) { yarn tailwindcss init --ts -p } else { yarn tailwindcss init -p }
 					}
+					Default { return }
 				}
 			}
 
 			''
+			Write-Host "-----------------------------------------------------------------------------------" -ForegroundColor DarkGray
+			$tableHeading = (gum style --bold --italic --border="rounded" --padding="0 4" --align="center" --foreground="#cba6f7" --border-foreground="#89b4fa" "PROJECT'S PER LANGUAGE SETTINGS CONFIGURATION")
+			$tableHeading
+			$table | Format-Table -AutoSize -Wrap
 			Write-Host "For more information, see https://remix.run/docs/en/main" -ForegroundColor Blue
 			Remove-Variable cmd
 		}
@@ -766,6 +827,7 @@ function Initialize-ProjectPerLangNode {
 					if ($tailwind -and $typescript) { yarn add -D tailwindcss postcss; yarn tailwindcss init --ts -p }
 					if ($tailwind -and (!$typescript)) { yarn add -D tailwindcss postcss; yarn tailwindcss init -p }
 				}
+				Default { return }
 			}
 
 			if ($tailwind) {
@@ -783,6 +845,11 @@ function Initialize-ProjectPerLangNode {
 			}
 
 			''
+			Write-Host "-----------------------------------------------------------------------------------" -ForegroundColor DarkGray
+			$tableHeading = (gum style --bold --italic --border="rounded" --padding="0 4" --align="center" --foreground="#cba6f7" --border-foreground="#89b4fa" "PROJECT'S PER LANGUAGE SETTINGS CONFIGURATION")
+			$tableHeading
+			$table | Format-Table -AutoSize -Wrap
+
 			Write-Host "For more information, see https://parceljs.org/docs/" -ForegroundColor Blue
 		}
 
@@ -821,6 +888,7 @@ function Initialize-ProjectPerLangNode {
 				"npm" { gum spin --title="Setting up Svelte Project $projectName..." -- npm install -y }
 				"pnpm" { gum spin --title="Setting up Svelte Project $projectName..." -- pnpm install }
 				"yarn" { gum spin --title="Setting up Svelte Project $projectName..." -- yarn install }
+				Default { return }
 			}
 
 			# Svelte Integrations
@@ -961,10 +1029,18 @@ function Initialize-ProjectPerLangNode {
 						Write-Host "Extra steps are required to setup, please see " -ForegroundColor Red -NoNewline
 						Write-Host "https://github.com/sveltejs/svelte-preprocess/blob/main/docs/getting-started.md" -ForegroundColor Blue
 					}
+
+					Default { return }
 				}
 			}
 
+			[void]$table.Rows.Add("Template", "$svelteTemplate")
 			''
+			Write-Host "-----------------------------------------------------------------------------------" -ForegroundColor DarkGray
+			$tableHeading = (gum style --bold --italic --border="rounded" --padding="0 4" --align="center" --foreground="#cba6f7" --border-foreground="#89b4fa" "PROJECT'S PER LANGUAGE SETTINGS CONFIGURATION")
+			$tableHeading
+			$table | Format-Table -AutoSize -Wrap
+
 			Write-Host "For more information, see https://svelte.dev/docs/kit/introduction" -ForegroundColor Blue
 		}
 
@@ -982,6 +1058,7 @@ function Initialize-ProjectPerLangNode {
 				"npm" { npm create vite@latest $projectName -- --template $viteTemplates }
 				"pnpm" { pnpm create vite $projectName --template $viteTemplates }
 				"yarn" { yarn create vite $projectName --template $viteTemplates }
+				Default { return }
 			}
 
 			Set-Location "$projectsRoot\$projectName"
@@ -990,8 +1067,16 @@ function Initialize-ProjectPerLangNode {
 				"npm" { npm install -y }
 				"pnpm" { pnpm install }
 				"yarn" { yarn install }
+				Default { return }
 			}
+
+			[void]$table.Rows.Add("Template", "$viteTemplates")
 			''
+			Write-Host "-----------------------------------------------------------------------------------" -ForegroundColor DarkGray
+			$tableHeading = (gum style --bold --italic --border="rounded" --padding="0 4" --align="center" --foreground="#cba6f7" --border-foreground="#89b4fa" "PROJECT'S PER LANGUAGE SETTINGS CONFIGURATION")
+			$tableHeading
+			$table | Format-Table -AutoSize -Wrap
+
 			Write-Host "For more information, see https://vite.dev/guide/" -ForegroundColor Blue
 		}
 
@@ -1008,24 +1093,377 @@ function Initialize-ProjectPerLangNode {
 				"npm" { npm init -y >$null 2>&1 }
 				"pnpm" { pnpm init >$null 2>&1 }
 				"yarn" { yarn init -2 >$null 2>&1 }
+				Default { return }
 			}
 
 			''
+			Write-Host "-----------------------------------------------------------------------------------" -ForegroundColor DarkGray
+			$tableHeading = (gum style --bold --italic --border="rounded" --padding="0 4" --align="center" --foreground="#cba6f7" --border-foreground="#89b4fa" "PROJECT'S PER LANGUAGE SETTINGS CONFIGURATION")
+			$tableHeading
+			$table | Format-Table -AutoSize -Wrap
+
 			Write-Success -Entry1 "OK" -Text "Initilized $projectName at $projectsRoot"
 		}
+
+		Default { return }
 	}
 }
 
 function Initialize-ProjectPerLangPython {
-	param ([string]$projectName, [switch]$flask, [switch]$django)
+	param ([string]$projectName)
 
-	if (!(Get-Command python -ErrorAction SilentlyContinue)) {
-		Write-Warning "Command not found: python. Please install to use this feature."; return
-	}
-
-	$projectsRoot = "$(Get-DevDrive)\projects"
 	$projectManager = (gum choose --limit=1 --header="Choose a Project Manager:" "Poetry" "PDM" "Rye" "UV").Trim()
 
+	$packages = @()
+	$webDevelopment = $(Write-Host "Integrate your project with Python Web Development? (y/n) " -ForegroundColor Cyan -NoNewline; Read-Host)
+	if ($webDevelopment.ToUpper() -eq 'Y') {
+		$frameworks = (gum choose --no-limit --header="Choose Python Web Frameworks:" "Aiohttp" "Bottle" "Django" "FastAPI" "Falcon" "Flask" "Litestar" "Pyramid" "Quart" "Sanic").Trim()
+
+		switch ($frameworks) {
+			{ $_ -match "Aiohttp" } { $packages += @('aiohttp[speedups]') }
+			{ $_ -match "Bottle" } { $packages += @('bottle') }
+			{ $_ -match "Django" } {
+				$packages += @('Django')
+				$djangoAddon = $(Write-Host "Install Django Addons? (y/n) " -ForegroundColor Cyan -NoNewline; Read-Host)
+				if ($djangoAddon.ToUpper() -eq 'Y') {
+					$djangoAddons = (gum choose --no-limit --header="Choose Django Addons:" "django-cachalot" "django-cacheops" "django-cleanup" "django-configurations" "django-cors-headers" "django-crispy-forms" "django-environ" "django-grappelli" "django-haystack" "django-imagekit" "django-import-export" "django-ninja" "django-polymorphic" "django-silk" "django-sockpuppet" "django-split-settings" "django-redis" "django-rest-framework" "django-reversion" "django-taggit" "django-unicorn" "django-widget-tweaks" "graphene-django" "starlette" "reactpy").Trim()
+					switch ($djangoAddons) {
+						{ $_ -match "django-cachalot" } { $packages += @('django-cachalot') }
+						{ $_ -match "django-cacheops" } { $packages += @('django-cacheops') }
+						{ $_ -match "django-cleanup" } { $packages += @('django-cleanup') }
+						{ $_ -match "django-configurations" } { $packages += @('django-configurations') }
+						{ $_ -match "django-cors-headers" } { $packages += @('django-cors-headers') }
+						{ $_ -match "django-crispy-forms" } { $packages += @('django-crispy-forms') }
+						{ $_ -match "django-environ" } { $packages += @('django-environ') }
+						{ $_ -match "django-grappelli" } { $packages += @('django-grappelli') }
+						{ $_ -match "django-haystack" } { $packages += @('django-haystack') }
+						{ $_ -match "django-imagekit" } { $packages += @('django-imagekit') }
+						{ $_ -match "django-import-export" } { $packages += @('django-import-export') }
+						{ $_ -match "django-lifecycle" } { $packages += @('django-lifecycle') }
+						{ $_ -match "django-ninja" } { $packages += @('django-ninja') }
+						{ $_ -match "django-polymorphic" } { $packages += @('django-polymorphic') }
+						{ $_ -match "django-redis" } { $packages += @('django-redis') }
+						{ $_ -match "django-rest-framework" } { $packages += @('djangorestframework') }
+						{ $_ -match "django-reversion" } { $packages += @('django-reversion') }
+						{ $_ -match "django-silk" } { $packages += @('django-silk') }
+						{ $_ -match "django-sockpuppet" } { $packages += @('django-sockpuppet[lxml]') }
+						{ $_ -match "django-split-settings" } { $packages += @('django-split-settings') }
+						{ $_ -match "django-taggit" } { $packages += @('django-taggit') }
+						{ $_ -match "django-unicorn" } { $packages += @('django-unicorn') }
+						{ $_ -match "django-widget-tweaks" } { $packages += @('django-widget-tweaks') }
+						{ $_ -match "graphene-django" } { $packages += @('graphene-django') }
+						{ $_ -match "starlette" } { $packages += @('starlette[full]') }
+						{ $_ -match "reactpy" } {
+							$backend = (gum choose --no-limit --header="Choose ReactPy Native Backends:" "None" "fastapi" "flask" "sanic" "starlette" "tornado").Trim()
+							$backendAdd = ""; if ($backend -match "None") { $backendAdd = $null } else { $backendAdd += "$backend"; $backendAdd = $backendAdd -replace ' ', ',' }
+							if ($null -ne $backendAdd) { $packages += @("reactpy[$backendAdd]") } else { $packages += @('reactpy') }
+						}
+					}
+				}
+			}
+			{ $_ -match "FastAPI" } {
+				$packages += @('fastapi[standard]')
+				$fastapiAddon = $(Write-Host "Install FastAPI Addons? (y/n) " -ForegroundColor Cyan -NoNewline; Read-Host)
+				if ($fastapiAddon.ToUpper() -eq 'Y') {
+					$fastApiAddons = (gum choose --no-limit --header="Choose FastAPI Addons:" "databases" "fastapi-admin" "fastapi-amis-admin" "fastapi-cache" "fastapi-camelcase" "fastapi-code-generator" "fastapi-users" "ormar" "piccolo" "prisma" "strawberry-graphql" "sqladmin" "sqlmodel" "tortoise-orm").Trim()
+					switch ($fastApiAddons) {
+						{ $_ -match "databases" } {
+							$dep = (gum choose --no-limit --header="Choose Database Supported Drivers:" "None" "asyncpg" "aiopg" "aiomysql" "asyncmy" "aiosqlite").Trim()
+							$depAdd = ""; if ($dep -match "None") { $depAdd = $null } else { $depAdd += "$dep"; $depAdd = "$depAdd" -replace ' ', ',' }
+							if ($null -ne $depAdd) { $packages += @("databases[$depAdd]") } else { $packages += @('databases') }
+						}
+						{ $_ -match "fastapi-admin" } { $packages += @('fastapi-admin') }
+						{ $_ -match "fastapi-amis-admin" } { $packages += @('fastapi_admis_admin') }
+						{ $_ -match "fastapi-cache" } {
+							$dep = (gum choose --header="Choose a BackEnd:" "None" "RedisBackend" "MemcacheBackend" "DynamoBackend").Trim()
+							switch ($dep) {
+								"None" { $packages += @('fastapi-cache2') }
+								"RedisBackend" { $packages += @('fastapi-cache2[redis]') }
+								"MemcacheBackend" { $packages += @('fastapi-cache2[memcache]') }
+								"DynamoBackend" { $packages += @('fastapi-cache2[dynamodb]') }
+								Default { $packages += @('fastapi-cache2') }
+							}
+						}
+						{ $_ -match "fastapi-camelcase" } { $packages += @('fastapi-camelcase') }
+						{ $_ -match "fastapi-code-generator" } { $packages += @('fastapi-code-generator') }
+						{ $_ -match "fastapi-users" } {
+							$dep = (gum choose --no-limit --header="Choose FastAPI Users Dependencies:" "None" "sqlalchemy" "beanie" "redis" "oath").Trim()
+							$depAdd = ""; if ($dep -match "None") { $depAdd = $null } else { $depAdd += "$dep"; $depAdd = $depAdd -replace ' ', ',' }
+							if ($null -ne $depAdd) { $packages += @("fastapi-users[$depAdd]") } else { $packages += @('fastapi-users') }
+						}
+						{ $_ -match "ormar" } {
+							$dep = (gum choose --no-limit --header="Choose Ormar optional dependencies:" "None" "postgresql" "mysql" "sqlite" "orjson" "crypto").Trim()
+							$depAdd = ""; if ($dep -match "None") { $depAdd = $null } else { $depAdd += "$dep"; $depAdd = $depAdd -replace ' ', ',' }
+							if ($null -ne $depAdd) { $packages += @("ormar[$depAdd]") } else { $packages += @('ormar') }
+						}
+						{ $_ -match "piccolo" } { $packages += @('piccolo[all]') }
+						{ $_ -match "prisma" } { $packages += @('prisma') }
+						{ $_ -match "strawberry-graphql" } { $packages += @('strawberry-graphql[debug-server]') }
+						{ $_ -match "sqladmin" } { $packages += @('sqladmin[full]') }
+						{ $_ -match "sqlmodel" } { $packages += @('sqlmodel') }
+						{ $_ -match "tortoise-orm" } {
+							$dep = (gum choose --header="Choose Tortoise ORM Libraries:" "asyncpg" "psycopg" "asyncmy" "asyncodbc" "accel").Trim()
+							$depAdd = ""; if ($dep -match "None") { $depAdd = $null } else { $depAdd += "$dep"; $depAdd -replace ' ', ',' }
+							if ($null -ne $depAdd) { $packages += @("tortoise-orm[$depAdd]") } else { $packages += @('tortoise-orm') }
+						}
+					}
+				}
+			}
+			{ $_ -match "Falcon" } {
+				$packages += @('falcon')
+				$WSGIorASGIserver = $(Write-Host "Install WSGI/ASGI Server? (y/n) " -ForegroundColor Cyan -NoNewline; Read-Host)
+				if ($WSGIorASGIserver.ToUpper() -eq 'Y') {
+					$WSGIserver = (gum choose "Choose a WSGI Server:" "gunicorn" "uwsgi" "waitress").Trim()
+					$ASGIserver = (gum choose "Choose an ASGI Server:" "uvicorn" "daphne" "hypercorn").Trim()
+					if ($ASGIserver -eq 'uvicorn') { $ASGIserver = 'uvicorn[standard]' }
+					$packages += @("$WSGIserver", "$ASGIserver")
+				}
+			}
+			{ $_ -match "Flask" } {
+				$packages += @('flask')
+				$flaskAddon = $(Write-Host "Install Flask Addons? (y/n) " -ForegroundColor Cyan -NoNewline; Read-Host)
+				if ($flaskAddon.ToUpper() -eq 'Y') {
+					$flaskAddons = (gum choose --no-limit --header="Choose Flask Addons:" "APIFlask" "Celery" "Connexion" "Eve" "Flasgger" "Flask-Admin" "Flask-Caching" "Flask-Classful" "Flask-Dance" "Flask-Excel" "Flask-GraphQL" "Flask-HTTPAuth" "Flask-Limiter" "Flask-Login" "Flask-Marshmallow" "Flask-Meld" "Flask-Migrate" "Flask-Paginate" "Flask-Pydantic" "Flask-RESTful" "Flask-RESTX" "Flask-Security" "Flask-Smorest" "Flask-SocketIO" "Flask-WTF").Trim()
+					switch ($flaskAddons) {
+						{ $_ -match "APIFlask" } { $packages += @('apiflask') }
+						{ $_ -match "Celery" } { $packages += @('celery') }
+						{ $_ -match "Connexion" } {
+							$dep = (gum choose --no-limit --header="Choose Connexion's Extras:" "None" "flask" "swagger-ui" "uvicorn").Trim()
+							$depAdd = ""; if ($dep -match "None") { $depAdd = $null } else { $depAdd += "$dep"; $depAdd = $depAdd -replace ' ', ',' }
+							if ($null -ne $depAdd) { $packages += @("connexion[$depAdd]") } else { $packages += @('connexion') }
+						}
+						{ $_ -match "Eve" } { $packages += @('Eve') }
+						{ $_ -match "Flasgger" } { $packages += @('flasgger==0.9.7b2') }
+						{ $_ -match "Flask-Admin" } { $packages += @('flask-admin') }
+						{ $_ -match "Flask-Caching" } { $packages += @('Flask-Caching') }
+						{ $_ -match "Flask-Classful" } { $packages += @('flask-classful') }
+						{ $_ -match "Flask-Dance" } {
+							$storage = $(Write-Host "Use Flask-Dance with SQLAlchemy storage? (y/n) " -ForegroundColor Cyan -NoNewline; Read-Host)
+							if ($storage.ToUpper() -eq 'Y') { $packages += @('Flask-Dance[sqla]') } else { $packages += @('Flask-Dance') }
+						}
+						{ $_ -match "Flask-Excel" } { $packages += @('Flask-Excel') }
+						{ $_ -match "Flask-GraphQL" } { $packages += @('Flask-GraphQL') }
+						{ $_ -match "Flask-HTTPAuth" } { $packages += @('Flask-HTTPAuth') }
+						{ $_ -match "Flask-Limiter" } {
+							$dep = (gum choose --header="Choose a Storage BackEnd:" "None" "Redis" "Memcached" "MongoDB").Trim()
+							switch ($dep) {
+								"None" { $packages += @('Flask-Limiter') }
+								"Redis" { $packages += @('Flask-Limiter[redis]') }
+								"Memcached" { $packages += @('Flask-Limiter[memcached]') }
+								"MongoDB" { $packages += @('Flask-Limiter[mongodb]') }
+								Default { $packages += @('Flask-Limiter') }
+							}
+						}
+						{ $_ -match "Flask-Login" } { $packages += @('flask-login') }
+						{ $_ -match "Flask-Marshmallow" } {
+							$packages += @('flask-marshmallow')
+							$sqlal = $(Write-Host "Integrate with Flask-SQLAlchemy? (y/n) " -ForegroundColor Cyan -NoNewline; Read-Host)
+							if ($sqlal.ToUpper() -eq 'Y') { $packages += @('flask-sqlalchemy', 'marshmallow-sqlalchemy') }
+						}
+						{ $_ -match "Flask-Meld" } { $packages += @('flask-meld') }
+						{ $_ -match "Flask-Migrate" } { $packages += @('Flask-Migrate') }
+						{ $_ -match "Flask-Paginate" } { $packages += @('flask-paginate') }
+						{ $_ -match "Flask-Pydantic" } { $packages += @('Flask-Pydantic') }
+						{ $_ -match "Flask-RESTful" } { $packages += @('flask-restful') }
+						{ $_ -match "Flask-RESTX" } { $packages += @('flask-restx') }
+						{ $_ -match "Flask-Security" } {
+							$dep = (gum choose --no-limit --header="Choose Flask-Security Extras:" "None" "babel" "fsqla" "common" "mfa").Trim()
+							$depAdd = ""; if ($dep -match "None") { $depAdd = $null } else { $depAdd += "$dep"; $depAdd = $depAdd -replace ' ', ',' }
+							if ($null -ne $depAdd) { $packages += @("flask-security[$depAdd]") } else { $packages += @('flask-security') }
+						}
+						{ $_ -match "Flask-Smorest" } { $packages += @('flask-smorest') }
+						{ $_ -match "Flask-SocketIO" } { $packages += @('flask-socketio') }
+						{ $_ -match "Flask-WTF" } { $packages += @('Flask-WTF') }
+					}
+				}
+			}
+			{ $_ -match "Pyramid" } {
+				$packages += @('pyramid')
+				$pyramidAddon = $(Write-Host "Install Pyramid Addons? (y/n) " -ForegroundColor Cyan -NoNewline; Read-Host)
+
+				if ($pyramidAddon.ToUpper() -eq 'Y') {
+					$pyramidAddons = (gum choose --no-limit --header="Choose Pyramid Addons:" "aiopyramid" "colander" "ColanderAlchemy" "deform" "gevent-socketio" "marshmallow" "pyramid_apispec" "pyramid_debugtoolbar" "pyramid_debugtoolbar_dogpile" "pyramid_exclog" "pyramid_jsonapi" "pyramid_mailer" "pyramid_multiauth" "pyramid_swagger" "python-social-auth" "pyramid_openapi3" "waitress" "webargs" "WebTest" "WTForms").Trim()
+					switch ($pyramidAddons) {
+						{ $_ -match "aiopyramid" } { $packages += @('aiopyramid') }
+						{ $_ -match "colander" } { $packages += @('colander') }
+						{ $_ -match "ColanderAlchemy" } { $ $packages += @('ColanderAlchemy') }
+						{ $_ -match "deform" } { $packages += @('deform') }
+						{ $_ -match "gevent-socketio" } { $packages += @('gevent-socketio') }
+						{ $_ -match "marshmallow" } { $packages += @('marshmallow') }
+						{ $_ -match "pyramid_apispec" } { $packages += @('pyramid_apispec') }
+						{ $_ -match "pyramid_debugtoolbar" } { $packages += @('pyramid_debugtoolbar') }
+						{ $_ -match "pyramid_debugtoolbar_dogpile" } { $packages += @('pyramid_debugtoolbar_dogpile') }
+						{ $_ -match "pyramid_exclog" } { $packages += @('pyramid_exclog') }
+						{ $_ -match "pyramid_jsonapi" } { $packages += @('pyramid-jsonapi') }
+						{ $_ -match "pyramid_mailer" } { $packages += @('pyramid_mailer') }
+						{ $_ -match "pyramid_multiauth" } { $packages += @('pyramid-multiauth') }
+						{ $_ -match "pyramid_swagger" } { $packages += @('pyramid-swagger') }
+						{ $_ -match "pyramid_openapi3" } { $packages += @('pyramid_openapi3') }
+						{ $_ -match "python-social-auth" } { $packages += @('python-social-auth') }
+						{ $_ -match "waitress" } { $packages += @('waitress') }
+						{ $_ -match "webargs" } { $packages += @('webargs') }
+						{ $_ -match "WebTest" } { $packages += @('WebTest') }
+						{ $_ -match "WTForms" } { $packages += @('WTForms') }
+					}
+				}
+			}
+			{ $_ -match "Quart" } { $packages += @('quart') }
+			{ $_ -match "Sanic" } {
+				$packages += @('sanic')
+				$sanicAddon = $(Write-Host "Install Sanic Addons? (y/n) " -ForegroundColor Cyan -NoNewline; Read-Host)
+
+				if ($sanicAddon.ToUpper() -eq 'Y') {
+					$officalSanicExt = $(Write-Host "Install Sanic Extensions (Offical)? (y/n) " -ForegroundColor Cyan -NoNewline; Read-Host)
+					$officalSanicTest = $(Write-Host "Install Sanic Testing (Offical)? (y/n) " -ForegroundColor Cyan -NoNewline; Read-Host)
+					if ($officalSanicExt.ToUpper() -eq 'Y') { $packages += @('sanic-ext') }
+					if ($officalSanicTest.ToUpper() -eq 'Y') { $packages += @('sanic-testing') }
+
+					$sanicAddons = (gum choose --no-limit --header="Choose Sanic Addons:" "GINO" "Mayim" "Sanic API Key" "Sanic-Auth" "Sanic-Babel" "Sanic-Beskar" "Sanic-CRUD" "Sanic-CORS" "Sanic-Dantic" "Sanic-DevTools" "Sanic-Dispatcher" "Sanic-GraphQL" "Sanic-HTTPAuth" "Sanic-Jinja2" "Sanic-JWT" "Sanic-Limiter" "Sanic-Motor" "Sanic-OAuth" "Sanic-OpenAPI" "Sanic-OpenAPI3e" "Sanic-OpenTracing" "Sanic-Prometheus" "Sanic-Pydantic" "Sanic-REST-Framework" "Sanic-RestPlus" "Sanic-Sass" "Sanic-Security" "Sanic-Sentry" "Sanic-Session" "Sanic-Transmute" "Tortoise ORM" "Webargs-Sanic").Trim()
+					switch ($sanicAddons) {
+						{ $_ -match "GINO" } { $packages += @('gino') }
+						{ $_ -match "Mayim" } {
+							$dep = (gum choose --header="Choose Database Integration:" "None" "Postgres" "MySQL" "SQLite").Trim()
+							switch ($dep) {
+								"None" { $packages += @('mayim') }
+								"Postgres" { $packages += @('mayim[postgres]') }
+								"MySQL" { $packages += @('mayim[mysql]') }
+								"SQLite" { $packages += @('mayim[sqlite]') }
+							}
+						}
+						{ $_ -match "Sanic API Key" } { $packages += @('sanicapikey') }
+						{ $_ -match "Sanic-Auth" } { $packages += @('Sanic-Auth') }
+						{ $_ -match "Sanic-Babel" } { $packages += @('sanic-babel') }
+						{ $_ -match "Sanic-Beskar" } { $packages += @('sanic-beskar') }
+						{ $_ -match "Sanic-CORS" } { $packages += @('sanic-cors') }
+						{ $_ -match "Sanic-CRUD" } { $packages += @('sanic-crud') }
+						{ $_ -match "Sanic-Dantic" } { $packages += @('sanic-dantic') }
+						{ $_ -match "Sanic-DevTools" } { $packages += @('sanic-devtools') }
+						{ $_ -match "Sanic-Dispatcher" } { $packages += @('Sanic-Dispatcher') }
+						{ $_ -match "Sanic-GraphQL" } { $packages += @('Sanic-GraphQL') }
+						{ $_ -match "Sanic-HTTPAuth" } { $packages += @('Sanic-HTTPAuth') }
+						{ $_ -match "Sanic-Jinja2" } { $packages += @('sanic-jinja2') }
+						{ $_ -match "Sanic-JWT" } { $packages += @('sanic-jwt') }
+						{ $_ -match "Sanic-Limiter" } { $packages += @('sanic_limiter') }
+						{ $_ -match "Sanic-Motor" } { $packages += @('sanic-motor') }
+						{ $_ -match "Sanic-OAuth" } { $packages += @('sanic_oauth') }
+						{ $_ -match "Sanic-OpenAPI" } { $packages += @('sanic-openapi') }
+						{ $_ -match "Sanic-OpenAPI3e" } { $packages += @('sanic-openapi3e') }
+						{ $_ -match "Sanic-OpenTracing" } { $packages += @('sanic-opentracing') }
+						{ $_ -match "Sanic-Prometheus" } { $packages += @('sanic-prometheus') }
+						{ $_ -match "Sanic-Pydantic" } { $packages += @('sanic-pydantic') }
+						{ $_ -match "Sanic-REST-Framework" } { $packages += @('sanic-rest-framework') }
+						{ $_ -match "Sanic-RestPlus" } { $packages += @('sanic-restplus') }
+						{ $_ -match "Sanic-Sass" } { $packages += @('sanic-sass') }
+						{ $_ -match "Sanic-Security" } { $packages += @('sanic-security') }
+						{ $_ -match "Sanic-Sentry" } { $packages += @('sanic-sentry') }
+						{ $_ -match "Sanic-Session" } { $packages += @('sanic_session') }
+						{ $_ -match "Sanic-Transmute" } { $packages += @('sanic-transmute') }
+						{ $_ -match "Tortoise ORM" } {
+							$dep = (gum choose --header="Choose Tortoise ORM Libraries:" "asyncpg" "psycopg" "asyncmy" "asyncodbc" "accel").Trim()
+							$depAdd = ""; if ($dep -match "None") { $depAdd = $null } else { $depAdd += "$dep"; $depAdd -replace ' ', ',' }
+							if ($null -ne $depAdd) { $packages += @("tortoise-orm[$depAdd]") } else { $packages += @('tortoise-orm') }
+						}
+						{ $_ -match "Webargs-Sanic" } { $packages += @('webargs-sanic') }
+					}
+				}
+			}
+			{ $_ -match "Litestar" } {
+				$packages += @('litestar')
+				$litestarAddon = $(Write-Host "Install Litestar Addons? (y/n) " -ForegroundColor Cyan -NoNewline; Read-Host)
+
+				if ($litestarAddon.ToUpper() -eq 'Y') {
+					$litestarAddons = (gum choose --no-limit --header="Choose Litestar Addons:" "dishka" "litestar-asyncpg" "litestar-mqtt" "litestar-piccolo" "litestar-users" "piccolo" "strawberry-graphql").Trim()
+
+					switch ($litestarAddons) {
+						{ $_ -match "dishka" } { $packages += @('dishka') }
+						{ $_ -match "litestar-asyncpg" } { $packages += @('litestar-asyncpg') }
+						{ $_ -match "litestar-mqtt" } { $packages += @('litestar-mqtt') }
+						{ $_ -match "litestar-piccolo" } { $packages += @('litestar-piccolo') }
+						{ $_ -match "litestar-users" } { $packages += @('litestar-users') }
+						{ $_ -match "piccolo" } { $packages += @('piccolo[all]') }
+						{ $_ -match "strawberry-graphql" } { $packages += @('strawberry-graphql[debug-server]') }
+					}
+				}
+			}
+
+		}
+	} else {
+		$prettyPrompt = (gum style --foreground="#fab387" --bold "Please input your preferred packages here:")
+		$prettyNote = (gum style --faint --italic "Separate each package with [SPACE]")
+		$prompt = gum input --prompt="$prettyPrompt $prettyNote " --placeholder="E.g: httpie wheel"
+		if ($null -ne $prompt) {
+			$prompt = $prompt.Split(' ')
+			foreach ($w in $prompt) { $packages += @("$w") }
+		} else { $packages = $null }
+	}
+
+	$devDependencies = @()
+	$projectDevDependencies = (gum choose --no-limit --header="Choose Project Dev Dependencies:" "None" "autopep8" "bumpversion" "flake8" "isort" "ipython" "httpx" "numpy" "pylint" "python-coveralls" "python-dotenv" "pytest" "tox" "wheel").Trim()
+	switch ($projectDevDependencies) {
+		{ $_ -match "None" } { $devDependencies = $null }
+		{ $_ -match "autopep8" } { $devDependencies += @('autopep8') }
+		{ $_ -match "bumpversion" } { $devDependencies += @('bumpversion') }
+		{ $_ -match "flake8" } { $devDependencies += @('flake8') }
+		{ $_ -match "isort" } { $devDependencies += @('isort') }
+		{ $_ -match "ipython" } { $devDependencies += @('ipython') }
+		{ $_ -match "httpx" } { $devDependencies += @('httpx') }
+		{ $_ -match "numpy" } { $devDependencies += @('numpy') }
+		{ $_ -match "pylint" } { $devDependencies += @('pylint') }
+		{ $_ -match "python-coveralls" } { $devDependencies += @('python-coveralls') }
+		{ $_ -match "python-dotenv" } { $devDependencies += @('python-dotenv') }
+		{ $_ -match "pytest" } {
+			$devDependencies += @('pytest')
+			$pytestPlugins = (gum choose --no-limit --header="Choose PyTest Plugins:" "pytest-aio" "pytest-api" "pytest-asyncio" "pytest-cache" "pytest-cov" "pytest-csv" "pytest-django" "pytest-flakes" "pytest-flask" "pytest-instafail" "pytest-sanic" "pytest-xdist").Trim()
+			Write-Host "For full list of PyTest Plugins, please visit: " -NoNewline
+			Write-Host "https://pytest.org/en/latest/reference/plugin_list.html#plugin-list" -ForegroundColor Blue
+			switch ($pytestPlugins) {
+				{ $_ -match "pytest-aio" } { $devDependencies += @('pytest-aio') }
+				{ $_ -match "pytest-api" } { $devDependencies += @('pytest-api') }
+				{ $_ -match "pytest-asyncio" } { $devDependencies += @('pytest-asyncio') }
+				{ $_ -match "pytest-cache" } { $devDependencies += @('pytest-cache') }
+				{ $_ -match "pytest-cov" } { $devDependencies += @('pytest-cov') }
+				{ $_ -match "pytest-csv" } { $devDependencies += @('pytest-csv') }
+				{ $_ -match "pytest-django" } { $devDependencies += @('pytest-django') }
+				{ $_ -match "pytest-flakes" } { $devDependencies += @('pytest-flakes') }
+				{ $_ -match "pytest-flask" } { $devDependencies += @('pytest-flask') }
+				{ $_ -match "pytest-instafail" } { $devDependencies += @('pytest-instafail') }
+				{ $_ -match "pytest-sanic" } { $devDependencies += @('pytest-sanic') }
+				{ $_ -match "pytest-xdist" } { $devDependencies += @('pytest-xdist') }
+			}
+		}
+		{ $_ -match "tox" } { $devDependencies += @('tox') }
+		{ $_ -match "wheel" } { $devDependencies += @('wheel') }
+	}
+
+	# printTableinformation
+	''
+	if ($null -ne $packages) { $prettyPackages = $packages -join ',' } else { $prettyPackages = "NONE" }
+	if ($projectDevDependencies -match "None") { $prettyDeps = "NONE" } else { $prettyDeps = $devDependencies -join ',' }
+	if ($webDevelopment.ToUpper() -eq 'Y') {
+		$prettyFramework = $frameworks -join ','
+		switch ($prettyFramework) {
+			{ $_ -match 'Django' } { gum format -- "[Django Addons:](https://github.com/shahraizali/awesome-django)" }
+			{ $_ -match 'FastAPI' } { gum format -- "[FastAPI Addons:](https://github.com/mjhea0/awesome-fastapi)" }
+			{ $_ -match 'Flask' } { gum format -- "[Flask Addons:](https://github.com/humiaozuzu/awesome-flask)" }
+			{ $_ -match 'Litestar' } { gum format -- "[Litestar Addons:](https://github.com/litestar-org/awesome-litestar)" }
+			{ $_ -match 'Pyramid' } { gum format -- "[Pyramid Addons:](https://github.com/uralbash/awesome-pyramid)" }
+			{ $_ -match 'Sanic' } { gum format -- "[Sanic Addons:](https://github.com/mekicha/awesome-sanic)" }
+		}
+	} else { $prettyFramework = "NONE" }
+
+	''
+	Write-Host "-----------------------------------------------------------------------------------" -ForegroundColor DarkGray
+	$tableHeading = (gum style --bold --italic --border="rounded" --padding="0 4" --align="center" --foreground="#cba6f7" --border-foreground="#89b4fa" "PROJECT'S PER LANGUAGE SETTINGS CONFIGURATION")
+	$tableHeading
+	# Print table information
+	[void]$table.Rows.Add('Project Manager', "$projectManager")
+	[void]$table.Rows.Add('Framework', "$prettyFramework")
+	[void]$table.Rows.Add('Packages', "$prettyPackages")
+	[void]$table.Rows.Add('DevDependencies', "$prettyDeps")
+	$table | Format-Table -AutoSize -Wrap
+
+	$projectsRoot = "$(Get-DevDrive)\projects"
+	# Test Commands Variables
 	$pipxExists = Get-Command pipx -ErrorAction SilentlyContinue
 	$poetryExists = Get-Command poetry -ErrorAction SilentlyContinue
 	$uvExists = Get-Command uv -ErrorAction SilentlyContinue
@@ -1038,6 +1476,7 @@ function Initialize-ProjectPerLangPython {
 		"^[a-z]+(-[a-z]+)*$" { $subProjectName = (Convert-NamingConventionCase -inputString "$projectName" -snake).Trim() }
 		"^[a-z]+(?:_[a-z]+)*$" { $subProjectName = "$projectName" }
 		"^[A-Z][a-z]+(?:[A-Z][a-z]+)*$" {	$subProjectName = $projectName.ToLower() }
+		Default { return }
 	}
 
 	switch ($projectManager) {
@@ -1048,55 +1487,63 @@ function Initialize-ProjectPerLangPython {
 			}
 
 			# Poetry Plugins
-			$poetryPlugins = @()
-			$plugin = (gum choose --no-limit --header="Choose Poetry Plugins:" "poetry-bumpversion" "poetry-dotenv-plugin" "poetry-dynamic-versioning" "poetry-multiproject-plugin" "poetry-plugin-bundle" "poetry-plugin-export").Trim()
-			switch ($plugin) {
-				{ $_ -match "poetry-bumpversion" } { $poetryPlugins += @('poetry-bumpversion') }
-				{ $_ -match "poetry-dotenv-plugin" } { $poetryPlugins += @('poetry-dotenv-plugin') }
-				{ $_ -match "poetry-dynamic-versioning" } { $poetryPlugins += @('poetry-dynamic-versioning') }
-				{ $_ -match "poetry-multiproject-plugin" } { $poetryPlugins += @('poetry-multiproject-plugin') }
-				{ $_ -match "poetry-plugin-export" } { $poetryPlugins += @('poetry-plugin-export') }
-			}
+			$installPlugins = $(Write-Host "Install Poetry plugins? (y/n) " -NoNewline -ForegroundColor Cyan; Read-Host)
+			if ($installPlugins.ToUpper() -eq 'Y') {
+				$poetryPlugins = @()
+				$plugin = (gum choose --no-limit --header="Choose Poetry Plugins:" "None" "poetry-bumpversion" "poetry-dotenv-plugin" "poetry-dynamic-versioning" "poetry-multiproject-plugin" "poetry-plugin-bundle" "poetry-plugin-export").Trim()
+				switch ($plugin) {
+					{ $_ -match "None" } { $poetryPlugins = $null }
+					{ $_ -match "poetry-bumpversion" } { $poetryPlugins += @('poetry-bumpversion') }
+					{ $_ -match "poetry-dotenv-plugin" } { $poetryPlugins += @('poetry-dotenv-plugin') }
+					{ $_ -match "poetry-dynamic-versioning" } { $poetryPlugins += @('poetry-dynamic-versioning') }
+					{ $_ -match "poetry-multiproject-plugin" } { $poetryPlugins += @('poetry-multiproject-plugin') }
+					{ $_ -match "poetry-plugin-export" } { $poetryPlugins += @('poetry-plugin-export') }
+					Default { return }
+				}
 
-			if (pipx list | Select-String 'poetry.exe') { $cmd = "pipx inject poetry" }
-			elseif (pip list | Select-String 'poetry') { $cmd = "pip install" }
-			else { $cmd = "poetry self add" }
+				if (($poetryPlugins.Count -gt 0) -or ($null -ne $poetryPlugins)) {
+					if (pipx list | Select-String 'poetry.exe') { $cmd = "pipx inject poetry" }
+					elseif (pip list | Select-String 'poetry') { $cmd = "pip install" }
+					else { $cmd = "poetry self add" }
 
-			foreach ($p in $poetryPlugins) {
-				if (!(poetry self show plugins | Select-String "$p" )) {
-					$cmd += " $p"
+					foreach ($p in $poetryPlugins) {
+						if (!(poetry self show plugins | Select-String "$p" )) {
+							$cmd += " $p"
+						}
+					}
+					Invoke-Expression $cmd
+					Remove-Variable cmd
 				}
 			}
-			Invoke-Expression $cmd
-			Remove-Variable cmd
 
 			# New poetry project
 			if (!(Test-Path "$projectsRoot\$projectName" -PathType Container)) {
 				Set-Location "$projectsRoot"
 				poetry new "$projectName"
 			}
-
 			Set-Location "$projectsRoot\$projectName"
+			gum spin --title="Setting Poetry Project Directory ..." -- poetry install
 
-			if (!(Test-Path "$projectsRoot\$projectName\$subProjectName" -PathType Container)) {
-				New-Item -Path "$projectsRoot\$projectName\$subProjectName" -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
-			}
+			if (!($prettyPackages -eq 'NONE')) { $prettyPackages -split ',' | ForEach-Object { poetry add --quiet -- "$_" } }
+			if (!($prettyDeps -eq 'NONE')) { $prettyDeps -split ',' | ForEach-Object { poetry add --quiet --dev -- "$_" } }
 
-			# Frameworks
-			if ($flask) { poetry add  --quiet }
-			if ($django) {
-				poetry add django --quiet
-				if (Test-Path "$projectsRoot\$projectName\$subProjectName\__init__.py") {
-					Remove-Item "$projectsRoot\$projectName\$subProjectName\__init__.py" -Force -ErrorAction SilentlyContinue | Out-Null
+			# django project
+			if ($prettyPackages -match 'Django') {
+				if (Test-Path "$projectsRoot\$projectName\$subProjectName") {
+					Remove-Item "$projectsRoot\$projectName\$subProjectName" -Force -Recurse -ErrorAction SilentlyContinue | Out-Null
 				}
 				poetry run django-admin startproject $subProjectName .
 			}
 
-			# Activate virtual environment for Poetry Project
-			$venvName = (($(poetry env list) -split '\n')[0] -split ' ')[0]
+			# requirements.txt
+			if (poetry self show plugins | Select-String 'poetry-plugin-export') {
+				poetry export -f requirements.txt --output requirements.txt
+				if ($?) { Write-Success -Entry1 "OK" -Entry2 "requirements.txt" -Text "created at $projectsRoot\$projectName." }
+			}
 
+			# Activate virtual environment for Poetry Project
 			& ((poetry env info --path) + "\Scripts\activate.ps1")
-			Write-Success -Entry1 "Virtual Environment $venvName in" -Entry2 "$(poetry env info --path | Split-Path)" -Text "activated."
+			if ($?) { Write-Success -Entry1 "OK" -Entry2 "$(poetry env info --path)" -Text "activated" }
 		}
 
 		"PDM" {
@@ -1105,9 +1552,10 @@ function Initialize-ProjectPerLangPython {
 				else { Write-Warning "Command not found: pipx. Could not install 'pdm'. Please install it manually"; break }
 			}
 
-			# if (($uvExists) -and (pdm config | Select-String 'use_uv = False') -and (!(pdm config | Select-String 'use_uv = True'))) {
-			# 	pdm config use_uv true
-			# }
+			# uv integration for pdm
+			if (($uvExists) -and (!(pdm config | Select-String 'use_uv = True'))) {
+				pdm config use_uv true
+			}
 
 			if (!(Test-Path "$projectsRoot\$projectName" -PathType Container)) {
 				New-Item -Path "$projectsRoot\$projectName" -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
@@ -1115,13 +1563,18 @@ function Initialize-ProjectPerLangPython {
 			Set-Location "$projectsRoot\$projectName"
 			pdm init -n
 
-			if ($flask) { pdm add flask }
-			if ($django) { pdm add django; pdm run django-admin startproject $subProjectName }
+			# install packages
+			if (!($prettyPackages -eq 'NONE')) { $prettyPackages -split ',' | ForEach-Object { pdm add --quiet --no-sync "$_" } }
+			if (!($prettyDeps -eq 'NONE')) { $prettyDeps -split ',' | ForEach-Object { pdm add --quiet --dev --no-sync "$_" } }
 
-			pdm sync
+			pdm sync --quiet
 
-			& (pdm venv activate)
-			Write-Success -Entry1 "Virtual Environment .venv in" -Entry2 "$projectsRoot\$projectName" -Text "activated."
+			# django project
+			if ($prettyPackages -match 'Django') { pdm run django-admin startproject $subProjectName . }
+
+			# requirements.txt
+			pdm export --pyproject --quiet -o requirements.txt
+			if ($?) { Write-Success -Entry1 "OK" -Entry2 "requirements.txt" -Text "created at $projectsRoot\$projectName." }
 		}
 
 		"UV" {
@@ -1137,17 +1590,21 @@ function Initialize-ProjectPerLangPython {
 			}
 			Set-Location "$projectsRoot\$projectName"
 
-			if ($django) {
-				if (Test-Path "$projectsRoot\$projectName\hello.py") { Remove-Item "$projectsRoot\$projectName\hello.py" -ErrorAction SilentlyContinue }
-				uv add django --quiet
-				uv run django-admin startproject $subProjectName .
-			}
-			if ($flask) { uv add flask --quiet }
+			# install packages
+			if (!($prettyPackages -eq 'NONE')) { $prettyPackages -split ',' | ForEach-Object { uv add --no-sync --no-progress -q "$_" } }
+			if (!($prettyDeps -eq 'NONE')) { $prettyDeps -split ',' | ForEach-Object { uv add --dev --no-sync --no-progress -q "$_" } }
 
-			uv sync
+			uv sync --quiet
+
+			# django project
+			if ($prettyPackages -match 'Django') { uv run django-admin startproject $subProjectName . }
+
+			# requirements.txt
+			uv pip compile pyproject.toml -o requirements.txt >$null 2>&1
+			if ($?) { Write-Success -Entry1 "OK" -Entry2 "requirements.txt" -Text "created at $projectsRoot\$projectName." }
 
 			& ("$projectsRoot\$projectName\.venv\Scripts\activate.ps1")
-			Write-Success -Entry1 "Virtual Environment .venv in" -Entry2 "$projectsRoot\$projectName" -Text "activated."
+			if ($?) { Write-Success -Entry1 "OK" -Entry2 "$projectsRoot\$projectName\.venv" -Text "activated" }
 		}
 
 		"Rye" {
@@ -1157,26 +1614,32 @@ function Initialize-ProjectPerLangPython {
 			}
 
 			if (!(Test-Path "$projectsRoot\$projectName" -PathType Container)) {
+				Set-Location "$projectsRoot"
 				rye init $projectName
 			}
 
 			Set-Location "$projectsRoot\$projectName"
 
-			if ($flask) { rye add flask --quiet }
-			if ($django) {
+			# install packages
+			if (!($prettyPackages -eq 'NONE')) { $prettyPackages -split ',' | ForEach-Object { rye add -q "$_" } }
+			if (!($prettyDeps -eq 'NONE')) { $prettyDeps -split ',' | ForEach-Object { rye add --dev -q "$_" } }
+
+			rye sync --quiet
+
+			# django project
+			if ($prettyPackages -match 'Django') {
 				if (Test-Path "$projectsRoot\$projectName\src\$subProjectName" -PathType Container) {
 					Remove-Item "$projectsRoot\$projectName\src\$subProjectName" -Force -Recurse -ErrorAction SilentlyContinue
 				}
-				rye add django --quiet
 				rye run django-admin startproject $subProjectName src
 			}
 
-			rye sync
-
 			# Virtual environment
 			& ("$projectsRoot\$projectName\.venv\Scripts\activate.ps1")
-			Write-Success -Entry1 "Virtual Environment .venv in" -Entry2 "$projectsRoot\$projectName" -Text "activated."
+			if ($?) { Write-Success -Entry1 "OK" -Entry2 "$projectsRoot\$projectName\.venv" -Text "activated." }
 		}
+
+		Default { return }
 	}
 }
 
@@ -1232,8 +1695,7 @@ function Initialize-Project {
 	$UserID = (gh auth status | Select-Object -Index 1).Split(' ')[8].Trim()
 
 	# print table
-	$tableHeading = (gum style --bold --italic --border="rounded" --padding="0 4" --align="center" --foreground="#cba6f7" --border-foreground="#89b4fa" "PROJECT'S BASIC SETTINGS CONFIGURATION")
-	$tableHeading
+	''
 	$table = New-Object System.Data.DataTable
 	[void]$table.Columns.Add("ENTRY")
 	[void]$table.Columns.Add("VALUE")
@@ -1243,8 +1705,7 @@ function Initialize-Project {
 	[void]$table.Rows.Add("Author", "$Author")
 	[void]$table.Rows.Add("UserID", "$UserID")
 	[void]$table.Rows.Add("Description", "$Description")
-	$table | Format-Table
-	Write-Host "----------------------------------------------------" -ForegroundColor DarkGray
+	[void]$table.Rows.Add("Location", "$mainProjectsDir\$Project")
 
 	switch ($Language) {
 		'node' {
@@ -1267,11 +1728,6 @@ function Initialize-Project {
 
 		'python' {
 			$invokePy = "Initialize-ProjectPerLangPython -projectName $Project"
-			$settings = (gum choose --no-limit --header="Choose Project's Settings:" "Django" "Flask")
-			switch ($settings) {
-				{ $_ -match 'Django' } { $invokePy += " -django" }
-				{ $_ -match 'Flask' } { $invokePy += " -flask" }
-			}
 			Invoke-Expression $invokePy
 
 			# .gitignore
@@ -1284,6 +1740,12 @@ function Initialize-Project {
 		}
 
 		'powershell' {
+			''
+			Write-Host "-----------------------------------------------------------------------------------" -ForegroundColor DarkGray
+			$tableHeading = (gum style --bold --italic --border="rounded" --padding="0 4" --align="center" --foreground="#cba6f7" --border-foreground="#89b4fa" "PROJECT'S PER LANGUAGE SETTINGS CONFIGURATION")
+			$tableHeading
+			$table | Format-Table -AutoSize -Wrap
+
 			Set-Location "$mainProjectsDir"
 			if (!(Test-Path "$mainProjectsDir\$Project" -PathType Container)) {
 				New-Item -Path "$mainProjectsDir\$Project" -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
@@ -1306,6 +1768,12 @@ function Initialize-Project {
 		}
 
 		'rust' {
+			''
+			Write-Host "-----------------------------------------------------------------------------------" -ForegroundColor DarkGray
+			$tableHeading = (gum style --bold --italic --border="rounded" --padding="0 4" --align="center" --foreground="#cba6f7" --border-foreground="#89b4fa" "PROJECT'S PER LANGUAGE SETTINGS CONFIGURATION")
+			$tableHeading
+			$table | Format-Table -AutoSize -Wrap
+
 			if (!(Get-Command cargo -ErrorAction SilentlyContinue)) { Write-Warning "Command not found: cargo. Please install to use this feature."; break }
 			Set-Location "$mainProjectsDir"
 
@@ -1331,7 +1799,7 @@ function Initialize-Project {
 			}
 		}
 
-		Default { Write-Warning "Language $Language does not support for this function. Exiting..."; break }
+		Default { return }
 	}
 
 	# git
