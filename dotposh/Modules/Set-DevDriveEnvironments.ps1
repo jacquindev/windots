@@ -126,9 +126,13 @@ function Set-DevDriveEnvironments {
     $cacheSettings = @(
         @{ Command = "npm"; Value = "npm_config_cache"; ValuePath = "$packagePath\npm"; SourcePaths = @("$env:APPDATA\npm-cache". "$env:LOCALAPPDATA\npm-cache") },
         @{ Command = "yarn"; Value = "YARN_CACHE_FOLDER"; ValuePath = "$packagePath\npm"; SourcePaths = @("$env:LOCALAPPDATA\Yarn\Cache") },
-        @{ Command = "pnpm"; Value = "PNPM_HOME"; ValuePath = "$packagePath\pnpm"; SourcePaths = @("$env:LOCALAPPDATA\pnpm\store") },
+        #@{ Command = "pnpm"; Value = "PNPM_HOME"; ValuePath = "$packagePath\pnpm"; SourcePaths = @("$env:LOCALAPPDATA\pnpm\store") },
         @{ Command = "pip"; Value = "PIP_CACHE_DIR"; ValuePath = "$packagePath\pip"; SourcePaths = @("$env:LOCALAPPDATA\pip\cache") },
         @{ Command = "pipx"; Value = "PIPX_HOME"; ValuePath = "$packagePath\pipx"; SourcePaths = @("$env:USERPROFILE\pipx") },
+        @{ Command = "poetry"; Value = "POETRY_CACHE_DIR"; ValuePath = "$packagePath\poetry"; SourcePaths = @("$env:LOCALAPPDATA\pypoetry\Cache") }
+        #@{ Command = "rye"; Value = "RYE_HOME"; ValuePath = "$packagePath\rye"; SourcePaths = @("$env:USERPROFILE\.rye") }
+        #@{ Command = "uv"; Value = "UV_CACHE_DIR"; ValuePath = "$packagePath\uv"; SourcePaths = @("$env:LOCALAPPDATA\uv\cache") }
+        #@{ Command = "hatch"; Value = ""; ValuePath = "$packagePath\hatch"; SourcePaths = @("$env:LOCALAPPDATA\hatch\Cache") }
         @{ Command = "cargo"; Value = "CARGO_HOME"; ValuePath = "$packagePath\cargo"; SourcePaths = @("$env:USERPROFILE\.cargo") },
         #@{ Command = "rustup"; Value = "RUSTUP_HOME"; ValuePath = "$packagePath\rustup"; SourcePaths = @("$env:USERPROFILE\.rustup") },
         @{ Command = "gradle"; Value = "GRADLE_USER_HOME"; ValuePath = "$packagePath\gradle"; SourcePaths = @("$env:USERPROFILE\.gradle") },
