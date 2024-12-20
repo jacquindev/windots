@@ -532,6 +532,10 @@ function Initialize-ProjectPerLangNode {
 			Write-Host "-----------------------------------------------------------------------------------" -ForegroundColor DarkGray
 			$tableHeading = (gum style --bold --italic --border="rounded" --padding="0 4" --align="center" --foreground="#cba6f7" --border-foreground="#89b4fa" "PROJECT'S PER LANGUAGE SETTINGS CONFIGURATION")
 			$tableHeading
+			[void]$table.Rows.Add("Server Routing", "$serverRouting")
+			[void]$table.Rows.Add("SSR and SSG", "$ssr")
+			[void]$table.Rows.Add("File Styling", "$style")
+			[void]$table.Rows.Add("Encapsulation View", "$view")
 			$table | Format-Table -AutoSize -Wrap
 
 			Write-Host "For more information, see https://angular.dev/overview" -ForegroundColor Blue
@@ -622,7 +626,7 @@ function Initialize-ProjectPerLangNode {
 				Default { return }
 			}
 
-			$cmd += " --no-interaction"
+			$cmd += " --quiet --no-interaction"
 			Invoke-Expression $cmd
 			Remove-Variable cmd
 
@@ -698,7 +702,7 @@ function Initialize-ProjectPerLangNode {
 
 			$getSail = $(Write-Host "Install Sail Into Your Current Application? (y/n) " -NoNewline -ForegroundColor Cyan; Read-Host)
 			if ($getSail.ToUpper() -eq 'Y') {
-				composer require laravel/sail --dev
+				composer require laravel/sail --dev --quiet
 				php artisan sail:install --devcontainer --quiet
 			}
 
@@ -722,7 +726,7 @@ function Initialize-ProjectPerLangNode {
 					Default { return }
 				}
 				foreach ($service in $services) {
-					php artisan sail:add $service --silent --no-interaction
+					php artisan sail:add $service --silent --no-interaction --quiet
 				}
 			}
 
