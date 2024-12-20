@@ -4,6 +4,7 @@
 	"$schema": "./schema.json",
 	"source": {
 		"winget": [
+			"BeyondCode.Herd",
 			"chrisant996.Clink",
 			"Discord.Discord",
 			"Flow-Launcher.Flow-Launcher",
