@@ -103,6 +103,7 @@ git clone https://github.com/jacquindev/windots.git your_location
 clink installscripts "your_location\clink\clink-custom"
 clink installscripts "your_location\clink\clink-completions"
 clink installscripts "your_location\clink\clink-gizmos"
+clink installscripts "your_location\clink\more-clink-completions"
 ```
 
 - Replace _`your_location`_ with full path to where you cloned this repository.
