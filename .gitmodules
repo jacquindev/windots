@@ -7,3 +7,6 @@
 [submodule "clink/clink-gizmos"]
 	path = clink/clink-gizmos
 	url = https://github.com/chrisant996/clink-gizmos.git
+[submodule "clink/more-clink-completions"]
+	path = clink/more-clink-completions
+	url = https://github.com/sebthom/more-clink-completions.git
