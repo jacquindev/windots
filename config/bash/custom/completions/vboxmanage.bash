@@ -2,15 +2,6 @@
 
 # cSpell:disable
 
-# Call `vboxmanage` without adding it to path
-if ! command -v vboxmanage >/dev/null 2>&1; then
-  if [ -f "/c/Program Files/Oracle/VirtualBox/VBoxManage.exe" ]; then
-    alias vboxmanage="'/c/Program Files/Oracle/VirtualBox/VBoxManage.exe'"
-  else
-    return 0
-  fi
-fi
-
 ########################################################################################################################
 # Source: - https://github.com/mug896/virtualbox-bash-completion
 
@@ -36,7 +27,7 @@ _vboxmanage_quote() {
   else
     WORDS=$(vboxmanage list vms | sed -E 's/(.*").*/\1/')
   fi
-  IFS=$'\n' COMPREPLY=($(compgen -W '$WORDS' -- \\\"$CUR))
+  IFS=$'\n' COMPREPLY=($(compgen -W '$WORDS' -- \\\""$CUR"))
 }
 
 _vboxmanage_option() {
@@ -44,44 +35,44 @@ _vboxmanage_option() {
 
   if [[ $CMD2 == @(snapshot|encryptvm|controlvm|debugvm|modifynvram|bandwidthctl|guestcontrol) ]]; then
     if [[ -n $CMD3 ]]; then
-      HELP=$(sed <<<$HELP -En "/vboxmanage $CMD2 [^ ]+ $CMD3/p")
+      HELP=$(sed <<<"$HELP" -En "/vboxmanage $CMD2 [^ ]+ $CMD3/p")
     else
       HELP=""
     fi
 
   elif [[ $CMD2 == @(mediumio|cloudprofile) ]]; then
     if [[ -z $CMD3 ]]; then
-      HELP=$(sed <<<$HELP -En 's/'"vboxmanage $CMD2"' (.*) \w{3,}( .*|$)/\1/p')
+      HELP=$(sed <<<"$HELP" -En 's/'"vboxmanage $CMD2"' (.*) \w{3,}( .*|$)/\1/p')
     else
-      HELP=$(sed <<<$HELP -En 's/.* '"$CMD3"' (.*)/\1/p')
+      HELP=$(sed <<<"$HELP" -En 's/.* '"$CMD3"' (.*)/\1/p')
     fi
 
   elif [[ $CMD2 == @(sharedfolder|dhcpserver|extpack|unattended|hostonlynet|updatecheck|usbfilter|guestproperty|metrics|natnetwork|hostonlyif|usbdevsource) ]]; then
     if [[ -n $CMD3 ]]; then
-      HELP=$(sed <<<$HELP -En "/vboxmanage $CMD2 $CMD3/p")
+      HELP=$(sed <<<"$HELP" -En "/vboxmanage $CMD2 $CMD3/p")
     else
       HELP=""
     fi
 
   elif [[ $CMD2 == cloud ]]; then
     if [[ -z $CMD3 ]]; then
-      HELP=$(sed <<<$HELP -En 's/'"vboxmanage $CMD2"' (.*) \w{3,} \w{3,}( .*|$)/\1/p')
+      HELP=$(sed <<<"$HELP" -En 's/'"vboxmanage $CMD2"' (.*) \w{3,} \w{3,}( .*|$)/\1/p')
     elif [[ -n $CMD3 && -n $CMD4 ]]; then
-      HELP=$(sed <<<$HELP -En "s/vboxmanage $CMD2.* $CMD3 $CMD4(.*)/\1/p")
+      HELP=$(sed <<<"$HELP" -En "s/vboxmanage $CMD2.* $CMD3 $CMD4(.*)/\1/p")
     else
       HELP=""
     fi
 
   elif [[ $CMD2 == internalcommands ]]; then
     if [[ -n $CMD3 ]]; then
-      HELP=$(sed <<<$HELP -En '/^ *'"$CMD3"' /,/^$/H; ${g; s/\n/ /g; p}')
+      HELP=$(sed <<<"$HELP" -En '/^ *'"$CMD3"' /,/^$/H; ${g; s/\n/ /g; p}')
     else
       HELP=""
     fi
   fi
 
   if [[ $arg != value ]]; then
-    WORDS=$(grep <<<$HELP -Po -- '(?<![[:alnum:]])-[[:alnum:]-]*[[:alpha:]]')
+    WORDS=$(grep <<<"$HELP" -Po -- '(?<![[:alnum:]])-[[:alnum:]-]*[[:alpha:]]')
     return
   fi
 
@@ -154,13 +145,13 @@ _vboxmanage_option() {
 
   elif [[ $CMD2 == storageattach && $PREV == --storagectl ]]; then
     WORDS=$(vboxmanage showvminfo "$VMNAME" --machinereadable | sed -En 's/storagecontrollername[0-9]=//p')
-    IFS=$'\n' COMPREPLY=($(compgen -W '$WORDS' -- \\\"$CUR))
+    IFS=$'\n' COMPREPLY=($(compgen -W '$WORDS' -- \\\""$CUR"))
     return
   fi
 
   if [[ -z $WORDS ]]; then
     local opt=${PREV/%[0-9]/N}
-    WORDS=$(sed <<<$HELP -En 's/.*'"$opt"'[= ]\[?((\[?(([[:alnum:].:]+-?)*[[:alnum:].:]+)\]?[,|/])+\[?(([[:alnum:].:]+-?)*[[:alnum:].:]+)\]?)]?.*/\1/; tX; b; :X s/[^[:alnum:].:-]/\n/g; p')
+    WORDS=$(sed <<<"$HELP" -En 's/.*'"$opt"'[= ]\[?((\[?(([[:alnum:].:]+-?)*[[:alnum:].:]+)\]?[,|/])+\[?(([[:alnum:].:]+-?)*[[:alnum:].:]+)\]?)]?.*/\1/; tX; b; :X s/[^[:alnum:].:-]/\n/g; p')
   fi
 }
 
@@ -168,7 +159,7 @@ _vboxmanage_words() {
   local RE='[[:alnum:]][[:alnum:]-]'
 
   if [[ $CMD2 == list ]]; then
-    WORDS=$(sed <<<$HELP -En 's/'"vboxmanage $CMD2"'|--\w+//g; s/\[|]|\|/\n/g; p')
+    WORDS=$(sed <<<"$HELP" -En 's/'"vboxmanage $CMD2"'|--\w+//g; s/\[|]|\|/\n/g; p')
 
   elif [[ $CMD2 == setproperty ]]; then
     if [[ -z $CMD3 ]]; then
@@ -181,7 +172,7 @@ _vboxmanage_words() {
 
   elif [[ $CMD2 == @(snapshot|encryptvm|controlvm|debugvm|modifynvram|bandwidthctl|guestcontrol) ]]; then
     if [[ -z $CMD3 ]]; then
-      WORDS=$(sed <<<$HELP -En 's/'"vboxmanage $CMD2"' [^ ]+ ('"$RE"*')( .*|$)/\1/p')
+      WORDS=$(sed <<<"$HELP" -En 's/'"vboxmanage $CMD2"' [^ ]+ ('"$RE"*')( .*|$)/\1/p')
     elif [[ $CMD2 == guestcontrol && $PREV == list ]]; then
       WORDS='all\nfiles\nprocesses\nsessions'
     elif [[ $CMD2 == controlvm ]]; then
@@ -228,11 +219,11 @@ _vboxmanage_words() {
     fi
 
   elif [[ -z $CMD3 && $CMD2 == @(mediumio|cloudprofile) ]]; then
-    WORDS=$(sed <<<$HELP -En 's/'"vboxmanage $CMD2"' .* ('"$RE"'{2,})( .*|$)/\1/p')
+    WORDS=$(sed <<<"$HELP" -En 's/'"vboxmanage $CMD2"' .* ('"$RE"'{2,})( .*|$)/\1/p')
 
   elif [[ $CMD2 == @(sharedfolder|dhcpserver|extpack|unattended|hostonlynet|updatecheck|convertfromraw|usbfilter|guestproperty|metrics|natnetwork|hostonlyif|usbdevsource) ]]; then
     if [[ -z $CMD3 ]]; then
-      WORDS=$(sed <<<$HELP -En 's/'"vboxmanage $CMD2"' ('"$RE"'*)( .*|$)/\1/p')
+      WORDS=$(sed <<<"$HELP" -En 's/'"vboxmanage $CMD2"' ('"$RE"'*)( .*|$)/\1/p')
     elif [[ $CMD2 == metrics ]]; then
       WORDS=$'\\"*\\"\nhost\nvmname\nmetrics-list'
     elif [[ $CMD2 == hostonlyif && $PREV == @(ipconfig|remove) ]]; then
@@ -241,16 +232,16 @@ _vboxmanage_words() {
 
   elif [[ $CMD2 == cloud ]]; then
     if [[ -z $CMD3 ]]; then
-      WORDS=$(sed <<<$HELP -En 's/'"vboxmanage $CMD2"'.* ('"$RE"'{2,}) '"$RE"'{2,}( .*|$)/\1/p')
+      WORDS=$(sed <<<"$HELP" -En 's/'"vboxmanage $CMD2"'.* ('"$RE"'{2,}) '"$RE"'{2,}( .*|$)/\1/p')
     elif [[ -z $CMD4 ]]; then
-      WORDS=$(sed <<<$HELP -En 's/'"vboxmanage $CMD2"'.* '"$CMD3"' ('"$RE"'{2,})( .*|$)/\1/p')
+      WORDS=$(sed <<<"$HELP" -En 's/'"vboxmanage $CMD2"'.* '"$CMD3"' ('"$RE"'{2,})( .*|$)/\1/p')
     fi
 
   elif [[ $CMD2 == @(showmediuminfo|createmedium|modifymedium|mediumproperty|closemedium) ]]; then
     if [[ $PREV == $CMD2 ]]; then
       WORDS=$'disk\ndvd\nfloppy'
     elif [[ -z $CMD3 && $CMD2 == mediumproperty ]]; then
-      WORDS=$(sed <<<$HELP -En 's/'"vboxmanage $CMD2"' [^ ]+ ('"$RE"'*)( .*|$)/\1/p')
+      WORDS=$(sed <<<"$HELP" -En 's/'"vboxmanage $CMD2"' [^ ]+ ('"$RE"'*)( .*|$)/\1/p')
     fi
 
   elif [[ $CMD2 == clonemedium ]]; then
@@ -335,7 +326,7 @@ _vboxmanage() {
     if [[ $CMD2 == internalcommands ]]; then
       HELP=$(vboxmanage internalcommands)
     else
-      HELP=$(vboxmanage $CMD2 | sed -Ez 's/ *\n {5,}/ /g; s/^([^\n]*\n){1}\n//; s/\n\n+/\n/g; s/ \| /\|/g; s/= /=/g')
+      HELP=$(vboxmanage "$CMD2" | sed -Ez 's/ *\n {5,}/ /g; s/^([^\n]*\n){1}\n//; s/\n\n+/\n/g; s/ \| /\|/g; s/= /=/g')
     fi
   fi
 
@@ -349,7 +340,7 @@ _vboxmanage() {
 
   elif [[ $CUR == +([0-9]) && -n $_vboxmanage_list ]]; then
     CUR=$((10#$CUR))
-    COMPREPLY=$(gawk <<<$_vboxmanage_list $CUR' == $1+0 {sub(/^[0-9]+) +/,""); print $0; exit}')
+    COMPREPLY=$(gawk <<<"$_vboxmanage_list" $CUR' == $1+0 {sub(/^[0-9]+) +/,""); print $0; exit}')
 
   elif [[ ${COMP_WORDS[COMP_CWORD]} == "@" || $PREV == "@" ]]; then
     :
@@ -359,7 +350,7 @@ _vboxmanage() {
     WORDS+=$'\ninternalcommands\nhelp'
 
   elif [[ $CMD2 = internalcommands && -z $CMD3 ]]; then
-    WORDS=$(grep <<<$HELP -Po '(?<=^  )([a-z]+)')
+    WORDS=$(grep <<<"$HELP" -Po '(?<=^  )([a-z]+)')
 
   elif [[ ${COMP_WORDS[COMP_CWORD]} == \"* &&
     $PREV != @(--storagectl|--cpu-profile) ]]; then
@@ -382,7 +373,7 @@ _vboxmanage() {
   fi
 
   if ! declare -p COMPREPLY &>/dev/null; then
-    WORDS=$(sed <<<$WORDS -E 's/^[[:blank:]]+|[[:blank:]]+$//g')
+    WORDS=$(sed <<<"$WORDS" -E 's/^[[:blank:]]+|[[:blank:]]+$//g')
     if [[ $WORDS == *" "* ]]; then
       IFS=$'\n' COMPREPLY=($(compgen -P \' -S \' -W "$WORDS" -- "$CUR"))
     else
@@ -392,4 +383,5 @@ _vboxmanage() {
   [[ ${COMPREPLY: -1} == "=" ]] && compopt -o nospace
 }
 
+complete -F _vboxmanage VBoxManage.exe
 complete -F _vboxmanage vboxmanage
