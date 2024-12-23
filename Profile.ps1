@@ -16,6 +16,9 @@ $Env:DOTPOSH = "$Env:DOTFILES\dotposh"
 $Env:EDITOR = "code"
 $Env:_ZO_DATA_DIR = "$Env:DOTFILES"
 $Env:UV_LINK_MODE = "copy"
+$Env:PIPENV_VENV_IN_PROJECT = $true
+$Env:PIPENV_NO_INHERIT = $true
+$Env:PIPENV_IGNORE_VIRTUALENVS = $true
 
 # Asynchrous processes
 # Oh-my-posh prompt
