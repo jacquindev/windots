@@ -280,5 +280,13 @@
 		"editor.defaultFormatter": "junstyle.php-cs-fixer",
 		"editor.formatOnSave": true,
 		"editor.snippetSuggestions": "bottom"
-	}
+	},
+
+	// rust
+	"[rust]": {
+		"editor.semanticHighlighting.enabled": true,
+		"editor.defaultFormatter": "rust-lang.rust-analyzer",
+		"editor.tabSize": 4
+	},
+	"rust-analyzer.semanticHighlighting.punctuation.enable": true
 }
