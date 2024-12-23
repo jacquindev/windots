@@ -23,6 +23,9 @@ if (-not (Get-Module -ListAvailable -Name Catppuccin -ErrorAction SilentlyContin
 Import-Module Catppuccin
 $Flavor = $Catppuccin['Mocha']
 
+# Verbose foreground color
+$PSStyle.Formatting.Verbose = $PSStyle.Foreground.Black
+
 # PSReadline
 # ----------------------------------------------------------------
 $PSReadLineOptions = @{
