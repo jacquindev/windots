@@ -22,7 +22,6 @@
 			// VIRTUALIZATION:
 			"Docker.DockerDesktop",
 			"Oracle.VirtualBox",
-			// "Hashicorp.Vagrant",
 
 			// EDITORS:
 			"Microsoft.VisualStudioCode",
@@ -53,6 +52,7 @@
 				"csvlens",
 				"delta",
 				"eza",
+				"faas-cli",
 				"fastfetch",
 				"fd",
 				"fzf",
@@ -64,8 +64,11 @@
 				"less",
 				"ripgrep",
 				"scoop-completion",
+				"scoop-search",
 				"secureuxtheme",
 				"spicetify-cli",
+				"terraform",
+				"vagrant",
 				"wixtoolset",
 				"yazi",
 				"yq",
