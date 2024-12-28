@@ -42,26 +42,31 @@ shopt -s extglob
 for arg in $(compgen -ac | sort -u); do
   case "$arg" in
   __git_complete*) __git_complete g git ;;
+  faas-cli?(.exe)) source <(faas-cli completion --shell bash) ;;
   oh-my-posh?(.exe)) source <(oh-my-posh completion bash) ;;
   gh?(.exe)) eval "$(gh completion -s bash)" ;;
   git-lfs?(.exe)) source <(git lfs completion bash) ;;
   gitleaks?(.exe)) source <(gitleaks completion bash) ;;
   glow?(.exe)) source <(glow completion bash) ;;
   gum?(.exe)) source <(gum completion bash) ;;
-  ssh?(.exe)?*) source "$CUSTOM_COMPLETIONS/ssh.bash" ;;
-  dotnet?(.exe)) source "$CUSTOM_COMPLETIONS/dotnet.bash" ;;
+  ssh?(.exe)?*) . "$CUSTOM_COMPLETIONS/ssh.bash" ;;
+  dotnet?(.exe)) . "$CUSTOM_COMPLETIONS/dotnet.bash" ;;
   docker?(.exe)) source <(docker completion bash) ;;
+  hugo?(.exe)) source <(hugo completion bash) ;;
   kubectl?(.exe)) source <(kubectl completion bash) ;;
   @(bun)) source "$CUSTOM_COMPLETIONS/bun.bash" ;;
   @(npm)) source <(npm completion) ;;
   @(pnpm)) source <(pnpm completion bash) ;;
-  @(yarn)) source "$CUSTOM_COMPLETIONS/yarn.bash" ;;
-  pip?(3*)) source "$CUSTOM_COMPLETIONS/pip.bash" ;;
+  @(yarn)) . "$CUSTOM_COMPLETIONS/yarn.bash" ;;
+  pip?(3*)) . "$CUSTOM_COMPLETIONS/pip.bash" ;;
   pipenv*) eval "$(_PIPENV_COMPLETE=bash_source pipenv)" ;;
   pipx?(.exe)) eval "$(register-python-argcomplete pipx)" ;;
   pdm?(.exe)) source <(pdm completion bash) ;;
+  terraform?(.exe)) complete -C "$(which terraform)" terraform ;;
   uv?(x)?(.exe)) source <(uv generate-shell-completion bash) ;;
   yq?(.exe)) source <(yq completion bash) ;;
-  [Vv][Bb]ox[Mm]anage?(.exe)) source "$CUSTOM_COMPLETIONS/vboxmanage.bash" ;;
+  [Vv][Bb]ox[Mm]anage?(.exe)) . "$CUSTOM_COMPLETIONS/vboxmanage.bash" ;;
+  # since we install vagrant with scoop
+  vagrant?(.exe)) . "$(dirname "$(dirname "$(which scoop)")")/apps/vagrant/2.4.3/embedded/gems/gems/vagrant-2.4.3/contrib/bash/completion.sh" ;;
   esac
 done
