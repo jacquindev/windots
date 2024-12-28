@@ -28,7 +28,7 @@ shopt -s histappend histverify
 
 # oh-my-posh
 if command -v oh-my-posh >/dev/null 2>&1; then
-  eval "$(oh-my-posh init bash --config $DOTFILES/home/bash-zen.toml)"
+  eval "$(oh-my-posh init bash --config "$DOTFILES"/home/bash-zen.toml)"
 fi
 
 # zoxide
