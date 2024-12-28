@@ -81,6 +81,7 @@
 
 	// explorer
 	"explorer.compactFolders": true,
+	"explorer.sortOrder": "type",
 
 	// zen mode
 	"zenMode.hideLineNumbers": false,
@@ -266,8 +267,11 @@
 
 	// python
 	"[python]": {
-		"editor.defaultFormatter": "ms-python.black-formatter",
-		"editor.tabSize": 4
+		"editor.tabSize": 4,
+		"editor.codeActionsOnSave": {
+      "source.fixAll": "explicit"
+    },
+		"editor.defaultFormatter": "ms-python.black-formatter"
 	},
 
 	// php

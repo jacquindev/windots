@@ -53,6 +53,11 @@ foreach ($function in $(Get-ChildItem -Path "$env:DOTPOSH\Modules\*.ps1" -File).
 }
 Remove-Variable function
 
+# PSProjectManager
+# This module allows you to manage and create projects from the command line.
+# For more information, see: https://github.com/jacquindev/PSProjectManager
+#Import-Module "$env:DOTPOSH\Modules\PSProjectManager\PSProjectManager.ps1"
+
 # Source config files
 foreach ($file in $(Get-ChildItem -Path "$env:DOTPOSH\Config\*" -Include *.ps1 -Recurse)) {
     . "$file"

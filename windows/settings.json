@@ -109,6 +109,12 @@
                 "hidden": false,
                 "name": "Developer PowerShell for VS 2022",
                 "source": "Windows.Terminal.VisualStudio"
+            },
+            {
+                "guid": "{b3cce841-dc88-555b-97df-a5830680a3f3}",
+                "hidden": false,
+                "name": "docker-desktop",
+                "source": "Microsoft.WSL"
             }
         ]
     },
