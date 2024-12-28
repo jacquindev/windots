@@ -22,7 +22,7 @@
 			// VIRTUALIZATION:
 			"Docker.DockerDesktop",
 			"Oracle.VirtualBox",
-			"Hashicorp.Vagrant",
+			// "Hashicorp.Vagrant",
 
 			// EDITORS:
 			"Microsoft.VisualStudioCode",
