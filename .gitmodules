@@ -10,3 +10,6 @@
 [submodule "clink/more-clink-completions"]
 	path = clink/more-clink-completions
 	url = https://github.com/sebthom/more-clink-completions.git
+[submodule "dotposh/Modules/PSProjectManager"]
+	path = dotposh/Modules/PSProjectManager
+	url = https://github.com/jacquindev/PSProjectManager.git
