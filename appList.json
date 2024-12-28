@@ -4,7 +4,7 @@
 	"$schema": "./schema.json",
 	"source": {
 		"winget": [
-			"BeyondCode.Herd",
+			"BeyondCode.Herd", // laravel, php developer tool
 			"chrisant996.Clink",
 			"Discord.Discord",
 			"Flow-Launcher.Flow-Launcher",
@@ -46,36 +46,50 @@
 			"bucket": ["extras", "java", "sysinternals"],
 			"user": [
 				"aria2",
+				"innounp",
+				"scoop-completion",
+				"scoop-search",
+				"wixtoolset",
+				"secureuxtheme",
+
+				// cli tools:
 				"bat",
 				"btop",
 				"charm-gum",
 				"csvlens",
-				"delta",
 				"eza",
-				"faas-cli",
 				"fastfetch",
 				"fd",
 				"fzf",
 				"glow",
-				"innounp",
 				"jq",
-				"lazygit",
-				//"lazydocker",
+				"lazydocker",
 				"less",
 				"ripgrep",
-				"scoop-completion",
-				"scoop-search",
-				"secureuxtheme",
+				"sed",
 				"spicetify-cli",
-				"terraform",
-				"vagrant",
-				"wixtoolset",
+				"wget",
 				"yazi",
 				"yq",
 				"zoxide",
 
+				// developer tools / programming languages
+				"erlang",
+				"faas-cli",
+				"go",
+				"hugo",
+				"make",
+				"postgresql",
+				"postman",
+				"rabbitmq",
+				"terraform",
+				"vagrant",
+				"zig",
+
 				// GIT ADDONS:
 				"bfg",
+				"delta",
+				"lazygit",
 				"gh",
 				"git-crypt",
 				"git-filter-repo",
@@ -83,16 +97,7 @@
 				"git-sizer",
 				"gitleaks"
 			],
-			"global": [
-				"7zip",
-				"cacert",
-				"openjdk",
-				"procmon",
-				"pskill",
-				"pslist",
-				"sed",
-				"wget"
-			]
+			"global": ["7zip", "openjdk"]
 		},
 		"modules": [
 			"BurntToast",
