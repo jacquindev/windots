@@ -64,10 +64,15 @@ foreach ($file in $(Get-ChildItem -Path "$env:DOTPOSH\Config\*" -Include *.ps1 -
 }
 Remove-Variable file
 
+# PowerShell completions
 foreach ($completion in $(Get-ChildItem -Path "$env:DOTPOSH\Config\posh-completions\*" -Include *.ps1 -Recurse)) {
     . "$completion"
 }
 Remove-Variable completion
+
+# Fast scoop search drop-in replacement 🚀
+# https://github.com/shilangyu/scoop-search
+Invoke-Expression (&scoop-search --hook)
 
 # yazi
 if (Get-Command yazi -ErrorAction SilentlyContinue) {
