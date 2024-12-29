@@ -114,67 +114,20 @@
 			"PSScriptTools",
 			"Terminal-Icons"
 		],
-		"npm": [
-			{
-				"Command": "git-cz",
-				"Packages": ["commitizen", "cz-git"]
-			},
-			{
-				"Command": "git-open",
-				"Packages": ["git-open"]
-			},
-			{
-				"Command": "git-recent",
-				"Packages": ["git-recent"]
-			}
-		],
 		"github_extension": [
-			{
-				"Name": "gh-dash",
-				"Repo": "dlvhdr/gh-dash"
-			},
-			{
-				"Name": "gh-s",
-				"Repo": "gennaro-tedesco/gh-s"
-			},
-			{
-				"Name": "gh-token",
-				"Repo": "Link-/gh-token"
-			},
-			{
-				"Name": "gh-poi",
-				"Repo": "seachicken/gh-poi"
-			},
-			{
-				"Name": "gh-download",
-				"Repo": "yuler/gh-download"
-			},
-			{
-				"Name": "gh-markdown-preview",
-				"Repo": "yusukebe/gh-markdown-preview"
-			},
-			{
-				"Name": "gh-screensaver",
-				"Repo": "vilmibm/gh-screensaver"
-			}
+			{ "name": "gh-dash", "repo": "dlvhdr/gh-dash" },
+			{ "name": "gh-s", "repo": "gennaro-tedesco/gh-s" },
+			{ "name": "gh-token", "repo": "Link-/gh-token" },
+			{ "name": "gh-poi", "repo": "seachicken/gh-poi" },
+			{ "name": "gh-download", "repo": "yuler/gh-download" },
+			{ "name": "gh-markdown-preview", "repo": "yusukebe/gh-markdown-preview" },
+			{	"name": "gh-screensaver", "repo": "vilmibm/gh-screensaver" }
 		],
 		"nerdfont": [
-			{
-				"DisplayName": "CodeNewRoman Nerd Font",
-				"ShortName": "code-new-roman"
-			},
-			{
-				"DisplayName": "FantasqueSansM Nerd Font",
-				"ShortName": "fantasque-sans-mono"
-			},
-			{
-				"DisplayName": "FiraCode Nerd Font",
-				"ShortName": "fira-code"
-			},
-			{
-				"DisplayName": "JetBrainsMono NF",
-				"ShortName": "jetbrains-mono"
-			}
+			{	"display_name": "CodeNewRoman Nerd Font", "short_name": "code-new-roman" },
+			{ "display_name": "FantasqueSansM Nerd Font", "short_name": "fantasque-sans-mono" },
+			{	"display_name": "FiraCode Nerd Font", "short_name": "fira-code" },
+			{ "display_name": "JetBrainsMono NF", "short_name": "jetbrains-mono" }
 		]
 	}
 }

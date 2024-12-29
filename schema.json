@@ -62,22 +62,23 @@
 					"minItems": 1,
 					"uniqueItems": true
 				},
-				"npm": {
+				"gihub_extension": {
 					"type": "array",
-					"description": "List of npm global packages",
-					"required": ["Command", "Packages"],
+					"description": "List of gh-cli extensions",
+					"required": ["name", "repo"],
 					"items": {
-						"anyOf": [
+						"uniqueItems": true,
+						"anyof": [
 							{
 								"type": "object",
 								"properties": {
-									"Command": {
+									"name": {
 										"type": "string",
-										"description": "Command installed by 'npm install --global'"
+										"description": "Name of the gh-cli extension"
 									},
-									"Packages": {
-										"type": "array",
-										"description": "List of packages installed by 'npm install --global'"
+									"repo": {
+										"type": "string",
+										"description": "gh-cli extension's repository name in format OWNER/REPO"
 									}
 								}
 							}
@@ -87,17 +88,17 @@
 				"nerdfont": {
 					"type": "array",
 					"description": "List of NerdFont fonts",
-					"required": ["DisplayName", "ShortName"],
+					"required": ["display_name", "short_name"],
 					"items": {
 						"anyOf": [
 							{
 								"type": "object",
 								"properties": {
-									"DisplayName": {
+									"display_name": {
 										"type": "string",
 										"description": "Full name of Nerd Font"
 									},
-									"ShortName": {
+									"short_name": {
 										"type": "string",
 										"description": "Name of Nerd Font of 'Invoke-NerdFontInstaller.ps1' script"
 									}
