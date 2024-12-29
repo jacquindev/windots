@@ -1,10 +1,10 @@
 // PLEASE READ THIS FILE CAREFULLY BEFORE RUNNING `Setup.ps1` !!!
 // You can ADD or REMOVE apps in this file before running the `Setup.ps1` script with your preferred applications.
 {
-	"$schema": "./schema.json",
+	"$schema": "https://raw.githubusercontent.com/jacquindev/windots/refs/heads/main/schema.json",
 	"source": {
 		"winget": [
-			"BeyondCode.Herd", // laravel, php developer tool
+			"BeyondCode.Herd", // laravel - php developer tool
 			"chrisant996.Clink",
 			"Discord.Discord",
 			"Flow-Launcher.Flow-Launcher",
