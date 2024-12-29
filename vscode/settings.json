@@ -8,11 +8,14 @@
 	"editor.cursorSmoothCaretAnimation": "on",
 	"editor.codeActionsOnSave": {
 		"source.fixAll.shellcheck": "explicit",
-		"source.fixAll.eslint": "explicit"
+		"source.fixAll.eslint": "explicit",
+		"source.organizeImports": "explicit"
 	},
+	"editor.experimental.asyncTokenization": true,
+	"editor.experimental.asyncTokenizationVerification": true,
 	"editor.fontFamily": "'FantasqueSansM Nerd Font', 'JetBrainsMono Nerd Font'",
 	"editor.fontLigatures": true,
-	"editor.fontSize": 14,
+	"editor.fontSize": 15,
 	"editor.formatOnSave": true,
 	"editor.guides.bracketPairs": "active",
 	"editor.hideCursorInOverviewRuler": false,
@@ -36,8 +39,56 @@
 	"files.trimTrailingWhitespace": true,
 	"files.insertFinalNewline": true,
 	"files.associations": {
+		".eslintrc.*.json": "jsonc",
 		".eslintrc.json": "jsonc",
-		".eslintrc.*.json": "jsonc"
+		"*.json5": "jsonc",
+		"**/.azure-pipelines/**/*.yaml": "azure-pipelines",
+		"**/.azure-pipelines/jobs/*.yaml": "azure-pipelines",
+		"**/*.json.hbs": "jsonc",
+		"**/CODEOWNERS": "ini",
+		"**/package.json.hbs": "json",
+		"**/NuGet.config": "xml"
+	},
+	"files.exclude": {
+		".venv": true,
+		".vscode-test": true,
+		"**.lock": true,
+		"**/__pycache__": true,
+		"**/.cache": true,
+		"**/.coverage": true,
+		"**/.DS_Store": true,
+		"**/.eslintcache": true,
+		"**/.git": true,
+		"**/.hg": true,
+		"**/.mypy_cache/**": true,
+		"**/.pytest_cache/**": true,
+		"**/.ruff_cache": true,
+		"**/.svn": true,
+		"**/*.class": true,
+		"**/*.pyc": true,
+		"**/coverage": true,
+		"**/node_modules": true,
+		"**/Thumbs.db": true
+	},
+	"files.watcherExclude": {
+		"**/.git": true,
+		"**/coverage": true,
+		"**/node_modules": true,
+		"**/out/*": true,
+		"**/temp": true
+	},
+
+	// search
+	"search.exclude": {
+		".vscode-test": true,
+		"**/.pnp.*": true,
+		"**/.venv/**": true,
+		"**/.yarn": true,
+		"**/*.svg": true,
+		"**/bower_components": true,
+		"**/coverage": true,
+		"**/node_modules": true,
+		"**/temp": true
 	},
 
 	// workbench
@@ -48,11 +99,11 @@
 	"workbench.editor.labelFormat": "medium",
 	"workbench.editor.tabActionCloseVisibility": false,
 	"workbench.editor.tabSizing": "shrink",
+	"workbench.iconTheme": "material-icon-theme",
 	"workbench.layoutControl.enabled": false,
 	"workbench.list.smoothScrolling": true,
 	"workbench.panel.defaultLocation": "left",
 	"workbench.productIconTheme": "material-product-icons",
-	"workbench.iconTheme": "material-icon-theme",
 	"workbench.sideBar.location": "right",
 	"workbench.startupEditor": "none",
 	"workbench.statusBar.visible": false,
@@ -127,9 +178,11 @@
 	"git.ignoreLimitWarning": true,
 	"git.openRepositoryInParentFolders": "never",
 	"git.pullBeforeCheckout": true,
+	"git.branchProtection": ["main"],
 	"git.mergeEditor": true,
 	"git.showInlineOpenFileAction": false,
 
+	// github pull requests
 	"githubPullRequests.assignCreated": "${user}",
 
 	// diff
@@ -155,17 +208,25 @@
 	"shellcheck.useWorkspaceRootAsCwd": true,
 
 	// prettier
-	"prettier.useTabs": true,
-	"prettier.useEditorConfig": true,
+	"prettier.configPath": ".prettierrc",
+	"prettier.ignorePath": ".prettierignore",
+	"prettier.jsxSingleQuote": true,
+	"prettier.printWidth": 120,
 	"prettier.singleQuote": true,
+	"prettier.useEditorConfig": true,
+	"prettier.useTabs": true,
+
+	// eslint
+	"eslint.enable": true,
+	"eslint.ignoreUntitled": true,
+	"eslint.lintTask.enable": true,
+	"eslint.workingDirectories": [{ "mode": "auto" }],
 
 	// cSpell
 	"cSpell.allowCompoundWords": true,
 	"cSpell.diagnosticLevel": "Hint",
-	"cSpell.words": [
-		"catppuccin",
-		"macchiato"
-	],
+	"cSpell.language": "en,en-US",
+	"cSpell.words": ["catppuccin", "macchiato"],
 
 	// better-comments
 	"better-comments.tags": [
@@ -217,7 +278,6 @@
 	],
 
 	// per language settings
-	"[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
 	"[plaintext]": { "files.insertFinalNewline": false },
 	"[shellscript]": { "editor.defaultFormatter": "foxundermoon.shell-format" },
 	"[lua]": { "editor.defaultFormatter": "sumneko.lua" },
@@ -225,60 +285,120 @@
 	"[github-issues]": { "editor.wordWrap": "on" },
 
 	// css
+	"[css]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.formatOnSave": true
+	},
 	"css.format.spaceAroundSelectorSeparator": true,
+	"css.autoValidation": "Save",
 
-	// eslint
-	"eslint.lintTask.enable": true,
-	"eslint.validate": [
-		"typescript",
-		"typescriptreact",
-		"javascript",
-		"javascriptreact"
-	],
+	// json
+	"[json]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.formatOnSave": true,
+		"editor.suggest.insertMode": "replace"
+	},
+	"[jsonc]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.formatOnSave": true,
+		"editor.suggest.insertMode": "replace"
+	},
+	"json.format.enable": false,
+
+	// yaml
+	"[yaml]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.formatOnSave": true
+	},
 
 	// html
+	"[html]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.formatOnSave": true
+	},
+	"html-css-class-completion.enableEmmetSupport": true,
 	"html.format.enable": true,
 	"html.format.preserveNewLines": true,
 
+	// handlebars
+	"[handlebars]": {
+		"editor.formatOnSave": false
+	},
+
 	// typescript
-	"[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+	"[typescript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.formatOnSave": true
+	},
 	"typescript.experimental.expandableHover": true,
+	"typescript.preferences.importModuleSpecifier": "relative",
 	"typescript.preferences.quoteStyle": "single",
+	"typescript.tsdk": "./node_modules/typescript/lib",
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.formatOnSave": true
+	},
 
 	// javascript
-	"[javascript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+	"[javascript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.formatOnSave": true
+	},
+	"javascript.preferences.importModuleSpecifier": "relative",
+	"javascript.preferences.importModuleSpecifierEnding": "js",
 
 	// powershell
+	"[powershell]": {
+		"files.encoding": "utf8bom",
+		"files.autoGuessEncoding": true
+	},
 	"powershell.codeFormatting.preset": "OTBS",
+	"powershell.codeFormatting.addWhitespaceAroundPipe": true,
+	"powershell.codeFormatting.alignPropertyValuePairs": true,
+	"powershell.codeFormatting.avoidSemicolonsAsLineTerminators": true,
+	"powershell.codeFormatting.ignoreOneLineBlock": true,
+	"powershell.codeFormatting.trimWhitespaceAroundPipe": true,
 	"powershell.codeFormatting.whitespaceAfterSeparator": true,
 	"powershell.codeFormatting.whitespaceAroundOperator": true,
 	"powershell.codeFormatting.whitespaceBeforeOpenBrace": true,
 	"powershell.codeFormatting.whitespaceBeforeOpenParen": true,
+	"powershell.codeFormatting.whitespaceBetweenParameters": true,
+	"powershell.codeFormatting.whitespaceInsideBrace": true,
 
 	// markdown
-	"[markdown]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+	"[markdown]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"files.trimTrailingWhitespace": false
+	},
 	"markdownlint.config": {
 		"MD024": false,
 		"MD033": false,
 		"MD034": false,
 		"MD038": false,
-    "MD042": false
+		"MD042": false
 	},
 
 	// python
 	"[python]": {
+		"editor.formatOnSave": true,
 		"editor.tabSize": 4,
 		"editor.codeActionsOnSave": {
-      "source.fixAll": "explicit"
-    },
+			"source.fixAll.eslint": "explicit",
+			"source.organizeImports.isort": "explicit"
+		},
 		"editor.defaultFormatter": "ms-python.black-formatter"
 	},
+	"python.analysis.autoImportCompletions": true,
+	"python.languageServer": "Pylance",
+	"python.testing.unittestEnabled": false,
+	"python.testing.pytestEnabled": true,
+	"ipynb.experimental.serialization": true,
 
 	// php
 	"php.validate.enable": false,
-	"php.suggest.basic": false,
 	"php-docblocker.returnGap": true,
 	"php-docblocker.qualifyClassNames": true,
+	"php-cs-fixer.autoFixBySemicolon": true,
 	"php-cs-fixer.rules": "@PhpCsFixer",
 	"[php]": {
 		"editor.defaultFormatter": "junstyle.php-cs-fixer",
@@ -290,7 +410,27 @@
 	"[rust]": {
 		"editor.semanticHighlighting.enabled": true,
 		"editor.defaultFormatter": "rust-lang.rust-analyzer",
+		"editor.tabSize": 4,
+		"editor.formatOnSave": true
+	},
+	"rust-analyzer.check.command": "clippy",
+	"rust-analyzer.rustfmt.rangeFormatting.enable": true,
+	"rust-analyzer.semanticHighlighting.punctuation.enable": true,
+
+	// xml
+	"xmlTools.enableXmlTreeViewCursorSync": true,
+	"xmlTools.enforcePrettySelfClosingTagOnFormat": true,
+
+	// go
+	"go.useLanguageServer": true,
+	"go.testEnvFile": "${workspaceFolder}/.env",
+
+	// csharp/dotnet
+	"[csharp]": {
+		"editor.defaultFormatter": "ms-dotnettools.csharp",
 		"editor.tabSize": 4
 	},
-	"rust-analyzer.semanticHighlighting.punctuation.enable": true
+	"omnisharp.organizeImportsOnFormat": true,
+	"omnisharp.enableEditorConfigSupport": true,
+	"dotnet.completion.showCompletionItemsFromUnimportedNamespaces": true
 }
