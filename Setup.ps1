@@ -118,9 +118,6 @@ $githubExtensions = $appList.github_extension
 # nerd fonts
 $nerdFonts = $appList.nerdfont
 
-# npm global packages
-$npmGlobalPackages = $appList.npm
-
 #######################################################################################################
 ###                                              MAIN SCRIPT                                        ###
 #######################################################################################################
@@ -219,35 +216,6 @@ function Install {
         Write-PrettyInfo -Message "VSCode Extensions List can be found at" -Info "$PSScriptRoot\vscode\extensions.list"
     }
 
-    # NodeJS setup
-    # Write-PrettyTitle "NVM (Node Version Manager)"
-    # if (-not (Get-Command nvm -ErrorAction SilentlyContinue)) {
-    #     # Installing nvm using the installer
-    #     $nvmVersion = $(&"curl.exe" -s "https://api.github.com/repos/coreybutler/nvm-windows/releases/latest" | jq -r '.tag_name').Trim()
-    #     $nvmDownloadLink = "https://github.com/coreybutler/nvm-windows/releases/download/$nvmVersion/nvm-setup.exe"
-    #     $downloadFolderPath = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path
-    #     $nvmInstallerFile = "$downloadFolderPath/nvm-setup.exe"
-    #     $obj = New-Object System.Net.WebClient
-    #     $obj.DownloadFile($nvmDownloadLink, $nvmInstallerFile)
-    #     Start-Process -FilePath "$nvmInstallerFile"
-    #     Remove-Variable nvmVersion, nvmDownloadLink, nvmInstallerFile, downloadFolderPath, obj
-    # } else {
-    #     if ((-not (Get-Command node -ErrorAction SilentlyContinue)) -or (-not(Get-Command npm -ErrorAction SilentlyContinue))) {
-    #         $ltsOrLatest = $(Write-Host "❔ NodeJS not found. Install LTS (y) or latest (n)? "-ForegroundColor Cyan -NoNewline; Read-Host)
-    #         if ($ltsOrLatest.ToUpper() -eq 'Y') {
-    #             nvm install lts
-    #         } else {
-    #             nvm install latest
-    #         }
-    #         nvm use newest
-    #         corepack enable
-    #         corepack prepare pnpm@latest --activate
-    #         npm install npm@latest
-    #         npm config set userconfig="$env:USERPROFILE\.config\npm\.npmrc" --global
-    #     }
-    #     Install-NPM-Packages -pnpm -List $npmGlobalPackages
-    # }
-
     # Bat
     if (Get-Command bat -ErrorAction SilentlyContinue) {
         Write-PrettyTitle "BAT THEME BUILD"
@@ -315,6 +283,7 @@ function Install {
         Start-Sleep -Seconds 1
     }
 
+    # yazi
     if (Get-Command yazi -ErrorAction SilentlyContinue) {
         Write-PrettyTitle "YAZI SETUP"
         # yazi environment variables
@@ -331,6 +300,7 @@ function Install {
         Start-Sleep -Seconds 1
     }
 
+    # komorebi
     if (Get-Command komorebic -ErrorAction SilentlyContinue) {
         Write-PrettyTitle "KOMOREBI SETUP WITH WHKD"
 
@@ -354,6 +324,7 @@ function Install {
         Start-Sleep -Seconds 1
     }
 
+    # yasb
     if (Get-Command yasb -ErrorAction SilentlyContinue) {
         Write-PrettyTitle "YASB STATUS BAR"
         $yasbProcess = Get-Process -Name yasb -ErrorAction SilentlyContinue
@@ -382,6 +353,17 @@ function Install {
     #     $VagrantPlugins = @('sahara', 'vagrant-disksize', 'vagrant-docker-compose', 'vagrant-reload', 'vagrant-winnfsd')
     #     Install-Vagrant-Plugins -List $VagrantPlugins
     # }
+
+    # wsl
+    if ((Get-WindowsOptionalFeature -Online | Where-Object { $_.FeatureName -eq "Microsoft-Windows-Subsystem-Linux" }).State -eq "Disabled") {
+        Enable-WindowsOptionalFeature -Online -FeatureName "Microsoft-Windows-Subsystem-Linux" -All -NoRestart
+    }
+    if ((Get-WindowsOptionalFeature -Online | Where-Object { $_.FeatureName -eq "VirtualMachinePlatform" }).State -eq "Disabled") {
+        Enable-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform" -All -NoRestart
+    }
+    # after running the script, please restart the computer and open elevated powershell, type:
+    # wsl --install
+    # wsl --update --pre-release
 
     ""
 }

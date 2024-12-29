@@ -200,8 +200,8 @@ function Install-GitHub-Extensions {
 
     $installed = (gh extension list)
     foreach ($ext in $List) {
-        $extName = $ext.Name
-        $extRepo = $ext.Repo
+        $extName = $ext.name
+        $extRepo = $ext.repo
         if (-not ($installed | Select-String "$extRepo")) {
             gum spin --title="Installing extension $extName..." -- gh extension install "$extRepo" --force
             Write-PrettyOutput -Process "github" -Entry "extension:" -Entry2 "$extName" -Message "installed successfully." -Extra
@@ -263,8 +263,8 @@ function Install-NerdFonts {
     [void][System.Reflection.Assembly]::LoadWithPartialName("System.Drawing")
     $installedFonts = (New-Object System.Drawing.Text.InstalledFontCollection).Families
     foreach ($font in $List) {
-        $fontName = $font.DisplayName
-        $fontShortName = $font.ShortName
+        $fontName = $font.display_name
+        $fontShortName = $font.short_name
         if (!($installedFonts | Select-String "$fontName")) {
             & ([scriptblock]::Create((Invoke-WebRequest 'https://to.loredo.me/Install-NerdFont.ps1'))) -Confirm:$false -Scope AllUsers -Name $fontShortName
             Write-PrettyOutput -Process "nerd font" -Entry "$fontName" -Message "installed successfully."
