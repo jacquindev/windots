@@ -8,3 +8,5 @@ db.zo
 .spotify_token_cache.json
 
 config/lazygit/state.yml
+
+archive/
