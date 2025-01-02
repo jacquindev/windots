@@ -30,8 +30,10 @@
 				"Microsoft.PowerShell",
 				"Microsoft.VisualStudio.2022.Community",
 				"Microsoft.VisualStudioCode",
+				"MongoDB.Compass.Full",
 				"Obsidian.Obsidian",
 				"Oracle.VirtualBox",
+				"Postman.Postman",
 				"Rainmeter.Rainmeter",
 				"rocksdanister.LivelyWallpaper",
 				"Stardock.Start11"
@@ -43,6 +45,7 @@
 				"erlang",
 				"gradle",
 				"openjdk",
+				"rabbitmq",
 				"terraform"
 			]
 		},
@@ -111,6 +114,8 @@
 				{ "plugin_name": "", "plugin_full_name": "commitizen", "version": "" },
 				{ "plugin_name": "", "plugin_full_name": "cz-git", "version": "" },
 				{ "plugin_name": "", "plugin_full_name": "degit", "version": "" },
+				{ "plugin_name": "", "plugin_full_name": "git-open", "version": "" },
+				{ "plugin_name": "", "plugin_full_name": "recent", "version": "" },
 				{ "plugin_name": "", "plugin_full_name": "newman", "version": "" }
 			],
 			"install": true
