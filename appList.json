@@ -1,133 +1,135 @@
-// PLEASE READ THIS FILE CAREFULLY BEFORE RUNNING `Setup.ps1` !!!
-// You can ADD or REMOVE apps in this file before running the `Setup.ps1` script with your preferred applications.
+// PLEASE MODIFY THIS FILE WITH YOUR PREFERRED APPLICATIONS / PACKAGES / TOOLS BEFOR RUNNING `Setup.ps1` script!!
+// ADD or REMOVE applications below:
 {
 	"$schema": "https://raw.githubusercontent.com/jacquindev/windots/refs/heads/main/schema.json",
-	"source": {
-		"winget": [
-			"BeyondCode.Herd", // laravel - php developer tool
-			"chrisant996.Clink",
-			"Discord.Discord",
-			"Flow-Launcher.Flow-Launcher",
-			"gerardog.gsudo",
-			"Git.Git",
-			"GitHub.GitHubDesktop",
-			"ImageMagick.ImageMagick",
-			"JanDeDobbeleer.OhMyPosh",
-			"Microsoft.PowerShell",
-			"Microsoft.PowerToys",
-			"Microsoft.WindowsTerminal.Preview",
-			"Proton.ProtonVPN",
-			"Spotify.Spotify",
-
-			// VIRTUALIZATION:
-			"Docker.DockerDesktop",
-			"Oracle.VirtualBox",
-
-			// EDITORS:
-			"Microsoft.VisualStudioCode",
-			// "Neovim.Neovim",
-			// "Notepad++.Notepad++",
-			"Obsidian.Obsidian",
-
-			// BROWSERS:
-			// "Mozilla.Firefox",
-			// "Zen-Team.Zen-Browser",
-
-			// WINDOWS TWEAK APPLICATIONS:
-			"AmN.yasb",
-			// "glzr-io.glazewm",
-			"LGUG2Z.komorebi",
-			"LGUG2Z.whkd",
-			"Rainmeter.Rainmeter",
-			"rocksdanister.LivelyWallpaper",
-			"Stardock.Start11"
-		],
+	"environment_variables": [
+		// Please modify the `path` for your environment names
+		{ "command": "eza", "value": "EZA_CONFIG_DIR", "path": "C:\\Users\\jqnhi\\.config\\eza" },
+		{ "command": "komorebic", "value": "KOMOREBI_CONFIG_HOME", "path": "C:\\Users\\jqnhi\\.config\\komorebi" },
+		{ "command": "yazi", "value": "YAZI_FILE_ONE", "path": "C:\\Program Files\\Git\\usr\\bin\\file.exe" },
+		{ "command": "yazi", "value": "YAZI_CONFIG_HOME", "path": "C:\\Users\\jqnhi\\.config\\yazi" }
+	],
+	"package_source": {
+		"winget": {
+			"auto_install": true,
+			"packages": [
+				"AmN.yasb",
+				"BeyondCode.Herd", // php, laravel, composer, herd, and nodejs (all-in-one!)
+				"chrisant996.Clink",
+				"Flow-Launcher.Flow-Launcher",
+				"gerardog.gsudo",
+				"Git.Git",
+				"GitHub.GitHubDesktop",
+				"Google.Chrome.Dev",
+				"ImageMagick.ImageMagick",
+				"JanDeDobbeleer.OhMyPosh",
+				"LGUG2Z.komorebi",
+				"LGUG2Z.whkd",
+				"Microsoft.DotNet.SDK.8",
+				"Microsoft.DotNet.SDK.9",
+				"Microsoft.PowerShell",
+				"Microsoft.VisualStudio.2022.Community",
+				"Microsoft.VisualStudioCode",
+				"Obsidian.Obsidian",
+				"Oracle.VirtualBox",
+				"Rainmeter.Rainmeter",
+				"rocksdanister.LivelyWallpaper",
+				"Stardock.Start11"
+			]
+		},
+		"choco": {
+			"auto_install": true,
+			"packages": [
+				"erlang",
+				"gradle",
+				"openjdk",
+				"terraform"
+			]
+		},
 		"scoop": {
-			"bucket": ["extras", "java", "sysinternals"],
-			"user": [
+			"auto_install": true,
+			"buckets": ["extras", "sysinternals"],
+			"packages": [
 				"aria2",
-				"innounp",
-				"scoop-completion",
-				"scoop-search",
-				"wixtoolset",
-				"secureuxtheme",
-
-				// cli tools:
 				"bat",
+				"bfg",
 				"btop",
 				"charm-gum",
-				"csvlens",
+				"delta",
 				"eza",
 				"fastfetch",
 				"fd",
 				"fzf",
-				"glow",
-				"jq",
-				"lazydocker",
-				"less",
-				"ripgrep",
-				"sed",
-				"spicetify-cli",
-				"wget",
-				"yazi",
-				"yq",
-				"zoxide",
-
-				// developer tools / programming languages
-				"erlang",
-				"faas-cli",
-				"go",
-				"hugo",
-				"make",
-				"postgresql",
-				"postman",
-				"rabbitmq",
-				"terraform",
-				"vagrant",
-				"zig",
-
-				// GIT ADDONS:
-				"bfg",
-				"delta",
-				"lazygit",
 				"gh",
+				"git-aliases",
 				"git-crypt",
 				"git-filter-repo",
 				"git-lfs",
 				"git-sizer",
-				"gitleaks"
+				"gitleaks",
+				"glow",
+				"jq",
+				"lazydocker",
+				"lazygit",
+				"pskill",
+				"scoop-completion",
+				"scoop-search",
+				"secureuxtheme",
+				"sed",
+				"speedtest-cli",
+				"spicetify-cli",
+				"spotify-tui",
+				"symfony-cli",
+				"wget",
+				"wixtoolset",
+				"yazi",
+				"zoxide"
+			]
+		}
+	},
+	"package_plugins": [
+		{
+			"name": "gh",
+			"invoke_command": "gh extension install",
+			"check_command": "gh extension list",
+			"plugins": [
+				{ "plugin_name": "gh-dash", "plugin_full_name": "dlvhdr/gh-dash", "version": "4.7.3" },
+				{ "plugin_name": "gh-license", "plugin_full_name": "Shresht7/gh-license", "version": "0.3.0" },
+				{ "plugin_name": "gh-download", "plugin_full_name": "yuler/gh-download", "version": "0.6.1" },
+				{ "plugin_name": "gh-poi", "plugin_full_name": "seachicken/gh-poi", "version": "0.12.0" },
+				{ "plugin_name": "gh-token", "plugin_full_name": "Link-/gh-token", "version": "2.0.2" },
+				{ "plugin_name": "gh-markdown-preview", "plugin_full_name": "yusukebe/gh-markdown-preview", "version": "1.8.0" }
 			],
-			"global": ["7zip", "openjdk"]
+			"install": true
 		},
+		{
+			"name": "bun", // I use bun instead of npm, pnpm, or yarn since it's faster (required `bun` installed)
+			"invoke_command": "bun add -g",
+			"check_command": "bun pm ls -g",
+			"plugins": [
+				{ "plugin_name": "", "plugin_full_name": "@angular/cli", "version": "" },
+				{ "plugin_name": "", "plugin_full_name": "commitizen", "version": "" },
+				{ "plugin_name": "", "plugin_full_name": "cz-git", "version": "" },
+				{ "plugin_name": "", "plugin_full_name": "degit", "version": "" },
+				{ "plugin_name": "", "plugin_full_name": "newman", "version": "" }
+			],
+			"install": true
+		}
+	],
+	"powershell_modules": {
+		"install": true,
 		"modules": [
 			"BurntToast",
 			"CompletionPredictor",
-			"DotNetVersionLister",
-			"Microsoft.PowerShell.SecretManagement",
-			"Microsoft.PowerShell.SecretStore",
+			"DockerCompletion",
+			"npm-completion",
 			"posh-alias",
 			"posh-git",
 			"powershell-yaml",
 			"PSFzf",
-			"PSParseHTML",
-			"PSProfiler",
-			"PSScriptTools",
-			"Terminal-Icons"
-		],
-		"github_extension": [
-			{ "name": "gh-dash", "repo": "dlvhdr/gh-dash" },
-			{ "name": "gh-s", "repo": "gennaro-tedesco/gh-s" },
-			{ "name": "gh-token", "repo": "Link-/gh-token" },
-			{ "name": "gh-poi", "repo": "seachicken/gh-poi" },
-			{ "name": "gh-download", "repo": "yuler/gh-download" },
-			{ "name": "gh-markdown-preview", "repo": "yusukebe/gh-markdown-preview" },
-			{	"name": "gh-screensaver", "repo": "vilmibm/gh-screensaver" }
-		],
-		"nerdfont": [
-			{	"display_name": "CodeNewRoman Nerd Font", "short_name": "code-new-roman" },
-			{ "display_name": "FantasqueSansM Nerd Font", "short_name": "fantasque-sans-mono" },
-			{	"display_name": "FiraCode Nerd Font", "short_name": "fira-code" },
-			{ "display_name": "JetBrainsMono NF", "short_name": "jetbrains-mono" }
+			"PSToml",
+			"Terminal-Icons",
+			"yarn-completion"
 		]
 	}
 }
