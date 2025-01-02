@@ -77,16 +77,16 @@ A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppu
 <h2 id="install">🌷 Install</h2>
 
 - Simply clone this repo to `your_location`
-- `cd` into `your_location`
 
 ```bash
 git clone https://github.com/jacquindev/windots.git your_location
+cd `your_location`
 ```
 
-- In your PowerShell Terminal, run: `.\Setup.ps1`
+- In your **elevated** PowerShell Terminal, run: `.\Setup.ps1`
 
 ```pwsh
-.\Setup.ps1
+. .\Setup.ps1
 ```
 
 > [!NOTE]
@@ -180,7 +180,7 @@ Follow the below links to download and learn to how to setup:
 - 🎨 Main theme [Catppuccin](https://github.com/catppuccin/catppuccin) for everything!
 - 🎀 Minimal [Yasb](https://github.com/amnweb/yasb) status bar
 - 💖 Beautiful **_[wallpapers](https://github.com/jacquindev/windots/tree/main/windows/walls#readme)_**, and [live wallpapers](./windows/walls/live-walls/) for [Lively Wallpapers](https://www.rocksdanister.com/lively/)
-- 🪟 [Komorebi](./config/komorebi) / [GlazeWM](./config/glazewm/config.yaml) config
+- 🪟 [Komorebi](./config/komorebi) config
 - 🌸 All-In-One VSCode setup (**_[extensions list](./vscode/extensions.list)_**)
 - ⚙️ [Rainmeter](./windows/rainmeter/) setup
 - \>\_ Sleek [Windows Terminal config](./windows/settings.json)
