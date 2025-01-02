@@ -103,7 +103,6 @@
 	"workbench.layoutControl.enabled": false,
 	"workbench.list.smoothScrolling": true,
 	"workbench.panel.defaultLocation": "left",
-	"workbench.productIconTheme": "material-product-icons",
 	"workbench.sideBar.location": "right",
 	"workbench.startupEditor": "none",
 	"workbench.statusBar.visible": false,
@@ -290,7 +289,6 @@
 		"editor.formatOnSave": true
 	},
 	"css.format.spaceAroundSelectorSeparator": true,
-	"css.autoValidation": "Save",
 
 	// json
 	"[json]": {
@@ -316,7 +314,6 @@
 		"editor.defaultFormatter": "esbenp.prettier-vscode",
 		"editor.formatOnSave": true
 	},
-	"html-css-class-completion.enableEmmetSupport": true,
 	"html.format.enable": true,
 	"html.format.preserveNewLines": true,
 
@@ -376,61 +373,5 @@
 		"MD034": false,
 		"MD038": false,
 		"MD042": false
-	},
-
-	// python
-	"[python]": {
-		"editor.formatOnSave": true,
-		"editor.tabSize": 4,
-		"editor.codeActionsOnSave": {
-			"source.fixAll.eslint": "explicit",
-			"source.organizeImports.isort": "explicit"
-		},
-		"editor.defaultFormatter": "ms-python.black-formatter"
-	},
-	"python.analysis.autoImportCompletions": true,
-	"python.languageServer": "Pylance",
-	"python.testing.unittestEnabled": false,
-	"python.testing.pytestEnabled": true,
-	"ipynb.experimental.serialization": true,
-
-	// php
-	"php.validate.enable": false,
-	"php-docblocker.returnGap": true,
-	"php-docblocker.qualifyClassNames": true,
-	"php-cs-fixer.autoFixBySemicolon": true,
-	"php-cs-fixer.rules": "@PhpCsFixer",
-	"[php]": {
-		"editor.defaultFormatter": "junstyle.php-cs-fixer",
-		"editor.formatOnSave": true,
-		"editor.snippetSuggestions": "bottom"
-	},
-
-	// rust
-	"[rust]": {
-		"editor.semanticHighlighting.enabled": true,
-		"editor.defaultFormatter": "rust-lang.rust-analyzer",
-		"editor.tabSize": 4,
-		"editor.formatOnSave": true
-	},
-	"rust-analyzer.check.command": "clippy",
-	"rust-analyzer.rustfmt.rangeFormatting.enable": true,
-	"rust-analyzer.semanticHighlighting.punctuation.enable": true,
-
-	// xml
-	"xmlTools.enableXmlTreeViewCursorSync": true,
-	"xmlTools.enforcePrettySelfClosingTagOnFormat": true,
-
-	// go
-	"go.useLanguageServer": true,
-	"go.testEnvFile": "${workspaceFolder}/.env",
-
-	// csharp/dotnet
-	"[csharp]": {
-		"editor.defaultFormatter": "ms-dotnettools.csharp",
-		"editor.tabSize": 4
-	},
-	"omnisharp.organizeImportsOnFormat": true,
-	"omnisharp.enableEditorConfigSupport": true,
-	"dotnet.completion.showCompletionItemsFromUnimportedNamespaces": true
+	}
 }
