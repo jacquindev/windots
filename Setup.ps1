@@ -187,10 +187,16 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
 	git config --global user.email $gitUserMail >$null 2>&1
 }
 
-# install nodejs
-if ((Get-Command nvm -ErrorAction SilentlyContinue) -and (!(Get-Command node -ErrorAction SilentlyContinue))) {
-	nvm install lts >$null 2>&1
-	nvm use newest
+# install nodejs & bun
+if ((Get-Command nvm -ErrorAction SilentlyContinue)) {
+	if (!(Get-Command node -ErrorAction SilentlyContinue)) {
+		nvm install lts >$null 2>&1
+		nvm use lts
+	}
+	if (!(Get-Command bun -ErrorAction SilentlyContinue)) {
+		$useBun = $(Write-Host "Install 'bun'? (Y/n): " -ForegroundColor Magenta -NoNewline; Read-Host)
+		if ($useBun.ToUpper() -eq 'Y') { npm install -g bun }
+	}
 }
 
 # reload bat configuration
@@ -252,12 +258,12 @@ if (Get-Command code -ErrorAction SilentlyContinue) {
 }
 
 # wsl enable
-# if ((Get-WindowsOptionalFeature -Online | Where-Object { $_.FeatureName -eq "Microsoft-Windows-Subsystem-Linux" }).State -eq "Disabled") {
-# 	Enable-WindowsOptionalFeature -Online -FeatureName "Microsoft-Windows-Subsystem-Linux" -All -NoRestart
-# }
-# if ((Get-WindowsOptionalFeature -Online | Where-Object { $_.FeatureName -eq "VirtualMachinePlatform" }).State -eq "Disabled") {
-# 	Enable-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform" -All -NoRestart
-# }
+if ((Get-WindowsOptionalFeature -Online | Where-Object { $_.FeatureName -eq "Microsoft-Windows-Subsystem-Linux" }).State -eq "Disabled") {
+	Enable-WindowsOptionalFeature -Online -FeatureName "Microsoft-Windows-Subsystem-Linux" -All -NoRestart
+}
+if ((Get-WindowsOptionalFeature -Online | Where-Object { $_.FeatureName -eq "VirtualMachinePlatform" }).State -eq "Disabled") {
+	Enable-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform" -All -NoRestart
+}
 
 # start komorebi
 if (Get-Command komorebic -ErrorAction SilentlyContinue) {
