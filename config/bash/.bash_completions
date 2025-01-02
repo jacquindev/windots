@@ -66,7 +66,6 @@ for arg in $(compgen -ac | sort -u); do
   uv?(x)?(.exe)) source <(uv generate-shell-completion bash) ;;
   yq?(.exe)) source <(yq completion bash) ;;
   [Vv][Bb]ox[Mm]anage?(.exe)) . "$CUSTOM_COMPLETIONS/vboxmanage.bash" ;;
-  # since we install vagrant with scoop
-  vagrant?(.exe)) . "$(dirname "$(dirname "$(which scoop)")")/apps/vagrant/2.4.3/embedded/gems/gems/vagrant-2.4.3/contrib/bash/completion.sh" ;;
+  # vagrant?(.exe)) . "/c/Program Files/Vagrant/embedded/gems/gems/vagrant-2.4.3/contrib/bash/completion.sh" ;;
   esac
 done
