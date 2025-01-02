@@ -6,7 +6,7 @@
     aliases = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\ \t => \\2/' | sort
     b = branch
     branches = branch --sort=authordate
-    cm = commit -m 
+    cm = commit -m
     co = checkout
     get = !git fetch --prune && git pull --rebase && git submodule update --init --recursive
     last = log -1 HEAD --stat
