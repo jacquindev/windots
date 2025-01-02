@@ -1,7 +1,7 @@
 ﻿#requires -Version 7
 #requires -RunAsAdministrator
 
-Write-Host "Start setup process..." -ForegroundColor DarkGray
+''; Write-Host "Start setup process..." -ForegroundColor DarkGray
 $currentLocation = "$($(Get-Location).Path)"
 
 # set current working directory location
@@ -146,7 +146,15 @@ if (Get-Command gh -ErrorAction SilentlyContinue) {
 }
 
 # install nerd fonts
-''; $installNerdFonts = $(Write-Host "[RECOMMENDED] Install NerdFont now? (Y/n): " -NoNewline -ForegroundColor Magenta; Read-Host)
+''
+Write-Host "The following fonts are highly recommended: " -ForegroundColor Green -NoNewline
+Write-Host "(Please skip this step if you already installed Nerd Fonts)" -ForegroundColor DarkGray
+Write-Output "  ● Cascadia Code Nerd Font"
+Write-Output "  ● FantasqueSansM Nerd Font"
+Write-Output "  ● FiraCode Nerd Font"
+Write-Output "  ● JetBrainsMono Nerd Font"
+''
+$installNerdFonts = $(Write-Host "[RECOMMENDED] Install NerdFont now? (Y/n): " -NoNewline -ForegroundColor Magenta; Read-Host)
 if ($installNerdFonts.ToUpper() -eq 'Y') {
 	& ([scriptblock]::Create((Invoke-WebRequest 'https://to.loredo.me/Install-NerdFont.ps1'))) -Scope AllUsers
 }
@@ -203,6 +211,38 @@ if ((Get-Command nvm -ErrorAction SilentlyContinue)) {
 if (Get-Command bat -ErrorAction SilentlyContinue) {
 	bat cache --clear >$null 2>&1
 	bat cache --build >$null 2>&1
+}
+
+# yazi plugins
+if (Get-Command ya -ErrorAction SilentlyContinue) {
+	ya pack -i >$null 2>&1
+	ya pack -u >$null 2>&1
+}
+
+$catppuccinThemes = @('Frappe', 'Latte', 'Macchiato', 'Mocha')
+# add flowlauncher themes
+$flowLauncherDir = "$env:LOCALAPPDATA\FlowLauncher"
+if (Test-Path "$flowLauncherDir" -PathType Container) {
+	$flowLauncherThemeDir = "$flowLauncherDir\Themes"
+	$catppuccinThemes | ForEach-Object {
+		if (!(Test-Path "$flowLauncherThemeDir\Catppuccin $_.xaml" -PathType Leaf)) {
+			$flowLauncherThemeUrl = "https://raw.githubusercontent.com/catppuccin/flow-launcher/refs/heads/main/themes/Catppuccin%20$_.xaml"
+			Invoke-WebRequest -Uri "$flowLauncherThemeUrl" -OutFile "$flowLauncherThemeDir"
+		}
+	}
+}
+
+# add btop theme
+# since we install btop by scoop, then the application folder would be in scoop directory
+if (Get-Command btop -ErrorAction SilentlyContinue) {
+	$btopThemeDir = "$env:USERPROFILE\scoop\apps\btop\current\themes"
+	$catppuccinThemes = $catppuccinThemes.ToLower()
+	$catppuccinThemes | ForEach-Object {
+		if (!(Test-Path "$btopThemeDir\catppuccin_$_.theme" -PathType Leaf)) {
+			$btopThemeUrl = "https://raw.githubusercontent.com/catppuccin/btop/refs/heads/main/themes/catppuccin_$_.theme"
+			Invoke-WebRequest -Uri "$btopThemeUrl" -OutFile "$btopThemeDir"
+		}
+	}
 }
 
 # add-ons
