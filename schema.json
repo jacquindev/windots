@@ -1,114 +1,129 @@
 {
 	"$schema": "https://json-schema.org/draft-04/schema#",
-	"$id": "https://example.com/product.schema.json",
-	"title": "Applications",
-	"description": "A list of applications to be installed/uninstalled on Windows",
-	"required": ["source"],
+	"$id": "https://example.com/packages.schema.json",
+	"title": "Applications / Packages",
+	"description": "A schema for defining applications or packages to install on Windows machine.",
+	"required": ["package_source"],
 	"type": "object",
 	"properties": {
-		"source": {
-			"description": "Source used to install/uninstall packages",
+		"environment_variables": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"required": ["value", "path", "command"],
+				"properties": {
+					"value": { "type": "string" },
+					"path": { "type": "string" },
+					"command": { "type": "string" }
+				},
+				"uniqueItems": true
+			}
+		},
+		"package_source": {
+			"description": "The source (command line) to get package from",
 			"type": "object",
 			"properties": {
 				"winget": {
-					"type": "array",
-					"items": {
-						"description": "List of WinGet Package Identifiers",
-						"type": "string"
-					},
-					"minItems": 1,
-					"uniqueItems": true
-				},
-				"scoop": {
 					"type": "object",
-					"items": {
-						"description": "List of Scoop Packages",
-						"type": "string"
-					},
+					"description": "Install applications using `winget` cli.",
 					"properties": {
-						"bucket": {
-							"type": "array",
-							"item": {
-								"description": "List of Scoop bucket to add/remove",
-								"type": "string"
-							}
+						"auto_install": {
+							"type": "boolean",
+							"description": "Whether or not automatically install `winget` cli and install packages from the list if it is not found."
 						},
-						"user": {
+						"packages": {
 							"type": "array",
-							"item": {
-								"description": "List of Scoop apps for User",
-								"type": "string",
-								"minItems": 1,
-								"uniqueItems": true
-							}
-						},
-						"global": {
-							"type": "array",
-							"item": {
-								"description": "List of Scoop apps for All Users",
-								"type": "string",
-								"minItems": 1,
-								"uniqueItems": true
-							}
+							"description": "List of winget packages' IDs to install.",
+							"uniqueItems": true
 						}
 					}
 				},
-				"modules": {
-					"type": "array",
-					"items": {
-						"description": "List of PowerShell Modules",
-						"type": "string"
-					},
-					"minItems": 1,
-					"uniqueItems": true
-				},
-				"gihub_extension": {
-					"type": "array",
-					"description": "List of gh-cli extensions",
-					"required": ["name", "repo"],
-					"items": {
-						"uniqueItems": true,
-						"anyof": [
-							{
-								"type": "object",
-								"properties": {
-									"name": {
-										"type": "string",
-										"description": "Name of the gh-cli extension"
-									},
-									"repo": {
-										"type": "string",
-										"description": "gh-cli extension's repository name in format OWNER/REPO"
-									}
-								}
-							}
-						]
+				"choco": {
+					"type": "object",
+					"description": "Install applications using `choco` cli: To add programs for developers which will be available for all users",
+					"properties": {
+						"auto_install": {
+							"type": "boolean",
+							"description": "Whether or not automatically install `choco` cli and install packages from the list if it is not found."
+						},
+						"packages": {
+							"type": "array",
+							"description": "List of choco packages' names to install.",
+							"uniqueItems": true
+						}
 					}
 				},
-				"nerdfont": {
-					"type": "array",
-					"description": "List of NerdFont fonts",
-					"required": ["display_name", "short_name"],
-					"items": {
-						"anyOf": [
-							{
-								"type": "object",
-								"properties": {
-									"display_name": {
-										"type": "string",
-										"description": "Full name of Nerd Font"
-									},
-									"short_name": {
-										"type": "string",
-										"description": "Name of Nerd Font of 'Invoke-NerdFontInstaller.ps1' script"
-									}
-								}
-							}
-						]
+				"scoop": {
+					"type": "object",
+					"description": "Install applications using `scoop` cli: To add packages which installed for current user.",
+					"required": ["auto_install", "packages"],
+					"properties": {
+						"auto_install": {
+							"type": "boolean",
+							"description": "Whether or not automatically install `scoop` cli and install packages from the list if it is not found."
+						},
+						"packages": {
+							"type": "array",
+							"description": "List of scoop packages' names to install.",
+							"uniqueItems": true
+						},
+						"buckets": {
+							"type": "array",
+							"description": "List of scoop buckets to add.",
+							"uniqueItems": true
+						}
 					}
 				}
-			},
-			"required": ["winget", "scoop", "modules"]
+			}
+		},
+		"package_plugins": {
+			"description": "Addons for installed packages",
+			"type": "array",
+			"items": {
+				"type": "object",
+				"required": ["invoke_command", "check_command", "plugins"],
+				"properties": {
+					"name": { "type": "string" },
+					"invoke_command": {
+						"type": "string",
+						"description": "Command to invoke to install an addon"
+					},
+					"check_command": {
+						"type": "string",
+						"description": "Command to if an addon is installed or not"
+					},
+					"install": {
+						"type": "boolean",
+						"description": "Whether or not to install provided plugins/extensions for application in the list"
+					},
+					"plugins": {
+						"type": "array",
+						"properties": {
+							"plugin_name": { "type": "string" },
+							"plugin_full_name": { "type": "string" },
+							"version": { "type": "string" }
+						},
+						"required": ["plugin_full_name", "install"]
+					}
+				},
+				"uniqueItems": true
+			}
+		},
+		"powershell_modules": {
+			"type": "object",
+			"description": "Powershell Core",
+			"uniqueItems": true,
+			"required": ["modules", "install"],
+			"properties": {
+				"install": {
+					"type": "boolean",
+					"description": "Whether or not to install powershell modules in provided list"
+				},
+				"modules": {
+					"type": "array",
+					"description": "List of powershell modules"
+				}
+			}
 		}
 	}
 }
