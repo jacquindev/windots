@@ -1,5 +1,5 @@
 [plugin]
-deps = [{ use = "yazi-rs/plugins:diff", rev = "a53d544" }, { use = "lpnh/fg", rev = "a7e1a82" }, { use = "yazi-rs/plugins:full-border", rev = "a53d544" }, { use = "yazi-rs/plugins:git", rev = "a53d544" }, { use = "yazi-rs/plugins:smart-filter", rev = "a53d544" }, { use = "Reledia/glow", rev = "388e847" }, { use = "imsi32/yatline-githead", rev = "a6377a8" }, { use = "imsi32/yatline", rev = "e255f5c" }]
+deps = [{ use = "yazi-rs/plugins:diff", rev = "600614a" }, { use = "lpnh/fg", rev = "9bba743" }, { use = "yazi-rs/plugins:full-border", rev = "600614a" }, { use = "yazi-rs/plugins:git", rev = "600614a" }, { use = "yazi-rs/plugins:smart-filter", rev = "600614a" }, { use = "Reledia/glow", rev = "5ce76dc" }, { use = "imsi32/yatline-githead", rev = "a6377a8" }, { use = "imsi32/yatline", rev = "9328205" }]
 
 [flavor]
-deps = [{ use = "dangooddd/kanagawa", rev = "b32f205" }, { use = "yazi-rs/flavors:catppuccin-mocha", rev = "c686812" }, { use = "yazi-rs/flavors:catppuccin-macchiato", rev = "c686812" }]
+deps = [{ use = "dangooddd/kanagawa", rev = "240194c" }, { use = "yazi-rs/flavors:catppuccin-mocha", rev = "fc8eeaa" }, { use = "yazi-rs/flavors:catppuccin-macchiato", rev = "fc8eeaa" }]
