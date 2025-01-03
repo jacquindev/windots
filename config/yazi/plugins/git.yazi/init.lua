@@ -154,10 +154,7 @@ local function setup(st, opts)
 	end, opts.order)
 end
 
-local function fetch(self, job)
-	-- TODO: remove this once Yazi 0.4 is released
-	job = job or self
-
+local function fetch(_, job)
 	local cwd = job.files[1].url:parent()
 	local repo = root(cwd)
 	if not repo then
@@ -178,7 +175,7 @@ local function fetch(self, job)
 		:stdout(Command.PIPED)
 		:output()
 	if not output then
-		ya.err("Cannot spawn git command, error code " .. tostring(err))
+		ya.err("Cannot spawn git command, error: " .. err)
 		return 0
 	end
 
