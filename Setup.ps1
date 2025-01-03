@@ -219,7 +219,9 @@ if (Get-Command ya -ErrorAction SilentlyContinue) {
 	ya pack -u >$null 2>&1
 }
 
+# Catppuccin Themes: https://github.com/catppuccin/catppuccin
 $catppuccinThemes = @('Frappe', 'Latte', 'Macchiato', 'Mocha')
+
 # add flowlauncher themes
 $flowLauncherDir = "$env:LOCALAPPDATA\FlowLauncher"
 if (Test-Path "$flowLauncherDir" -PathType Container) {
@@ -235,7 +237,8 @@ if (Test-Path "$flowLauncherDir" -PathType Container) {
 # add btop theme
 # since we install btop by scoop, then the application folder would be in scoop directory
 if (Get-Command btop -ErrorAction SilentlyContinue) {
-	$btopThemeDir = "$env:USERPROFILE\scoop\apps\btop\current\themes"
+	$scoopDir = (Get-Command scoop.ps1).Source | Split-Path | Split-Path
+	$btopThemeDir = "$scoopDir\apps\btop\current\themes"
 	$catppuccinThemes = $catppuccinThemes.ToLower()
 	$catppuccinThemes | ForEach-Object {
 		if (!(Test-Path "$btopThemeDir\catppuccin_$_.theme" -PathType Leaf)) {
@@ -332,7 +335,7 @@ if (Test-Path "C:\ProgramData\chocolatey\helpers\chocolateyProfile.psm1" -PathTy
 }
 
 
-''; Start-Sleep -Seconds 3; Set-Location $currentLocation
+''; Start-Sleep -Seconds 5; Set-Location $currentLocation
 
 Write-Host "┌────────────────────────────────────────────────────────────────────────────────┐" -ForegroundColor "Green"
 Write-Host "│                                                                                │" -ForegroundColor "Green"
