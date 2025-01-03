@@ -7,7 +7,7 @@ $OutputEncoding = [System.Text.Encoding]::UTF8
 
 # To communicate that real prompt is still loading while loading asynchronously
 function prompt {
-    "[async]::❯ "
+    "[async]::$(Get-Date -Format "HH:mm")$('❯' * ($nestedPromptLevel + 1)) "
 }
 
 # Environment Variables
@@ -29,7 +29,6 @@ if (Get-Command 'oh-my-posh' -ErrorAction SilentlyContinue) {
         oh-my-posh completion powershell | Out-String | Invoke-Expression
     } | Out-Null
 }
-
 
 # Posh Modules
 $PoshModules = @('powershell-yaml', 'Microsoft.PowerShell.SecretManagement', 'Microsoft.PowerShell.SecretStore', 'Terminal-Icons')
@@ -55,7 +54,9 @@ Remove-Variable function
 
 # chocolatey
 if (Get-Command choco -ErrorAction SilentlyContinue) {
-    Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
+    Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCount 1 -Action {
+        Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
+    } | Out-Null
 }
 
 # Source config files
@@ -70,9 +71,13 @@ foreach ($completion in $(Get-ChildItem -Path "$env:DOTPOSH\Config\posh-completi
 }
 Remove-Variable completion
 
-# Fast scoop search drop-in replacement 🚀
-# https://github.com/shilangyu/scoop-search
-Invoke-Expression (&scoop-search --hook)
+if (Get-Command scoop -ErrorAction SilentlyContinue) {
+    if ((scoop info scoop-search).Installed) {
+        # Fast scoop search drop-in replacement 🚀
+        # https://github.com/shilangyu/scoop-search
+        Invoke-Expression (&scoop-search --hook)
+    }
+}
 
 # yazi
 if (Get-Command yazi -ErrorAction SilentlyContinue) {
