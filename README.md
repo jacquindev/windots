@@ -92,7 +92,7 @@ cd `your_location`
 > [!NOTE]<br/>
 > Before running the `Setup.ps1` script, please check the **[appList.json](./appList.json)** file to **ADD/REMOVE** the apps you would like to install.<br/>
 > <br/>
-> <u><b><i>VSCode Extensions:</i></b></u><br/>
+> <b><i><ins>VSCode Extensions:</ins></i></b><br/>
 > Edit the **[extensions list](./vscode/extensions.list)** to **ADD/REMOVE** the extensions you would like to install.
 
 <br>
