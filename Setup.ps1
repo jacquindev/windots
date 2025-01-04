@@ -183,7 +183,7 @@ foreach ($env in $envVars) {
 if (Test-Path "C:\ProgramData\chocolatey\helpers\chocolateyProfile.psm1" -PathType Leaf) {
 	Import-Module "C:\ProgramData\chocolatey\helpers\chocolateyProfile.psm1"
 	refreshenv | Out-Null
-	if ($LASTEXITCODE -eq 0) { ''; Write-Host -ErrorAction Stop "Refreshed environment variables from the registry. (1st try)" }
+	if ($LASTEXITCODE -eq 0) { ''; Write-Output "Refreshed environment variables from the registry. (1st try)" }
 }
 
 # reload git
@@ -331,7 +331,7 @@ if (Get-Command yasb -ErrorAction SilentlyContinue) {
 if (Test-Path "C:\ProgramData\chocolatey\helpers\chocolateyProfile.psm1" -PathType Leaf) {
 	Import-Module "C:\ProgramData\chocolatey\helpers\chocolateyProfile.psm1"
 	refreshenv | Out-Null
-	if ($LASTEXITCODE -eq 0) { ''; Write-Host -ErrorAction Stop "Refreshed environment variables from the registry. (2st try)" }
+	if ($LASTEXITCODE -eq 0) { ''; Write-Output "Refreshed environment variables from the registry. (2st try)" }
 }
 
 
