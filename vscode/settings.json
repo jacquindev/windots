@@ -194,13 +194,6 @@
 	"code-runner.saveFileBeforeRun": true,
 	"code-runner.showExecutionMessage": false,
 
-	// polacode settings
-	"polacode.transparentBackground": true,
-	"polacode.target": "snippet",
-
-	// tabnine
-	"tabnine.experimentalAutoImports": true,
-
 	// shellcheck
 	"shellcheck.enable": true,
 	"shellcheck.enableQuickFix": true,
@@ -277,11 +270,9 @@
 	],
 
 	// per language settings
-	"[plaintext]": { "files.insertFinalNewline": false },
-	"[shellscript]": { "editor.defaultFormatter": "foxundermoon.shell-format" },
-	"[lua]": { "editor.defaultFormatter": "sumneko.lua" },
-	"[log]": { "editor.largeFileOptimizations": false },
-	"[github-issues]": { "editor.wordWrap": "on" },
+	"[log]": {
+		"editor.largeFileOptimizations": false
+	},
 
 	// css
 	"[css]": {
@@ -330,7 +321,6 @@
 	"typescript.experimental.expandableHover": true,
 	"typescript.preferences.importModuleSpecifier": "relative",
 	"typescript.preferences.quoteStyle": "single",
-	"typescript.tsdk": "./node_modules/typescript/lib",
 	"[typescriptreact]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode",
 		"editor.formatOnSave": true
