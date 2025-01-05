@@ -182,8 +182,8 @@ Add-Alias profiles 'Get-PSProfile {$_.exists -eq "True"} | Format-List'
 Add-Alias HKLM: 'Set-Location HKLM:'
 Add-Alias HKCU: 'Set-Location HKCU:'
 
-# List NPM Global Packages
-Add-Alias npm-list '([string]::join(" ", ((npm ls -g --depth=0) | select -skip 1 | select -skiplast 1 | % { $_.remove(0,4) }))).Replace(" ","`r`n")'
-
-# Use VBoxManage without adding it to PATH
-# Add-Alias vboxmanage '&"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" $args'
+# List NPM (NodeJS) Global Packages
+# To export global packages to a file, for-example: `npm-ls > global_packages.txt`
+Add-Alias npm-ls '(npm ls -g | Select-Object -skip 1).Trim().Split() | ForEach-Object { if ($_ -match [regex]::Escape("@")) { Write-Output $_ } };'
+Add-Alias bun-ls '(bun pm ls -g | Select-Object -Skip 1).Trim().Split() | ForEach-Object { if ($_ -match [regex]::Escape("@")) { Write-Output $_ } };'
+Add-Alias pnpm-ls '(pnpm ls -g | Select-Object -Skip 5) | ForEach-Object { $name = $_.Split()[0]; $version = $_.Split()[1]; Write-Output "$name@$version" };'
