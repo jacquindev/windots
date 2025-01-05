@@ -14,7 +14,6 @@
 			"auto_install": true,
 			"packages": [
 				"AmN.yasb",
-				"BeyondCode.Herd", // php, laravel, composer, herd, and nodejs (all-in-one!)
 				"chrisant996.Clink",
 				"Flow-Launcher.Flow-Launcher",
 				"gerardog.gsudo",
@@ -30,13 +29,18 @@
 				"Microsoft.PowerShell",
 				"Microsoft.VisualStudio.2022.Community",
 				"Microsoft.VisualStudioCode",
-				"MongoDB.Compass.Full",
 				"Obsidian.Obsidian",
 				"Oracle.VirtualBox",
 				"Postman.Postman",
 				"Rainmeter.Rainmeter",
 				"rocksdanister.LivelyWallpaper",
 				"Stardock.Start11"
+			],
+			"additional_args": [
+				"--exact",
+				"--silent",
+				"--accept-package-agreements",
+				"--accept-source-agreements"
 			]
 		},
 		"choco": {
@@ -47,11 +51,15 @@
 				"openjdk",
 				"rabbitmq",
 				"terraform"
+			],
+			"additional_args": [
+				"--allow-downgrade",
+				"-y"
 			]
 		},
 		"scoop": {
 			"auto_install": true,
-			"buckets": ["extras", "sysinternals"],
+			"buckets": ["extras", "sysinternals", "versions"],
 			"packages": [
 				"aria2",
 				"bat",
@@ -82,41 +90,43 @@
 				"speedtest-cli",
 				"spicetify-cli",
 				"spotify-tui",
+				"starship",
 				"symfony-cli",
 				"wget",
 				"wixtoolset",
 				"yazi",
 				"zoxide"
-			]
+			],
+			"additional_args": []
 		}
 	},
 	"package_plugins": [
+		// You can add extra plugins/extensions/addons list here with the following format:
 		{
-			"name": "gh",
+			"command_name": "gh",
 			"invoke_command": "gh extension install",
 			"check_command": "gh extension list",
 			"plugins": [
-				{ "plugin_name": "gh-dash", "plugin_full_name": "dlvhdr/gh-dash", "version": "4.7.3" },
-				{ "plugin_name": "gh-license", "plugin_full_name": "Shresht7/gh-license", "version": "0.3.0" },
-				{ "plugin_name": "gh-download", "plugin_full_name": "yuler/gh-download", "version": "0.6.1" },
-				{ "plugin_name": "gh-poi", "plugin_full_name": "seachicken/gh-poi", "version": "0.12.0" },
-				{ "plugin_name": "gh-token", "plugin_full_name": "Link-/gh-token", "version": "2.0.2" },
-				{ "plugin_name": "gh-markdown-preview", "plugin_full_name": "yusukebe/gh-markdown-preview", "version": "1.8.0" }
+				"dlvhdr/gh-dash",
+				"Shresht7/gh-license",
+				"yuler/gh-download",
+				"seachicken/gh-poi",
+				"Link-/gh-token",
+				"yusukebe/gh-markdown-preview"
 			],
 			"install": true
 		},
 		{
-			"name": "bun", // I use bun instead of npm, pnpm, or yarn since it's faster (required `bun` installed)
+			"command_name": "bun", // I use bun instead of npm, pnpm, or yarn since it's faster (required `bun` installed)
 			"invoke_command": "bun add -g",
 			"check_command": "bun pm ls -g",
 			"plugins": [
-				{ "plugin_name": "", "plugin_full_name": "@angular/cli", "version": "" },
-				{ "plugin_name": "", "plugin_full_name": "commitizen", "version": "" },
-				{ "plugin_name": "", "plugin_full_name": "cz-git", "version": "" },
-				{ "plugin_name": "", "plugin_full_name": "degit", "version": "" },
-				{ "plugin_name": "", "plugin_full_name": "git-open", "version": "" },
-				{ "plugin_name": "", "plugin_full_name": "recent", "version": "" },
-				{ "plugin_name": "", "plugin_full_name": "newman", "version": "" }
+				"@angular/cli",
+				"commitizen",
+				"cz-git",
+				"degit",
+				"git-open",
+				"newman"
 			],
 			"install": true
 		}
@@ -135,6 +145,12 @@
 			"PSToml",
 			"Terminal-Icons",
 			"yarn-completion"
+		],
+		"additional_args": [
+			"-Scope",
+			"CurrentUser",
+			"-Force",
+			"-AllowClobber"
 		]
 	}
 }
