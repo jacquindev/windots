@@ -132,6 +132,10 @@
 				"modules": {
 					"type": "array",
 					"description": "List of powershell modules"
+				},
+				"additional_args": {
+					"type": "array",
+					"description": "Additional args for `Install-Module [module name]`"
 				}
 			}
 		}
