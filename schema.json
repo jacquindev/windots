@@ -22,10 +22,12 @@
 		"package_source": {
 			"description": "The source (command line) to get package from",
 			"type": "object",
+			"required": ["winget", "scoop", "choco"],
 			"properties": {
 				"winget": {
 					"type": "object",
 					"description": "Install applications using `winget` cli.",
+					"required": ["auto_install", "packages"],
 					"properties": {
 						"auto_install": {
 							"type": "boolean",
@@ -35,12 +37,17 @@
 							"type": "array",
 							"description": "List of winget packages' IDs to install.",
 							"uniqueItems": true
+						},
+						"additional_args": {
+							"type": "array",
+							"description": "Additional args for `winget install [package]`"
 						}
 					}
 				},
 				"choco": {
 					"type": "object",
 					"description": "Install applications using `choco` cli: To add programs for developers which will be available for all users",
+					"required": ["auto_install", "packages"],
 					"properties": {
 						"auto_install": {
 							"type": "boolean",
@@ -50,13 +57,17 @@
 							"type": "array",
 							"description": "List of choco packages' names to install.",
 							"uniqueItems": true
+						},
+						"additional_args": {
+							"type": "array",
+							"description": "Additional args for `choco install [package]`"
 						}
 					}
 				},
 				"scoop": {
 					"type": "object",
 					"description": "Install applications using `scoop` cli: To add packages which installed for current user.",
-					"required": ["auto_install", "packages"],
+					"required": ["auto_install", "packages", "buckets"],
 					"properties": {
 						"auto_install": {
 							"type": "boolean",
@@ -71,6 +82,10 @@
 							"type": "array",
 							"description": "List of scoop buckets to add.",
 							"uniqueItems": true
+						},
+						"additional_args": {
+							"type": "array",
+							"description": "Additional args for `scoop install [package]`"
 						}
 					}
 				}
@@ -81,7 +96,7 @@
 			"type": "array",
 			"items": {
 				"type": "object",
-				"required": ["invoke_command", "check_command", "plugins"],
+				"required": ["command_name", "invoke_command", "check_command", "plugins", "install"],
 				"properties": {
 					"name": { "type": "string" },
 					"invoke_command": {
@@ -98,12 +113,7 @@
 					},
 					"plugins": {
 						"type": "array",
-						"properties": {
-							"plugin_name": { "type": "string" },
-							"plugin_full_name": { "type": "string" },
-							"version": { "type": "string" }
-						},
-						"required": ["plugin_full_name", "install"]
+						"uniqueItems": true
 					}
 				},
 				"uniqueItems": true
