@@ -1,13 +1,38 @@
 ﻿#requires -Version 7
 #requires -RunAsAdministrator
 
-''; Write-Host "Start setup process..." -ForegroundColor DarkGray
+$VerbosePreference = "SilentlyContinue"
+
+Write-Host "Start setup process..." -ForegroundColor Blue
 $currentLocation = "$($(Get-Location).Path)"
+
+function Refresh ([int]$Time) {
+	if (Get-Command choco -ErrorAction SilentlyContinue) {
+
+		switch -regex ($Time.ToString()) {
+			'1(1|2|3)$' { $suffix = 'th'; break }
+			'.?1$' { $suffix = 'st'; break }
+			'.?2$' { $suffix = 'nd'; break }
+			'.?3$' { $suffix = 'rd'; break }
+			default { $suffix = 'th'; break }
+		}
+
+		if (!(Get-Module -ListAvailable -Name "chocoProfile" -ErrorAction SilentlyContinue)) {
+			$chocoModule = "C:\ProgramData\chocolatey\helpers\chocolateyProfile.psm1"
+			if (Test-Path $chocoModule -PathType Leaf) {
+				Import-Module $chocoModule
+			}
+		}
+		Write-Verbose -Message "Refreshing environment variables from registry ($Time$suffix attempt)"
+		refreshenv | Out-Null
+	}
+}
 
 # set current working directory location
 Set-Location $PSScriptRoot
 [System.Environment]::CurrentDirectory = $PSScriptRoot
 
+$i = 1
 # symlinks
 $symlinks = @{
 	$PROFILE.CurrentUserAllHosts                                                                  = ".\Profile.ps1"
@@ -40,114 +65,49 @@ $json = Get-Content "$PSScriptRoot\appList.json" -Raw | ConvertFrom-Json
 
 $wingetItem = $json.package_source.winget
 $wingetPkgs = $wingetItem.packages
+$wingetArgs = $wingetItem.additional_args
 $wingetInstall = $wingetItem.auto_install
 
 $scoopItem = $json.package_source.scoop
 $scoopBuckets = $scoopItem.buckets
 $scoopPkgs = $scoopItem.packages
+$scoopArgs = $scoopItem.additional_args
 $scoopInstall = $scoopItem.auto_install
 
 $chocoItem = $json.package_source.choco
 $chocoPkgs = $chocoItem.packages
+$chocoArgs = $chocoItem.additional_args
 $chocoInstall = $chocoItem.auto_install
 
 $moduleItem = $json.powershell_modules
 $moduleList = $moduleItem.modules
+$moduleArgs = $moduleItem.additional_args
 $moduleInstall = $moduleItem.install
 
-# Apps installation
-$totalPkgs = @()
-switch ($true) {
-	{ $wingetInstall } {
-		$wingetExists = Get-Command winget -ErrorAction SilentlyContinue
-		if (!$wingetExists) {
-			&([ScriptBlock]::Create((Invoke-RestMethod asheroto.com/winget))) -Force
-		}
-		$totalPkgs += $wingetPkgs
-	}
-	{ $scoopInstall } {
-		$scoopExists = Get-Command scoop -ErrorAction SilentlyContinue
-		if (!$scoopExists) {
-			# follow https://github.com/ScoopInstaller/Install#for-admin
-			Invoke-Expression "& {$(Invoke-RestMethod get.scoop.sh)} -RunAsAdmin"
-		}
-		$totalPkgs += $scoopPkgs + $scoopBuckets
-	}
-	{ $chocoInstall } {
-		$chocoExists = Get-Command choco -ErrorAction SilentlyContinue
-		if (!$chocoExists) {
-			# instructions on: https://chocolatey.org/install
-			Set-ExecutionPolicy Bypass -Scope Process -Force
-			[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-			Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-		}
-		$totalPkgs += $chocoPkgs
-	}
-	{ $moduleInstall } { $totalPkgs += $moduleList }
-}
+if ($wingetArgs.Count -ge 1) { $wingetArgs = $wingetArgs -join ' ' } else { $wingetArgs = $null }
+if ($scoopArgs.Count -ge 1) { $scoopArgs = $scoopArgs -join ' ' } else { $scoopArgs = $null }
+if ($chocoArgs.Count -ge 1) { $chocoArgs = $chocoArgs -join ' ' } else { $chocoArgs = $null }
+if ($moduleArgs.Count -ge 1) { $moduleArgs = $moduleArgs -join ' ' } else { $moduleArgs = $null }
 
-$i = 1
-$totalCount = $totalPkgs.Count
-foreach ($pkg in $totalPkgs) {
-	switch ($true) {
-		{ $pkg -in $wingetPkgs } {
-			if (!(winget list --exact --accept-source-agreements -q "$pkg" | Select-String "$pkg")) {
-				try {	winget install --exact --silent --accept-package-agreements --accept-source-agreements "$pkg" --source winget > $null 2>&1 }
-				catch {	Write-Error -ErrorAction Stop "An error occurred while installing $pkg"	}
-			}
-		}
+$tasks = @()
 
-		{ $pkg -in $scoopBuckets } {
-			$bucketPath = "$HOME\scoop\buckets"
-			if (!(Test-Path "$bucketPath\$pkg" -PathType Container)) {
-				try {	scoop bucket add $pkg >$null 2>&1 }
-				catch { Write-Error -ErrorAction Stop "An error occurred while adding $pkg" }
-			}
-		}
-		{ $pkg -in $scoopPkgs } {
-			if (!(scoop info $pkg).Installed) {
-				try { scoop install $pkg >$null 2>&1	}
-				catch { Write-Error -ErrorAction Stop "An error occurred while installing $pkg" }
-			}
-		}
-
-		# Chocolatey packages
-		{ $pkg -in $chocoPkgs } {
-			if (!(choco list | Select-String "$pkg")) {
-				try {	choco install $pkg -y >$null 2>&1	}
-				catch { Write-Error -ErrorAction Stop "An error occurred while installing $pkg" }
-			}
-		}
-
-		{ $pkg -in $moduleList } {
-			if (!(Get-Module -ListAvailable -Name $pkg -ErrorAction SilentlyContinue)) {
-				try {	Install-Module -Name $pkg -Scope CurrentUser -AllowClobber -Force }
-				catch { Write-Error -ErrorAction Stop "An error occurred while installing module $pkg" }
-			}
-		}
-	}
-
-	[int]$percent = ($i / $totalCount) * 100
-	Write-Progress -Activity "Installing packages" -Status "$percent% Complete: $pkg" -PercentComplete $percent
-	$i++
-}
-
-# setup git
 if (Get-Command git -ErrorAction SilentlyContinue) {
 	$gitUserName = (git config --global user.name)
 	$gitUserMail = (git config --global user.email)
 
-	if ($null -eq $gitUserName) { $gitUserName = $(Write-Host "Input your git name: " -NoNewline -ForegroundColor Green; Read-Host) }
-	if ($null -eq $gitUserMail) { $gitUserMail = $(Write-Host "Input your git email: " -NoNewline -ForegroundColor Green; Read-Host) }
+	if ($null -eq $gitUserName) { $gitUserName = $(Write-Host "Input your git name: " -NoNewline -ForegroundColor Magenta; Read-Host) }
+	if ($null -eq $gitUserMail) { $gitUserMail = $(Write-Host "Input your git email: " -NoNewline -ForegroundColor Magenta; Read-Host) }
+
+	git submodule update --init --recursive
 }
 
 if (Get-Command gh -ErrorAction SilentlyContinue) {
-	if (!(Test-Path "$env:APPDATA\GitHub CLI\hosts.yml")) { gh auth login }
+	if (!(gh auth status)) { gh auth login }
 }
 
 # install nerd fonts
 ''
-Write-Host "The following fonts are highly recommended: " -ForegroundColor Green -NoNewline
+Write-Host "The following fonts are highly recommended: " -ForegroundColor Green
 Write-Host "(Please skip this step if you already installed Nerd Fonts)" -ForegroundColor DarkGray
 Write-Output "  ● Cascadia Code Nerd Font"
 Write-Output "  ● FantasqueSansM Nerd Font"
@@ -156,72 +116,176 @@ Write-Output "  ● JetBrainsMono Nerd Font"
 ''
 $installNerdFonts = $(Write-Host "[RECOMMENDED] Install NerdFont now? (Y/n): " -NoNewline -ForegroundColor Magenta; Read-Host)
 if ($installNerdFonts.ToUpper() -eq 'Y') {
-	& ([scriptblock]::Create((Invoke-WebRequest 'https://to.loredo.me/Install-NerdFont.ps1'))) -Scope AllUsers
+	& ([scriptblock]::Create((Invoke-WebRequest 'https://to.loredo.me/Install-NerdFont.ps1'))) -Scope AllUsers -Confirm:$False
+	Refresh ($i++)
+} else { Write-Host "Skipped installing Nerd Fonts" -ForegroundColor DarkGray; '' }
+
+if (!(Get-Command nvm -ErrorAction SilentlyContinue)) {
+	$installNvm = $(Write-Host "Install NVM? (Y/n) " -ForegroundColor Magenta -NoNewline; Read-Host)
+	if ($installNvm.ToUpper() -eq 'Y') {
+		$repo = "coreybutler/nvm-windows"
+		$file = "nvm-setup.exe"
+		$releases = "https://api.github.com/repos/$repo/releases"
+		$tag = (Invoke-WebRequest $releases | ConvertFrom-Json)[0].tag_name
+		$downloadUrl = "https://github.com/$repo/releases/download/$tag/$file"
+		$downloadPath = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path
+
+		Write-Verbose -Message "Downloading nvm-setup.exe from $downloadUrl"
+		$downloadPath = "$downloadPath\$file"
+		(New-Object System.Net.Client).DownloadFile($downloadUrl, $downloadPath)
+		Start-Process -FilePath "$downloadPath"
+	}
+}
+
+if (Get-Command nvm -ErrorAction SilentlyContinue) {
+	if (!(Get-Command node -ErrorAction SilentlyContinue)) {
+		$tasks += "nvm install lts"
+		$tasks += "nvm use lts"
+		$tasks += "corepack prepare --activate pnpm@latest"
+		$tasks += "corepack prepare --activate yarn@latest"
+		$tasks += "corepack enable"
+	}
+	if (!(Get-Command bun -ErrorAction SilentlyContinue)) {
+		$useBun = $(Write-Host "Install 'bun'? (Y/n): " -ForegroundColor Magenta -NoNewline; Read-Host)
+		if ($useBun.ToUpper() -eq 'Y') { $tasks += "pnpm add -g bun" }
+	}
 }
 
 # add symlinks
 foreach ($symlink in $symlinks.GetEnumerator()) {
+	Write-Verbose -Message "Creating symlink for $(Resolve-Path $symlink.Value) --> $($symlink.Key)"
 	Get-Item -Path $symlink.Key -ErrorAction SilentlyContinue | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
 	New-Item -ItemType SymbolicLink -Path $symlink.Key -Target (Resolve-Path $symlink.Value) -Force | Out-Null
 }
 
-# environment variables
-foreach ($env in $envVars) {
-	$envVarCmd = $env.command
-	$envVarValue = $env.value
-	$envVarPath = $env.path
-
-	if (Get-Command $envVarCmd -ErrorAction SilentlyContinue) {
-		if (!([System.Environment]::GetEnvironmentVariable("$envVarValue"))) {
-			[System.Environment]::SetEnvironmentVariable("$envVarValue", "$envVarPath", "User")
-			if ($LASTEXITCODE -ne 0) { Write-Error -ErrorAction Stop "An error occurred while creating environment variable with value $envVarValue" }
+# add environment variables
+$envVar = $json.environment_variables
+foreach ($env in $envVar) {
+	if (Get-Command $($env.command) -ErrorAction SilentlyContinue) {
+		if (!([System.Environment]::GetEnvironmentVariable("$($env.value)"))) {
+			Write-Verbose -Message "Setting up environment variable for $($env.value) --> $($env.path)"
+			[System.Environment]::SetEnvironmentVariable("$($env.value)", "$($env.path)", "User")
+			if ($LASTEXITCODE -ne 0) { Write-Error -ErrorAction Stop "An error occurred while creating environment variable with value $($env.value)" }
 		}
 	}
 }
 
-# refresh environment (from chocolatey)
-if (Test-Path "C:\ProgramData\chocolatey\helpers\chocolateyProfile.psm1" -PathType Leaf) {
-	Import-Module "C:\ProgramData\chocolatey\helpers\chocolateyProfile.psm1"
-	refreshenv | Out-Null
-	if ($LASTEXITCODE -eq 0) { ''; Write-Output "Refreshed environment variables from the registry. (1st try)" }
-}
-
-# reload git
-if (Get-Command git -ErrorAction SilentlyContinue) {
-	git submodule update --init --recursive
-	git config --global --unset user.email >$null 2>&1
-	git config --global --unset user.name >$null 2>&1
-	git config --global user.name $gitUserName >$null 2>&1
-	git config --global user.email $gitUserMail >$null 2>&1
-}
-
-# install nodejs & bun
-if ((Get-Command nvm -ErrorAction SilentlyContinue)) {
-	if (!(Get-Command node -ErrorAction SilentlyContinue)) {
-		nvm install lts >$null 2>&1
-		nvm use lts
+$totalPkgs = @()
+switch ($True) {
+	($wingetInstall -eq $True) {
+		if (!(Get-Command winget -ErrorAction SilentlyContinue)) {
+			# https://github.com/asheroto/winget-install
+			Write-Verbose -Message "Installing winget-cli"
+			&([ScriptBlock]::Create((Invoke-RestMethod asheroto.com/winget))) -Force
+		}
+		$totalPkgs += $wingetPkgs
 	}
-	if (!(Get-Command bun -ErrorAction SilentlyContinue)) {
-		$useBun = $(Write-Host "Install 'bun'? (Y/n): " -ForegroundColor Magenta -NoNewline; Read-Host)
-		if ($useBun.ToUpper() -eq 'Y') { npm install -g bun }
+	($chocoInstall -eq $True) {
+		if (!(Get-Command choco -ErrorAction SilentlyContinue)) {
+			# https://chocolatey.org/install
+			Write-Verbose -Message "Installing chocolatey"
+			Set-ExecutionPolicy Bypass -Scope Process -Force
+			[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+			Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+		}
+		$totalPkgs += $chocoPkgs
+	}
+	($scoopInstall -eq $True) {
+		if (!(Get-Command scoop -ErrorAction SilentlyContinue)) {
+			# follow https://github.com/ScoopInstaller/Install#for-admin
+			Write-Verbose -Message "Installing scoop for admin https://github.com/ScoopInstaller/Install#for-admin"
+			Invoke-Expression "& {$(Invoke-RestMethod get.scoop.sh)} -RunAsAdmin"
+		}
+		$totalPkgs += $scoopBuckets + $scoopPkgs
+	}
+	($moduleInstall -eq $True) {	$totalPkgs += $moduleList }
+	Default { continue }
+}
+
+foreach ($pkg in $totalPkgs) {
+	switch ($True) {
+		($pkg -in $wingetPkgs) {
+			if (!(winget list --exact --accept-source-agreements -q "$pkg" | Select-String "$pkg")) {
+				if ($null -ne $wingetArgs) { $tasks += "winget install $wingetArgs $pkg --source winget" }
+				else { $tasks += "winget install $pkg --source winget" }
+			}
+			break
+		}
+		($pkg -in $chocoPkgs) {
+			if (!(choco list | Select-String "$pkg")) {
+				if ($null -ne $chocoArgs) { $tasks += "choco install $pkg $chocoArgs" }
+				else { $tasks += "choco install $pkg" }
+			}
+		}
+		($pkg -in $scoopBuckets) {
+			if ($scoopBuckets.Count -ge 1) {
+				$scoopDir = (Get-Command scoop.ps1 -ErrorAction SilentlyContinue).Source | Split-Path | Split-Path
+				if (!(Test-Path "$scoopDir\buckets\$pkg" -PathType Container)) {
+					$tasks += "scoop bucket add $pkg"
+				}
+			}
+		}
+		($pkg -in $scoopPkgs) {
+			if (!(scoop info $pkg).Installed) {
+				if ($null -ne $scoopArgs) { $tasks += "scoop install $pkg $scoopArgs" }
+				else { $tasks += "scoop install $pkg" }
+			}
+		}
+		($pkg -in $moduleList) {
+			if (!(Get-InstalledModule -Name $pkg -ErrorAction SilentlyContinue)) {
+				if ($null -ne $moduleArgs) { $tasks += "Install-Module $pkg $moduleArgs" }
+				else { $tasks += "Install-Module $pkg" }
+			}
+		}
+		Default { continue }
 	}
 }
 
-# reload bat configuration
+$pluginItems = $json.package_plugins
+foreach ($plugin in $pluginItems) {
+	$p = [PSCustomObject]@{
+		CommandName   = $plugin.command_name
+		InvokeCommand = $plugin.invoke_command
+		CheckCommand  = $plugin.check_command
+		List          = [array]$plugin.plugins
+		InstallOrNot  = $plugin.install
+	}
+
+	if ($p.InstallOrNot -eq $True) {
+		if (Get-Command "$($p.CommandName)" -ErrorAction SilentlyContinue) {
+			foreach ($pg in $($p.List)) {
+				if (!(Invoke-Expression "$($p.CheckCommand)" | Select-String "$pg")) {
+					$tasks += "$($p.InvokeCommand) $pg"
+				}
+			}
+		}
+	}
+}
+
+if (Get-Command code -ErrorAction SilentlyContinue) {
+	$extensionList = Get-Content "$PSScriptRoot\vscode\extensions.list"
+	foreach ($ext in $extensionList) {
+		if (!(code --list-extensions | Select-String "$ext")) {
+			Write-Verbose -Message "Installing VSCode Extension: $ext"
+			$tasks += "code --install-extension $ext"
+		}
+	}
+}
+
+if (Get-Command spicetify -ErrorAction SilentlyContinue) {
+	if (!(Test-Path "$env:APPDATA\spicetify\CustomApps\marketplace")) {
+		$marketplaceInstallUrl = "https://raw.githubusercontent.com/spicetify/spicetify-marketplace/main/resources/install.ps1"
+		$tasks += "Invoke-WebRequest -UseBasicParsing $marketplaceInstallUrl"
+	}
+}
+
 if (Get-Command bat -ErrorAction SilentlyContinue) {
-	bat cache --clear >$null 2>&1
-	bat cache --build >$null 2>&1
-}
-
-# yazi plugins
-if (Get-Command ya -ErrorAction SilentlyContinue) {
-	ya pack -i >$null 2>&1
-	ya pack -u >$null 2>&1
+	$tasks += "bat cache --clear"
+	$tasks += "bat cache --build"
 }
 
 # Catppuccin Themes: https://github.com/catppuccin/catppuccin
 $catppuccinThemes = @('Frappe', 'Latte', 'Macchiato', 'Mocha')
-
 # add flowlauncher themes
 $flowLauncherDir = "$env:LOCALAPPDATA\FlowLauncher"
 if (Test-Path "$flowLauncherDir" -PathType Container) {
@@ -229,11 +293,10 @@ if (Test-Path "$flowLauncherDir" -PathType Container) {
 	$catppuccinThemes | ForEach-Object {
 		if (!(Test-Path "$flowLauncherThemeDir\Catppuccin $_.xaml" -PathType Leaf)) {
 			$flowLauncherThemeUrl = "https://raw.githubusercontent.com/catppuccin/flow-launcher/refs/heads/main/themes/Catppuccin%20$_.xaml"
-			Invoke-WebRequest -Uri "$flowLauncherThemeUrl" -OutFile "$flowLauncherThemeDir"
+			$tasks += Invoke-WebRequest -Uri $flowLauncherThemeUrl -OutFile $flowLauncherThemeDir
 		}
 	}
 }
-
 # add btop theme
 # since we install btop by scoop, then the application folder would be in scoop directory
 if (Get-Command btop -ErrorAction SilentlyContinue) {
@@ -243,100 +306,71 @@ if (Get-Command btop -ErrorAction SilentlyContinue) {
 	$catppuccinThemes | ForEach-Object {
 		if (!(Test-Path "$btopThemeDir\catppuccin_$_.theme" -PathType Leaf)) {
 			$btopThemeUrl = "https://raw.githubusercontent.com/catppuccin/btop/refs/heads/main/themes/catppuccin_$_.theme"
-			Invoke-WebRequest -Uri "$btopThemeUrl" -OutFile "$btopThemeDir"
+			$tasks += "Invoke-WebRequest -Uri $btopThemeUrl -OutFile $btopThemeDir"
 		}
 	}
-}
-
-# add-ons
-$pluginItems = $json.package_plugins
-foreach ($plugin in $pluginItems) {
-	$p = [PSCustomObject]@{
-		CommandName   = $plugin.name
-		InvokeCommand = $plugin.invoke_command
-		CheckCommand  = $plugin.check_command
-		List          = [array]$plugin.plugins.plugin_full_name
-		InstallOrNot  = $plugin.install
-	}
-
-	if ($p.InstallOrNot -eq $True) {
-		if (!(Get-Command $($p.CommandName) -ErrorAction SilentlyContinue)) {
-			Write-Warning "Command not found: $($p.CommandName). Please install to continue."; return
-		}
-
-		foreach ($plug in $($p.List)) {
-			if (!(Invoke-Expression "$($p.CheckCommand)" | Select-String "$plug")) {
-				Invoke-Expression "$($p.InvokeCommand) $plug"
-				if ($LASTEXITCODE -ne 0) { Write-Error -Entry1 "$plug" -Text "is unable to install." }
-			}
-		}
-	}
-}
-
-# add spicetify marketplace for spotify
-if (Get-Command spicetify -ErrorAction SilentlyContinue) {
-	if (!(Test-Path "$env:APPDATA\spicetify\CustomApps\marketplace")) {
-		for ($i = 1; $i -le 100; $i++) {
-			Write-Progress -Activity "Installing spicetify marketplace" -Status "$i% Complete:" -PercentComplete $i
-			Invoke-WebRequest -UseBasicParsing "https://raw.githubusercontent.com/spicetify/spicetify-marketplace/main/resources/install.ps1" | Invoke-Expression | Out-Null
-			if ($LASTEXITCODE -ne 0) { Write-Error -ErrorAction Stop "An error occurred while installing spicetify's marketplace." }
-		}
-	}
-}
-
-# vscode extensions
-if (Get-Command code -ErrorAction SilentlyContinue) {
-	$extensionList = Get-Content "$PSScriptRoot\vscode\extensions.list"
-	$e = 1
-	$extCount = $extensionList.Count
-	foreach ($ext in $extensionList) {
-		if (!(code --list-extensions | Select-String "$ext")) {
-			code --install-extension $ext >$null 2>&1
-			if ($LASTEXITCODE -ne 0) { Write-Error -ErrorAction Stop "An error occurred while install vscode's extension $ext." }
-		}
-		[int]$epercent = ($e / $extCount) * 100
-		Write-Progress -Activity "Installing VS Code extensions" -Status "$epercent% Complete: $ext" -PercentComplete $epercent
-		$e++
-	}
-}
-
-# wsl enable
-if ((Get-WindowsOptionalFeature -Online | Where-Object { $_.FeatureName -eq "Microsoft-Windows-Subsystem-Linux" }).State -eq "Disabled") {
-	Enable-WindowsOptionalFeature -Online -FeatureName "Microsoft-Windows-Subsystem-Linux" -All -NoRestart
-}
-if ((Get-WindowsOptionalFeature -Online | Where-Object { $_.FeatureName -eq "VirtualMachinePlatform" }).State -eq "Disabled") {
-	Enable-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform" -All -NoRestart
 }
 
 # start komorebi
 if (Get-Command komorebic -ErrorAction SilentlyContinue) {
-	if (!(Get-Process -Name komorebi -ErrorAction SilentlyContinue)) {
-		& komorebic start --whkd >$null 2>&1
-		if ($LASTEXITCODE -ne 0) { Write-Error -ErrorAction Stop "An error occurred while starting komorebi with whkd." }
+	if ((!(Get-Process -Name komorebi -ErrorAction SilentlyContinue)) -and (!(Get-Process -Name whkd -ErrorAction SilentlyContinue))) {
+		$tasks += "komorebic start --whkd"
 	}
 }
 
-# start yasb
+# start yasn
 if (Get-Command yasb -ErrorAction SilentlyContinue) {
 	if (!(Get-Process -Name yasb -ErrorAction SilentlyContinue)) {
 		$yasbPath = "$Env:ProgramFiles\Yasb\yasb.exe"
-		if (Test-Path -Path "$yasbPath") {
-			Start-Process -FilePath $yasbPath > $null 2>&1
-			if ($LASTEXITCODE -ne 0) { Write-Error -ErrorAction Stop "An error occurred while starting YASB." }
-		}
+		if (Test-Path -Path "$yasbPath") { $tasks += "Start-Process -FilePath $yasbPath" }
 	}
 }
 
-# refresh environment (from chocolatey)
-if (Test-Path "C:\ProgramData\chocolatey\helpers\chocolateyProfile.psm1" -PathType Leaf) {
-	Import-Module "C:\ProgramData\chocolatey\helpers\chocolateyProfile.psm1"
-	refreshenv | Out-Null
-	if ($LASTEXITCODE -eq 0) { ''; Write-Output "Refreshed environment variables from the registry. (2st try)" }
+##### RUN TASKS #####
+$t = 1
+$totalTasks = $tasks.Count
+foreach ($task in $tasks) {
+	try {
+		Write-Verbose -Message "Invoking command: $task"
+		Invoke-Expression $task | Out-Null
+		Refresh ($i++)
+	} catch {
+		Write-Error -ErrorAction Stop "An error occurred: $_"
+	}
+	[long]$percent = ($t / $totalTasks) * 100
+	Write-Progress -Activity "Setting up Windows" -Status "$percent% $task" -PercentComplete $percent
+	$t++
 }
 
+# reload git
+if (Get-Command git -ErrorAction SilentlyContinue) {
+	git config --global --unset user.email >$null 2>&1
+	git config --global --unset user.name >$null 2>&1
+	git config --global user.name $gitUserName >$null 2>&1
+	git config --global user.email $gitUserMail >$null 2>&1
+}
 
-''; Start-Sleep -Seconds 5; Set-Location $currentLocation
+# yazi plugins
+if (Get-Command ya -ErrorAction SilentlyContinue) {
+	Write-Verbose -Message "Installing and updating yazi plugins"
+	ya pack -i >$null 2>&1
+	ya pack -u >$null 2>&1
+}
 
+# wsl enable
+if ((Get-WindowsOptionalFeature -Online | Where-Object { $_.FeatureName -eq "Microsoft-Windows-Subsystem-Linux" }).State -eq "Disabled") {
+	Write-Verbose -Message "Enable Windows Feature: Windows Subsystem for Linux"
+	Enable-WindowsOptionalFeature -Online -FeatureName "Microsoft-Windows-Subsystem-Linux" -All -NoRestart
+}
+if ((Get-WindowsOptionalFeature -Online | Where-Object { $_.FeatureName -eq "VirtualMachinePlatform" }).State -eq "Disabled") {
+	Write-Verbose -Message "Enable Windows Feature: Virtual Machine Platform"
+	Enable-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform" -All -NoRestart
+}
+
+Set-Location $currentLocation
+Start-Sleep -Seconds 5
+
+''
 Write-Host "┌────────────────────────────────────────────────────────────────────────────────┐" -ForegroundColor "Green"
 Write-Host "│                                                                                │" -ForegroundColor "Green"
 Write-Host "│        █████╗ ██╗     ██╗         ██████╗  ██████╗ ███╗   ██╗███████╗ ██╗      │" -ForegroundColor "Green"
