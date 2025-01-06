@@ -39,6 +39,7 @@ function Add-EnvPath {
 }
 
 function Remove-EnvPath {
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [string] $Path,
@@ -69,6 +70,7 @@ function Remove-EnvPath {
 }
 
 function Get-EnvPath {
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory = $false)]
         [ValidateSet('Machine', 'User')]
@@ -77,14 +79,13 @@ function Get-EnvPath {
 
     if ($PSBoundParameters.Count -eq 0) {
         return $Env:PATH -Split ";"
-    }
-    else {
+    } else {
         $containerMapping = @{
             Machine = [EnvironmentVariableTarget]::Machine
             User    = [EnvironmentVariableTarget]::User
         }
         $containerType = $containerMapping[$Container]
-    
+
         [Environment]::GetEnvironmentVariable("Path", $containerType) -split ";" |
         Where-Object { $_ }
     }

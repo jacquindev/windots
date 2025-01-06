@@ -125,7 +125,6 @@
 				"commitizen",
 				"cz-git",
 				"degit",
-				"git-open",
 				"newman"
 			],
 			"install": true
