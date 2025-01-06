@@ -11,72 +11,47 @@ function Get-IPAddress {
     .PARAMETER private
         Return the Private (Internal) IP Address of the current workstation.
     .EXAMPLE
-        > Get-IpAddress -public
+        Get-IpAddress -Public
 
-        Print Public IP Address onto the console.
+        --> Print Public IP Address onto the console.
     .EXAMPLE
-        > Get-IpAddress -public -interactive
+        Get-IpAddress -Public -Interactive
 
-        Show Public IP Address in Windows notification.
+        --> Show Public IP Address in Windows notification.
+    .LINK
+        https://github.com/Windos/BurntToast
+        https://www.technewstoday.com/powershell-get-ip-address/
     .NOTES
-        Filename: Get-IpAddress.ps1
+        Filename: Get-IPAddress.ps1
         Author: Jacquin Moon
         Date: October 15th, 2024
-
-        In order to make it works for Interactive Mode. You must have installed `BurntToast` module.
-        For more information about `BurntToast` module, please check the following link:
-            -> https://github.com/Windos/BurntToast
-
-        References:
-        - https://github.com/mikepruett3/dotposh/blob/master/functions/Get-IPAddress.ps1
-        - http://jdhitsolutions.com/blog/friday-fun/4342/friday-fun-whats-my-ip/
-        - https://www.technewstoday.com/powershell-get-ip-address/
     #>
 
     [CmdletBinding()]
     param (
-        [switch]$public,
-        [switch]$private,
-        [switch]$interactive
+        [Alias('external', 'global', 'g')][switch]$Public,
+        [Alias('internal', 'local', 'l')][switch]$Private,
+        [Alias('i')][switch]$Interactive
     )
 
-    Set-Location $PSScriptRoot
-    [System.Environment]::CurrentDirectory = $PSScriptRoot
-
     $LogoPath = "$PSScriptRoot\Assets\global-network.png"
+    $PublicIp = (Invoke-WebRequest "http://icanhazip.com" -UseBasicParsing -DisableKeepAlive).Content.Trim()
+    $PrivateIp = (Get-WmiObject -Class Win32_NetworkAdapterConfiguration | Where-Object { $null -ne $_.DHCPEnabled -and $null -ne $_.DefaultIPGateway }).IPAddress | Select-Object -First 1
 
-    if ($public) {
-        $IPAddress = (Invoke-WebRequest "http://icanhazip.com/" -UseBasicParsing -DisableKeepAlive).Content.Trim()
-
-        if ($interactive) {
-            if (!(Get-InstalledModule -Name BurntToast -ErrorAction SilentlyContinue)) {
-                Write-Error "Please install BurntToast module to continue!"
-            } else {
-                New-BurntToastNotification -AppLogo $LogoPath -Silent -Text "Public IP Address: ", "`u{1F60A}  $IPAddress"
-            }
-        } else {
-            Write-Host "==> " -ForegroundColor "Magenta" -NoNewline
-            Write-Host "Public IP Address: " -ForegroundColor "Green"
-            Write-Host "`u{1F310}  $IPAddress"
-        }
+    if ($Public) {
+        if ($Interactive) { New-BurntToastNotification -AppLogo $LogoPath -Silent -Text "Public IP Address: ", "`u{1F60A}  $PublicIp" }
+        else { Write-Host "Public IP Address: " -ForegroundColor Green; Write-Host "`u{1F310}  $PublicIp" }
     }
 
-    if ($private) {
-        $IPAddress = (Get-WmiObject -Class Win32_NetworkAdapterConfiguration | Where-Object { $null -ne $_.DHCPEnabled -and $null -ne $_.DefaultIPGateway }).IPAddress | `
-            Select-Object -First 1
+    elseif ($Private) {
+        if ($Interactive) { New-BurntToastNotification -AppLogo $LogoPath -Silent -Text "Private IP Address: ", "`u{1F60A}  $PrivateIp" }
+        else { Write-Host "Private IP Address: " -ForegroundColor Green; Write-Host "`u{1F310}  $PrivateIp" }
+    }
 
-        if ($interactive) {
-            if (!(Get-InstalledModule -Name BurntToast -ErrorAction SilentlyContinue)) {
-                Write-Error "Please install BurntToast module to continue!"
-            } else {
-                New-BurntToastNotification -AppLogo $LogoPath -Silent -Text "Local IP Address: ", "`u{1F60A}  $IPAddress"
-            }
-        } else {
-            Write-Host "==> " -ForegroundColor "Magenta" -NoNewline
-            Write-Host "Local IP Address: " -ForegroundColor "Green"
-            Write-Host "`u{1F310}  $IPAddress"
-        }
+    else {
+        $ToastButton = New-BTButton -Dismiss -Content 'Close'
+        New-BurntToastNotification -AppLogo $LogoPath -Button $ToastButton -Silent -Text "Public IP:  $PublicIp", "Private IP:  $PrivateIp"
     }
 }
 
-Set-Alias -Name 'ipaddress' -Value 'Get-IPAddress'
+Set-Alias -Name 'ip' -Value 'Get-IPAddress'
