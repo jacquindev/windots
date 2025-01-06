@@ -2,11 +2,10 @@ function Write-AnimatedProgress {
     <#
     .SYNOPSIS
         Show animated animations while waiting for progress done.
-    .NOTES
-        References: 
-        - https://github.com/Jaykul/Spinner/blob/master/Spinner.ps1
-        - https://github.com/DBremen/Write-TerminalProgress/blob/main/Write-TerminalProgress.ps1
-        - https://github.com/sindresorhus/cli-spinners/blob/07c83e7b9d8a08080d71ac8bda2115c83501d9d6/spinners.json
+    .LINK
+        https://github.com/Jaykul/Spinner/blob/master/Spinner.ps1
+        https://github.com/DBremen/Write-TerminalProgress/blob/main/Write-TerminalProgress.ps1
+        https://github.com/sindresorhus/cli-spinners/blob/07c83e7b9d8a08080d71ac8bda2115c83501d9d6/spinners.json
     #>
     [CmdletBinding()]
     param (
@@ -73,9 +72,9 @@ function Get-Netstats {
                 or
             > Get-Netstats -RemotePort 443
         .NOTES
-            This function was originally from Mike Pruett, please check the file below for more details: 
+            This function was originally from Mike Pruett, please check the file below for more details:
                 - https://github.com/mikepruett3/dotposh/blob/master/functions/Get-Netstat.ps1
-    
+
             I rewrite this with the purpose of simplifying the code and adding extra waiting animations.
         #>
     [CmdletBinding()]
@@ -86,22 +85,22 @@ function Get-Netstats {
         [string] $LocalPort,
         [string] $RemotePort
     )
-    
+
     $Results = @()
-    
+
     if ($PSBoundParameters.Count -eq 0) {
         Write-AnimatedProgress -Label "Collecting TCP & UDP connections ..."
         $TCPConnections = Get-NetTCPConnection -ErrorAction SilentlyContinue
         $UDPConnections = Get-NetUDPEndpoint -ErrorAction SilentlyContinue
         $Sort = "LocalAddress"
     }
-    
+
     if ($Listen) {
         Write-AnimatedProgress -Label "Collecting TCP Connections of Listening State ..."
         $TCPConnections = Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue
         $Sort = "LocalAddress"
     }
-    
+
     if ($Process) {
         Write-AnimatedProgress -Label "Collecting TCP & UDP Connections of Process Name - $Process ..."
         $ProcessId = (Get-Process -Name $Process -ErrorAction SilentlyContinue).Id
@@ -109,27 +108,27 @@ function Get-Netstats {
         $UDPConnections = Get-NetUDPEndpoint -OwningProcess $ProcessId -ErrorAction SilentlyContinue
         $Sort = "LocalAddress"
     }
-    
+
     if ($ID) {
         Write-AnimatedProgress -Label "Collecting TCP & UDP Connections of Process ID - $ID ..."
         $TCPConnections = Get-NetTCPConnection -OwningProcess $ID -ErrorAction SilentlyContinue
         $UDPConnections = Get-NetUDPEndpoint -OwningProcess $ID -ErrorAction SilentlyContinue
         $Sort = "LocalAddress"
     }
-    
+
     if ($LocalPort) {
         Write-AnimatedProgress -Label "Collecting TCP & UDP Connections of Local Port - $LocalPort ..."
         $TCPConnections = Get-NetTCPConnection -LocalPort $LocalPort -ErrorAction SilentlyContinue
         $UDPConnections = Get-NetUDPEndpoint -LocalPort $LocalPort -ErrorAction SilentlyContinue
         $Sort = "ProcessName"
     }
-    
+
     if ($RemotePort) {
         Write-AnimatedProgress -Label "Collecting TCP Connections of Remote Port - $RemotePort ..."
         $TCPConnections = Get-NetTCPConnection -RemotePort $RemotePort -ErrorAction SilentlyContinue
         $Sort = "ProcessName"
     }
-    
+
     foreach ($Connection in $TCPConnections) {
         $Result = [PSCustomObject]@{
             CreationTime = $Connection.CreationTime
@@ -142,17 +141,16 @@ function Get-Netstats {
             RemotePort   = $Connection.RemotePort
             State        = $Connection.State
         }
-    
+
         if (Resolve-DNSName -Name $Connection.RemoteAddress -DnsOnly -ErrorAction SilentlyContinue) {
             $Result | Add-Member -MemberType NoteProperty -Name "RemoteAddress" -Value (Resolve-DNSName -Name $Connection.RemoteAddress -DnsOnly).NameHost
+        } else {
+            $Result | Add-Member -MemberType NoteProperty -Name 'RemoteAddress' -Value $Connection.RemoteAddress
         }
-        else {
-            $Result |  Add-Member -MemberType NoteProperty -Name 'RemoteAddress' -Value $Connection.RemoteAddress
-        }
-    
+
         $Results += $Result
     }
-    
+
     foreach ($Connection in $UDPConnections) {
         $Result = [PSCustomObject]@{
             CreationTime  = $Connection.CreationTime
@@ -168,11 +166,11 @@ function Get-Netstats {
         }
         $Results += $Result
     }
-    
+
     $Results |
     Select-Object Protocol, LocalAddress, LocalPort, RemoteAddress, RemotePort, ProcessName, ID |
     Sort-Object -Property @{Expression = "Protocol" }, @{Expression = $Sort } |
     Format-Table -AutoSize -Wrap
-} 
+}
 
 Set-Alias -Name 'netstats' -Value 'Get-Netstats'
