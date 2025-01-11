@@ -141,13 +141,14 @@ if (Get-Command nvm -ErrorAction SilentlyContinue) {
 	if (!(Get-Command node -ErrorAction SilentlyContinue)) {
 		$tasks += "nvm install lts"
 		$tasks += "nvm use lts"
+		$tasks += "npm install -g npm@latest"
 		$tasks += "corepack prepare --activate pnpm@latest"
 		$tasks += "corepack prepare --activate yarn@latest"
 		$tasks += "corepack enable"
 	}
 	if (!(Get-Command bun -ErrorAction SilentlyContinue)) {
 		$useBun = $(Write-Host "Install 'bun'? (Y/n): " -ForegroundColor Magenta -NoNewline; Read-Host)
-		if ($useBun.ToUpper() -eq 'Y') { $tasks += "pnpm add -g bun" }
+		if ($useBun.ToUpper() -eq 'Y') { $tasks += "pnpm install -g bun" }
 	}
 }
 
@@ -162,9 +163,9 @@ foreach ($symlink in $symlinks.GetEnumerator()) {
 $envVar = $json.environment_variables
 foreach ($env in $envVar) {
 	if (Get-Command $($env.command) -ErrorAction SilentlyContinue) {
-		if (!([System.Environment]::GetEnvironmentVariable("$($env.value)"))) {
-			Write-Verbose -Message "Setting up environment variable for $($env.value) --> $($env.path)"
-			[System.Environment]::SetEnvironmentVariable("$($env.value)", "$($env.path)", "User")
+		if (!([System.Environment]::GetEnvironmentVariable("$($env.name)"))) {
+			Write-Verbose -Message "Setting up environment variable for $($env.name) --> $($env.value)"
+			[System.Environment]::SetEnvironmentVariable("$($env.name)", "$($env.value)", "User")
 			if ($LASTEXITCODE -ne 0) { Write-Error -ErrorAction Stop "An error occurred while creating environment variable with value $($env.value)" }
 		}
 	}
@@ -184,6 +185,7 @@ switch ($True) {
 		if (!(Get-Command choco -ErrorAction SilentlyContinue)) {
 			# https://chocolatey.org/install
 			Write-Verbose -Message "Installing chocolatey"
+			if ((Get-ExecutionPolicy) -eq "Restricted") { Set-ExecutionPolicy AllSigned }
 			Set-ExecutionPolicy Bypass -Scope Process -Force
 			[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
 			Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
