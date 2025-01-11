@@ -10,10 +10,10 @@
 			"type": "array",
 			"items": {
 				"type": "object",
-				"required": ["value", "path", "command"],
+				"required": ["name", "value", "command"],
 				"properties": {
 					"value": { "type": "string" },
-					"path": { "type": "string" },
+					"name": { "type": "string" },
 					"command": { "type": "string" }
 				},
 				"uniqueItems": true
