@@ -3,38 +3,41 @@
 {
 	"$schema": "https://raw.githubusercontent.com/jacquindev/windots/refs/heads/main/schema.json",
 	"environment_variables": [
-		// Please modify the `path` for your environment names
-		{ "command": "eza", "value": "EZA_CONFIG_DIR", "path": "C:\\Users\\jqnhi\\.config\\eza" },
-		{ "command": "komorebic", "value": "KOMOREBI_CONFIG_HOME", "path": "C:\\Users\\jqnhi\\.config\\komorebi" },
-		{ "command": "yazi", "value": "YAZI_FILE_ONE", "path": "C:\\Program Files\\Git\\usr\\bin\\file.exe" },
-		{ "command": "yazi", "value": "YAZI_CONFIG_HOME", "path": "C:\\Users\\jqnhi\\.config\\yazi" }
+		// Please modify the `path/value` for your environment names
+		{ "command": "eza", "name": "EZA_CONFIG_DIR", "value": "C:\\Users\\jqnhi\\.config\\eza" },
+		{ "command": "komorebic", "name": "KOMOREBI_CONFIG_HOME", "value": "C:\\Users\\jqnhi\\.config\\komorebi" },
+		{ "command": "yazi", "name": "YAZI_FILE_ONE", "value": "C:\\Program Files\\Git\\usr\\bin\\file.exe" },
+		{ "command": "yazi", "name": "YAZI_CONFIG_HOME", "value": "C:\\Users\\jqnhi\\.config\\yazi" },
+		{ "command": "vagrant", "name": "VAGRANT_DEFAULT_PROVIDER", "value": "virtualbox" }
 	],
 	"package_source": {
 		"winget": {
-			"auto_install": true,
+			"auto_install": false,
 			"packages": [
+				"Amazon.AWSCLI",
 				"AmN.yasb",
 				"chrisant996.Clink",
-				"Flow-Launcher.Flow-Launcher",
 				"gerardog.gsudo",
 				"Git.Git",
 				"GitHub.GitHubDesktop",
 				"Google.Chrome.Dev",
 				"ImageMagick.ImageMagick",
 				"JanDeDobbeleer.OhMyPosh",
+				"JetBrains.IntelliJIDEA.Community",
 				"LGUG2Z.komorebi",
 				"LGUG2Z.whkd",
+				"Microsoft.AzureCLI",
 				"Microsoft.DotNet.SDK.8",
 				"Microsoft.DotNet.SDK.9",
 				"Microsoft.PowerShell",
 				"Microsoft.VisualStudio.2022.Community",
 				"Microsoft.VisualStudioCode",
 				"Obsidian.Obsidian",
-				"Oracle.VirtualBox",
 				"Postman.Postman",
 				"Rainmeter.Rainmeter",
 				"rocksdanister.LivelyWallpaper",
-				"Stardock.Start11"
+				"Stardock.Start11",
+				"Symless.Synergy"
 			],
 			"additional_args": [
 				"--exact",
@@ -44,21 +47,20 @@
 			]
 		},
 		"choco": {
-			"auto_install": true,
+			"auto_install": false,
 			"packages": [
-				"erlang",
 				"gradle",
+				"maven",
+				"ngrok",
 				"openjdk",
-				"rabbitmq",
-				"terraform"
+				"virtualbox",
+				"vagrant",
+				"zig"
 			],
-			"additional_args": [
-				"--allow-downgrade",
-				"-y"
-			]
+			"additional_args": [ "-y" ]
 		},
 		"scoop": {
-			"auto_install": true,
+			"auto_install": false,
 			"buckets": ["extras", "sysinternals", "versions"],
 			"packages": [
 				"aria2",
@@ -91,7 +93,6 @@
 				"spicetify-cli",
 				"spotify-tui",
 				"starship",
-				"symfony-cli",
 				"wget",
 				"wixtoolset",
 				"yazi",
@@ -117,6 +118,26 @@
 			"install": true
 		},
 		{
+			"command_name": "vagrant",
+			"invoke_command": "vagrant plugin install",
+			"check_command": "vagrant plugin list",
+			"plugins": [
+				"vagrant-hostmanager",
+				"vagrant-share"
+			],
+			"install": true
+		},
+		{
+			"command_name": "az",
+			"invoke_command": "az extension add --name",
+			"check_command": "(az extension list | ConvertFrom-Json).name",
+			"plugins": [
+				"azure-devops",
+				"costmanagement"
+			],
+			"install": false
+		},
+		{
 			"command_name": "bun", // I use bun instead of npm, pnpm, or yarn since it's faster (required `bun` installed)
 			"invoke_command": "bun add -g",
 			"check_command": "bun pm ls -g",
@@ -124,10 +145,21 @@
 				"@angular/cli",
 				"commitizen",
 				"cz-git",
-				"degit",
-				"newman"
+				"degit"
 			],
-			"install": true
+			"install": false
+		},
+		{
+			"command_name": "pipx",
+			"invoke_command": "pipx install",
+			"check_command": "pipx list",
+			"plugins": [
+				"cookiecutter",
+				"copier",
+				"pdm",
+				"poetry"
+			],
+			"install": false
 		}
 	],
 	"powershell_modules": {
@@ -142,8 +174,7 @@
 			"powershell-yaml",
 			"PSFzf",
 			"PSToml",
-			"Terminal-Icons",
-			"yarn-completion"
+			"Terminal-Icons"
 		],
 		"additional_args": [
 			"-Scope",
