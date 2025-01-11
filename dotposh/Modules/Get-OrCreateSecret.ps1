@@ -77,8 +77,8 @@ function Get-OrCreateSecret {
             } else {
                 $SecretVault = $(Write-Host "Input Secret Vault name: " -ForegroundColor Magenta -NoNewline; Read-Host)
             }
-            Set-SecretStoreConfiguration -Scope CurrentUser -Authentication None -Confirm:$False
-            Register-SecretVault -Name $SecretVault -ModuleName Microsoft.PowerShell.SecretStore -DefaultVault
+            Set-SecretStoreConfiguration -Scope CurrentUser -Authentication None -Interaction None -Confirm:$False
+            Register-SecretVault -Name $SecretVault -ModuleName Microsoft.PowerShell.SecretStore -DefaultVault:$True
         }
     }
 
