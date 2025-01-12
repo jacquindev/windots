@@ -1,6 +1,17 @@
-*.rmskin filter=lfs diff=lfs merge=lfs -text
+# Set the default behavior, in case people don't have core.autocrlf set.
+* text=auto
+
+# Denote all files that are truly binary and should not be modified.
+*.jpg binary
+*.mp4 binary
+*.png binary
+*.rmskin binary
+
+# Git LFS
+*.jpg filter=lfs diff=lfs merge=lfs -text
 *.mp4 filter=lfs diff=lfs merge=lfs -text
 *.png filter=lfs diff=lfs merge=lfs -text
-*.jpg filter=lfs diff=lfs merge=lfs -text
+*.rmskin filter=lfs diff=lfs merge=lfs -text
 
+# Git-crypt
 config/spotify-tui/client.yml filter=git-crypt diff=git-crypt
