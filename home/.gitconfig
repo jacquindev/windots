@@ -30,6 +30,8 @@
     what = show --no-patch --pretty='tformat:%h (%s, %ad)' --date=short
     who = shortlog --summary --numbered --no-merges
 [core]
+    # Configure Git to ensure line endings in files you checkout are correct for different os systems
+    autocrlf = true
     branch = auto
     editor = code --wait
     grep = auto
