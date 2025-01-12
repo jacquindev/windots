@@ -12,32 +12,36 @@
 	],
 	"package_source": {
 		"winget": {
-			"auto_install": false,
+			"auto_install": true,
 			"packages": [
-				"Amazon.AWSCLI",
-				"AmN.yasb",
-				"chrisant996.Clink",
-				"gerardog.gsudo",
-				"Git.Git",
-				"GitHub.GitHubDesktop",
-				"Google.Chrome.Dev",
-				"ImageMagick.ImageMagick",
-				"JanDeDobbeleer.OhMyPosh",
-				"JetBrains.IntelliJIDEA.Community",
-				"LGUG2Z.komorebi",
-				"LGUG2Z.whkd",
-				"Microsoft.AzureCLI",
-				"Microsoft.DotNet.SDK.8",
-				"Microsoft.DotNet.SDK.9",
-				"Microsoft.PowerShell",
-				"Microsoft.VisualStudio.2022.Community",
-				"Microsoft.VisualStudioCode",
-				"Obsidian.Obsidian",
-				"Postman.Postman",
-				"Rainmeter.Rainmeter",
-				"rocksdanister.LivelyWallpaper",
-				"Stardock.Start11",
-				"Symless.Synergy"
+				{ "id": "Amazon.AWSCLI" },
+				{ "id": "AmN.yasb" },
+				{ "id": "chrisant996.Clink" },
+				{ "id": "Docker.DockerDesktop" },
+				{ "id": "gerardog.gsudo" },
+				{ "id": "Git.Git" },
+				{ "id": "GitHub.GitHubDesktop" },
+				{ "id": "Google.Chrome.Dev" },
+				{ "id": "ImageMagick.ImageMagick" },
+				{ "id": "JanDeDobbeleer.OhMyPosh" },
+				{ "id": "JetBrains.IntelliJIDEA.Community" },
+				{ "id": "LGUG2Z.komorebi" },
+				{ "id": "LGUG2Z.whkd" },
+				{ "id": "Microsoft.AzureCLI" },
+				{ "id": "Microsoft.DotNet.SDK.8" },
+				{ "id": "Microsoft.DotNet.SDK.9" },
+				{ "id": "Microsoft.PowerShell" },
+				{ "id": "Microsoft.PowerToys" },
+				{ "id": "Microsoft.VisualStudio.2022.Community" },
+				{ "id": "Microsoft.VisualStudioCode" },
+				{ "id": "Obsidian.Obsidian" },
+				{ "id": "Postman.Postman" },
+				{ "id": "Rainmeter.Rainmeter" },
+				{ "id": "rocksdanister.LivelyWallpaper" },
+				{ "id": "Stardock.Start11" },
+				{ "id": "Symless.Synergy" },
+				{ "id": "9NRX63209R7B", "source": "msstore" }, // Outlook for Windows
+				{ "id": "9NHT9RB2F4HD", "source": "msstore" } // Microsoft Copilot
 			],
 			"additional_args": [
 				"--exact",
@@ -47,9 +51,8 @@
 			]
 		},
 		"choco": {
-			"auto_install": false,
+			"auto_install": true,
 			"packages": [
-				"gradle",
 				"maven",
 				"ngrok",
 				"openjdk",
@@ -57,11 +60,13 @@
 				"vagrant",
 				"zig"
 			],
-			"additional_args": [ "-y" ]
+			"additional_args": [
+				"-y"
+			]
 		},
 		"scoop": {
-			"auto_install": false,
-			"buckets": ["extras", "sysinternals", "versions"],
+			"auto_install": true,
+			"buckets": ["extras", "sysinternals"],
 			"packages": [
 				"aria2",
 				"bat",
@@ -82,13 +87,13 @@
 				"gitleaks",
 				"glow",
 				"jq",
-				"lazydocker",
 				"lazygit",
 				"pskill",
 				"scoop-completion",
 				"scoop-search",
 				"secureuxtheme",
 				"sed",
+				"shfmt",
 				"speedtest-cli",
 				"spicetify-cli",
 				"spotify-tui",
@@ -96,6 +101,7 @@
 				"wget",
 				"wixtoolset",
 				"yazi",
+				"yq",
 				"zoxide"
 			],
 			"additional_args": []
@@ -118,12 +124,24 @@
 			"install": true
 		},
 		{
+			"command_name": "dotnet",
+			"invoke_command": "dotnet tool install -g",
+			"check_command": "dotnet tool list -g",
+			"plugins": [
+				"dotnet-ef",
+				"dotnet-outdated-tool",
+				"GitVersion.Tool"
+			],
+			"install": true
+		},
+		{
 			"command_name": "vagrant",
 			"invoke_command": "vagrant plugin install",
 			"check_command": "vagrant plugin list",
 			"plugins": [
 				"vagrant-hostmanager",
-				"vagrant-share"
+				"vagrant-share",
+				"vagrant-winnfsd"
 			],
 			"install": true
 		},
@@ -132,10 +150,9 @@
 			"invoke_command": "az extension add --name",
 			"check_command": "(az extension list | ConvertFrom-Json).name",
 			"plugins": [
-				"azure-devops",
 				"costmanagement"
 			],
-			"install": false
+			"install": true
 		},
 		{
 			"command_name": "bun", // I use bun instead of npm, pnpm, or yarn since it's faster (required `bun` installed)
@@ -147,7 +164,7 @@
 				"cz-git",
 				"degit"
 			],
-			"install": false
+			"install": true
 		},
 		{
 			"command_name": "pipx",
@@ -159,7 +176,7 @@
 				"pdm",
 				"poetry"
 			],
-			"install": false
+			"install": true
 		}
 	],
 	"powershell_modules": {

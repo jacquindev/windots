@@ -3,8 +3,100 @@
 
 $VerbosePreference = "SilentlyContinue"
 
-Write-Host "Start setup process..." -ForegroundColor Blue
-$currentLocation = "$($(Get-Location).Path)"
+########################################################################################################################
+###																											HELPER FUNCTIONS																						 ###
+########################################################################################################################
+
+function Add-ScoopBucket {
+	param ([string]$BucketName)
+	$scoopDir = (Get-Command scoop.ps1 -ErrorAction SilentlyContinue).Source | Split-Path | Split-Path
+	if (!(Test-Path "$scoopDir\buckets\$BucketName" -PathType Container)) {
+		scoop bucket add $BucketName
+	}
+}
+
+function Install-ScoopApp {
+	param ([string]$Package, [array]$AdditionalArgs)
+	if (!(scoop info $Package).Installed) {
+		if ($AdditionalArgs.Count -ge 1) {
+			$AdditionalArgs = $AdditionalArgs -join ' '
+			Invoke-Expression "scoop install $Package $AdditionalArgs"
+		} else { Invoke-Expression "scoop install $Package" }
+	}
+}
+
+function Install-WinGetApp {
+	param ([string]$PackageID, [array]$AdditionalArgs, [string]$Source)
+
+	winget list --exact -q $PackageID | Out-Null
+	if (!$?) {
+		$wingetCmd = "winget install $PackageID"
+		if ($AdditionalArgs.Count -ge 1) {
+			$AdditionalArgs = $AdditionalArgs -join ' '
+			$wingetCmd += " $AdditionalArgs"
+		}
+		if ($Source -eq "msstore") { $wingetCmd += " --source msstore" }
+		else { $wingetCmd += " --source winget" }
+		Invoke-Expression "$wingetCmd"
+	}
+}
+
+function Install-ChocoApp {
+	param ([string]$Package, [array]$AdditionalArgs)
+
+	$chocoList = choco list $Package
+	if ($chocoList -like "0 packages installed.") {
+		if ($AdditionalArgs.Count -ge 1) {
+			$AdditionalArgs = $AdditionalArgs -join ' '
+			Invoke-Expression "choco install $Package $AdditionArgs"
+		} else { Invoke-Expression "choco install $Package" }
+	}
+}
+
+function Install-PowerShellModule {
+	param ([string]$Module, [array]$AdditionalArgs)
+
+	if (!(Get-InstalledModule -Name $Module -ErrorAction SilentlyContinue)) {
+		if ($AdditionalArgs.Count -ge 1) {
+			$AdditionalArgs = $AdditionalArgs -join ' '
+			Invoke-Expression "Install-Module $Module $AdditionalArgs"
+		} else { Invoke-Expression "Install-Module $Module" }
+	}
+}
+
+function Install-AppFromGitHub {
+	param ([string]$RepoName, [string]$FileName)
+
+	$release = "https://api.github.com/repos/$RepoName/releases"
+	$tag = (Invoke-WebRequest $release | ConvertFrom-Json)[0].tag_name
+	$downloadUrl = "https://github.com/$RepoName/releases/download/$tag/$FileName"
+	$downloadPath = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path
+	$downloadFile = "$downloadPath\$FileName"
+	(New-Object System.Net.Client).DownloadFile($downloadUrl, $downloadFile)
+
+	switch ($FileName.Split('.') | Select-Object -Last 1) {
+		"exe" {
+			Start-Process -FilePath "$downloadFile" -Wait
+		}
+		"msi" {
+			Start-Process -FilePath "$downloadFile" -Wait
+		}
+		"zip" {
+			$dest = "$downloadPath\$($FileName.Split('.'))"
+			Expand-Archive -Path "$downloadFile" -DestinationPath "$dest"
+		}
+		"7z" {
+			7z x -o"$downloadPath" -y "$downloadFile" | Out-Null
+		}
+		Default { break }
+	}
+	Remove-Item "$downloadFile" -Force -Recurse -ErrorAction SilentlyContinue
+}
+
+function Install-OnlineFile {
+	param ([string]$OutputDir, [string]$Url)
+	Invoke-WebRequest -Uri $Url -OutFile $OutputDir
+}
 
 function Refresh ([int]$Time) {
 	if (Get-Command choco -ErrorAction SilentlyContinue) {
@@ -77,11 +169,189 @@ function Write-LockFile {
 	}
 }
 
+########################################################################################################################
+###																					  						MAIN SCRIPT 		  																				 ###
+########################################################################################################################
+
+
 # set current working directory location
+$currentLocation = "$($(Get-Location).Path)"
+
 Set-Location $PSScriptRoot
 [System.Environment]::CurrentDirectory = $PSScriptRoot
 
 $i = 1
+
+########################################################################################################################
+###																												NERD FONTS																								 ###
+########################################################################################################################
+# install nerd fonts
+''
+Write-Host "(Please skip this step if you already installed Nerd Fonts)" -ForegroundColor DarkGray
+Write-Host "The following fonts are highly recommended: " -ForegroundColor Green
+Write-Output "  ● Cascadia Code Nerd Font"
+Write-Output "  ● FantasqueSansM Nerd Font"
+Write-Output "  ● FiraCode Nerd Font"
+Write-Output "  ● JetBrainsMono Nerd Font"
+''
+$installNerdFonts = $(Write-Host "[RECOMMENDED] Install NerdFont now? (Y/n): " -NoNewline -ForegroundColor Magenta; Read-Host)
+if ($installNerdFonts.ToUpper() -eq 'Y') {
+	& ([scriptblock]::Create((Invoke-WebRequest 'https://to.loredo.me/Install-NerdFont.ps1'))) -Scope AllUsers -Confirm:$False
+	Refresh ($i++)
+} else { Write-Host "Skipped installing Nerd Fonts..." -ForegroundColor DarkGray; '' }
+
+########################################################################################################################
+###																											WINGET PACKAGES 																						 ###
+########################################################################################################################
+# Retrieve information from json file
+$json = Get-Content "$PSScriptRoot\appList.json" -Raw | ConvertFrom-Json
+
+# Winget Packages
+$wingetItem = $json.package_source.winget
+$wingetPkgs = $wingetItem.packages
+$wingetArgs = $wingetItem.additional_args
+$wingetInstall = $wingetItem.auto_install
+
+if ($wingetInstall -eq $True) {
+	if (!(Get-Command winget -ErrorAction SilentlyContinue)) {
+		# https://github.com/asheroto/winget-install
+		Write-Verbose -Message "Installing winget-cli"
+		&([ScriptBlock]::Create((Invoke-RestMethod asheroto.com/winget))) -Force
+	}
+
+	# Configure winget for better performance
+	$settingsPath = "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json"
+	$settingsJson = @'
+{
+		"$schema": "https://aka.ms/winget-settings.schema.json",
+
+		// For documentation on these settings, see: https://aka.ms/winget-settings
+		// "source": {
+		//    "autoUpdateIntervalInMinutes": 5
+		// },
+		"visual": {
+				"enableSixels": true,
+				"progressBar": "rainbow"
+		},
+		"telemetry": {
+				"disable": true
+		},
+		"experimentalFeatures": {
+				"configuration03": true,
+				"configureExport": true,
+				"configureSelfElevate": true,
+				"experimentalCMD": true
+		},
+		"network": {
+				"downloader": "wininet"
+		}
+}
+'@
+	$settingsJson | Out-File $settingsPath -Encoding utf8
+
+	# Download packages
+	foreach ($pkg in $wingetPkgs) {
+		if ($null -ne $pkg.source) {
+			Install-WinGetApp -PackageID "$($pkg.id)" -AdditionalArgs $wingetArgs -Source "$($pkg.source)"
+		} else {
+			Install-WinGetApp -PackageID "$($pkg.id)" -AdditionalArgs $wingetArgs
+		}
+	}
+	Write-LockFile -PackageSource winget -FileName wingetfile.json -OutputPath $PSScriptRoot
+	Refresh ($i++)
+}
+
+########################################################################################################################
+###																										CHOCOLATEY PACKAGES 											  									 ###
+########################################################################################################################
+# Chocolatey Packages
+$chocoItem = $json.package_source.choco
+$chocoPkgs = $chocoItem.packages
+$chocoArgs = $chocoItem.additional_args
+$chocoInstall = $chocoItem.auto_install
+
+if ($chocoInstall -eq $True) {
+	if (!(Get-Command choco -ErrorAction SilentlyContinue)) {
+		Write-Verbose -Message "Installing chocolatey"
+		if ((Get-ExecutionPolicy) -eq "Restricted") { Set-ExecutionPolicy AllSigned }
+		Set-ExecutionPolicy Bypass -Scope Process -Force
+		[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+		Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+	}
+	foreach ($pkg in $chocoPkgs) { Install-ChocoApp -Package $pkg -AdditionalArgs $chocoArgs }
+	Write-LockFile -PackageSource choco -FileName chocolatey.config -OutputPath $PSScriptRoot
+	Refresh ($i++)
+}
+
+########################################################################################################################
+###																					 						SCOOP PACKAGES 	 							 															 ###
+########################################################################################################################
+# Scoop Packages
+$scoopItem = $json.package_source.scoop
+$scoopBuckets = $scoopItem.buckets
+$scoopPkgs = $scoopItem.packages
+$scoopArgs = $scoopItem.additional_args
+$scoopInstall = $scoopItem.auto_install
+
+if ($scoopInstall -eq $True) {
+	if (!(Get-Command scoop -ErrorAction SilentlyContinue)) {
+		# follow https://github.com/ScoopInstaller/Install#for-admin
+		Write-Verbose -Message "Installing scoop"
+		Invoke-Expression "& {$(Invoke-RestMethod get.scoop.sh)} -RunAsAdmin"
+	}
+	if (!(Get-Command aria2c -ErrorAction SilentlyContinue)) { scoop install aria2 }
+	if (!($(scoop config aria2-enabled) -eq $True)) { scoop config aria2-enabled true }
+	if (!($(scoop config aria2-warning-enabled) -eq $False)) { scoop config aria2-warning-enabled false }
+	if (!(Get-ScheduledTaskInfo -TaskName "Aria2RPC" -ErrorAction Ignore)) {
+		$scoopDir = (Get-Command scoop.ps1 -ErrorAction SilentlyContinue).Source | Split-Path | Split-Path
+		$Action = New-ScheduledTaskAction -Execute "$scoopDir\apps\aria2\current\aria2c.exe" -Argument "--enable-rpc --rpc-listen-all" -WorkingDirectory "$Env:USERPROFILE\Downloads"
+		$Trigger = New-ScheduledTaskTrigger -AtStartup
+		$Principal = New-ScheduledTaskPrincipal -UserID "$Env:USERDOMAIN\$Env:USERNAME" -LogonType S4U
+		$Settings = New-ScheduledTaskSettingsSet -ExecutionTimeLimit 0 -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
+		Register-ScheduledTask -TaskName "Aria2RPC" -Action $Action -Trigger $Trigger -Principal $Principal -Settings $Settings
+	}
+
+	foreach ($bucket in $scoopBuckets) { Add-ScoopBucket -BucketName $bucket }
+	foreach ($pkg in $scoopPkgs) { Install-ScoopApp -Package $pkg -AdditionalArgs $scoopArgs }
+	Write-LockFile -PackageSource scoop -FileName scoopfile.json -OutputPath $PSScriptRoot
+	Refresh ($i++)
+}
+
+########################################################################################################################
+###																										POWERSHELL MODULES 																						 ###
+########################################################################################################################
+# Powershell Modules
+$moduleItem = $json.powershell_modules
+$moduleList = $moduleItem.modules
+$moduleArgs = $moduleItem.additional_args
+$moduleInstall = $moduleItem.install
+if ($moduleInstall -eq $True) {
+	foreach ($module in $moduleList) { Install-PowerShellModule -Module $module -AdditionalArgs $moduleArgs }
+	Write-LockFile -PackageSource modules -FileName modules.json -OutputPath $PSScriptRoot
+	Refresh ($i++)
+}
+
+########################################################################################################################
+###																												GIT SETUP																									 ###
+########################################################################################################################
+# Configure git
+if (Get-Command git -ErrorAction SilentlyContinue) {
+	$gitUserName = (git config --global user.name)
+	$gitUserMail = (git config --global user.email)
+
+	if ($null -eq $gitUserName) { $gitUserName = $(Write-Host "Input your git name: " -NoNewline -ForegroundColor Magenta; Read-Host) }
+	if ($null -eq $gitUserMail) { $gitUserMail = $(Write-Host "Input your git email: " -NoNewline -ForegroundColor Magenta; Read-Host) }
+
+	git submodule update --init --recursive
+}
+
+if (Get-Command gh -ErrorAction SilentlyContinue) {
+	if (!(gh auth status)) { gh auth login }
+}
+
+########################################################################################################################
+###																													SYMLINKS 																								 ###
+########################################################################################################################
 # symlinks
 $symlinks = @{
 	$PROFILE.CurrentUserAllHosts                                                                  = ".\Profile.ps1"
@@ -109,105 +379,17 @@ $symlinks = @{
 	"$HOME\.wslconfig"                                                                            = ".\home\.wslconfig"
 }
 
-# Retrieve information from json file
-$json = Get-Content "$PSScriptRoot\appList.json" -Raw | ConvertFrom-Json
-
-$wingetItem = $json.package_source.winget
-$wingetPkgs = $wingetItem.packages
-$wingetArgs = $wingetItem.additional_args
-$wingetInstall = $wingetItem.auto_install
-
-$scoopItem = $json.package_source.scoop
-$scoopBuckets = $scoopItem.buckets
-$scoopPkgs = $scoopItem.packages
-$scoopArgs = $scoopItem.additional_args
-$scoopInstall = $scoopItem.auto_install
-
-$chocoItem = $json.package_source.choco
-$chocoPkgs = $chocoItem.packages
-$chocoArgs = $chocoItem.additional_args
-$chocoInstall = $chocoItem.auto_install
-
-$moduleItem = $json.powershell_modules
-$moduleList = $moduleItem.modules
-$moduleArgs = $moduleItem.additional_args
-$moduleInstall = $moduleItem.install
-
-if ($wingetArgs.Count -ge 1) { $wingetArgs = $wingetArgs -join ' ' } else { $wingetArgs = $null }
-if ($scoopArgs.Count -ge 1) { $scoopArgs = $scoopArgs -join ' ' } else { $scoopArgs = $null }
-if ($chocoArgs.Count -ge 1) { $chocoArgs = $chocoArgs -join ' ' } else { $chocoArgs = $null }
-if ($moduleArgs.Count -ge 1) { $moduleArgs = $moduleArgs -join ' ' } else { $moduleArgs = $null }
-
-$tasks = @()
-
-if (Get-Command git -ErrorAction SilentlyContinue) {
-	$gitUserName = (git config --global user.name)
-	$gitUserMail = (git config --global user.email)
-
-	if ($null -eq $gitUserName) { $gitUserName = $(Write-Host "Input your git name: " -NoNewline -ForegroundColor Magenta; Read-Host) }
-	if ($null -eq $gitUserMail) { $gitUserMail = $(Write-Host "Input your git email: " -NoNewline -ForegroundColor Magenta; Read-Host) }
-
-	git submodule update --init --recursive
-}
-
-if (Get-Command gh -ErrorAction SilentlyContinue) {
-	if (!(gh auth status)) { gh auth login }
-}
-
-# install nerd fonts
-''
-Write-Host "The following fonts are highly recommended: " -ForegroundColor Green
-Write-Host "(Please skip this step if you already installed Nerd Fonts)" -ForegroundColor DarkGray
-Write-Output "  ● Cascadia Code Nerd Font"
-Write-Output "  ● FantasqueSansM Nerd Font"
-Write-Output "  ● FiraCode Nerd Font"
-Write-Output "  ● JetBrainsMono Nerd Font"
-''
-$installNerdFonts = $(Write-Host "[RECOMMENDED] Install NerdFont now? (Y/n): " -NoNewline -ForegroundColor Magenta; Read-Host)
-if ($installNerdFonts.ToUpper() -eq 'Y') {
-	& ([scriptblock]::Create((Invoke-WebRequest 'https://to.loredo.me/Install-NerdFont.ps1'))) -Scope AllUsers -Confirm:$False
-	Refresh ($i++)
-} else { Write-Host "Skipped installing Nerd Fonts" -ForegroundColor DarkGray; '' }
-
-if (!(Get-Command nvm -ErrorAction SilentlyContinue)) {
-	$installNvm = $(Write-Host "Install NVM? (Y/n) " -ForegroundColor Magenta -NoNewline; Read-Host)
-	if ($installNvm.ToUpper() -eq 'Y') {
-		$repo = "coreybutler/nvm-windows"
-		$file = "nvm-setup.exe"
-		$releases = "https://api.github.com/repos/$repo/releases"
-		$tag = (Invoke-WebRequest $releases | ConvertFrom-Json)[0].tag_name
-		$downloadUrl = "https://github.com/$repo/releases/download/$tag/$file"
-		$downloadPath = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path
-
-		Write-Verbose -Message "Downloading nvm-setup.exe from $downloadUrl"
-		$downloadPath = "$downloadPath\$file"
-		(New-Object System.Net.Client).DownloadFile($downloadUrl, $downloadPath)
-		Start-Process -FilePath "$downloadPath"
-	}
-}
-
-if (Get-Command nvm -ErrorAction SilentlyContinue) {
-	if (!(Get-Command node -ErrorAction SilentlyContinue)) {
-		$tasks += "nvm install lts"
-		$tasks += "nvm use lts"
-		$tasks += "npm install -g npm@latest"
-		$tasks += "corepack prepare --activate pnpm@latest"
-		$tasks += "corepack prepare --activate yarn@latest"
-		$tasks += "corepack enable"
-	}
-	if (!(Get-Command bun -ErrorAction SilentlyContinue)) {
-		$useBun = $(Write-Host "Install 'bun'? (Y/n): " -ForegroundColor Magenta -NoNewline; Read-Host)
-		if ($useBun.ToUpper() -eq 'Y') { $tasks += "pnpm install -g bun" }
-	}
-}
-
 # add symlinks
 foreach ($symlink in $symlinks.GetEnumerator()) {
 	Write-Verbose -Message "Creating symlink for $(Resolve-Path $symlink.Value) --> $($symlink.Key)"
 	Get-Item -Path $symlink.Key -ErrorAction SilentlyContinue | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
 	New-Item -ItemType SymbolicLink -Path $symlink.Key -Target (Resolve-Path $symlink.Value) -Force | Out-Null
 }
+Refresh ($i++)
 
+########################################################################################################################
+###																									ENVIRONMENT VARIABLES																						 ###
+########################################################################################################################
 # add environment variables
 $envVar = $json.environment_variables
 foreach ($env in $envVar) {
@@ -219,78 +401,43 @@ foreach ($env in $envVar) {
 		}
 	}
 }
+Refresh ($i++)
 
-$totalPkgs = @()
-switch ($True) {
-	($wingetInstall -eq $True) {
-		if (!(Get-Command winget -ErrorAction SilentlyContinue)) {
-			# https://github.com/asheroto/winget-install
-			Write-Verbose -Message "Installing winget-cli"
-			&([ScriptBlock]::Create((Invoke-RestMethod asheroto.com/winget))) -Force
-		}
-		$totalPkgs += $wingetPkgs
+########################################################################################################################
+###																		SETUP NODEJS / INSTALL NVM (Node Version Manager)															 ###
+########################################################################################################################
+if (!(Get-Command nvm -ErrorAction SilentlyContinue)) {
+	$installNvm = $(Write-Host "Install NVM? (Y/n) " -ForegroundColor Magenta -NoNewline; Read-Host)
+	if ($installNvm.ToUpper() -eq 'Y') {
+		Write-Verbose "Installing NVM from GitHub Repo"
+		Install-AppFromGitHub -RepoName "coreybutler/nvm-windows" -FileName "nvm-setup.exe"
 	}
-	($chocoInstall -eq $True) {
-		if (!(Get-Command choco -ErrorAction SilentlyContinue)) {
-			# https://chocolatey.org/install
-			Write-Verbose -Message "Installing chocolatey"
-			if ((Get-ExecutionPolicy) -eq "Restricted") { Set-ExecutionPolicy AllSigned }
-			Set-ExecutionPolicy Bypass -Scope Process -Force
-			[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-			Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-		}
-		$totalPkgs += $chocoPkgs
-	}
-	($scoopInstall -eq $True) {
-		if (!(Get-Command scoop -ErrorAction SilentlyContinue)) {
-			# follow https://github.com/ScoopInstaller/Install#for-admin
-			Write-Verbose -Message "Installing scoop for admin https://github.com/ScoopInstaller/Install#for-admin"
-			Invoke-Expression "& {$(Invoke-RestMethod get.scoop.sh)} -RunAsAdmin"
-		}
-		$totalPkgs += $scoopBuckets + $scoopPkgs
-	}
-	($moduleInstall -eq $True) {	$totalPkgs += $moduleList }
-	Default { continue }
+	Refresh ($i++)
 }
 
-foreach ($pkg in $totalPkgs) {
-	switch ($True) {
-		($pkg -in $wingetPkgs) {
-			if (!(winget list --exact --accept-source-agreements -q "$pkg" | Select-String "$pkg")) {
-				if ($null -ne $wingetArgs) { $tasks += "winget install $wingetArgs $pkg --source winget" }
-				else { $tasks += "winget install $pkg --source winget" }
-			}
+if (Get-Command nvm -ErrorAction SilentlyContinue) {
+	if (!(Get-Command node -ErrorAction SilentlyContinue)) {
+		$whichNode = $(Write-Host "Install LTS (Y) or latest (n) Node version? " -ForegroundColor Magenta -NoNewline; Read-Host)
+		if ($whichNode.ToUpper() -eq 'Y') {	nvm install lts }
+		else { nvm install latest }
+		nvm use newest
+		npm install -g npm@latest >$null 2>&1
+		corepack prepare --activate pnpm@latest
+		corepack prepare --activate yarn@latest
+		corepack enable
+	}
+	if (!(Get-Command bun -ErrorAction SilentlyContinue)) {
+		$useBun = $(Write-Host "Install 'bun'? (Y/n): " -ForegroundColor Magenta -NoNewline; Read-Host)
+		if ($useBun.ToUpper() -eq 'Y') {
+			pnpm install -g bun
 		}
-		($pkg -in $chocoPkgs) {
-			if (!(choco list | Select-String "$pkg")) {
-				if ($null -ne $chocoArgs) { $tasks += "choco install $pkg $chocoArgs" }
-				else { $tasks += "choco install $pkg" }
-			}
-		}
-		($pkg -in $scoopBuckets) {
-			if ($scoopBuckets.Count -ge 1) {
-				$scoopDir = (Get-Command scoop.ps1 -ErrorAction SilentlyContinue).Source | Split-Path | Split-Path
-				if (!(Test-Path "$scoopDir\buckets\$pkg" -PathType Container)) {
-					$tasks += "scoop bucket add $pkg"
-				}
-			}
-		}
-		($pkg -in $scoopPkgs) {
-			if (!(scoop info $pkg).Installed) {
-				if ($null -ne $scoopArgs) { $tasks += "scoop install $pkg $scoopArgs" }
-				else { $tasks += "scoop install $pkg" }
-			}
-		}
-		($pkg -in $moduleList) {
-			if (!(Get-InstalledModule -Name $pkg -ErrorAction SilentlyContinue)) {
-				if ($null -ne $moduleArgs) { $tasks += "Install-Module $pkg $moduleArgs" }
-				else { $tasks += "Install-Module $pkg" }
-			}
-		}
-		Default { continue }
 	}
 }
 
+########################################################################################################################
+###																										ADDONS / PLUGINS																							 ###
+########################################################################################################################
+# plugins / extensions / addons
 $pluginItems = $json.package_plugins
 foreach ($plugin in $pluginItems) {
 	$p = [PSCustomObject]@{
@@ -303,58 +450,47 @@ foreach ($plugin in $pluginItems) {
 
 	if ($p.InstallOrNot -eq $True) {
 		if (Get-Command "$($p.CommandName)" -ErrorAction SilentlyContinue) {
-			foreach ($pg in $($p.List)) {
-				if (!(Invoke-Expression "$($p.CheckCommand)" | Select-String "$pg")) {
-					$tasks += "$($p.InvokeCommand) $pg"
+			foreach ($pkg in $($p.List)) {
+				if (!(Invoke-Expression "$($p.CheckCommand)" | Select-String "$pkg")) {
+					Invoke-Expression "$($p.InvokeCommand) $pkg"
 				}
 			}
 		}
 	}
 }
+Refresh ($i++)
 
-# Export lock files
-''
-Write-LockFile -PackageSource winget -FileName wingetfile.json -OutputPath $PSScriptRoot
-Write-LockFile -PackageSource scoop -FileName scoopfile.json -OutputPath $PSScriptRoot
-Write-LockFile -PackageSource choco -FileName chocolatey.config -OutputPath $PSScriptRoot
-Write-LockFile -PackageSource modules -FileName modules.json -OutputPath $PSScriptRoot
-
-
+########################################################################################################################
+###																										VSCODE EXTENSIONS																							 ###
+########################################################################################################################
+# VSCode Extensions
 if (Get-Command code -ErrorAction SilentlyContinue) {
 	$extensionList = Get-Content "$PSScriptRoot\vscode\extensions.list"
 	foreach ($ext in $extensionList) {
 		if (!(code --list-extensions | Select-String "$ext")) {
 			Write-Verbose -Message "Installing VSCode Extension: $ext"
-			$tasks += "code --install-extension $ext"
+			Invoke-Expression "code --install-extension $ext"
 		}
 	}
 }
 
-if (Get-Command spicetify -ErrorAction SilentlyContinue) {
-	if (!(Test-Path "$env:APPDATA\spicetify\CustomApps\marketplace")) {
-		$marketplaceInstallUrl = "https://raw.githubusercontent.com/spicetify/spicetify-marketplace/main/resources/install.ps1"
-		$tasks += "Invoke-WebRequest -UseBasicParsing $marketplaceInstallUrl"
-	}
-}
-
-if (Get-Command bat -ErrorAction SilentlyContinue) {
-	$tasks += "bat cache --clear"
-	$tasks += "bat cache --build"
-}
-
-# Catppuccin Themes: https://github.com/catppuccin/catppuccin
+########################################################################################################################
+###																					CATPPUCCIN THEMES (FlowLauncher + Btop)								 									 ###
+########################################################################################################################
+# Catppuccin Themes
 $catppuccinThemes = @('Frappe', 'Latte', 'Macchiato', 'Mocha')
-# add flowlauncher themes
+
+# FLowlauncher themes
 $flowLauncherDir = "$env:LOCALAPPDATA\FlowLauncher"
 if (Test-Path "$flowLauncherDir" -PathType Container) {
 	$flowLauncherThemeDir = "$flowLauncherDir\Themes"
 	$catppuccinThemes | ForEach-Object {
 		if (!(Test-Path "$flowLauncherThemeDir\Catppuccin $_.xaml" -PathType Leaf)) {
-			$flowLauncherThemeUrl = "https://raw.githubusercontent.com/catppuccin/flow-launcher/refs/heads/main/themes/Catppuccin%20$_.xaml"
-			$tasks += Invoke-WebRequest -Uri $flowLauncherThemeUrl -OutFile $flowLauncherThemeDir
+			Install-OnlineFile -OutputDir "$flowLauncherThemeDir" -Url "https://raw.githubusercontent.com/catppuccin/flow-launcher/refs/heads/main/themes/Catppuccin%20$_.xaml"
 		}
 	}
 }
+
 # add btop theme
 # since we install btop by scoop, then the application folder would be in scoop directory
 if (Get-Command btop -ErrorAction SilentlyContinue) {
@@ -363,44 +499,30 @@ if (Get-Command btop -ErrorAction SilentlyContinue) {
 	$catppuccinThemes = $catppuccinThemes.ToLower()
 	$catppuccinThemes | ForEach-Object {
 		if (!(Test-Path "$btopThemeDir\catppuccin_$_.theme" -PathType Leaf)) {
-			$btopThemeUrl = "https://raw.githubusercontent.com/catppuccin/btop/refs/heads/main/themes/catppuccin_$_.theme"
-			$tasks += "Invoke-WebRequest -Uri $btopThemeUrl -OutFile $btopThemeDir"
+			Install-OnlineFile -OutputDir "$btopThemeDir" -Url "https://raw.githubusercontent.com/catppuccin/btop/refs/heads/main/themes/catppuccin_$_.theme"
 		}
 	}
 }
 
+########################################################################################################################
+###																										START KOMOREBI + YASB																					 ###
+########################################################################################################################
 # start komorebi
 if (Get-Command komorebic -ErrorAction SilentlyContinue) {
 	if ((!(Get-Process -Name komorebi -ErrorAction SilentlyContinue)) -and (!(Get-Process -Name whkd -ErrorAction SilentlyContinue))) {
-		$tasks += "komorebic start --whkd"
+		Invoke-Expression "komorebic start --whkd"
 	}
 }
 
-# start yasn
+# start yasb
 if (Get-Command yasb -ErrorAction SilentlyContinue) {
 	if (!(Get-Process -Name yasb -ErrorAction SilentlyContinue)) {
 		$yasbPath = "$Env:ProgramFiles\Yasb\yasb.exe"
-		if (Test-Path -Path "$yasbPath") { $tasks += "Start-Process -FilePath $yasbPath" }
+		if (Test-Path -Path "$yasbPath") { Invoke-Expression "Start-Process -FilePath $yasbPath -Wait" }
 	}
 }
 
-##### RUN TASKS #####
-$t = 1
-$totalTasks = $tasks.Count
-foreach ($task in $tasks) {
-	try {
-		Write-Verbose -Message "Invoking command: $task"
-		Invoke-Expression $task | Out-Null
-		Refresh ($i++)
-	} catch {
-		Write-Error -ErrorAction Stop "An error occurred: $_"
-	}
-	[long]$percent = ($t / $totalTasks) * 100
-	Write-Progress -Activity "Setting up Windows" -Status "$percent% $task" -PercentComplete $percent
-	$t++
-}
-
-# reload git
+# Unset git
 if (Get-Command git -ErrorAction SilentlyContinue) {
 	git config --global --unset user.email >$null 2>&1
 	git config --global --unset user.name >$null 2>&1
@@ -410,49 +532,30 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
 
 # yazi plugins
 if (Get-Command ya -ErrorAction SilentlyContinue) {
-	Write-Verbose -Message "Installing and updating yazi plugins"
+	Write-Verbose "Installing yazi plugins / themes"
 	ya pack -i >$null 2>&1
 	ya pack -u >$null 2>&1
 }
 
-# wsl enable
-if ((Get-WindowsOptionalFeature -Online | Where-Object { $_.FeatureName -eq "Microsoft-Windows-Subsystem-Linux" }).State -eq "Disabled") {
-	Write-Verbose -Message "Enable Windows Feature: Windows Subsystem for Linux"
-	Enable-WindowsOptionalFeature -Online -FeatureName "Microsoft-Windows-Subsystem-Linux" -All -NoRestart
-}
-if ((Get-WindowsOptionalFeature -Online | Where-Object { $_.FeatureName -eq "VirtualMachinePlatform" }).State -eq "Disabled") {
-	Write-Verbose -Message "Enable Windows Feature: Virtual Machine Platform"
-	Enable-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform" -All -NoRestart
+# bat build theme
+if (Get-Command bat -ErrorAction SilentlyContinue) {
+	Write-Verbose "Building bat theme"
+	bat cache --clear >$null 2>&1
+	bat cache --build >$null 2>&1
 }
 
-# Export lock files (packages installed)
-function Write-LockFile {
-	param (
-		[ValidateSet('winget', 'choco', 'scoop')]
-		[Alias('s', 'p')][string]$PackageSource,
-		[Alias('f')][string]$FileName,
-		[Alias('o')][string]$OutputPath = "$($(Get-Location).Path)"
-	)
-
-	$dest = "$OutputPath\$FileName"
-
-	switch ($PackageSource) {
-		"winget" {
-			if (!(Get-Command winget -ErrorAction SilentlyContinue)) { return }
-			winget export -o $dest | Out-Null
-		}
-		"choco" {
-			if (!(Get-Command choco -ErrorAction SilentlyContinue)) { return }
-			choco export $dest | Out-Null
-		}
-		"scoop" {
-			if (!(Get-Command scoop -ErrorAction SilentlyContinue)) { return }
-			scoop export > $dest
-		}
-	}
+########################################################################################################################
+###																								WINDOWS SUBSYSTEMS FOR LINUX																			 ###
+########################################################################################################################
+if (!(Get-Command wsl -CommandType Application -ErrorAction Ignore)) {
+	Write-Verbose -Message "Installing Windows SubSystems for Linux..."
+	Start-Process -FilePath "PowerShell" -ArgumentList "wsl", "--install" -Verb RunAs -Wait -WindowStyle Hidden
 }
-Write-LockFile -PackageSource winget -FileName winget.lock.json -OutputPath $PSScriptRoot
 
+
+########################################################################################################################
+###																												END SCRIPT																								 ###
+########################################################################################################################
 Set-Location $currentLocation
 Start-Sleep -Seconds 5
 
