@@ -28,6 +28,55 @@ function Refresh ([int]$Time) {
 	}
 }
 
+function Write-LockFile {
+	param (
+		[ValidateSet('winget', 'choco', 'scoop', 'modules')]
+		[Alias('s', 'p')][string]$PackageSource,
+		[Alias('f')][string]$FileName,
+		[Alias('o')][string]$OutputPath = "$($(Get-Location).Path)"
+	)
+
+	$dest = "$OutputPath\$FileName"
+
+	switch ($PackageSource) {
+		"winget" {
+			if (!(Get-Command winget -ErrorAction SilentlyContinue)) { return }
+			winget export -o $dest | Out-Null
+			if ($?) {
+				Write-Host "Packages installed by WinGet are exported at " -NoNewline -ForegroundColor Green
+				Write-Host "$dest" -ForegroundColor Yellow
+			}
+			Start-Sleep -Seconds 1
+		}
+		"choco" {
+			if (!(Get-Command choco -ErrorAction SilentlyContinue)) { return }
+			choco export $dest | Out-Null
+			if ($?) {
+				Write-Host "Packages installed by Chocolatey are exported at " -NoNewline -ForegroundColor Green
+				Write-Host "$dest" -ForegroundColor Yellow
+			}
+			Start-Sleep -Seconds 1
+		}
+		"scoop" {
+			if (!(Get-Command scoop -ErrorAction SilentlyContinue)) { return }
+			scoop export > $dest
+			if ($?) {
+				Write-Host "Packages installed by Scoop are exported at " -NoNewline -ForegroundColor Green
+				Write-Host "$dest" -ForegroundColor Yellow
+			}
+			Start-Sleep -Seconds 1
+		}
+		"modules" {
+			Get-InstalledModule | Select-Object -Property Name, Version | ConvertTo-Json -Depth 100 | Out-File $dest
+			if ($?) {
+				Write-Host "PowerShell Modules installed are exported at " -NoNewline -ForegroundColor Green
+				Write-Host "$dest" -ForegroundColor Yellow
+			}
+			Start-Sleep -Seconds 1
+		}
+	}
+}
+
 # set current working directory location
 Set-Location $PSScriptRoot
 [System.Environment]::CurrentDirectory = $PSScriptRoot
@@ -211,7 +260,6 @@ foreach ($pkg in $totalPkgs) {
 				if ($null -ne $wingetArgs) { $tasks += "winget install $wingetArgs $pkg --source winget" }
 				else { $tasks += "winget install $pkg --source winget" }
 			}
-			break
 		}
 		($pkg -in $chocoPkgs) {
 			if (!(choco list | Select-String "$pkg")) {
@@ -263,6 +311,14 @@ foreach ($plugin in $pluginItems) {
 		}
 	}
 }
+
+# Export lock files
+''
+Write-LockFile -PackageSource winget -FileName wingetfile.json -OutputPath $PSScriptRoot
+Write-LockFile -PackageSource scoop -FileName scoopfile.json -OutputPath $PSScriptRoot
+Write-LockFile -PackageSource choco -FileName chocolatey.config -OutputPath $PSScriptRoot
+Write-LockFile -PackageSource modules -FileName modules.json -OutputPath $PSScriptRoot
+
 
 if (Get-Command code -ErrorAction SilentlyContinue) {
 	$extensionList = Get-Content "$PSScriptRoot\vscode\extensions.list"
@@ -368,6 +424,34 @@ if ((Get-WindowsOptionalFeature -Online | Where-Object { $_.FeatureName -eq "Vir
 	Write-Verbose -Message "Enable Windows Feature: Virtual Machine Platform"
 	Enable-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform" -All -NoRestart
 }
+
+# Export lock files (packages installed)
+function Write-LockFile {
+	param (
+		[ValidateSet('winget', 'choco', 'scoop')]
+		[Alias('s', 'p')][string]$PackageSource,
+		[Alias('f')][string]$FileName,
+		[Alias('o')][string]$OutputPath = "$($(Get-Location).Path)"
+	)
+
+	$dest = "$OutputPath\$FileName"
+
+	switch ($PackageSource) {
+		"winget" {
+			if (!(Get-Command winget -ErrorAction SilentlyContinue)) { return }
+			winget export -o $dest | Out-Null
+		}
+		"choco" {
+			if (!(Get-Command choco -ErrorAction SilentlyContinue)) { return }
+			choco export $dest | Out-Null
+		}
+		"scoop" {
+			if (!(Get-Command scoop -ErrorAction SilentlyContinue)) { return }
+			scoop export > $dest
+		}
+	}
+}
+Write-LockFile -PackageSource winget -FileName winget.lock.json -OutputPath $PSScriptRoot
 
 Set-Location $currentLocation
 Start-Sleep -Seconds 5
