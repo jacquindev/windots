@@ -1,12 +1,18 @@
+archive/
+
+*.lock
+*.lock.*
 *.log
 *.log.*
 *.bak
-foo*
+*.backup
 
 db.zo
-*.lock.json
+
+modules.json
+wingetfile.json
+scoopfile.json
+chocolatey.config
+
 .spotify_token_cache.json
-
 config/lazygit/state.yml
-
-archive/
