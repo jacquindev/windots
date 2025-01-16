@@ -53,9 +53,7 @@
 		"choco": {
 			"auto_install": true,
 			"packages": [
-				"maven",
 				"ngrok",
-				"openjdk",
 				"virtualbox",
 				"vagrant",
 				"zig"
