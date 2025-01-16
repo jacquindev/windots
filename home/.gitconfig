@@ -88,6 +88,16 @@
     smudge = git-lfs smudge -- %f
     process = git-lfs filter-process
     required = true
+[gpg]
+	program = C:\\Program Files (x86)\\GnuPG\\bin\\gpg.exe
+	format = ssh
+[gpg "ssh"]
+	allowedSignersFile = ~/.ssh/allowed_signers
+[commit]
+	gpgsign = true
+[tag]
+	gpgsign = true
 [user]
+    signingkey = ~/.ssh/id_ed25519.pub
 	name = Jacquin Moon
 	email = jacquindev@outlook.com
