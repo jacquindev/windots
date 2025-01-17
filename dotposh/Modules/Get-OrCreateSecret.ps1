@@ -11,6 +11,8 @@ function Get-OrCreateSecret {
         Name of the secret to get or create.
     .PARAMETER SecretVault
         Name of the vault where it stores local secrets.
+    .PARAMETER Metadata
+        Add or show metadata of a secret.
     .EXAMPLE
         Get-OrCreateSecret -SecretName mysecret -SecretVault LocalVault
     .LINK
@@ -20,37 +22,21 @@ function Get-OrCreateSecret {
 
     [CmdletBinding()]
     param (
+        [Parameter(Mandatory = $True)]
+        [ArgumentCompleter({
+                param ($commandName, $parameterName, $stringMatch)
+                Get-SecretInfo -Name "$stringMatch*" | Select-Object -ExpandProperty Name })]
         [Alias('n', 'name')][string]$SecretName,
-        [Alias('v', 'vault')][string]$SecretVault
-    )
 
-    if (!$SecretName) {
-        $secretNameList = (Get-SecretInfo).Name
-        if ($secretNameList.Count -eq 1) { $SecretName = $secretNameList }
-        elseif ($secretNameList.Count -gt 1) {
-            if (Get-Command gum -ErrorAction SilentlyContinue) {
-                $SecretName = gum choose --header="Choose a Secret Name:" $secretNameList
-            } elseif (Get-Command fzf -ErrorAction SilentlyContinue) {
-                $SecretName = $secretNameList | fzf --prompt="Select Secret Name >  " --height=~80% --layout=reverse --border --exit-0 --cycle --margin="2,40" --padding=1
-            } else {
-                for ($i = 0; $i -lt $secretNameList.Count; $i++) {
-                    Write-Host "[$i] $($secretNameList[$i])"
-                }
-                $index = $(Write-Host "Enter the corresponding number of Secret Name: " -ForegroundColor Magenta -NoNewline; Read-Host)
-                if ($null -ne $index) {
-                    if ($index -match '^\d+$' -and [int]$index -lt $secretNameList.Count) {
-                        $SecretName = $secretNameList[$index]
-                    } else { return }
-                }
-            }
-        } else {
-            if (Get-Command gum -ErrorAction SilentlyContinue) {
-                $SecretName = gum input --prompt="Input Secret Name: "
-            } else {
-                $SecretName = $(Write-Host "Input Secret Name: " -ForegroundColor Magenta -NoNewline; Read-Host)
-            }
-        }
-    }
+        [Parameter(Mandatory = $False)]
+        [ArgumentCompleter({
+                param ($commandName, $parameterName, $stringMatch)
+                Get-SecretVault -Name "$stringMatch*" | Select-Object -ExpandProperty Name })]
+        [Alias('v', 'vault')][string]$SecretVault,
+
+        [Parameter(Mandatory = $False)]
+        [Alias('m', 'meta')][switch]$Metadata
+    )
 
     if (!$SecretVault) {
         $secretVaultList = (Get-SecretVault).Name
@@ -72,6 +58,7 @@ function Get-OrCreateSecret {
                 }
             }
         } else {
+            Write-Host "Register new vault on your local machine:" -ForegroundColor Blue
             if (Get-Command gum -ErrorAction SilentlyContinue) {
                 $SecretVault = gum input --prompt="Input Secret Vault name: "
             } else {
@@ -89,10 +76,43 @@ function Get-OrCreateSecret {
 
         if ($createSecret.ToUpper() -eq 'Y') {
             $SecretValue = Read-Host -Prompt "Enter secret value for ($SecretName)" -AsSecureString
-            Set-Secret -Name $SecretName -Vault $SecretVault -SecureStringSecret $SecretValue
+            if ($Metadata) {
+                $metadataTable = @{}
+
+                do {
+                    $metadataKey = Read-Host "Input Metadata Key"
+                    $metadataValue = Read-Host "Input Metadata Value"
+
+                    ''; $done = Read-Host "Add more? (Y/n)"; ''
+
+                    $metadataTable += @{
+                        $metadataKey = $metadataValue
+                    }
+                } until (($done.ToUpper() -eq 'n') -or ($done.ToUpper() -eq 'no'))
+
+                Set-Secret -Name $SecretName -Vault $SecretVault -SecureStringSecret $SecretValue -Metadata $metadataTable
+            } else {
+                Set-Secret -Name $SecretName -Vault $SecretVault -SecureStringSecret $SecretValue
+            }
             $SecretValue = Get-Secret -Name $SecretName -AsPlainText -Vault $SecretVault
         } else { throw "Secret not found and not created, exiting" }
     }
 
+    if ($Metadata) {
+        $MetadataValue = Get-SecretInfo -Name $SecretName | Select-Object -ExpandProperty Metadata
+        return ($SecretValue, $MetadataValue)
+    }
+
     return $SecretValue
+}
+
+#############################################################################################################################
+# The remaining script is Get-OrCreateSecret powershell tab completion helper
+Register-ArgumentCompleter -CommandName Get-OrCreateSecret -ParameterName SecretName -ScriptBlock {
+    param ($commandName, $parameterName, $stringMatch)
+    Get-SecretInfo -Name "$stringMatch*" | Select-Object -ExpandProperty Name
+}
+Register-ArgumentCompleter -CommandName Get-OrCreateSecret -ParameterName SecretVault -ScriptBlock {
+    param ($commandName, $parameterName, $stringMatch)
+    Get-SecretVault -Name "$stringMatch*" | Select-Object -ExpandProperty Name
 }
