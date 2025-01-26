@@ -35,24 +35,24 @@
     margin: 0;
     padding: 0;
 }
-
 .yasb-bar {
     padding: 0;
     margin: 0;
 }
-
-/* WIDGET */
+.widget {
+    background-color: var(--base);
+    padding: 0 8px;
+    margin: 0;
+}
 .widget .label {
-    padding: 0px 1px;
+    padding: 1px 2px 1px 2px;
 }
 .widget .label.alt {
-	padding: 1px 8px 1px 8px;
+    padding: 1px 8px 1px 8px;
 }
 .active-window-widget {
-    margin: 0;
-    padding: 0 8px;
     border-radius: 15px;
-    background-color: var(--base);
+    margin-left: 8px;
 }
 .container-left,
 .container-center,
@@ -61,59 +61,82 @@
 	padding: 0;
 }
 
-/* KOMOREBI */
+.komorebi-active-layout {
+	border-top-right-radius: 15px;
+	border-bottom-right-radius: 15px;
+}
+.komorebi-active-layout .label {
+	font-weight: 500;
+	padding: 2px 0 0 0;
+}
+.apps-widget .widget-container,
+.komorebi-workspaces .widget-container,
+.wifi-widget .widget-container,
+.komorebi-active-layout .widget-container {
+	background-color: var(--base);
+	margin: 4px 0px 4px 0;
+	border-radius: 15px;
+}
+.komorebi-active-layout {
+    padding: 0 8px 0 4px;
+}
+.komorebi-active-layout .label {
+    color: var(--lavender);
+}
 .komorebi-workspaces {
-    padding: 0 4px 0 8px;
-    background-color: var(--base);
-    border-radius: 15px;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
 }
 .komorebi-workspaces .ws-btn {
+    background-color: var(--surface2);
+    margin: 0 4px 0 4px;
+    color: transparent;
     width: 12px;
     height: 12px;
-    margin: 0 2px;
-    background-color: var(--surface2);
-    color: transparent;
 }
 .komorebi-workspaces .ws-btn:hover,
 .komorebi-workspaces .ws-btn.populated:hover {
 	background-color: var(--text);
 }
 .komorebi-workspaces .ws-btn.active {
-    width: 26px;
+	width: 26px;
     height: 12px;
-    color: transparent;
     background-color: var(--green);
     border-radius: 5px;
 }
-.komorebi-active-layout {
-    padding: 0 8px 0 4px;
-}
-.komorebi-active-layout .label {
-    font-weight: bold;
-    font-style: italic;
-    color: var(--lavender);
+
+.wifi-widget {
+	padding: 0 4px 0 4px;
+	border-top-left-radius: 18px;
+	border-bottom-left-radius: 18px;
 }
 
-/* APP WIDGETS */
+.apps-widget .widget-container {
+    margin-right: 2px;
+}
 .apps-widget {
-    margin: 0 8px;
-    padding: 0 8px;
+    margin: 0 2px 0 2px;
+    padding: 0 8px 0 8px;
     border-radius: 15px;
     background-color: var(--base);
 }
-
-/*POWER MENU WIDGET*/
-/* Uptime text */
-.uptime {
-	font-size: 20px;
-    font-style: italic;
-	margin-bottom: 10px;
-	color: var(--lavender);
+.clock-widget {
+	border-radius: 15px;
 }
+
+.uptime {
+    font-size: 20px;
+    font-style: italic;
+    margin-bottom: 10px;
+    color: var(--lavender);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
 .power-menu-widget {
     padding: 0 12px;
     background-color: var(--base);
     border-radius: 15px;
+    margin: 0 8px 0 0px;
 }
 .power-menu-widget .label {
     color: var(--red);
@@ -146,7 +169,7 @@
 	padding-top: 8px;
 	color: var(--subtext0);
 }
-.power-menu-popup .button.cancel .icon, 
+.power-menu-popup .button.cancel .icon,
 .power-menu-popup .button.cancel .label {
     color: var(--red);
 }
@@ -171,17 +194,18 @@
     color: var(--blue);
 }
 
-.volume-widget, .memory-widget, .disk-widget, .cpu-widget, .weather-widget {
-    padding: 0 8px;
-    background-color: var(--base);
+.wifi-widget {
+	padding: 0 4px 0 4px;
+	border-top-left-radius: 15px;
+	border-bottom-left-radius: 15px;
+}
+.wifi-widget .icon {
+	color: #43d8d8;
+	padding: 0 8px;
+	margin: 0;
 }
 
-.memory-widget {
-    margin: 0 8px 0 0;
-    border-top-right-radius: 15px;
-    border-bottom-right-radius: 15px;
-}
-
+.language-widget .icon,
 .volume-widget .icon,
 .memory-widget .icon,
 .disk-widget .icon,
@@ -190,6 +214,10 @@
     margin: 0 2px 0 0;
 }
 
+.language-widget .icon {
+    color: var(--maroon);
+    font-size: 16px;
+}
 .memory-widget .icon {
     color: var(--peach);
     font-size: 16px;
@@ -203,62 +231,24 @@
     padding: 0 2px 0 4px;
     color: var(--mauve);
 }
-
-
-/* WIFI WIDGET */
-.wifi-widget {
-    padding: 0 8px 0 12px;
-    background-color: var(--base);
-    border-top-left-radius: 15px;
-    border-bottom-left-radius: 15px;
+.volume-widget {
+    margin: 0 8px 0 0;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
 }
-.wifi-widget .icon {
-    color: var(--blue);
-    font-size: 21px;
-}
-
-/* GITHUB WIDGET */
-.github-widget {
-    margin: 0;
-    padding: 0;
-    background-color: var(--base);
-}
-.github-widget .icon {
-	color: var(--lavender);
-}
-.github-widget .icon.new-notification {
-    color: var(--green);
-}
-
-.wallpapers-widget {
-    margin: 0;
-    padding: 0 8 0 10;
-    background-color: var(--base);
-}
-
-/* CLOCK WIDGET */
-.clock-widget {
-    padding: 0 10px;
-    border-radius: 15px;
-    background-color: var(--base);
-}
-
-/* WEATHER WIDGET */
 .weather-widget .icon {
-    font-size: 28px;
-    margin: 0 4px 0 2px;
-    padding: 0 2px 0 4px;
+	font-size: 24px;
 }
 .weather-widget .icon.sunnyDay {
-    color: var(--yellow);
+	color: var(--yellow);
 }
 .weather-widget .icon.rainyDay,
 .weather-widget .icon.rainyNight {
-    color: var(--sapphire);
+    color: var(--blue);
 }
 .weather-widget .icon.cloudyDay,
 .weather-widget .icon.cloudyNight {
-    color: var(--teal)
+    color: var(--sapphire)
 }
 .weather-widget .icon.default {
     color: var(--green)
@@ -267,35 +257,45 @@
 .weather-widget .icon.snowyIcyNight {
     color: var(--lavender)
 }
+.weather-widget .icon.clearNight {
+	color: var(--teal);
+}
 
-/* MEDIA WIDGET */
 .media-widget {
 	padding: 0 8px;
-    margin: 0 8px;
-    background-color: var(--base);
-    border-radius: 15px;
+	margin: 0 8px;
+	border-radius: 15px;
+	margin-right: 8px;
 }
 .media-widget .label {
-    padding: 0 8px;
 	background-color: transparent;
-    color: var(--lavender);
-    font-style: italic;
 }
 .media-widget .btn {
-    padding: 0 3px 0 0;
-	margin: 0;
     color: var(--subtext0);
     font-family: Segoe Fluent Icons;
+    padding: 0 3px 0 0;
+}
+.media-widget .btn:hover {
+    color: var(--peach);
 }
 .media-widget .btn.play {
 	background-color: var(--mantle);
 	border-radius: 15px;
 }
-.media-widget .btn:hover {
-    color: var(--peach);
-}
 .media-widget .btn.disabled:hover,
 .media-widget .btn.disabled {
 	color: var(--surface1);
-    background-color: transparent;
+	background-color: transparent;
+}
+
+/* GITHUB WIDGET */
+.github-widget {
+    padding: 0 4px;
+}
+.github-widget .icon {
+    font-size: 14px;
+	color: var(--text);
+}
+.github-widget .icon.new-notification {
+    color: var(--red);
 }
