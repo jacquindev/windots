@@ -172,8 +172,6 @@ function Write-LockFile {
 ########################################################################################################################
 ###																					  						MAIN SCRIPT 		  																				 ###
 ########################################################################################################################
-
-
 # set current working directory location
 $currentLocation = "$($(Get-Location).Path)"
 
@@ -187,14 +185,15 @@ $i = 1
 ########################################################################################################################
 # install nerd fonts
 ''
-Write-Host "(Please skip this step if you already installed Nerd Fonts)" -ForegroundColor DarkGray
+Write-Verbose "Installing Nerd Fonts"
 Write-Host "The following fonts are highly recommended: " -ForegroundColor Green
+Write-Host "(Please skip this step if you already installed Nerd Fonts)" -ForegroundColor DarkGray
 Write-Output "  ● Cascadia Code Nerd Font"
 Write-Output "  ● FantasqueSansM Nerd Font"
 Write-Output "  ● FiraCode Nerd Font"
 Write-Output "  ● JetBrainsMono Nerd Font"
 ''
-$installNerdFonts = $(Write-Host "[RECOMMENDED] Install NerdFont now? (Y/n): " -NoNewline -ForegroundColor Magenta; Read-Host)
+$installNerdFonts = $(Write-Host "[RECOMMENDED] Install NerdFont now? (y/N): " -NoNewline -ForegroundColor Magenta; Read-Host)
 if ($installNerdFonts.ToUpper() -eq 'Y') {
 	& ([scriptblock]::Create((Invoke-WebRequest 'https://to.loredo.me/Install-NerdFont.ps1'))) -Scope AllUsers -Confirm:$False
 	Refresh ($i++)
@@ -219,7 +218,7 @@ if ($wingetInstall -eq $True) {
 		&([ScriptBlock]::Create((Invoke-RestMethod asheroto.com/winget))) -Force
 	}
 
-	# Configure winget for better performance
+	# Configure winget settings for better performance
 	$settingsPath = "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json"
 	$settingsJson = @'
 {
@@ -336,8 +335,8 @@ if ($moduleInstall -eq $True) {
 ########################################################################################################################
 # Configure git
 if (Get-Command git -ErrorAction SilentlyContinue) {
-	$gitUserName = (git config --global user.name)
-	$gitUserMail = (git config --global user.email)
+	$gitUserName = (git config user.name)
+	$gitUserMail = (git config user.email)
 
 	if ($null -eq $gitUserName) { $gitUserName = $(Write-Host "Input your git name: " -NoNewline -ForegroundColor Magenta; Read-Host) }
 	if ($null -eq $gitUserMail) { $gitUserMail = $(Write-Host "Input your git email: " -NoNewline -ForegroundColor Magenta; Read-Host) }
@@ -387,6 +386,14 @@ foreach ($symlink in $symlinks.GetEnumerator()) {
 }
 Refresh ($i++)
 
+# Set the right git name and email for the user after symlinking
+if (Get-Command git -ErrorAction SilentlyContinue) {
+	git config --global unset user.name
+	git config --global user.name $gitUserName
+	git config --global unset user.email
+	git config --global user.email $gitUserMail
+}
+
 ########################################################################################################################
 ###																									ENVIRONMENT VARIABLES																						 ###
 ########################################################################################################################
@@ -395,7 +402,7 @@ $envVar = $json.environment_variables
 foreach ($env in $envVar) {
 	if (Get-Command $($env.command) -ErrorAction SilentlyContinue) {
 		if (!([System.Environment]::GetEnvironmentVariable("$($env.name)"))) {
-			Write-Verbose -Message "Setting up environment variable for $($env.name) --> $($env.value)"
+			Write-Verbose "Setting environment variable for: $($env.name) --> $($env.value)"
 			[System.Environment]::SetEnvironmentVariable("$($env.name)", "$($env.value)", "User")
 			if ($LASTEXITCODE -ne 0) { Write-Error -ErrorAction Stop "An error occurred while creating environment variable with value $($env.value)" }
 		}
@@ -407,7 +414,7 @@ Refresh ($i++)
 ###																		SETUP NODEJS / INSTALL NVM (Node Version Manager)															 ###
 ########################################################################################################################
 if (!(Get-Command nvm -ErrorAction SilentlyContinue)) {
-	$installNvm = $(Write-Host "Install NVM? (Y/n) " -ForegroundColor Magenta -NoNewline; Read-Host)
+	$installNvm = $(Write-Host "Install NVM? (y/N) " -ForegroundColor Magenta -NoNewline; Read-Host)
 	if ($installNvm.ToUpper() -eq 'Y') {
 		Write-Verbose "Installing NVM from GitHub Repo"
 		Install-AppFromGitHub -RepoName "coreybutler/nvm-windows" -FileName "nvm-setup.exe"
@@ -417,7 +424,7 @@ if (!(Get-Command nvm -ErrorAction SilentlyContinue)) {
 
 if (Get-Command nvm -ErrorAction SilentlyContinue) {
 	if (!(Get-Command node -ErrorAction SilentlyContinue)) {
-		$whichNode = $(Write-Host "Install LTS (Y) or latest (n) Node version? " -ForegroundColor Magenta -NoNewline; Read-Host)
+		$whichNode = $(Write-Host "Install LTS (y) or latest (N) Node version? " -ForegroundColor Magenta -NoNewline; Read-Host)
 		if ($whichNode.ToUpper() -eq 'Y') {	nvm install lts }
 		else { nvm install latest }
 		nvm use newest
@@ -427,9 +434,15 @@ if (Get-Command nvm -ErrorAction SilentlyContinue) {
 		corepack enable
 	}
 	if (!(Get-Command bun -ErrorAction SilentlyContinue)) {
-		$useBun = $(Write-Host "Install 'bun'? (Y/n): " -ForegroundColor Magenta -NoNewline; Read-Host)
+		$useBun = $(Write-Host "Install Bun? (y/N): " -ForegroundColor Magenta -NoNewline; Read-Host)
 		if ($useBun.ToUpper() -eq 'Y') {
-			pnpm install -g bun
+			if (Get-Command pnpm -ErrorAction SilentlyContinue) {
+				Write-Verbose "Installing 'bun' using 'pnpm'"
+				pnpm install -g bun
+			} else {
+				Write-Verbose "Installing 'bun' using 'npm'"
+				npm install --global bun
+			}
 		}
 	}
 }
@@ -453,6 +466,7 @@ foreach ($plugin in $pluginItems) {
 		if (Get-Command "$($p.CommandName)" -ErrorAction SilentlyContinue) {
 			foreach ($pkg in $($p.List)) {
 				if (!(Invoke-Expression "$($p.CheckCommand)" | Select-String "$pkg")) {
+					Write-Verbose "Executing: $($p.InvokeCommand) $pkg"
 					Invoke-Expression "$($p.InvokeCommand) $pkg"
 				}
 			}
@@ -476,7 +490,7 @@ if (Get-Command code -ErrorAction SilentlyContinue) {
 }
 
 ########################################################################################################################
-###																					CATPPUCCIN THEMES (FlowLauncher + Btop)								 									 ###
+###																										CATPPUCCIN THEMES 								 														 ###
 ########################################################################################################################
 # Catppuccin Themes
 $catppuccinThemes = @('Frappe', 'Latte', 'Macchiato', 'Mocha')
@@ -487,6 +501,7 @@ if (Test-Path "$flowLauncherDir" -PathType Container) {
 	$flowLauncherThemeDir = "$flowLauncherDir\Themes"
 	$catppuccinThemes | ForEach-Object {
 		if (!(Test-Path "$flowLauncherThemeDir\Catppuccin $_.xaml" -PathType Leaf)) {
+			Write-Verbose "Adding file: `"Catppuccin $_.xaml`" to $flowLauncherThemeDir."
 			Install-OnlineFile -OutputDir "$flowLauncherThemeDir" -Url "https://raw.githubusercontent.com/catppuccin/flow-launcher/refs/heads/main/themes/Catppuccin%20$_.xaml"
 		}
 	}
@@ -500,6 +515,7 @@ if (Get-Command btop -ErrorAction SilentlyContinue) {
 	$catppuccinThemes = $catppuccinThemes.ToLower()
 	$catppuccinThemes | ForEach-Object {
 		if (!(Test-Path "$btopThemeDir\catppuccin_$_.theme" -PathType Leaf)) {
+			Write-Verbose "Adding file: catppuccin_$_.theme to $btopThemeDir."
 			Install-OnlineFile -OutputDir "$btopThemeDir" -Url "https://raw.githubusercontent.com/catppuccin/btop/refs/heads/main/themes/catppuccin_$_.theme"
 		}
 	}
@@ -511,6 +527,7 @@ if (Get-Command btop -ErrorAction SilentlyContinue) {
 # start komorebi
 if (Get-Command komorebic -ErrorAction SilentlyContinue) {
 	if ((!(Get-Process -Name komorebi -ErrorAction SilentlyContinue)) -and (!(Get-Process -Name whkd -ErrorAction SilentlyContinue))) {
+		Write-Verbose "Starting Komorebi with WHKD"
 		Invoke-Expression "komorebic start --whkd"
 	}
 }
@@ -518,17 +535,13 @@ if (Get-Command komorebic -ErrorAction SilentlyContinue) {
 # start yasb
 if (Get-Command yasb -ErrorAction SilentlyContinue) {
 	if (!(Get-Process -Name yasb -ErrorAction SilentlyContinue)) {
-		$yasbPath = "$Env:ProgramFiles\Yasb\yasb.exe"
-		if (Test-Path -Path "$yasbPath") { Invoke-Expression "Start-Process -FilePath $yasbPath -Wait" }
+		# Ensure the correct path to `yasb.exe` file
+		$yasbPath = (Get-Command yasb -ErrorAction SilentlyContinue).Source
+		if (Test-Path -Path "$yasbPath") {
+			Write-Verbose "Starting YASB Status Bar"
+			Start-Process -FilePath $yasbPath -Wait
+		}
 	}
-}
-
-# Unset git
-if (Get-Command git -ErrorAction SilentlyContinue) {
-	git config --global --unset user.email >$null 2>&1
-	git config --global --unset user.name >$null 2>&1
-	git config --global user.name $gitUserName >$null 2>&1
-	git config --global user.email $gitUserMail >$null 2>&1
 }
 
 # yazi plugins

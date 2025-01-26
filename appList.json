@@ -17,6 +17,7 @@
 				{ "id": "Amazon.AWSCLI" },
 				{ "id": "AmN.yasb" },
 				{ "id": "chrisant996.Clink" },
+				{ "id": "LoftLabs.DevPod" },
 				{ "id": "Docker.DockerDesktop" },
 				{ "id": "gerardog.gsudo" },
 				{ "id": "Git.Git" },
@@ -24,7 +25,6 @@
 				{ "id": "Google.Chrome.Dev" },
 				{ "id": "ImageMagick.ImageMagick" },
 				{ "id": "JanDeDobbeleer.OhMyPosh" },
-				{ "id": "JetBrains.IntelliJIDEA.Community" },
 				{ "id": "LGUG2Z.komorebi" },
 				{ "id": "LGUG2Z.whkd" },
 				{ "id": "Microsoft.AzureCLI" },
@@ -79,7 +79,6 @@
 				"gh",
 				"git-aliases",
 				"git-crypt",
-				"git-filter-repo",
 				"git-lfs",
 				"git-sizer",
 				"gitleaks",
@@ -96,6 +95,7 @@
 				"spicetify-cli",
 				"spotify-tui",
 				"starship",
+				"task",
 				"wget",
 				"wixtoolset",
 				"yazi",
@@ -107,6 +107,7 @@
 	},
 	"package_plugins": [
 		// You can add extra plugins/extensions/addons list here with the following format:
+		// Set `"install": true` to install the plugins
 		{
 			"command_name": "gh",
 			"invoke_command": "gh extension install",
@@ -119,7 +120,7 @@
 				"Link-/gh-token",
 				"yusukebe/gh-markdown-preview"
 			],
-			"install": true
+			"install": false
 		},
 		{
 			"command_name": "dotnet",
@@ -130,7 +131,7 @@
 				"dotnet-outdated-tool",
 				"GitVersion.Tool"
 			],
-			"install": true
+			"install": false
 		},
 		{
 			"command_name": "vagrant",
@@ -141,7 +142,7 @@
 				"vagrant-share",
 				"vagrant-winnfsd"
 			],
-			"install": true
+			"install": false
 		},
 		{
 			"command_name": "az",
@@ -150,7 +151,7 @@
 			"plugins": [
 				"costmanagement"
 			],
-			"install": true
+			"install": false
 		},
 		{
 			"command_name": "bun", // I use bun instead of npm, pnpm, or yarn since it's faster (required `bun` installed)
@@ -160,9 +161,13 @@
 				"@angular/cli",
 				"commitizen",
 				"cz-git",
-				"degit"
+				"degit",
+				"markdown-link-check",
+				"textlint-rule-terminology",
+				"textlint",
+				"typescript"
 			],
-			"install": true
+			"install": false
 		},
 		{
 			"command_name": "pipx",
@@ -174,7 +179,7 @@
 				"pdm",
 				"poetry"
 			],
-			"install": true
+			"install": false
 		}
 	],
 	"powershell_modules": {
