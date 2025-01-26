@@ -4,10 +4,7 @@ $pyenvVenvCommand = (Get-Command 'pyenv-win-venv' -ErrorAction SilentlyContinue)
 
 if ($pyenvVenvCommand) {
 	if ($pyenvVenvCommand.ScriptContents | Select-String -Pattern 'completion') {
-		# Run pyenv-venv completion script asynchronously
-		Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCount 1 -Action {
-			&"pyenv-win-venv.ps1" completion | Out-String | Invoke-Expression
-		} | Out-Null
+		&"pyenv-win-venv.ps1" completion | Out-String | Invoke-Expression
 
 	} else {
 		# If there is no internet connection, then silently exit

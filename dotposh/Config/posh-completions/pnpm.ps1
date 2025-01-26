@@ -176,7 +176,5 @@ if (Get-Command pnpm -ErrorAction SilentlyContinue) {
         ###-end-pnpm-completion-###
     }
 
-    Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCount 1 -Action {
-        Register-ArgumentCompleter -CommandName @('pnpm', 'pn') -ScriptBlock $scriptBlock
-    } | Out-Null
+    Register-ArgumentCompleter -CommandName @('pnpm', 'pn') -ScriptBlock $scriptBlock
 }
