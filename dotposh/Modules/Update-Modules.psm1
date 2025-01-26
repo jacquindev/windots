@@ -1,19 +1,19 @@
+<#
+.SYNOPSIS
+    Update all installed modules
+.EXAMPLE
+    Update-Modules -Scope CurrentUser
+.PARAMETER AllowPrerelease
+    Updating module to latest prerelease version.
+.PARAMETER WhatIf
+    Run function without actually executing it.
+.PARAMETER Name
+    Name of the module you want to update.
+.PARAMETER Scope
+    The scope apply when updating modules.
+#>
+
 function Update-Modules {
-    <#
-    .SYNOPSIS
-        Update all installed modules
-    .EXAMPLE
-        Update-Modules -Scope CurrentUser
-    .PARAMETER AllowPrerelease
-        Updating module to latest prerelease version.
-    .PARAMETER WhatIf
-        Run function without actually executing it.
-    .PARAMETER Name
-        Name of the module you want to update.
-    .PARAMETER Scope
-        The scope apply when updating modules.
-    #>
-    [CmdletBinding()]
     param (
         [switch]$AllowPrerelease,
 
@@ -62,3 +62,5 @@ function Update-Modules {
         if ($?) { Write-Host "Everything is up-to-date!" -ForegroundColor Green }
     }
 }
+
+Export-ModuleMember -Function Update-Modules

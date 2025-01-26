@@ -1,5 +1,5 @@
 function Search-History {
-    [CmdletBinding()]
+    [alias('hist')]
     param (
         [string]$SearchTerm,
         [switch]$g, # global search
@@ -34,10 +34,12 @@ function Search-History {
 }
 
 function Clear-PSHistory {
-    Get-PSReadLineOption | 
-    Select-Object -ExpandProperty HistorySavePath | 
+    [alias('clr-hist')]
+    param ()
+
+    Get-PSReadLineOption |
+    Select-Object -ExpandProperty HistorySavePath |
     Remove-Item -Force -Recurse
 }
 
-Set-Alias -Name 'hist' -Value 'Search-History'
-Set-Alias -Name 'clr-hist' -Value 'Clear-PSHistory'
+Export-ModuleMember -Function Search-History, Clear-PSHistory -Alias hist, clr-hist

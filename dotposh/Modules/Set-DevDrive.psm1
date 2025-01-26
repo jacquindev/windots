@@ -1,7 +1,10 @@
-﻿# source: https://github.com/ran-dall/Dev-Drive
-
-# Function to check if a drive is a Dev Drive
-function Get-DevDrive {
+﻿function Get-DevDrive {
+	<#
+	.SYNOPSIS
+		Function to check if a drive is a Dev Drive
+	.LINK
+		https://github.com/ran-dall/Dev-Drive/blob/main/SetupDevDrive.ps1
+	#>
 	$devDrives = Get-Volume | Where-Object { $_.FileSystemType -eq 'ReFS' -and $_.DriveType -eq 'Fixed' }
 	$devDriveLetters = @()
 
@@ -68,7 +71,21 @@ function Move-CacheContents {
 	} else { Write-Warning -Message "No contents found in $ContentPath." }
 }
 
-function Set-DevDriveCache {
+function Set-DevDrive {
+	<#
+	.SYNOPSIS
+		Set DevDrive environment variables and packages' cache locations
+	.DESCRIPTION
+		Create chosen environment variables if not exist.
+		Move cache contents from original location to DevDrive's destination
+	.EXAMPLE
+		Set-DevDrive
+	.LINK
+		https://github.com/ran-dall/Dev-Drive/blob/main/SetupDevDrivePackageCache.ps1
+	#>
+
+	[CmdletBinding()]
+
 	$selectedDrive = Get-DevDrive
 	if ($selectedDrive) {
 		Write-Host "Selected Dev Drive: " -ForegroundColor Green -NoNewline
@@ -90,6 +107,7 @@ function Set-DevDriveCache {
 		@{ Name = "RYE_HOME"; Value = "$cachePath\rye"; Sources = @("$env:USERPROFILE\.rye") },
 		@{ Name = "UV_CACHE_DIR"; Value = "$cachePath\uv"; Sources = @("$env:LOCALAPPDATA\uv\cache") },
 		@{ Name = "NUGET_PACKAGES"; Value = "$cachePath\.nuget\packages"; Sources = @("$env:USERPROFILE\.nuget\packages") },
+		@{ Name = "VAGRANT_HOME"; Value = "$selectedDrive\.vagrant.d"; Sources = @("$env:USERPROFILE\.vagrant.d") },
 		@{ Name = "VCPKG_DEFAULT_BINARY_CACHE"; Value = "$cachePath\vcpkg"; Sources = @("$env:LOCALAPPDATA\vcpkg\archives", "$env:APPDATA\vcpkg\archives") },
 		@{ Name = "CARGO_HOME"; Value = "$cachePath\cargo"; Sources = @("$env:USERPROFILE\.cargo") },
 		@{ Name = "GRADLE_USER_HOME"; Value = "$cachePath\gradle"; Sources = @("$env:USERPROFILE\.gradle") },
@@ -112,3 +130,5 @@ function Set-DevDriveCache {
 		}
 	}
 }
+
+Export-ModuleMember -Function Set-DevDrive

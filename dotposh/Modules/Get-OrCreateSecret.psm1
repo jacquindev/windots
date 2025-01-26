@@ -1,26 +1,26 @@
+<#
+.SYNOPSIS
+    Get secret from local vault or create if it does not exists.
+.DESCRIPTION
+    Use external modules: SecretManagement & SecretStore to manage secrets on local machine.
+.PARAMETER SecretName
+    Name of the secret to get or create.
+.PARAMETER SecretVault
+    Name of the vault where it stores local secrets.
+.PARAMETER Metadata
+    Add or show metadata of a secret.
+.EXAMPLE
+    Get-OrCreateSecret -SecretName mysecret -SecretVault LocalVault
+.LINK
+    https://github.com/scottmckendry/Windots/blob/main/Profile.ps1#L178
+    https://learn.microsoft.com/en-us/powershell/utility-modules/secretmanagement/overview?view=ps-modules
+#>
+
 #requires -Module Microsoft.PowerShell.SecretManagement
 #requires -Module Microsoft.PowerShell.SecretStore
 
 function Get-OrCreateSecret {
-    <#
-    .SYNOPSIS
-        Get secret from local vault or create if it does not exists.
-    .DESCRIPTION
-        Use external modules: SecretManagement & SecretStore to manage secrets on local machine.
-    .PARAMETER SecretName
-        Name of the secret to get or create.
-    .PARAMETER SecretVault
-        Name of the vault where it stores local secrets.
-    .PARAMETER Metadata
-        Add or show metadata of a secret.
-    .EXAMPLE
-        Get-OrCreateSecret -SecretName mysecret -SecretVault LocalVault
-    .LINK
-        https://github.com/scottmckendry/Windots/blob/main/Profile.ps1#L178
-        https://learn.microsoft.com/en-us/powershell/utility-modules/secretmanagement/overview?view=ps-modules
-    #>
-
-    [CmdletBinding()]
+    [alias('secret')]
     param (
         [Parameter(Mandatory = $True)]
         [ArgumentCompleter({
@@ -106,13 +106,4 @@ function Get-OrCreateSecret {
     return $SecretValue
 }
 
-#############################################################################################################################
-# The remaining script is Get-OrCreateSecret powershell tab completion helper
-Register-ArgumentCompleter -CommandName Get-OrCreateSecret -ParameterName SecretName -ScriptBlock {
-    param ($commandName, $parameterName, $stringMatch)
-    Get-SecretInfo -Name "$stringMatch*" | Select-Object -ExpandProperty Name
-}
-Register-ArgumentCompleter -CommandName Get-OrCreateSecret -ParameterName SecretVault -ScriptBlock {
-    param ($commandName, $parameterName, $stringMatch)
-    Get-SecretVault -Name "$stringMatch*" | Select-Object -ExpandProperty Name
-}
+Export-ModuleMember -Function Get-OrCreateSecret -Alias secret

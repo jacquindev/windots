@@ -1,83 +1,36 @@
-function Write-AnimatedProgress {
-    <#
-    .SYNOPSIS
-        Show animated animations while waiting for progress done.
-    .LINK
-        https://github.com/Jaykul/Spinner/blob/master/Spinner.ps1
-        https://github.com/DBremen/Write-TerminalProgress/blob/main/Write-TerminalProgress.ps1
-        https://github.com/sindresorhus/cli-spinners/blob/07c83e7b9d8a08080d71ac8bda2115c83501d9d6/spinners.json
-    #>
-    [CmdletBinding()]
-    param (
-        [string]$SpinnerName = "earth",
-        [string]$Label = "",
-        [string[]]$Frames,
-        [int]$Interval = 80,
-        [int]$Duration = 10
-    )
+<#
+.SYNOPSIS
+    Retrieves Network Connections
+.DESCRIPTION
+    Function that emulates the MS-DOS netstat tool, and returns a PSCustomObject
+    that includes resultes in a specified format.
+.PARAMETER Listen
+    Returns all Network Connections with the state of 'Listening'
+.PARAMETER Process
+    Returns all Network Connections that match the 'Process' name
+.PARAMETER ID
+    Returns all Network Connections that match the Process 'ID'
+.PARAMETER LocalPort
+    Returns all Network Connections that match the Local Port number
+.PARAMETER RemotePort
+    Returns all Network Connections that match the Remote Port number
+.PARAMETER Process
+    Returns all Network Connections that match the 'Process' name
+.EXAMPLE
+    > Get-Netstats -Listen
+        or
+    > Get-Netstats -Process svchost
+        or
+    > Get-Netstats -RemotePort 443
+.NOTES
+    This function was originally from Mike Pruett, please check the file below for more details:
+    - https://github.com/mikepruett3/dotposh/blob/master/functions/Get-Netstat.ps1
 
-    $e = [char]27
-    $Sw = [System.Diagnostics.Stopwatch]::new()
-    $Sw.Start()
-    $Duration *= 500
-
-    Set-Location $PSScriptRoot
-    [System.Environment]::CurrentDirectory = $PSScriptRoot
-
-    if ($SpinnerName) {
-        $spinnersPath = "$PSScriptRoot\Assets\spinners.json"
-        $spinners = Get-Content $spinnersPath | ConvertFrom-Json -AsHashtable
-        $spinner = $spinners[$SpinnerName]
-        $Interval = $spinner["interval"]
-        $Frames = $spinner["frames"]
-    }
-
-    $Frames = $Frames.ForEach{ "$e[u" + $_ + " " + $Label }
-    Write-Host "$e[s" -NoNewline
-
-    do {
-        foreach ($Frame in $Frames) {
-            Write-Host $Frame -NoNewline
-            Start-Sleep -Milliseconds $Interval
-        }
-    } while ($Sw.ElapsedMilliseconds -lt $Duration)
-
-    Write-Host ("$e[u" + (" " * ($Frame.Length + $Label.Length + 1)) + "$e[u") -NoNewline
-    $Sw.Stop()
-}
+    I rewrite this with the purpose of simplifying the code and adding extra waiting animations.
+#>
 
 function Get-Netstats {
-    <#
-        .SYNOPSIS
-            Retrieves Network Connections
-        .DESCRIPTION
-            Function that emulates the MS-DOS netstat tool, and returns a PSCustomObject
-            that includes resultes in a specified format.
-        .PARAMETER Listen
-            Returns all Network Connections with the state of 'Listening'
-        .PARAMETER Process
-            Returns all Network Connections that match the 'Process' name
-        .PARAMETER ID
-            Returns all Network Connections that match the Process 'ID'
-        .PARAMETER LocalPort
-            Returns all Network Connections that match the Local Port number
-        .PARAMETER RemotePort
-            Returns all Network Connections that match the Remote Port number
-        .PARAMETER Process
-            Returns all Network Connections that match the 'Process' name
-        .EXAMPLE
-            > Get-Netstats -Listen
-                or
-            > Get-Netstats -Process svchost
-                or
-            > Get-Netstats -RemotePort 443
-        .NOTES
-            This function was originally from Mike Pruett, please check the file below for more details:
-                - https://github.com/mikepruett3/dotposh/blob/master/functions/Get-Netstat.ps1
-
-            I rewrite this with the purpose of simplifying the code and adding extra waiting animations.
-        #>
-    [CmdletBinding()]
+    [alias('netstats')]
     param (
         [switch] $Listen,
         [string] $Process,
@@ -173,4 +126,51 @@ function Get-Netstats {
     Format-Table -AutoSize -Wrap
 }
 
-Set-Alias -Name 'netstats' -Value 'Get-Netstats'
+function Write-AnimatedProgress {
+    <#
+    .SYNOPSIS
+        Show animated animations while waiting for progress done.
+    .LINK
+        https://github.com/Jaykul/Spinner/blob/master/Spinner.ps1
+        https://github.com/DBremen/Write-TerminalProgress/blob/main/Write-TerminalProgress.ps1
+        https://github.com/sindresorhus/cli-spinners/blob/07c83e7b9d8a08080d71ac8bda2115c83501d9d6/spinners.json
+    #>
+    param (
+        [string]$SpinnerName = "earth",
+        [string]$Label = "",
+        [string[]]$Frames,
+        [int]$Interval = 80,
+        [int]$Duration = 10
+    )
+
+    $e = [char]27
+    $Sw = [System.Diagnostics.Stopwatch]::new()
+    $Sw.Start()
+    $Duration *= 500
+
+    Set-Location $PSScriptRoot
+    [System.Environment]::CurrentDirectory = $PSScriptRoot
+
+    if ($SpinnerName) {
+        $spinnersPath = "$PSScriptRoot\Assets\spinners.json"
+        $spinners = Get-Content $spinnersPath | ConvertFrom-Json -AsHashtable
+        $spinner = $spinners[$SpinnerName]
+        $Interval = $spinner["interval"]
+        $Frames = $spinner["frames"]
+    }
+
+    $Frames = $Frames.ForEach{ "$e[u" + $_ + " " + $Label }
+    Write-Host "$e[s" -NoNewline
+
+    do {
+        foreach ($Frame in $Frames) {
+            Write-Host $Frame -NoNewline
+            Start-Sleep -Milliseconds $Interval
+        }
+    } while ($Sw.ElapsedMilliseconds -lt $Duration)
+
+    Write-Host ("$e[u" + (" " * ($Frame.Length + $Label.Length + 1)) + "$e[u") -NoNewline
+    $Sw.Stop()
+}
+
+Export-ModuleMember -Function Get-Netstats -Alias netstats
