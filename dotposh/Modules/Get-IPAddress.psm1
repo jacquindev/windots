@@ -1,33 +1,31 @@
+<#
+.SYNOPSIS
+    Show current public or private IP address of the machine.
+.DESCRIPTION
+    Function that enumerate the current public or private IP address.
+.PARAMETER public
+    Return the Public (External) IP Address of the current workstation.
+.PARAMETER private
+    Return the Private (Internal) IP Address of the current workstation.
+.EXAMPLE
+    Get-IpAddress -Public
+    --> Print Public IP Address onto the console.
+.EXAMPLE
+    Get-IpAddress -Public -Interactive
+    --> Show Public IP Address in Windows notification.
+.LINK
+    https://github.com/Windos/BurntToast
+    https://www.technewstoday.com/powershell-get-ip-address/
+.NOTES
+    Filename: Get-IPAddress.ps1
+    Author: Jacquin Moon
+    Date: October 15th, 2024
+#>
+
 #requires -Module BurntToast
 
 function Get-IPAddress {
-    <#
-    .SYNOPSIS
-        Show current public or private IP address of the machine.
-    .DESCRIPTION
-        Function that enumerate the current public or private IP address.
-    .PARAMETER public
-        Return the Public (External) IP Address of the current workstation.
-    .PARAMETER private
-        Return the Private (Internal) IP Address of the current workstation.
-    .EXAMPLE
-        Get-IpAddress -Public
-
-        --> Print Public IP Address onto the console.
-    .EXAMPLE
-        Get-IpAddress -Public -Interactive
-
-        --> Show Public IP Address in Windows notification.
-    .LINK
-        https://github.com/Windos/BurntToast
-        https://www.technewstoday.com/powershell-get-ip-address/
-    .NOTES
-        Filename: Get-IPAddress.ps1
-        Author: Jacquin Moon
-        Date: October 15th, 2024
-    #>
-
-    [CmdletBinding()]
+    [alias('ip')]
     param (
         [Alias('external', 'global', 'g')][switch]$Public,
         [Alias('internal', 'local', 'l')][switch]$Private,
@@ -54,4 +52,4 @@ function Get-IPAddress {
     }
 }
 
-Set-Alias -Name 'ip' -Value 'Get-IPAddress'
+Export-ModuleMember -Function Get-IPAddress -Alias ip

@@ -118,7 +118,6 @@ function Get-VBoxManageSnapshotList {
 }
 
 function Invoke-VBoxManageSnapshot {
-	[CmdletBinding()]
 	param (
 		[Parameter(Position = 0)]
 		[ArgumentCompletions('take', 'delete', 'restore', 'restorecurrent', 'edit', 'list', 'showvminfo')]
@@ -202,7 +201,6 @@ Example:
 }
 
 function Edit-VBoxManage {
-	[CmdletBinding()]
 	param (
 		[ArgumentCompletions('cpu', 'ram', 'vram', 'disk', 'help')]
 		[Parameter(Position = 0)][string]$Subcommand,
@@ -246,7 +244,6 @@ Example:
 }
 
 function Update-VBoxManage {
-	[CmdletBinding()]
 	param (
 		[ArgumentCompletions('help', 'perform', 'list', 'modify')]
 		[string]$Subcommand,
@@ -332,7 +329,6 @@ Example:
 }
 
 function Invoke-VBoxManageGuest {
-	[CmdletBinding()]
 	param (
 		[ArgumentCompletions('help', 'run', 'start', 'copyfrom', 'copyto', 'mkdir', 'rmdir', 'rm', 'mv', 'mktemp', 'mount', 'fsinfo', 'stat', 'list', 'closeprocess', 'closesession', 'updatega', 'waitrunlevel', 'watch')]
 		[string]$Subcommand
@@ -399,7 +395,6 @@ Example:
 }
 
 function Set-VBoxManageExtPack {
-	[CmdletBinding()]
 	param (
 		[ArgumentCompletions('install', 'uninstall', 'cleanup', 'list')]
 		[string]$Subcommand,
@@ -460,7 +455,6 @@ Example:
 }
 
 function Invoke-VBoxManage {
-	[CmdletBinding()]
 	param(
 		[ArgumentCompletions('help', 'commands', 'extpack', 'version', 'list', 'edit', 'start', 'stop', 'delete', 'snapshot', 'guestcontrol', 'update')]
 		[string]$Subcommand

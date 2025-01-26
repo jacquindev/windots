@@ -1,23 +1,25 @@
+<#
+.SYNOPSIS
+    Outputs file system directory statistics.
+.DESCRIPTION
+    Recursively correlate directory structures, file counts, directory counts, largest files, and total directory size.
+.LINK
+    https://github.com/CyberCondor/Get-DirStats/blob/main/Get-DirStats.ps1
+.PARAMETER Dir
+    Specifies a directory other than the current working directory.
+.PARAMETER Format
+    Specifies the format of file size calculated and displayed.
+.EXAMPLE
+    PS C:\> Get-DirStats -Dir ~\ -Format GB
+.EXAMPLE
+    PS C:\> Get-DirStats -Format KB
+.NOTES
+    Author: CyberCondor
+    Link: https://github.com/CyberCondor/Get-DirStats
+#>
+
 function Get-Dirstats {
-    <#
-    .SYNOPSIS
-        Outputs file system directory statistics.
-    .DESCRIPTION
-        Recursively correlate directory structures, file counts, directory counts, largest files, and total directory size.
-    .LINK
-        https://github.com/CyberCondor/Get-DirStats/blob/main/Get-DirStats.ps1
-    .PARAMETER Dir
-        Specifies a directory other than the current working directory.
-    .PARAMETER Format
-        Specifies the format of file size calculated and displayed.
-    .EXAMPLE
-        PS C:\> Get-DirStats -Dir ~\ -Format GB
-    .EXAMPLE
-        PS C:\> Get-DirStats -Format KB
-    .NOTES
-        Author: CyberCondor
-        Link: https://github.com/CyberCondor/Get-DirStats
-    #>
+    [alias('dirstats')]
     param(
         [Alias('d')]
         [string]$Dir,
@@ -35,8 +37,7 @@ function Get-Dirstats {
 
     if (($Format -eq "KB") -or ($Format -eq "GB") -or ($Format -eq "TB")) {
         $FormatAndPath | Add-Member -NotePropertyMembers @{Format = $Format }
-    }
-    else { $FormatAndPath | Add-Member -NotePropertyMembers @{Format = "MB" } }
+    } else { $FormatAndPath | Add-Member -NotePropertyMembers @{Format = "MB" } }
 
     $FormatAndPath | Select-Object Format, Path | Format-List
 
@@ -56,8 +57,7 @@ function Get-Dirstats {
             Write-Progress -id 1 -Activity "Collecting Stats for -> $($ThisDir.Name) ( $([int]$Index) / $($TotalIndex) )" -Status "$(($ContentsIndex++/$ContentsCount).ToString("P")) Complete"
             if ($Item.Mode -like "d*") {
                 $TotalDirCount++
-            }
-            elseif ($Item.Mode -NotLike "d*") {
+            } elseif ($Item.Mode -NotLike "d*") {
                 $TotalFileCount++
             }
             if ($Item.Length) {
@@ -79,11 +79,11 @@ function Get-Dirstats {
         else { $ThisDir | Add-Member -NotePropertyMembers @{LargestItemSize = [math]::round($LargestItemSize / 1MB, 8) } ; $ThisDir | Add-Member -NotePropertyMembers @{TotalSize = [math]::round($TotalLength / 1MB, 8) } } #Set to MB by default
     }
     Write-Progress -id 1 -Completed -Activity "Complete"
-    $AllItemsInCurrDir | Select-Object Mode, LastWriteTime, Name, DirCount, FileCount, TotalSize, LargestItemSize, LargestItem, Contents | 
+    $AllItemsInCurrDir | Select-Object Mode, LastWriteTime, Name, DirCount, FileCount, TotalSize, LargestItemSize, LargestItem, Contents |
     Sort-Object TotalSize, FileCount, DirCount, Mode, Contents |
     Format-Table -AutoSize
 
     if ($Dir) { Set-Location $CurrDir }
 }
 
-Set-Alias -Name 'dirstats' -Value 'Get-Dirstats'
+Export-ModuleMember -Function Get-Dirstats -Alias dirstats

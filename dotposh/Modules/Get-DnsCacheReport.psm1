@@ -1,8 +1,8 @@
+<#
+.LINK
+    https://raw.githubusercontent.com/HarmVeenstra/Powershellisfun/refs/heads/main/Create%20a%20Report%20on%20DNS%20lookups/Get-DnsCacheReport.ps1
+#>
 function Get-DnsCacheReport {
-    <#
-    .LINK
-        https://raw.githubusercontent.com/HarmVeenstra/Powershellisfun/refs/heads/main/Create%20a%20Report%20on%20DNS%20lookups/Get-DnsCacheReport.ps1
-    #>
     param (
         [Parameter(Mandatory = $true)][int]$Minutes,
         [Parameter(Mandatory = $false)][string]$CsvPath
@@ -22,7 +22,7 @@ function Get-DnsCacheReport {
     $d = (Get-Date) + $t
     [int]$Interval = 1
 
-    # Start countdown 
+    # Start countdown
     while ($remain.TotalSeconds -gt 0) {
         Write-Host (" {0} " -f $spinner[$spinnerPos % ($spinner.Count)]) -NoNewline
         Write-Host "Gathering DNS Cache Information, countdown:" -ForegroundColor "Green" -NoNewline
@@ -86,3 +86,5 @@ function Get-DnsSection($section) {
         default { return 'Unknown' }
     }
 }
+
+Export-ModuleMember -Function Get-DnsCacheReport

@@ -1,6 +1,9 @@
 function Get-BIOSInfo {
+    [alias('bios')]
+    param ()
+
     Write-Host "----------------- " -ForegroundColor "Yellow"
-    Write-Host "BIOS Information: " -ForegroundColor "Yellow" 
+    Write-Host "BIOS Information: " -ForegroundColor "Yellow"
     Write-Host "----------------- " -ForegroundColor "Yellow"
     $details = Get-CimInstance -ClassName Win32_BIOS
     $result = [PSCustomObject]@{
@@ -14,8 +17,11 @@ function Get-BIOSInfo {
 }
 
 function Get-CPUInfo {
+    [alias('cpu')]
+    param ()
+
     Write-Host "---------------- " -ForegroundColor "Yellow"
-    Write-Host "CPU Information: " -ForegroundColor "Yellow" 
+    Write-Host "CPU Information: " -ForegroundColor "Yellow"
     Write-Host "---------------- " -ForegroundColor "Yellow"
     $details = Get-WmiObject -Class Win32_Processor
     $celsius = Get-CPUTemperature
@@ -31,8 +37,11 @@ function Get-CPUInfo {
 }
 
 function Get-GPUInfo {
+    [alias('gpu')]
+    param ()
+
     Write-Host "---------------- " -ForegroundColor "Yellow"
-    Write-Host "GPU Information: " -ForegroundColor "Yellow" 
+    Write-Host "GPU Information: " -ForegroundColor "Yellow"
     Write-Host "---------------- " -ForegroundColor "Yellow"
     $details = Get-WmiObject Win32_videocontroller
     $result = [PSCustomObject]@{
@@ -49,8 +58,11 @@ function Get-GPUInfo {
 }
 
 function Get-MotherBoardInfo {
+    [alias('motherboard')]
+    param ()
+
     Write-Host "------------------------ " -ForegroundColor "Yellow"
-    Write-Host "Motherboard Information: " -ForegroundColor "Yellow" 
+    Write-Host "Motherboard Information: " -ForegroundColor "Yellow"
     Write-Host "------------------------ " -ForegroundColor "Yellow"
     $details = Get-WmiObject Win32_BaseBoard
     $result = [PSCustomObject]@{
@@ -62,8 +74,11 @@ function Get-MotherBoardInfo {
 }
 
 function Get-OSInfo {
+    [alias('os')]
+    param ()
+
     Write-Host "----------------------------- " -ForegroundColor "Yellow"
-    Write-Host "Operating System Information: " -ForegroundColor "Yellow" 
+    Write-Host "Operating System Information: " -ForegroundColor "Yellow"
     Write-Host "----------------------------- " -ForegroundColor "Yellow"
     $details = Get-WmiObject -Class Win32_OperatingSystem
     $result = [PSCustomObject]@{
@@ -79,8 +94,11 @@ function Get-OSInfo {
 }
 
 function Get-RAMInfo {
+    [alias('ram')]
+    param ()
+
     Write-Host "---------------- " -ForegroundColor "Yellow"
-    Write-Host "RAM Information: " -ForegroundColor "Yellow" 
+    Write-Host "RAM Information: " -ForegroundColor "Yellow"
     Write-Host "---------------- " -ForegroundColor "Yellow"
     $objs = Get-WmiObject -Class Win32_PhysicalMemory
     $objSum = $objs | Measure-Object -Property Capacity -Sum
@@ -101,6 +119,9 @@ function Get-RAMInfo {
 }
 
 function Get-SwapSpaceInfo {
+    [alias('swapspace')]
+    param ()
+
     Write-Host "----------------------- " -ForegroundColor "Yellow"
     Write-Host "Swap Space Information: " -ForegroundColor "Yellow"
     Write-Host "----------------------- " -ForegroundColor "Yellow"
@@ -122,10 +143,13 @@ function Get-SwapSpaceInfo {
     Write-Host "$percent% " -ForegroundColor "Yellow" -NoNewline
     Write-Host "(Free: " -ForegroundColor "Blue" -NoNewline
     Write-Host "$free MB" -ForegroundColor "Yellow" -NoNewline
-    Write-Host ")" -ForegroundColor "Blue" 
+    Write-Host ")" -ForegroundColor "Blue"
 }
 
 function Get-CPUTemperature {
+    [alias('cputemp')]
+    param ()
+
     $objects = Get-WmiObject -Query "SELECT * FROM Win32_PerfFormattedData_Counters_ThermalZoneInformation" -Namespace "root/CIMV2"
     foreach ($object in $objects) {
         $highPrec = $object.HighPrecisionTemperature
@@ -135,7 +159,9 @@ function Get-CPUTemperature {
 }
 
 function Get-RAMType {
+    [alias('ramtype')]
     param ([int]$Type)
+
     switch ($Type) {
         20 { return "DDR" }
         21 { return "DDR2" }
@@ -145,3 +171,5 @@ function Get-RAMType {
         default { return "RAM" }
     }
 }
+
+Export-ModuleMember -Function Get-BIOSInfo, Get-CPUInfo, Get-GPUInfo, Get-MotherBoardInfo, Get-OSInfo, Get-RAMInfo, Get-SwapSpaceInfo, Get-CPUTemperature, Get-RAMType -Alias bios, cpu, gpu, motherboard, os, ram, swapspace, cputemp, ramtype

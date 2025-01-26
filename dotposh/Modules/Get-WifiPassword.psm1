@@ -1,18 +1,18 @@
-function Get-WifiPassword {
-    <#
-    .SYNOPSIS
-        Function to get wifi password
-    .DESCRIPTION
-        Prints password to the console
-    .PARAMETER WifiName
-        Determine the name of the Wi-Fi
-    .EXAMPLE
-        Get-WifiPassword
-    .EXAMPLE
-        Get-WifiPassword -name WIFINAME
-    #>
+<#
+.SYNOPSIS
+    Function to get wifi password
+.DESCRIPTION
+    Prints password to the console
+.PARAMETER WifiName
+    Determine the name of the Wi-Fi
+.EXAMPLE
+    Get-WifiPassword
+.EXAMPLE
+    Get-WifiPassword -name WIFINAME
+#>
 
-    [CmdletBinding()]
+function Get-WifiPassword {
+    [alias('wifipass')]
     param ([Alias('n', 'name')][string]$WifiName)
 
     if (!$WifiName) {
@@ -48,4 +48,4 @@ function Get-WifiPassword {
     }
 }
 
-Set-Alias -Name 'wifipass' -Value 'Get-WifiPassword'
+Export-ModuleMember -Function Get-WifiPassword -Alias wifipass

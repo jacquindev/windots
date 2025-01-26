@@ -9,14 +9,13 @@
     https://gist.github.com/mkropat/c1226e0cc2ca941b23a9
 #>
 
-function Add-EnvPath {
-    [CmdletBinding()]
+function Add-Path {
     param (
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [string]$Path,
 
         [ValidateSet("Machine", "User", "Session")]
-        [string]$Container = "Session"
+        [Alias('c')][string]$Container = "Session"
     )
 
     if ($Container -ne "Session") {
@@ -38,14 +37,13 @@ function Add-EnvPath {
     }
 }
 
-function Remove-EnvPath {
-    [CmdletBinding()]
+function Remove-Path {
     param(
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
-        [string] $Path,
+        [string]$Path,
 
         [ValidateSet("Machine", "User", "Session")]
-        [string] $Container = "Session"
+        [Alias('c')][string] $Container = "Session"
     )
 
     if ($Container -ne "Session") {
@@ -69,12 +67,12 @@ function Remove-EnvPath {
     }
 }
 
-function Get-EnvPath {
-    [CmdletBinding()]
+function Get-Paths {
+    [alias('paths')]
     param(
         [Parameter(Mandatory = $false)]
         [ValidateSet('Machine', 'User')]
-        [string]$Container
+        [Alias('c')][string]$Container
     )
 
     if ($PSBoundParameters.Count -eq 0) {
@@ -90,3 +88,6 @@ function Get-EnvPath {
         Where-Object { $_ }
     }
 }
+
+Export-ModuleMember -Function Add-Path, Remove-Path
+Export-ModuleMember -Function Get-Paths -Alias paths
