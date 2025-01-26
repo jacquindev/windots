@@ -40,9 +40,9 @@
   },
   "transparency": false,
   "display_index_preferences": {
-    "0": "XMI3447-5&27a467dc&0&UID256",
-    "1": "VIE0994-5&27a467dc&0&UID281",
-    "2": "XYM2405-5&27a467dc&0&UID280"
+    "0": "XMI3447-5&27a467dc&0&UID260",
+    "1": "VIE0994-5&27a467dc&0&UID280",
+    "2": "XYM2405-5&27a467dc&0&UID281"
   },
   "ignore_rules": [
     {
@@ -94,7 +94,13 @@
           "name": "4",
           "layout": "VerticalStack"
         }
-      ]
+      ],
+      "work_area_offset": {
+        "bottom": 20,
+        "left": 0,
+        "right": 0,
+        "top": 35
+      }
     },
     {
       "workspaces": [
@@ -110,7 +116,13 @@
           "name": "3",
           "layout": "Grid"
         }
-      ]
+      ],
+      "work_area_offset": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 20
+      }
     },
     {
       "workspaces": [
@@ -126,7 +138,13 @@
           "name": "3",
           "layout": "Grid"
         }
-      ]
+      ],
+      "work_area_offset": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 20
+      }
     }
   ]
 }
