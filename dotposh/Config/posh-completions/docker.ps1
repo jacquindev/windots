@@ -5,5 +5,5 @@ if (Get-Command docker -ErrorAction SilentlyContinue) {
         Install-Module -Name "DockerCompletion" -AcceptLicense -Scope CurrentUser -Force
     }
     Set-Alias -Name 'd' -Value 'docker'
-    Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCount 1 -Action { Import-Module DockerCompletion -Global } | Out-Null
+    Import-Module DockerCompletion -Global
 }

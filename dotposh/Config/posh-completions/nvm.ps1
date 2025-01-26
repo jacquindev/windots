@@ -79,15 +79,14 @@ if (Get-Command nvm -ErrorAction SilentlyContinue) {
 		}
 	}
 
-	Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCount 1 -Action {
-		Register-ArgumentCompleter -Native -CommandName @('nvm', 'nvm.exe') -ScriptBlock {
-			param($wordToComplete, $commandAst, $cursorPosition)
-			$rest = $commandAst.CommandElements[1..$commandAst.CommandElements.Count] -join ' '
-			if ($rest -ne "" -and $wordToComplete -eq "") {
-				$rest += " "
-			}
-			NvmTabExpansion $rest
+
+	Register-ArgumentCompleter -Native -CommandName @('nvm', 'nvm.exe') -ScriptBlock {
+		param($wordToComplete, $commandAst, $cursorPosition)
+		$rest = $commandAst.CommandElements[1..$commandAst.CommandElements.Count] -join ' '
+		if ($rest -ne "" -and $wordToComplete -eq "") {
+			$rest += " "
 		}
-	} | Out-Null
+		NvmTabExpansion $rest
+	}
 	# nvm powershell completion end
 }
