@@ -1,4 +1,5 @@
 function New-Symlink {
+    [alias('symlink')]
     param (
         [Parameter(Mandatory = $true, Position = 0)]
         [string]$Target,
@@ -12,6 +13,7 @@ function New-Symlink {
 }
 
 function Get-Symlinks {
+    [alias('symlinks')]
     param (
         [string]$Path = "$($(Get-Location).Path)",
         [switch]$Recurse,
@@ -24,4 +26,4 @@ function Get-Symlinks {
         Format-Table -AutoSize
 }
 
-Export-ModuleMember -Function New-Symlink, Get-Symlinks
+Export-ModuleMember -Function New-Symlink, Get-Symlinks -Alias symlink, symlinks
