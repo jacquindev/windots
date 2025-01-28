@@ -189,7 +189,6 @@
 			"CompletionPredictor",
 			"DockerCompletion",
 			"npm-completion",
-			"posh-alias",
 			"posh-git",
 			"powershell-yaml",
 			"PSFzf",
