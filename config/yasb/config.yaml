@@ -37,7 +37,7 @@ bars:
     widgets:
       left: ["komorebi_workspaces", "komorebi_active_layout", "apps", "active_window"]
       center: ["clock"]
-      right: ["media", "wifi", "language", "cpu", "memory", "weather", "volume", "power_menu"]
+      right: ["media", "wifi", "github", "language", "cpu", "memory", "weather", "volume", "power_menu"]
 
 widgets:
   win_button:
@@ -156,9 +156,49 @@ widgets:
       only_unread: false # Show only unread or all notifications;
       max_field_size: 54 # Max characters in title before truncation.
       update_interval: 300 # Check for new notification in seconds
-      menu_width: 400
-      menu_height: 400
-      menu_offset: 240
+      menu:
+        blur: true
+        round_corners: true
+        round_corners_type: "normal"
+        alignment: "right"
+        direction: "down"
+        distance: 5
+
+  wallpapers:
+    type: "yasb.wallpapers.WallpapersWidget"
+    options:
+      label: "<span>\udb83\ude09</span>"
+    image_path: "G:\\dotfiles\\windows\\walls\\pics" # Example path to folder with images
+    change_automatically: false # Automatically change wallpaper
+    update_interval: 60 # If change_automatically is true, update interval in seconds
+    gallery:
+        enabled: true
+        blur: true
+        image_width: 220
+        image_per_page: 8
+        show_buttons: false
+        orientation: "portrait"
+        image_spacing: 8
+        lazy_load: true
+        lazy_load_delay: 80
+        lazy_load_fadein: 400
+        image_corner_radius: 20
+        enable_cache: true
+    run_after: # List of functions to run after wallpaper is updated
+      - "wal -s -t -e -q -n -i {image}" # Example command to run after wallpaper is updated
+      - "cmd.exe /c start /min pwsh ./yasb.ps1" # Example command to run after wallpaper is updated
+  home:
+    type: "yasb.home.HomeWidget"
+    options:
+      label: "<span>\udb81\udf17</span>"
+      menu_list:
+        - { title: "User Home", path: "~" }
+        - { title: "Downloads", path: "~\\Downloads" }
+        - { title: "Documents", path: "~\\Documents" }
+        - { title: "Pictures", path: "~\\Pictures" }
+      system_menu: true
+      power_menu: true
+      blur: false
 
   cpu:
     type: "yasb.cpu.CpuWidget"
@@ -259,6 +299,13 @@ widgets:
         on_left: "exec cmd.exe /c start ms-settings:network"
         on_middle: "do_nothing"
         on_right: "toggle_label"
+      wifi_icons: [
+        "\udb82\udd2e",  # Icon for 0% strength
+        "\udb82\udd1f",  # Icon for 1-20% strength
+        "\udb82\udd22",  # Icon for 21-40% strength
+        "\udb82\udd25",  # Icon for 41-80% strength
+        "\udb82\udd28"   # Icon for 81-100% strength
+      ]
 
   update:
     type: "yasb.update_check.UpdateCheckWidget"

@@ -194,17 +194,6 @@
     color: var(--blue);
 }
 
-.wifi-widget {
-	padding: 0 4px 0 4px;
-	border-top-left-radius: 15px;
-	border-bottom-left-radius: 15px;
-}
-.wifi-widget .icon {
-	color: #43d8d8;
-	padding: 0 8px;
-	margin: 0;
-}
-
 .language-widget .icon,
 .volume-widget .icon,
 .memory-widget .icon,
@@ -288,14 +277,91 @@
 	background-color: transparent;
 }
 
+/* WIFI WIDGET */
+.wifi-widget {
+	padding: 0 4px 0 2px;
+	border-top-left-radius: 15px;
+	border-bottom-left-radius: 15px;
+}
+.wifi-widget .icon {
+	color: #43d8d8;
+	padding: 0 2px 0 8px;
+    margin: 0;
+}
+
 /* GITHUB WIDGET */
 .github-widget {
     padding: 0 4px;
 }
 .github-widget .icon {
-    font-size: 14px;
+    font-size: 18px;
 	color: var(--text);
+    padding: 0 2px 3px 4px;
+    margin: 0;
 }
 .github-widget .icon.new-notification {
     color: var(--red);
+}
+
+.github-menu    {
+    background-color: var(--mantle);
+    max-height: 500px;
+    min-height: 500px;
+    min-width: 420px;
+}
+.github-menu .header {
+    border-bottom: 1px solid var(--base);
+    font-size: 15px;
+    font-weight: 400;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 8px;
+    color: var(--lavender);
+    background-color: var(--base);
+}
+.github-menu .footer {
+    border-top: 1px solid var(--base);
+    font-size: 14px;
+    padding: 4px 8px 6px 8px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--lavender);
+    background-color: rgba(17, 17, 27, 0.75);
+}
+.github-menu .contents {
+    background-color:  rgba(17, 17, 27, 0.2);
+}
+.github-menu .contents .item {
+    min-height: 40px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--crust);
+}
+.github-menu .contents .item:hover {
+    background-color: var(--mantle);
+    border-bottom: 1px solid rgba(255, 255, 255, 0);
+}
+.github-menu .contents .item .title,
+.github-menu .contents .item .description {
+    color: var(--overlay2);
+    font-family: Segoe UI;
+}
+.github-menu .contents .item .title {
+    font-size: 16px;
+    font-weight: 600;
+}
+.github-menu .contents .item .description {
+    font-size: 14px;
+    font-weight: 500
+}
+.github-menu .contents .item.new .title,
+.github-menu .contents .item.new .description {
+    color: var(--text);
+}
+.github-menu .contents .item .icon {
+    font-size: 16px;
+    padding-right: 0;
+    padding-left: 8px;
+    padding-right: 4px;
+    color: var(--lavender);
+}
+.github-menu .contents .item.new .icon {
+    color: var(--green);
 }
