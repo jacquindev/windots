@@ -25,7 +25,7 @@ if (Get-Command fastfetch -ErrorAction SilentlyContinue) {
 function prompt {
     # oh-my-posh will override this prompt, however because we're loading it async we want to communicate that the
     # real prompt is still loading.
-    "[async]:: $(Get-Date -Format "HH:mm tt") $('❯' * ($nestedPromptLevel + 1)) "
+    "[async]:: $($executionContext.SessionState.Path.CurrentLocation) :: $(Get-Date -Format "HH:mm tt") $('❯' * ($nestedPromptLevel + 1)) "
 }
 
 # Load modules asynchronously to reduce shell startup time
@@ -34,6 +34,31 @@ function prompt {
         if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
             oh-my-posh init pwsh --config "$Env:DOTPOSH\posh-zen.toml" | Invoke-Expression
             $Env:POSH_GIT_ENABLED = $true
+        }
+    },
+    {
+        # posh-git
+        if (Get-Module -ListAvailable -Name posh-git -ErrorAction SilentlyContinue) {
+            Set-Alias -Name 'g' -Value 'git' -Scope Global -Force
+            Import-Module posh-git -Global
+        }
+
+        # lazygit alias
+        if (Get-Command lazygit -ErrorAction SilentlyContinue) {
+            Set-Alias -Name 'lg' -Value 'lazygit' -Scope Global -Force
+        }
+    },
+    {
+        # git-aliases
+        if (Get-Module -ListAvailable -Name git-aliases -ErrorAction SilentlyContinue) {
+            Import-Module git-aliases -Global -DisableNameChecking
+        }
+    },
+    {
+        # GitHub CLI
+        if (Get-Command gh -ErrorAction SilentlyContinue) {
+            # gh completion
+            Invoke-Expression -Command $(gh completion -s powershell | Out-String)
         }
     },
     {
@@ -144,6 +169,6 @@ Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -SupportEvent -Action {
 foreach ($module in $((Get-ChildItem -Path "$env:DOTPOSH\Modules\*" -Include *.psm1).FullName )) {
     Import-Module "$module" -Global
 }
-foreach ($file in $((Get-ChildItem -Path "$env:DOTPOSH\Config\*" -Include *.ps1 -Recurse).FullName)) {
+foreach ($file in $((Get-ChildItem -Path "$env:DOTPOSH\Config\*" -Include *.ps1 -Recurse | Sort-Object -Property Directory).FullName)) {
     . "$file"
 }
