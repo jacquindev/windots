@@ -388,9 +388,7 @@ Refresh ($i++)
 
 # Set the right git name and email for the user after symlinking
 if (Get-Command git -ErrorAction SilentlyContinue) {
-	git config --global unset user.name
 	git config --global user.name $gitUserName
-	git config --global unset user.email
 	git config --global user.email $gitUserMail
 }
 
@@ -535,10 +533,12 @@ if (Get-Command komorebic -ErrorAction SilentlyContinue) {
 # start yasb
 if (Get-Command yasb -ErrorAction SilentlyContinue) {
 	if (!(Get-Process -Name yasb -ErrorAction SilentlyContinue)) {
+		Write-Verbose "Starting YASB Status Bar"
 		# Ensure the correct path to `yasb.exe` file
 		$yasbPath = (Get-Command yasb -ErrorAction SilentlyContinue).Source
-		if (Test-Path -Path "$yasbPath") {
-			Write-Verbose "Starting YASB Status Bar"
+		if (Get-Command yasbc -ErrorAction SilentlyContinue) {
+			Invoke-Expression "yasbc start"
+		} elseif (Test-Path -Path "$yasbPath") {
 			Start-Process -FilePath $yasbPath -Wait
 		}
 	}

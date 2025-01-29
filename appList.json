@@ -36,6 +36,7 @@
 				{ "id": "Microsoft.VisualStudioCode" },
 				{ "id": "Obsidian.Obsidian" },
 				{ "id": "Postman.Postman" },
+				{ "id": "Python.Python.3.13" },
 				{ "id": "Rainmeter.Rainmeter" },
 				{ "id": "rocksdanister.LivelyWallpaper" },
 				{ "id": "Stardock.Start11" },
@@ -75,6 +76,7 @@
 				"eza",
 				"fastfetch",
 				"fd",
+				"ffmpeg",
 				"fzf",
 				"gh",
 				"git-aliases",
@@ -85,6 +87,7 @@
 				"glow",
 				"jq",
 				"lazygit",
+				"poppler",
 				"pskill",
 				"scoop-completion",
 				"scoop-search",
@@ -177,7 +180,7 @@
 				"cookiecutter",
 				"copier",
 				"pdm",
-				"poetry"
+				"uv"
 			],
 			"install": false
 		}
