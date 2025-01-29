@@ -1,6 +1,6 @@
 ###-begin-pnpm-completion-###
 if type complete &>/dev/null; then
-  _pnpm_completion () {
+  _pnpm_completion() {
     local words cword
     if type _get_comp_words_by_ref &>/dev/null; then
       _get_comp_words_by_ref -n = -n @ -n : -w words -i cword
@@ -10,12 +10,7 @@ if type complete &>/dev/null; then
     fi
 
     local si="$IFS"
-    IFS=$'\n' COMPREPLY=($(COMP_CWORD="$cword" \
-                           COMP_LINE="$COMP_LINE" \
-                           COMP_POINT="$COMP_POINT" \
-                           SHELL=bash \
-                           pnpm completion-server -- "${words[@]}" \
-                           2>/dev/null)) || return $?
+    IFS=$'\n' COMPREPLY=($(COMP_CWORD="$cword" COMP_LINE="$COMP_LINE" COMP_POINT="$COMP_POINT" SHELL=bash pnpm completion-server -- "${words[@]}" 2>/dev/null)) || return $?
     IFS="$si"
 
     if [ "$COMPREPLY" = "__tabtab_complete_files__" ]; then
@@ -29,4 +24,3 @@ if type complete &>/dev/null; then
   complete -o default -F _pnpm_completion pnpm
 fi
 ###-end-pnpm-completion-###
-

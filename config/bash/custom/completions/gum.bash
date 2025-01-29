@@ -1,43 +1,39 @@
 # bash completion for gum.exe                              -*- shell-script -*-
 
-__gum.exe_debug()
-{
+__gum.exe_debug() {
     if [[ -n ${BASH_COMP_DEBUG_FILE:-} ]]; then
-        echo "$*" >> "${BASH_COMP_DEBUG_FILE}"
+        echo "$*" >>"${BASH_COMP_DEBUG_FILE}"
     fi
 }
 
 # Homebrew on Macs have version 1.3 of bash-completion which doesn't include
 # _init_completion. This is a very minimal version of that function.
-__gum.exe_init_completion()
-{
+__gum.exe_init_completion() {
     COMPREPLY=()
     _get_comp_words_by_ref "$@" cur prev words cword
 }
 
-__gum.exe_index_of_word()
-{
+__gum.exe_index_of_word() {
     local w word=$1
     shift
     index=0
     for w in "$@"; do
         [[ $w = "$word" ]] && return
-        index=$((index+1))
+        index=$((index + 1))
     done
     index=-1
 }
 
-__gum.exe_contains_word()
-{
-    local w word=$1; shift
+__gum.exe_contains_word() {
+    local w word=$1
+    shift
     for w in "$@"; do
         [[ $w = "$word" ]] && return
     done
     return 1
 }
 
-__gum.exe_handle_go_custom_completion()
-{
+__gum.exe_handle_go_custom_completion() {
     __gum.exe_debug "${FUNCNAME[0]}: cur is ${cur}, words[*] is ${words[*]}, #words[@] is ${#words[@]}"
 
     local shellCompDirectiveError=1
@@ -54,8 +50,8 @@ __gum.exe_handle_go_custom_completion()
     # Disable ActiveHelp which is not supported for bash completion v1
     requestComp="GUM.EXE_ACTIVE_HELP=0 ${words[0]} completion completeNoDesc ${args[*]}"
 
-    lastParam=${words[$((${#words[@]}-1))]}
-    lastChar=${lastParam:$((${#lastParam}-1)):1}
+    lastParam=${words[$((${#words[@]} - 1))]}
+    lastChar=${lastParam:$((${#lastParam} - 1)):1}
     __gum.exe_debug "${FUNCNAME[0]}: lastParam ${lastParam}, lastChar ${lastChar}"
 
     if [ -z "${cur}" ] && [ "${lastChar}" != "=" ]; then
@@ -130,56 +126,55 @@ __gum.exe_handle_go_custom_completion()
     fi
 }
 
-__gum.exe_handle_reply()
-{
+__gum.exe_handle_reply() {
     __gum.exe_debug "${FUNCNAME[0]}"
     local comp
     case $cur in
-        -*)
+    -*)
+        if [[ $(type -t compopt) = "builtin" ]]; then
+            compopt -o nospace
+        fi
+        local allflags
+        if [ ${#must_have_one_flag[@]} -ne 0 ]; then
+            allflags=("${must_have_one_flag[@]}")
+        else
+            allflags=("${flags[*]} ${two_word_flags[*]}")
+        fi
+        while IFS='' read -r comp; do
+            COMPREPLY+=("$comp")
+        done < <(compgen -W "${allflags[*]}" -- "$cur")
+        if [[ $(type -t compopt) = "builtin" ]]; then
+            [[ "${COMPREPLY[0]}" == *= ]] || compopt +o nospace
+        fi
+
+        # complete after --flag=abc
+        if [[ $cur == *=* ]]; then
             if [[ $(type -t compopt) = "builtin" ]]; then
-                compopt -o nospace
-            fi
-            local allflags
-            if [ ${#must_have_one_flag[@]} -ne 0 ]; then
-                allflags=("${must_have_one_flag[@]}")
-            else
-                allflags=("${flags[*]} ${two_word_flags[*]}")
-            fi
-            while IFS='' read -r comp; do
-                COMPREPLY+=("$comp")
-            done < <(compgen -W "${allflags[*]}" -- "$cur")
-            if [[ $(type -t compopt) = "builtin" ]]; then
-                [[ "${COMPREPLY[0]}" == *= ]] || compopt +o nospace
+                compopt +o nospace
             fi
 
-            # complete after --flag=abc
-            if [[ $cur == *=* ]]; then
-                if [[ $(type -t compopt) = "builtin" ]]; then
-                    compopt +o nospace
-                fi
-
-                local index flag
-                flag="${cur%=*}"
-                __gum.exe_index_of_word "${flag}" "${flags_with_completion[@]}"
-                COMPREPLY=()
-                if [[ ${index} -ge 0 ]]; then
-                    PREFIX=""
-                    cur="${cur#*=}"
-                    ${flags_completion[${index}]}
-                    if [ -n "${ZSH_VERSION:-}" ]; then
-                        # zsh completion needs --flag= prefix
-                        eval "COMPREPLY=( \"\${COMPREPLY[@]/#/${flag}=}\" )"
-                    fi
+            local index flag
+            flag="${cur%=*}"
+            __gum.exe_index_of_word "${flag}" "${flags_with_completion[@]}"
+            COMPREPLY=()
+            if [[ ${index} -ge 0 ]]; then
+                PREFIX=""
+                cur="${cur#*=}"
+                ${flags_completion[${index}]}
+                if [ -n "${ZSH_VERSION:-}" ]; then
+                    # zsh completion needs --flag= prefix
+                    eval "COMPREPLY=( \"\${COMPREPLY[@]/#/${flag}=}\" )"
                 fi
             fi
+        fi
 
-            if [[ -z "${flag_parsing_disabled}" ]]; then
-                # If flag parsing is enabled, we have completed the flags and can return.
-                # If flag parsing is disabled, we may not know all (or any) of the flags, so we fallthrough
-                # to possibly call handle_go_custom_completion.
-                return 0;
-            fi
-            ;;
+        if [[ -z "${flag_parsing_disabled}" ]]; then
+            # If flag parsing is enabled, we have completed the flags and can return.
+            # If flag parsing is disabled, we may not know all (or any) of the flags, so we fallthrough
+            # to possibly call handle_go_custom_completion.
+            return 0
+        fi
+        ;;
     esac
 
     # check if we are handling a flag with special work handling
@@ -234,25 +229,22 @@ __gum.exe_handle_reply()
     # If there is only 1 completion and it is a flag with an = it will be completed
     # but we don't want a space after the =
     if [[ "${#COMPREPLY[@]}" -eq "1" ]] && [[ $(type -t compopt) = "builtin" ]] && [[ "${COMPREPLY[0]}" == --*= ]]; then
-       compopt -o nospace
+        compopt -o nospace
     fi
 }
 
 # The arguments should be in the form "ext1|ext2|extn"
-__gum.exe_handle_filename_extension_flag()
-{
+__gum.exe_handle_filename_extension_flag() {
     local ext="$1"
     _filedir "@(${ext})"
 }
 
-__gum.exe_handle_subdirs_in_dir_flag()
-{
+__gum.exe_handle_subdirs_in_dir_flag() {
     local dir="$1"
     pushd "${dir}" >/dev/null 2>&1 && _filedir -d && popd >/dev/null 2>&1 || return
 }
 
-__gum.exe_handle_flag()
-{
+__gum.exe_handle_flag() {
     __gum.exe_debug "${FUNCNAME[0]}: c is $c words[c] is ${words[c]}"
 
     # if a command required a flag, and we found it, unset must_have_one_flag()
@@ -261,8 +253,8 @@ __gum.exe_handle_flag()
     # if the word contained an =
     if [[ ${words[c]} == *"="* ]]; then
         flagvalue=${flagname#*=} # take in as flagvalue after the =
-        flagname=${flagname%=*} # strip everything after the =
-        flagname="${flagname}=" # but put the = back
+        flagname=${flagname%=*}  # strip everything after the =
+        flagname="${flagname}="  # but put the = back
     fi
     __gum.exe_debug "${FUNCNAME[0]}: looking for ${flagname}"
     if __gum.exe_contains_word "${flagname}" "${must_have_one_flag[@]}"; then
@@ -271,16 +263,16 @@ __gum.exe_handle_flag()
 
     # if you set a flag which only applies to this command, don't show subcommands
     if __gum.exe_contains_word "${flagname}" "${local_nonpersistent_flags[@]}"; then
-      commands=()
+        commands=()
     fi
 
     # keep flag value with flagname as flaghash
     # flaghash variable is an associative array which is only supported in bash > 3.
     if [[ -z "${BASH_VERSION:-}" || "${BASH_VERSINFO[0]:-}" -gt 3 ]]; then
-        if [ -n "${flagvalue}" ] ; then
+        if [ -n "${flagvalue}" ]; then
             flaghash[${flagname}]=${flagvalue}
-        elif [ -n "${words[ $((c+1)) ]}" ] ; then
-            flaghash[${flagname}]=${words[ $((c+1)) ]}
+        elif [ -n "${words[$((c + 1))]}" ]; then
+            flaghash[${flagname}]=${words[$((c + 1))]}
         else
             flaghash[${flagname}]="true" # pad "true" for bool flag
         fi
@@ -289,19 +281,18 @@ __gum.exe_handle_flag()
     # skip the argument to a two word flag
     if [[ ${words[c]} != *"="* ]] && __gum.exe_contains_word "${words[c]}" "${two_word_flags[@]}"; then
         __gum.exe_debug "${FUNCNAME[0]}: found a flag ${words[c]}, skip the next argument"
-        c=$((c+1))
+        c=$((c + 1))
         # if we are looking for a flags value, don't show commands
         if [[ $c -eq $cword ]]; then
             commands=()
         fi
     fi
 
-    c=$((c+1))
+    c=$((c + 1))
 
 }
 
-__gum.exe_handle_noun()
-{
+__gum.exe_handle_noun() {
     __gum.exe_debug "${FUNCNAME[0]}: c is $c words[c] is ${words[c]}"
 
     if __gum.exe_contains_word "${words[c]}" "${must_have_one_noun[@]}"; then
@@ -311,11 +302,10 @@ __gum.exe_handle_noun()
     fi
 
     nouns+=("${words[c]}")
-    c=$((c+1))
+    c=$((c + 1))
 }
 
-__gum.exe_handle_command()
-{
+__gum.exe_handle_command() {
     __gum.exe_debug "${FUNCNAME[0]}: c is $c words[c] is ${words[c]}"
 
     local next_command
@@ -328,13 +318,12 @@ __gum.exe_handle_command()
             next_command="_${words[c]//:/__}"
         fi
     fi
-    c=$((c+1))
+    c=$((c + 1))
     __gum.exe_debug "${FUNCNAME[0]}: looking for ${next_command}"
     declare -F "$next_command" >/dev/null && $next_command
 }
 
-__gum.exe_handle_word()
-{
+__gum.exe_handle_word() {
     if [[ $c -ge $cword ]]; then
         __gum.exe_handle_reply
         return
@@ -360,8 +349,7 @@ __gum.exe_handle_word()
     __gum.exe_handle_word
 }
 
-_gum.exe_choose()
-{
+_gum.exe_choose() {
     last_command="gum.exe_choose"
 
     command_aliases=()
@@ -381,6 +369,7 @@ _gum.exe_choose()
     flags+=("--cursor=")
     two_word_flags+=("--cursor")
     flags+=("--show-help")
+    flags+=("--timeout")
     flags+=("--header=")
     two_word_flags+=("--header")
     flags+=("--cursor-prefix=")
@@ -391,6 +380,13 @@ _gum.exe_choose()
     two_word_flags+=("--unselected-prefix")
     flags+=("--selected")
     flags+=("--select-if-one")
+    flags+=("--input-delimiter=")
+    two_word_flags+=("--input-delimiter")
+    flags+=("--output-delimiter=")
+    two_word_flags+=("--output-delimiter")
+    flags+=("--label-delimiter=")
+    two_word_flags+=("--label-delimiter")
+    flags+=("--strip-ansi")
     flags+=("--cursor.foreground=")
     two_word_flags+=("--cursor.foreground")
     flags+=("--cursor.background=")
@@ -407,13 +403,11 @@ _gum.exe_choose()
     two_word_flags+=("--selected.foreground")
     flags+=("--selected.background=")
     two_word_flags+=("--selected.background")
-    flags+=("--timeout")
 
     noun_aliases=()
 }
 
-_gum.exe_confirm()
-{
+_gum.exe_confirm() {
     last_command="gum.exe_confirm"
 
     command_aliases=()
@@ -427,6 +421,7 @@ _gum.exe_confirm()
     flags_completion=()
 
     flags+=("--default")
+    flags+=("--show-output")
     flags+=("--affirmative=")
     two_word_flags+=("--affirmative")
     flags+=("--negative=")
@@ -449,8 +444,7 @@ _gum.exe_confirm()
     noun_aliases=()
 }
 
-_gum.exe_file()
-{
+_gum.exe_file() {
     last_command="gum.exe_file"
 
     command_aliases=()
@@ -468,9 +462,16 @@ _gum.exe_file()
     two_word_flags+=("-c")
     flags+=("--all")
     flags+=("-a")
+    flags+=("--permissions")
+    flags+=("-p")
+    flags+=("--size")
+    flags+=("-s")
     flags+=("--file")
     flags+=("--directory")
     flags+=("--show-help")
+    flags+=("--timeout")
+    flags+=("--header=")
+    two_word_flags+=("--header")
     flags+=("--height")
     flags+=("--cursor.foreground=")
     two_word_flags+=("--cursor.foreground")
@@ -500,13 +501,15 @@ _gum.exe_file()
     two_word_flags+=("--file-size.foreground")
     flags+=("--file-size.background=")
     two_word_flags+=("--file-size.background")
-    flags+=("--timeout")
+    flags+=("--header.foreground=")
+    two_word_flags+=("--header.foreground")
+    flags+=("--header.background=")
+    two_word_flags+=("--header.background")
 
     noun_aliases=()
 }
 
-_gum.exe_filter()
-{
+_gum.exe_filter() {
     last_command="gum.exe_filter"
 
     command_aliases=()
@@ -528,6 +531,8 @@ _gum.exe_filter()
     flags+=("--limit")
     flags+=("--no-limit")
     flags+=("--select-if-one")
+    flags+=("--selected")
+    flags+=("--show-help")
     flags+=("--strict")
     flags+=("--selected-prefix=")
     two_word_flags+=("--selected-prefix")
@@ -577,14 +582,18 @@ _gum.exe_filter()
     two_word_flags+=("--value")
     flags+=("--reverse")
     flags+=("--fuzzy")
-    flags+=("--sort")
+    flags+=("--fuzzy-sort")
     flags+=("--timeout")
+    flags+=("--input-delimiter=")
+    two_word_flags+=("--input-delimiter")
+    flags+=("--output-delimiter=")
+    two_word_flags+=("--output-delimiter")
+    flags+=("--strip-ansi")
 
     noun_aliases=()
 }
 
-_gum.exe_format()
-{
+_gum.exe_format() {
     last_command="gum.exe_format"
 
     command_aliases=()
@@ -602,6 +611,7 @@ _gum.exe_format()
     flags+=("--language=")
     two_word_flags+=("--language")
     two_word_flags+=("-l")
+    flags+=("--strip-ansi")
     flags+=("--type=")
     two_word_flags+=("--type")
     two_word_flags+=("-t")
@@ -609,8 +619,7 @@ _gum.exe_format()
     noun_aliases=()
 }
 
-_gum.exe_input()
-{
+_gum.exe_input() {
     last_command="gum.exe_input"
 
     command_aliases=()
@@ -654,12 +663,12 @@ _gum.exe_input()
     flags+=("--header.background=")
     two_word_flags+=("--header.background")
     flags+=("--timeout")
+    flags+=("--strip-ansi")
 
     noun_aliases=()
 }
 
-_gum.exe_join()
-{
+_gum.exe_join() {
     last_command="gum.exe_join"
 
     command_aliases=()
@@ -680,8 +689,7 @@ _gum.exe_join()
     noun_aliases=()
 }
 
-_gum.exe_pager()
-{
+_gum.exe_pager() {
     last_command="gum.exe_pager"
 
     command_aliases=()
@@ -698,10 +706,6 @@ _gum.exe_pager()
     two_word_flags+=("--foreground")
     flags+=("--background=")
     two_word_flags+=("--background")
-    flags+=("--help.foreground=")
-    two_word_flags+=("--help.foreground")
-    flags+=("--help.background=")
-    two_word_flags+=("--help.background")
     flags+=("--show-line-numbers")
     flags+=("--line-number.foreground=")
     two_word_flags+=("--line-number.foreground")
@@ -717,12 +721,15 @@ _gum.exe_pager()
     flags+=("--match-highlight.background=")
     two_word_flags+=("--match-highlight.background")
     flags+=("--timeout")
+    flags+=("--help.foreground=")
+    two_word_flags+=("--help.foreground")
+    flags+=("--help.background=")
+    two_word_flags+=("--help.background")
 
     noun_aliases=()
 }
 
-_gum.exe_spin()
-{
+_gum.exe_spin() {
     last_command="gum.exe_spin"
 
     command_aliases=()
@@ -737,6 +744,8 @@ _gum.exe_spin()
 
     flags+=("--show-output")
     flags+=("--show-error")
+    flags+=("--show-stdout")
+    flags+=("--show-stderr")
     flags+=("--spinner=")
     two_word_flags+=("--spinner")
     two_word_flags+=("-s")
@@ -758,8 +767,7 @@ _gum.exe_spin()
     noun_aliases=()
 }
 
-_gum.exe_style()
-{
+_gum.exe_style() {
     last_command="gum.exe_style"
 
     command_aliases=()
@@ -772,6 +780,8 @@ _gum.exe_style()
     flags_with_completion=()
     flags_completion=()
 
+    flags+=("--trim")
+    flags+=("--strip-ansi")
     flags+=("--foreground=")
     two_word_flags+=("--foreground")
     flags+=("--background=")
@@ -799,8 +809,7 @@ _gum.exe_style()
     noun_aliases=()
 }
 
-_gum.exe_table()
-{
+_gum.exe_table() {
     last_command="gum.exe_table"
 
     command_aliases=()
@@ -829,6 +838,9 @@ _gum.exe_table()
     flags+=("--border=")
     two_word_flags+=("--border")
     two_word_flags+=("-b")
+    flags+=("--show-help")
+    flags+=("--lazy-quotes")
+    flags+=("--fields-per-record")
     flags+=("--border.foreground=")
     two_word_flags+=("--border.foreground")
     flags+=("--border.background=")
@@ -845,12 +857,14 @@ _gum.exe_table()
     two_word_flags+=("--selected.foreground")
     flags+=("--selected.background=")
     two_word_flags+=("--selected.background")
+    flags+=("--return-column")
+    flags+=("-r")
+    flags+=("--timeout")
 
     noun_aliases=()
 }
 
-_gum.exe_write()
-{
+_gum.exe_write() {
     last_command="gum.exe_write"
 
     command_aliases=()
@@ -876,17 +890,36 @@ _gum.exe_write()
     flags+=("--value=")
     two_word_flags+=("--value")
     flags+=("--char-limit")
+    flags+=("--max-lines")
     flags+=("--show-help")
     flags+=("--cursor.mode=")
     two_word_flags+=("--cursor.mode")
+    flags+=("--timeout")
+    flags+=("--strip-ansi")
     flags+=("--base.foreground=")
     two_word_flags+=("--base.foreground")
     flags+=("--base.background=")
     two_word_flags+=("--base.background")
+    flags+=("--cursor-line-number.foreground=")
+    two_word_flags+=("--cursor-line-number.foreground")
+    flags+=("--cursor-line-number.background=")
+    two_word_flags+=("--cursor-line-number.background")
+    flags+=("--cursor-line.foreground=")
+    two_word_flags+=("--cursor-line.foreground")
+    flags+=("--cursor-line.background=")
+    two_word_flags+=("--cursor-line.background")
     flags+=("--cursor.foreground=")
     two_word_flags+=("--cursor.foreground")
     flags+=("--cursor.background=")
     two_word_flags+=("--cursor.background")
+    flags+=("--end-of-buffer.foreground=")
+    two_word_flags+=("--end-of-buffer.foreground")
+    flags+=("--end-of-buffer.background=")
+    two_word_flags+=("--end-of-buffer.background")
+    flags+=("--line-number.foreground=")
+    two_word_flags+=("--line-number.foreground")
+    flags+=("--line-number.background=")
+    two_word_flags+=("--line-number.background")
     flags+=("--header.foreground=")
     two_word_flags+=("--header.foreground")
     flags+=("--header.background=")
@@ -899,28 +932,11 @@ _gum.exe_write()
     two_word_flags+=("--prompt.foreground")
     flags+=("--prompt.background=")
     two_word_flags+=("--prompt.background")
-    flags+=("--end-of-buffer.foreground=")
-    two_word_flags+=("--end-of-buffer.foreground")
-    flags+=("--end-of-buffer.background=")
-    two_word_flags+=("--end-of-buffer.background")
-    flags+=("--line-number.foreground=")
-    two_word_flags+=("--line-number.foreground")
-    flags+=("--line-number.background=")
-    two_word_flags+=("--line-number.background")
-    flags+=("--cursor-line-number.foreground=")
-    two_word_flags+=("--cursor-line-number.foreground")
-    flags+=("--cursor-line-number.background=")
-    two_word_flags+=("--cursor-line-number.background")
-    flags+=("--cursor-line.foreground=")
-    two_word_flags+=("--cursor-line.foreground")
-    flags+=("--cursor-line.background=")
-    two_word_flags+=("--cursor-line.background")
 
     noun_aliases=()
 }
 
-_gum.exe_log()
-{
+_gum.exe_log() {
     last_command="gum.exe_log"
 
     command_aliases=()
@@ -950,6 +966,8 @@ _gum.exe_log()
     flags+=("--time=")
     two_word_flags+=("--time")
     two_word_flags+=("-t")
+    flags+=("--min-level=")
+    two_word_flags+=("--min-level")
     flags+=("--level.foreground=")
     two_word_flags+=("--level.foreground")
     flags+=("--level.background=")
@@ -982,8 +1000,23 @@ _gum.exe_log()
     noun_aliases=()
 }
 
-_gum.exe_root_command()
-{
+_gum.exe_version-check() {
+    last_command="gum.exe_version-check"
+
+    command_aliases=()
+
+    commands=()
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    noun_aliases=()
+}
+
+_gum.exe_root_command() {
     last_command="gum.exe"
 
     command_aliases=()
@@ -1002,6 +1035,7 @@ _gum.exe_root_command()
     commands+=("table")
     commands+=("write")
     commands+=("log")
+    commands+=("version-check")
 
     flags=()
     two_word_flags=()
@@ -1017,8 +1051,7 @@ _gum.exe_root_command()
     noun_aliases=()
 }
 
-__start_gum.exe()
-{
+__start_gum.exe() {
     local cur prev words cword split
     declare -A flaghash 2>/dev/null || :
     declare -A aliashash 2>/dev/null || :
@@ -1048,9 +1081,9 @@ __start_gum.exe()
 }
 
 if [[ $(type -t compopt) = "builtin" ]]; then
-    complete -o default -F __start_gum.exe gum.exe
+    complete -o default -F __start_gum.exe gum.exe gum
 else
-    complete -o default -o nospace -F __start_gum.exe gum.exe
+    complete -o default -o nospace -F __start_gum.exe gum.exe gum
 fi
 
 # ex: ts=4 sw=4 et filetype=sh

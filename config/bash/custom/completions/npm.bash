@@ -7,7 +7,7 @@
 #
 
 if type complete &>/dev/null; then
-  _npm_completion () {
+  _npm_completion() {
     local words cword
     if type _get_comp_words_by_ref &>/dev/null; then
       _get_comp_words_by_ref -n = -n @ -n : -w words -i cword
@@ -17,11 +17,7 @@ if type complete &>/dev/null; then
     fi
 
     local si="$IFS"
-    if ! IFS=$'\n' COMPREPLY=($(COMP_CWORD="$cword" \
-                           COMP_LINE="$COMP_LINE" \
-                           COMP_POINT="$COMP_POINT" \
-                           npm completion -- "${words[@]}" \
-                           2>/dev/null)); then
+    if ! IFS=$'\n' COMPREPLY=($(COMP_CWORD="$cword" COMP_LINE="$COMP_LINE" COMP_POINT="$COMP_POINT" npm completion -- "${words[@]}" 2>/dev/null)); then
       local ret=$?
       IFS="$si"
       return $ret
@@ -35,16 +31,12 @@ if type complete &>/dev/null; then
 elif type compdef &>/dev/null; then
   _npm_completion() {
     local si=$IFS
-    compadd -- $(COMP_CWORD=$((CURRENT-1)) \
-                 COMP_LINE=$BUFFER \
-                 COMP_POINT=0 \
-                 npm completion -- "${words[@]}" \
-                 2>/dev/null)
+    compadd -- $(COMP_CWORD=$((CURRENT - 1)) COMP_LINE=$BUFFER COMP_POINT=0 npm completion -- "${words[@]}" 2>/dev/null)
     IFS=$si
   }
   compdef _npm_completion npm
 elif type compctl &>/dev/null; then
-  _npm_completion () {
+  _npm_completion() {
     local cword line point words si
     read -Ac words
     read -cn cword
@@ -52,11 +44,7 @@ elif type compctl &>/dev/null; then
     read -l line
     read -ln point
     si="$IFS"
-    if ! IFS=$'\n' reply=($(COMP_CWORD="$cword" \
-                       COMP_LINE="$line" \
-                       COMP_POINT="$point" \
-                       npm completion -- "${words[@]}" \
-                       2>/dev/null)); then
+    if ! IFS=$'\n' reply=($(COMP_CWORD="$cword" COMP_LINE="$line" COMP_POINT="$point" npm completion -- "${words[@]}" 2>/dev/null)); then
 
       local ret=$?
       IFS="$si"

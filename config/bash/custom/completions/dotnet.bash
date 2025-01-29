@@ -1,19 +1,12 @@
-#!/usr/bin/env bash
+# bash parameter completion for the dotnet CLI
 
-# Source: - https://learn.microsoft.com/en-us/dotnet/core/tools/enable-tab-autocomplete#bash
-# cSpell: disable
+function _dotnet_bash_complete() {
+	local cur="${COMP_WORDS[COMP_CWORD]}" IFS=$'\r\n' # On Windows you may need to use use IFS=$'\r\n'
+	local candidates
 
-if command -v dotnet >/dev/null 2>&1; then
-  # bash parameter completion for the dotnet CLI
+	read -d '' -ra candidates < <(dotnet complete --position "${COMP_POINT}" "${COMP_LINE}" 2>/dev/null)
 
-  function _dotnet_bash_complete() {
-    local cur="${COMP_WORDS[COMP_CWORD]}" IFS=$'\n' # On Windows you may need to use use IFS=$'\r\n'
-    local candidates
+	read -d '' -ra COMPREPLY < <(compgen -W "${candidates[*]:-}" -- "$cur")
+}
 
-    read -d '' -ra candidates < <(dotnet complete --position "${COMP_POINT}" "${COMP_LINE}" 2>/dev/null)
-
-    read -d '' -ra COMPREPLY < <(compgen -W "${candidates[*]:-}" -- "$cur")
-  }
-
-  complete -f -F _dotnet_bash_complete dotnet
-fi
+complete -f -F _dotnet_bash_complete dotnet
