@@ -3,15 +3,35 @@
 if (Get-Command nvm -ErrorAction SilentlyContinue) {
 	# nvm powershell completion start
 	$script:NvmCommands = @(
-		'arch', 'current', 'debug', 'install', 'list', 'ls', 'on', 'off', 'proxy', 'node_mirror', 'npm_mirror', 'uninstall', 'use', 'root', 'v', 'version'
+		'arch',
+		'current',
+		'debug',
+		'install',
+		'list',
+		'ls',
+		'on',
+		'off',
+		'proxy',
+		'node_mirror',
+		'npm_mirror',
+		'uninstall',
+		'reinstall',
+		'subscribe',
+		'unsubscribe',
+		'use',
+		'root',
+		'v',
+		'version'
 	)
 
 	$script:NvmSubcommands = @{
-		install = 'latest lts'
-		arch    = '32 64'
-		list    = 'available'
-		ls      = 'available'
-		use     = 'latest lts newest'
+		install     = 'latest lts'
+		arch        = '32 64'
+		list        = 'available'
+		ls          = 'available'
+		use         = 'latest lts newest'
+		subscribe   = 'lts current nvm4w author'
+		unsubscribe = 'lts current nvm4w author'
 	}
 
 	function script:NvmExpandCmdParams($cmds, $cmd, $filter) {
