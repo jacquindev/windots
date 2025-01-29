@@ -61,4 +61,4 @@ for comp_file in "$BASH_COMPLETIONS_DIR"/*.bash; do
 done
 
 unset BASH_COMPLETIONS_DIR comp_file cmd
-unset __ltrim_colon_completions command_exists
+unset command_exists
