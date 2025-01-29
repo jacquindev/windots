@@ -82,10 +82,3 @@ else
   alias urlencode='python3 -c "import sys; del sys.path[0]; import urllib.parse as up; print(up.quote_plus(sys.argv[1]))"'
   alias urldecode='python3 -c "import sys; del sys.path[0]; import urllib.parse as up; print(up.unquote_plus(sys.argv[1]))"'
 fi
-
-# Call `vboxmanage` without adding it to path
-if ! command -v vboxmanage >/dev/null 2>&1; then
-  if [ -f "/c/Program Files/Oracle/VirtualBox/VBoxManage.exe" ]; then
-    alias vboxmanage="'/c/Program Files/Oracle/VirtualBox/VBoxManage.exe'"
-  fi
-fi

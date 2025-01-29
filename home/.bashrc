@@ -1,12 +1,15 @@
-# cSpell:disable
+#!/usr/bin/env bash
 
-export DOTFILES="$(dirname $(dirname $(readlink ~/.bashrc)))"
+# shellcheck disable=SC1090
 
-# Source external files
-test -f ~/.config/bash/.bash_env && . ~/.config/bash/.bash_env
-test -f ~/.config/bash/.bash_aliases && . ~/.config/bash/.bash_aliases
-test -f ~/.config/bash/.bash_completions && . ~/.config/bash/.bash_completions
-test -f ~/.config/bash/.bash_functions && . ~/.config/bash/.bash_functions
+DOTFILES="$(dirname "$(dirname "$(readlink "$HOME/.bashrc")")")"
+export DOTFILES
+
+# Source bash configuration files
+for file in ~/.config/bash/.bash_*; do
+  source "$file"
+done
+unset file
 
 # Bash shell settings
 shopt -s autocd
