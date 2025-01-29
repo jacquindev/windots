@@ -117,12 +117,6 @@ function prompt {
         }
     },
     {
-        # UV settings
-        if (Get-Command uv -ErrorAction SilentlyContinue) {
-            $Env:UV_LINK_MODE = "copy"
-        }
-    },
-    {
         # Pipenv settings
         if (Get-Command pipenv -ErrorAction SilentlyContinue) {
             $Env:PIPENV_VENV_IN_PROJECT = $true
