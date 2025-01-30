@@ -1,5 +1,47 @@
-﻿#requires -Version 7
-#requires -RunAsAdministrator
+
+<#PSScriptInfo
+
+.VERSION 1.0
+
+.GUID ccb5be4c-ea07-4c45-a5b4-6310df24e2bc
+
+.AUTHOR jacquindev@outlook.com
+
+.COMPANYNAME
+
+.COPYRIGHT 2024 Jacquin Moon. All rights reserved.
+
+.TAGS windots dotfiles
+
+.LICENSEURI https://github.com/jacquindev/windots/blob/main/LICENSE
+
+.PROJECTURI https://github.com/jacquindev/windots
+
+.ICONURI
+
+.EXTERNALMODULEDEPENDENCIES
+
+.REQUIREDSCRIPTS
+
+.EXTERNALSCRIPTDEPENDENCIES
+
+.RELEASENOTES
+
+
+.PRIVATEDATA
+
+#>
+
+#Requires -Version 7
+#Requires -RunAsAdministrator
+
+<#
+
+.DESCRIPTION
+	Setup script for Windows 11 Machine.
+
+#>
+Param()
 
 $VerbosePreference = "SilentlyContinue"
 
@@ -426,22 +468,7 @@ if (Get-Command nvm -ErrorAction SilentlyContinue) {
 		if ($whichNode.ToUpper() -eq 'Y') {	nvm install lts }
 		else { nvm install latest }
 		nvm use newest
-		npm install -g npm@latest >$null 2>&1
-		corepack prepare --activate pnpm@latest
-		corepack prepare --activate yarn@latest
-		corepack enable
-	}
-	if (!(Get-Command bun -ErrorAction SilentlyContinue)) {
-		$useBun = $(Write-Host "Install Bun? (y/N): " -ForegroundColor Magenta -NoNewline; Read-Host)
-		if ($useBun.ToUpper() -eq 'Y') {
-			if (Get-Command pnpm -ErrorAction SilentlyContinue) {
-				Write-Verbose "Installing 'bun' using 'pnpm'"
-				pnpm install -g bun
-			} else {
-				Write-Verbose "Installing 'bun' using 'npm'"
-				npm install --global bun
-			}
-		}
+		npm install -g npm@latest yarn@latest pnpm@latest bun@latest npm-check-updates@latest
 	}
 }
 
