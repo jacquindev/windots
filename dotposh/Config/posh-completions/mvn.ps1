@@ -185,14 +185,14 @@ $MvnSystemProperties = $SystemProperties | Sort-Object | ForEach-Object -Process
 
 # Default filtering and result transformation for completion
 $MvnDefaultFilterSB = { param($WordToComplete) { param($It) $It -like "$WordToComplete*" } }
-$MvnDefaultResultSB = { param($It) [System.Management.Automation.CompletionResult]::new($It, $It, 'parameterValue', $It) }
+$MvnDefaultResultSB = { param($It) [System.Management.Automation.CompletionResult]::new($It, $It, 'ParameterValue', $It) }
 
 # Handle project-related completion results
 $MvnProjectFilterSB = { param($WordToComplete) { param($It) ($It -like "$($WordToComplete -replace ":")*") -and ($It -ne "") } }
-$MvnProjectResultSB = { param($It) [System.Management.Automation.CompletionResult]::new(":$It", ":$It", 'parameterValue', ":$It") }
+$MvnProjectResultSB = { param($It) [System.Management.Automation.CompletionResult]::new(":$It", ":$It", 'ParameterValue', ":$It") }
 
 # Handle quoted result completion
-$MvnQuotedResultSB = { param($It) [System.Management.Automation.CompletionResult]::new("`"$It`"", "`"$It`"", 'parameterValue', "`"$It`"") }
+$MvnQuotedResultSB = { param($It) [System.Management.Automation.CompletionResult]::new("`"$It`"", "`"$It`"", 'ParameterValue', "`"$It`"") }
 
 # Find folders that include pom.xml.
 function MvnProjects {

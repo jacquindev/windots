@@ -1,5 +1,7 @@
 ﻿if (Get-Command aws -ErrorAction SilentlyContinue) {
-	# https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html
+	# References:
+	# -  https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html
+
 	Register-ArgumentCompleter -Native -CommandName aws -ScriptBlock {
 		param($commandName, $wordToComplete, $cursorPosition)
 		$env:COMP_LINE = $wordToComplete
