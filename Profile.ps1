@@ -163,6 +163,6 @@ Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -SupportEvent -Action {
 foreach ($module in $((Get-ChildItem -Path "$env:DOTPOSH\Modules\*" -Include *.psm1).FullName )) {
     Import-Module "$module" -Global
 }
-foreach ($file in $((Get-ChildItem -Path "$env:DOTPOSH\Config\*" -Include *.ps1 -Recurse | Sort-Object -Property Directory).FullName)) {
+foreach ($file in $((Get-ChildItem -Path "$env:DOTPOSH\Config\*" -Include *.ps1 -Recurse | Sort-Object -Property File).FullName)) {
     . "$file"
 }
