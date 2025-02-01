@@ -14,33 +14,21 @@
 		"winget": {
 			"auto_install": true,
 			"packages": [
-				{ "id": "Amazon.AWSCLI" },
 				{ "id": "AmN.yasb" },
 				{ "id": "chrisant996.Clink" },
-				{ "id": "LoftLabs.DevPod" },
-				{ "id": "Docker.DockerDesktop" },
 				{ "id": "gerardog.gsudo" },
 				{ "id": "Git.Git" },
 				{ "id": "GitHub.GitHubDesktop" },
-				{ "id": "Google.Chrome.Dev" },
+				{ "id": "Google.Chrome" },
 				{ "id": "ImageMagick.ImageMagick" },
 				{ "id": "JanDeDobbeleer.OhMyPosh" },
 				{ "id": "LGUG2Z.komorebi" },
 				{ "id": "LGUG2Z.whkd" },
-				{ "id": "Microsoft.AzureCLI" },
-				{ "id": "Microsoft.DotNet.SDK.8" },
-				{ "id": "Microsoft.DotNet.SDK.9" },
 				{ "id": "Microsoft.PowerShell" },
 				{ "id": "Microsoft.PowerToys" },
-				{ "id": "Microsoft.VisualStudio.2022.Community" },
-				{ "id": "Microsoft.VisualStudioCode" },
-				{ "id": "Obsidian.Obsidian" },
-				{ "id": "Postman.Postman" },
-				{ "id": "Python.Python.3.13" },
 				{ "id": "Rainmeter.Rainmeter" },
 				{ "id": "rocksdanister.LivelyWallpaper" },
 				{ "id": "Stardock.Start11" },
-				{ "id": "Symless.Synergy" },
 				{ "id": "9NRX63209R7B", "source": "msstore" }, // Outlook for Windows
 				{ "id": "9NHT9RB2F4HD", "source": "msstore" } // Microsoft Copilot
 			],
@@ -54,10 +42,9 @@
 		"choco": {
 			"auto_install": true,
 			"packages": [
-				"ngrok",
-				"virtualbox",
-				"vagrant",
-				"zig"
+				"awscli",
+				"choco-cleaner",
+				"ngrok"
 			],
 			"additional_args": [
 				"-y"
@@ -69,7 +56,6 @@
 			"packages": [
 				"aria2",
 				"bat",
-				"bfg",
 				"btop",
 				"charm-gum",
 				"delta",
@@ -80,11 +66,6 @@
 				"fzf",
 				"gh",
 				"git-aliases",
-				"git-crypt",
-				"git-lfs",
-				"git-sizer",
-				"gitleaks",
-				"glow",
 				"jq",
 				"lazygit",
 				"poppler",
@@ -92,13 +73,11 @@
 				"scoop-completion",
 				"scoop-search",
 				"secureuxtheme",
-				"sed",
 				"shfmt",
 				"speedtest-cli",
 				"spicetify-cli",
 				"spotify-tui",
 				"starship",
-				"task",
 				"wget",
 				"wixtoolset",
 				"yazi",
@@ -118,69 +97,7 @@
 			"plugins": [
 				"dlvhdr/gh-dash",
 				"Shresht7/gh-license",
-				"yuler/gh-download",
-				"seachicken/gh-poi",
-				"Link-/gh-token",
 				"yusukebe/gh-markdown-preview"
-			],
-			"install": false
-		},
-		{
-			"command_name": "dotnet",
-			"invoke_command": "dotnet tool install -g",
-			"check_command": "dotnet tool list -g",
-			"plugins": [
-				"dotnet-ef",
-				"dotnet-outdated-tool",
-				"GitVersion.Tool"
-			],
-			"install": false
-		},
-		{
-			"command_name": "vagrant",
-			"invoke_command": "vagrant plugin install",
-			"check_command": "vagrant plugin list",
-			"plugins": [
-				"vagrant-hostmanager",
-				"vagrant-share",
-				"vagrant-winnfsd"
-			],
-			"install": false
-		},
-		{
-			"command_name": "az",
-			"invoke_command": "az extension add --name",
-			"check_command": "(az extension list | ConvertFrom-Json).name",
-			"plugins": [
-				"costmanagement"
-			],
-			"install": false
-		},
-		{
-			"command_name": "bun", // I use bun instead of npm, pnpm, or yarn since it's faster (required `bun` installed)
-			"invoke_command": "bun add -g",
-			"check_command": "bun pm ls -g",
-			"plugins": [
-				"@angular/cli",
-				"commitizen",
-				"cz-git",
-				"degit",
-				"markdown-link-check",
-				"textlint-rule-terminology",
-				"textlint",
-				"typescript"
-			],
-			"install": false
-		},
-		{
-			"command_name": "pipx",
-			"invoke_command": "pipx install",
-			"check_command": "pipx list",
-			"plugins": [
-				"cookiecutter",
-				"copier",
-				"pdm",
-				"uv"
 			],
 			"install": false
 		}
