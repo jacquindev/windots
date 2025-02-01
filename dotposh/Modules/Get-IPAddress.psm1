@@ -3,22 +3,26 @@
     Show current public or private IP address of the machine.
 .DESCRIPTION
     Function that enumerate the current public or private IP address.
+
+    References:
+    - https://github.com/Windos/BurntToast
+    - https://www.technewstoday.com/powershell-get-ip-address/
 .PARAMETER public
     Return the Public (External) IP Address of the current workstation.
 .PARAMETER private
     Return the Private (Internal) IP Address of the current workstation.
 .EXAMPLE
-    Get-IpAddress -Public
-    --> Print Public IP Address onto the console.
+    PS> Get-IpAddress -Public
+
+    Print Public IP Address onto the console.
 .EXAMPLE
-    Get-IpAddress -Public -Interactive
-    --> Show Public IP Address in Windows notification.
-.LINK
-    https://github.com/Windos/BurntToast
-    https://www.technewstoday.com/powershell-get-ip-address/
+    PS> Get-IpAddress -Public -Interactive
+
+    Show Public IP Address in Windows notification.
 .NOTES
-    Filename: Get-IPAddress.ps1
+    Filename: Get-IPAddress.psm1
     Author: Jacquin Moon
+    Email: jacquindev@outlook.com
     Date: October 15th, 2024
 #>
 

@@ -3,8 +3,9 @@
     Display mountpoints and drives
 .DESCRIPTION
     Output detailed information about mountpoints
-.LINK
-    https://lifeofageekadmin.com/display-mount-points-drives-using-powershell/
+
+    References:
+    - https://lifeofageekadmin.com/display-mount-points-drives-using-powershell/
 #>
 
 function Get-Mountpoints {

@@ -1,7 +1,6 @@
-<#
-.LINK
-    https://raw.githubusercontent.com/HarmVeenstra/Powershellisfun/refs/heads/main/Create%20a%20Report%20on%20DNS%20lookups/Get-DnsCacheReport.ps1
-#>
+# Source:
+# - https://raw.githubusercontent.com/HarmVeenstra/Powershellisfun/refs/heads/main/Create%20a%20Report%20on%20DNS%20lookups/Get-DnsCacheReport.ps1
+#
 function Get-DnsCacheReport {
     param (
         [Parameter(Mandatory = $true)][int]$Minutes,

@@ -5,8 +5,14 @@
     Add-EnvPath: Add environment variables to the system PATH.
     Remove-EnvPath: Remove environment variables from the system PATH.
     Get-EnvPath: List all environment variables in the system PATH
-.LINK
-    https://gist.github.com/mkropat/c1226e0cc2ca941b23a9
+
+    References:
+    - https://gist.github.com/mkropat/c1226e0cc2ca941b23a9
+.NOTES
+    Filename: PathsManager.psm1
+    Author: Jacquin Moon
+    Email: jacquindev@outlook.com
+    Date: November 6th, 2024
 #>
 
 function Add-Path {

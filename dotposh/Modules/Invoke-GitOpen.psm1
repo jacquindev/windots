@@ -12,6 +12,11 @@
 
 	> Invoke-GitOpen -Path C:\Users\{username}\dotfiles
 	Open github repo of local git folder C:\Users\{username}\dotfiles
+	.NOTES
+		Filename: Invoke-GitOpen.psm1
+		Author: Jacquin Moon
+		Email: jacquindev@outlook.com
+		Date: January 28th, 2025
 #>
 
 function Invoke-GitOpen {
@@ -39,7 +44,11 @@ function Invoke-GitOpen {
 		gh repo view --branch $branch --web
 		Set-Location $currentLocation
 	}
+
 	# Find the exact url to open github repo
+	# References:
+	# - https://github.com/paulirish/git-open
+
 	else {
 		$remote = git -C $workingDir config "branch.$branch.remote"
 		$gitUrl = git -C $workingDir remote get-url "$remote"

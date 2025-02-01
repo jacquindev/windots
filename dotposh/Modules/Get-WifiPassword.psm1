@@ -6,9 +6,14 @@
 .PARAMETER WifiName
     Determine the name of the Wi-Fi
 .EXAMPLE
-    Get-WifiPassword
+    PS> Get-WifiPassword
 .EXAMPLE
-    Get-WifiPassword -name WIFINAME
+    PS> Get-WifiPassword -name WIFINAME
+.NOTES
+    Filename: Get-WifiPassword.psm1
+    Author: Jacquin Moon
+    Email: jacquindev@outlook.com
+    Date: January 6th, 2025
 #>
 
 function Get-WifiPassword {

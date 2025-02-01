@@ -4,10 +4,12 @@
 .DESCRIPTION
     Easily manage PowerShell modules you installed by json file.
 .EXAMPLE
-    > Get-Modules -output
+    PS> Get-Modules -output
+
     Output modules information into modules.lock.json file in dotfiles directory.
 .EXAMPLE
-    > Get-Modules -list
+    PS> Get-Modules -list
+
     Print modules information on the console.
 #>
 

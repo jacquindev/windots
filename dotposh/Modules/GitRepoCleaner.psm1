@@ -1,9 +1,15 @@
 ﻿<#
-	.SYNOPSIS
-		Remove large files of your git repository
-	.NOTES
-		- Must have `BFG`, `JAVA` and `GitHub CLI` installed.
-		- `Remove-GitLargeFiles` should and only should be used within your personal git repo.
+.SYNOPSIS
+	Remove large files / unwanted secrets of your git repository
+.DESCRIPTION
+	- Must have `BFG`, `JAVA` and `GitHub CLI` installed.
+	- `Remove-GitLargeFiles` should and only should be used within your personal git repo.
+.NOTES
+	Filename: GitRepoCleaner.psm1
+	Author: Jacquin Moon
+	Email: jacquindev@outlook.com
+	Date: January 26th, 2025
+
 #>
 
 function bfg {

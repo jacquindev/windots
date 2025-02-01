@@ -3,6 +3,10 @@
     Get secret from local vault or create if it does not exists.
 .DESCRIPTION
     Use external modules: SecretManagement & SecretStore to manage secrets on local machine.
+
+    References:
+    - https://github.com/scottmckendry/Windots/blob/main/Profile.ps1#L178
+    - https://learn.microsoft.com/en-us/powershell/utility-modules/secretmanagement/overview?view=ps-modules
 .PARAMETER SecretName
     Name of the secret to get or create.
 .PARAMETER SecretVault
@@ -10,10 +14,12 @@
 .PARAMETER Metadata
     Add or show metadata of a secret.
 .EXAMPLE
-    Get-OrCreateSecret -SecretName mysecret -SecretVault LocalVault
-.LINK
-    https://github.com/scottmckendry/Windots/blob/main/Profile.ps1#L178
-    https://learn.microsoft.com/en-us/powershell/utility-modules/secretmanagement/overview?view=ps-modules
+    PS> Get-OrCreateSecret -SecretName mysecret -SecretVault LocalVault
+.NOTES
+    Filename: Get-OrCreateSecret.psm1
+    Author: Jacquin Moon
+    Email: jacquindev@outlook.com
+    Date: November 6th, 2024
 #>
 
 #requires -Module Microsoft.PowerShell.SecretManagement

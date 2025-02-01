@@ -101,6 +101,7 @@ function Set-DevDrive {
 	$cacheSettings = @(
 		@{ Name = "npm_config_cache"; Value = "$cachePath\npm"; Sources = @("$env:APPDATA\npm-cache", "$env:LOCALAPPDATA\npm-cache") },
 		@{ Name = "YARN_CACHE_FOLDER"; Value = "$cachePath\npm"; Sources = @("$env:LOCALAPPDATA\Yarn\Cache") },
+		@{ Name = "DENO_DIR"; Value = "$cachePath\deno"; Sources = @("$env:LOCALAPPDATA\deno") },
 		@{ Name = "PIP_CACHE_DIR"; Value = "$cachePath\pip"; Sources = @("$env:APPDATA\pip\Cache") },
 		@{ Name = "PIPX_HOME"; Value = "$cachePath\pipx"; Sources = @("$env:USERPROFILE\pipx") },
 		@{ Name = "POETRY_CACHE_DIR"; Value = "$cachePath\poetry"; Sources = @("$env:LOCALAPPDATA\pypoetry\Cache") },
