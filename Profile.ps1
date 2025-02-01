@@ -65,9 +65,10 @@ function prompt {
         # Fast scoop search drop-in replacement 🚀
         if (Get-Command scoop -ErrorAction SilentlyContinue) {
             if ((scoop info scoop-search).Installed) {
-                New-Module -Name scoop-search -ScriptBlock {
-                    Invoke-Expression (&scoop-search --hook)
-                } | Import-Module -Global
+                New-Module -Name scoop-search -ScriptBlock { Invoke-Expression (&scoop-search --hook) } | Import-Module -Global
+            }
+            if ((scoop info scoop-completion).Installed) {
+                Import-Module scoop-completion -Global
             }
         }
     },
