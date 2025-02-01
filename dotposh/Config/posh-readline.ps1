@@ -1,7 +1,3 @@
-#requires -Module PSReadline
-#requires -Module PSFzf
-#requires -Module CompletionPredictor
-
 <#
     .SYNOPSIS
         PSReadLine & PSFzf Configuration File.
@@ -11,6 +7,13 @@
     .NOTES
         !! This script is already included in my PowerShell profile (.ps1), not executed directly.
 #>
+
+#requires -Module PSReadline
+#requires -Module PSFzf
+#requires -Module CompletionPredictor
+
+# fzf required
+if (!(Get-Command fzf -ErrorAction SilentlyContinue)) { return }
 
 # Catppuccin (syntax highlighting)
 # -----------------------------------------------------------------
