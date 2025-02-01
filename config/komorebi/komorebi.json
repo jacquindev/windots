@@ -94,13 +94,7 @@
           "name": "4",
           "layout": "VerticalStack"
         }
-      ],
-      "work_area_offset": {
-        "bottom": 20,
-        "left": 0,
-        "right": 0,
-        "top": 35
-      }
+      ]
     },
     {
       "workspaces": [
@@ -116,13 +110,7 @@
           "name": "3",
           "layout": "Grid"
         }
-      ],
-      "work_area_offset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 20
-      }
+      ]
     },
     {
       "workspaces": [
@@ -138,13 +126,7 @@
           "name": "3",
           "layout": "Grid"
         }
-      ],
-      "work_area_offset": {
-        "bottom": 0,
-        "left": 0,
-        "right": 0,
-        "top": 20
-      }
+      ]
     }
   ]
 }
