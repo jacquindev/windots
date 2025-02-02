@@ -37,6 +37,15 @@ A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppu
 <br>
 <hr>
 
+## ⚠️ Disclaimer
+
+Since I work with this repository everyday to maintain ***latest updates*** for my Windows machine, many apps or packages will be **add** / **remove** / **reconfigure** to fit my personal taste.
+
+So, please keep in mind that:
+
+- **This repository is under very active development.**
+- You might expect bugs and breaking changes.
+
 ## ✨ Prerequisites
 
 - **[Git for Windows](https://gitforwindows.org/)**
@@ -284,8 +293,7 @@ Big thanks for those inspirations:
 <hr>
 <h2 id="author">👤 Author</h2>
 
-**Jacquin Moon**
-
+- Name: **Jacquin Moon**
 - Github: [@jacquindev](https://github.com/jacquindev)
 - Email: jacquindev@outlook.com
 
@@ -296,7 +304,6 @@ This repository is released under the [MIT License](https://github.com/jacquinde
 
 Feel free to use and modify these dotfiles to suit your needs.
 
-<hr>
-<h2>Show your support</h2>
+## Show your support
 
-Give a ⭐️ if this project helped you!
+Please give a ⭐️ if this project helped you!
