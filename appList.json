@@ -19,6 +19,10 @@
 				{ "packageId": "Git.Git" },
 				{ "packageId": "Microsoft.PowerShell" },
 
+				// One of the following is recommended:
+				// { "packageId": "Microsoft.WindowsTerminal" },
+				{ "packageId": "Microsoft.WindowsTerminal.Preview" },
+
 				// Shell supports
 				{ "packageId": "chrisant996.Clink" },
 				{ "packageId": "JanDeDobbeleer.OhMyPosh" },
@@ -65,7 +69,7 @@
 				{ "packageName": "gpg4win" },
 				{ "packageName": "vmwareworkstation" }
 			],
-			"additionalArgs": ["-y"]
+			"additionalArgs": ["-y", "-r", "--no-progress"]
 		},
 		"scoop": {
 			"autoInstall": true,
@@ -154,32 +158,32 @@
 				"Link-/gh-token",
 				"yusukebe/gh-markdown-preview"
 			],
-			"install": false
+			"install": true
 		},
 		{
 			"commandName": "npm",
 			"commandCheck": "npm list -g",
-			"commandInvoke": "npm install -g",
+			"commandInvoke": "npm install -g --silent",
 			"addonList": [
 				"npm@latest",
 				"npm-check-updates",
 				"bun"
 			],
-			"install": false
+			"install": true
 		},
 		{
 			// I personally prefer bun over other Node package managers since it's faster
 			// This option required `bun` cli is installed on your machine
 			"commandName": "bun",
 			"commandCheck": "bun pm ls -g",
-			"commandInvoke": "bun install -g",
+			"commandInvoke": "bun install -g --silent",
 			"addonList": [
 				"@angular/cli",
 				"commitizen",
 				"cz-git",
 				"typescript"
 			],
-			"install": false
+			"install": true
 		},
 		{
 			"commandName": "dotnet",
@@ -190,7 +194,7 @@
 				"dotnet-outdated-tool",
 				"gitversion.tool"
 			],
-			"install": false
+			"install": true
 		},
 		{
 			"commandName": "vagrant",
@@ -201,7 +205,7 @@
 				"vagrant-share",
 				"vagrant-winnfsd"
 			],
-			"install": false
+			"install": true
 		},
 		{
 			"commandName": "az",
@@ -220,7 +224,7 @@
 				"pdm",
 				"uv"
 			],
-			"install": false
+			"install": true
 		}
 	],
 	"powershellModule": {

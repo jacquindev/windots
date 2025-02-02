@@ -48,6 +48,47 @@ $VerbosePreference = "SilentlyContinue"
 ########################################################################################################################
 ###																											HELPER FUNCTIONS																						 ###
 ########################################################################################################################
+function Write-TitleBox {
+	param ([string]$Title, [string]$BorderChar = "*", [int]$Padding = 10)
+
+	$Title = $Title.ToUpper()
+	$titleLength = $Title.Length
+	$boxWidth = $titleLength + ($Padding * 2) + 2
+
+	$borderLine = $BorderChar * $boxWidth
+	$paddingLine = $BorderChar + (" " * ($boxWidth - 2)) + $BorderChar
+	$titleLine = $BorderChar + (" " * $Padding) + $Title + (" " * $Padding) + $BorderChar
+
+	''
+	Write-Host $borderLine -ForegroundColor Cyan
+	Write-Host $paddingLine -ForegroundColor Cyan
+	Write-Host $titleLine -ForegroundColor Cyan
+	Write-Host $paddingLine -ForegroundColor Cyan
+	Write-Host $borderLine -ForegroundColor Cyan
+	''
+}
+
+# Source:
+# - https://stackoverflow.com/questions/2688547/multiple-foreground-colors-in-powershell-in-one-command
+function Write-ColorText {
+	param ([string]$Text, [switch]$NoNewLine)
+
+	$hostColor = $Host.UI.RawUI.ForegroundColor
+
+	$Text.Split( [char]"{", [char]"}" ) | ForEach-Object { $i = 0; } {
+		if ($i % 2 -eq 0) {	Write-Host $_ -NoNewline }
+		else {
+			if ($_ -in [enum]::GetNames("ConsoleColor")) {
+				$Host.UI.RawUI.ForegroundColor = ($_ -as [System.ConsoleColor])
+			}
+		}
+		$i++
+	}
+
+	if (!$NoNewLine) { Write-Host }
+	$Host.UI.RawUI.ForegroundColor = $hostColor
+}
+
 function Add-ScoopBucket {
 	param ([string]$BucketName, [string]$BucketRepo)
 
@@ -58,6 +99,8 @@ function Add-ScoopBucket {
 		} else {
 			scoop bucket add $BucketName
 		}
+	} else {
+		Write-ColorText "{Blue}[bucket] {Green}scoop: {Magenta}(exists) {Gray}$BucketName"
 	}
 }
 
@@ -71,6 +114,8 @@ function Install-ScoopApp {
 			$scoopCmd += " $AdditionalArgs"
 		}
 		Invoke-Expression "$scoopCmd"
+	} else {
+		Write-ColorText "{Blue}[package] {Green}scoop: {Magenta}(exists) {Gray}$Package"
 	}
 }
 
@@ -87,6 +132,8 @@ function Install-WinGetApp {
 		if ($Source -eq "msstore") { $wingetCmd += " --source msstore" }
 		else { $wingetCmd += " --source winget" }
 		Invoke-Expression "$wingetCmd"
+	} else {
+		Write-ColorText "{Blue}[package] {Green}winget: {Magenta}(exists) {Gray}$PackageID"
 	}
 }
 
@@ -105,6 +152,8 @@ function Install-ChocoApp {
 			$chocoCmd += " $AdditionalArgs"
 		}
 		Invoke-Expression "$chocoCmd"
+	} else {
+		Write-ColorText "{Blue}[package] {Green}choco: {Magenta}(exists) {Gray}$Package"
 	}
 }
 
@@ -116,6 +165,8 @@ function Install-PowerShellModule {
 			$AdditionalArgs = $AdditionalArgs -join ' '
 			Invoke-Expression "Install-Module $Module $AdditionalArgs"
 		} else { Invoke-Expression "Install-Module $Module" }
+	} else {
+		Write-ColorText "{Blue}[module] {Green}pwsh: {Magenta}(exists) {Gray}$Module"
 	}
 }
 
@@ -127,7 +178,7 @@ function Install-AppFromGitHub {
 	$downloadUrl = "https://github.com/$RepoName/releases/download/$tag/$FileName"
 	$downloadPath = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path
 	$downloadFile = "$downloadPath\$FileName"
-	(New-Object System.Net.Client).DownloadFile($downloadUrl, $downloadFile)
+	(New-Object System.Net.WebClient).DownloadFile($downloadUrl, $downloadFile)
 
 	switch ($FileName.Split('.') | Select-Object -Last 1) {
 		"exe" {
@@ -190,8 +241,7 @@ function Write-LockFile {
 			if (!(Get-Command winget -ErrorAction SilentlyContinue)) { return }
 			winget export -o $dest | Out-Null
 			if ($?) {
-				Write-Host "Packages installed by WinGet are exported at " -NoNewline -ForegroundColor Green
-				Write-Host "$dest" -ForegroundColor Yellow
+				Write-ColorText "`n✔️  Packages installed by {Green}$PackageSource {Gray}are exported at {Red}$dest"
 			}
 			Start-Sleep -Seconds 1
 		}
@@ -199,8 +249,7 @@ function Write-LockFile {
 			if (!(Get-Command choco -ErrorAction SilentlyContinue)) { return }
 			choco export $dest | Out-Null
 			if ($?) {
-				Write-Host "Packages installed by Chocolatey are exported at " -NoNewline -ForegroundColor Green
-				Write-Host "$dest" -ForegroundColor Yellow
+				Write-ColorText "`n✔️  Packages installed by {Green}$PackageSource {Gray}are exported at {Red}$dest"
 			}
 			Start-Sleep -Seconds 1
 		}
@@ -208,16 +257,14 @@ function Write-LockFile {
 			if (!(Get-Command scoop -ErrorAction SilentlyContinue)) { return }
 			scoop export -c > $dest
 			if ($?) {
-				Write-Host "Packages installed by Scoop are exported at " -NoNewline -ForegroundColor Green
-				Write-Host "$dest" -ForegroundColor Yellow
+				Write-ColorText "`n✔️  Packages installed by {Green}$PackageSource {Gray}are exported at {Red}$dest"
 			}
 			Start-Sleep -Seconds 1
 		}
 		"modules" {
 			Get-InstalledModule | Select-Object -Property Name, Version | ConvertTo-Json -Depth 100 | Out-File $dest
 			if ($?) {
-				Write-Host "PowerShell Modules installed are exported at " -NoNewline -ForegroundColor Green
-				Write-Host "$dest" -ForegroundColor Yellow
+				Write-ColorText "`n✔️  {Green}PowerShell Modules {Gray}installed are exported at {Red}$dest"
 			}
 			Start-Sleep -Seconds 1
 		}
@@ -239,20 +286,25 @@ $i = 1
 ###																												NERD FONTS																								 ###
 ########################################################################################################################
 # install nerd fonts
-''
-Write-Verbose "Installing Nerd Fonts"
-Write-Host "The following fonts are highly recommended: " -ForegroundColor Green
-Write-Host "(Please skip this step if you already installed Nerd Fonts)" -ForegroundColor DarkGray
-Write-Output "  ● Cascadia Code Nerd Font"
-Write-Output "  ● FantasqueSansM Nerd Font"
-Write-Output "  ● FiraCode Nerd Font"
-Write-Output "  ● JetBrainsMono Nerd Font"
-''
-$installNerdFonts = $(Write-Host "[RECOMMENDED] Install NerdFont now? (y/N): " -NoNewline -ForegroundColor Magenta; Read-Host)
-if ($installNerdFonts.ToUpper() -eq 'Y') {
-	& ([scriptblock]::Create((Invoke-WebRequest 'https://to.loredo.me/Install-NerdFont.ps1'))) -Scope AllUsers -Confirm:$False
-	Refresh ($i++)
-} else { Write-Host "Skipped installing Nerd Fonts..." -ForegroundColor DarkGray; '' }
+Write-TitleBox -Title "Nerd Fonts Installation"
+Write-ColorText "{Green}The following fonts are highly recommended:`n{DarkGray}(Please skip this step if you already installed Nerd Fonts)`n`n  {Gray}● Cascadia Code Nerd Font`n  ● FantasqueSansM Nerd Font`n  ● FiraCode Nerd Font`n  ● JetBrainsMono Nerd Font`n"
+
+for ($count = 5; $count -ge 0; $count--) {
+	Write-ColorText "`r{Magenta}Install Nerd Fonts now? [y/N]: {DarkGray}(Exit in {Blue}$count {DarkGray}seconds) {Gray}" -NoNewLine
+
+	if ([System.Console]::KeyAvailable) {
+		$key = [System.Console]::ReadKey($false)
+		if ($key.Key -ne 'Y') {
+			Write-ColorText "`r{DarkGray}Skipped installing Nerd Fonts...                                                                 "
+			break
+		} else {
+			& ([scriptblock]::Create((Invoke-WebRequest 'https://to.loredo.me/Install-NerdFont.ps1')))
+			break
+		}
+	}
+	Start-Sleep -Seconds 1
+}
+Refresh ($i++)
 
 ########################################################################################################################
 ###																											WINGET PACKAGES 																						 ###
@@ -261,6 +313,7 @@ if ($installNerdFonts.ToUpper() -eq 'Y') {
 $json = Get-Content "$PSScriptRoot\appList.json" -Raw | ConvertFrom-Json
 
 # Winget Packages
+Write-TitleBox -Title "WinGet Packages Installation"
 $wingetItem = $json.installSource.winget
 $wingetPkgs = $wingetItem.packageList
 $wingetArgs = $wingetItem.additionalArgs
@@ -268,12 +321,13 @@ $wingetInstall = $wingetItem.autoInstall
 
 if ($wingetInstall -eq $True) {
 	if (!(Get-Command winget -ErrorAction SilentlyContinue)) {
-		# https://github.com/asheroto/winget-install
+		# Use external script to install WinGet and all of its requirements
+		# Source: - https://github.com/asheroto/winget-install
 		Write-Verbose -Message "Installing winget-cli"
 		&([ScriptBlock]::Create((Invoke-RestMethod asheroto.com/winget))) -Force
 	}
 
-	# Configure winget settings for better performance
+	# Configure winget settings for BETTER PERFORMANCE
 	# Note that this will always overwrite existed winget settings file whenever you run this script
 	$settingsPath = "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json"
 	$settingsJson = @'
@@ -304,7 +358,7 @@ if ($wingetInstall -eq $True) {
 '@
 	$settingsJson | Out-File $settingsPath -Encoding utf8
 
-	# Download packages
+	# Download packages from WinGet
 	foreach ($pkg in $wingetPkgs) {
 		$pkgId = $pkg.packageId
 		$pkgSource = $pkg.packageSource
@@ -322,6 +376,7 @@ if ($wingetInstall -eq $True) {
 ###																										CHOCOLATEY PACKAGES 											  									 ###
 ########################################################################################################################
 # Chocolatey Packages
+Write-TitleBox -Title "Chocolatey Packages Installation"
 $chocoItem = $json.installSource.choco
 $chocoPkgs = $chocoItem.packageList
 $chocoArgs = $chocoItem.additionalArgs
@@ -329,12 +384,24 @@ $chocoInstall = $chocoItem.autoInstall
 
 if ($chocoInstall -eq $True) {
 	if (!(Get-Command choco -ErrorAction SilentlyContinue)) {
+		# Install chocolatey
+		# Source: - https://chocolatey.org/install
 		Write-Verbose -Message "Installing chocolatey"
 		if ((Get-ExecutionPolicy) -eq "Restricted") { Set-ExecutionPolicy AllSigned }
 		Set-ExecutionPolicy Bypass -Scope Process -Force
 		[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
 		Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 	}
+
+	# Since we install VMWare Application(s) with `chocolatey`, print the help message
+	# to the console if VMWare Installer notify that it cannot locate 'vmnetbridge.dll'
+	# file in order to complete the installation. There are several reasons this could
+	# happen, but for the sake of this script, we will just inform the simplest option
+	# in the majority of cases.
+	if ($chocoPkgs.packageName -match "vmware*") {
+		Write-ColorText "{DarkGray}====================================================================================`n`n{Yellow}IMPORTANT NOTES: `n----------------`n`n{DarkGray}about VMWARE APPLICATION(s) installation`n`n{Gray}While installing VMWare Application, it is possible that a dialog box would appear`nand notify that the file 'vmnetbridge.dll' cannot be found by VMWare Installer. It`nmight prompt you to specify that path of the folder where 'vmnetbridge.dll' file is.`nIf that is the case, try to find the VMWare Application folder and provide the full`npath to it. `n`nFor example, if you are trying to install 'VMWare Workstation', then the path to its`nfolder could be (depending on your machine):`n`n	{Magenta}C:\Program Files (x86)\VMware\VMware Workstation`n{Gray}or`n	{Magenta}C:\Program Files\VMWare\VMWare Workstation `n`n{Gray}Rare case is that if you cannot find the file 'vmnetbridge.dll' in the installation`nfolder, then you could try to install the file from one of the following links,`nextract the zip file and tell VMWare Installer the path to that folder:`n`n	{Blue}https://windll.com/dll/vmware-inc/vmnetbridge`n{Gray}or`n	{Blue}https://www.dll-files.com/vmnetbridge.dll.html`n`n{DarkGray}===================================================================================={Gray}"
+	}
+
 	foreach ($pkg in $chocoPkgs) {
 		$chocoPkg = $pkg.packageName
 		$chocoVer = $pkg.packageVersion
@@ -352,6 +419,7 @@ if ($chocoInstall -eq $True) {
 ###																					 						SCOOP PACKAGES 	 							 															 ###
 ########################################################################################################################
 # Scoop Packages
+Write-TitleBox -Title "Scoop Packages Installation"
 $scoopItem = $json.installSource.scoop
 $scoopBuckets = $scoopItem.bucketList
 $scoopPkgs = $scoopItem.packageList
@@ -360,24 +428,36 @@ $scoopInstall = $scoopItem.autoInstall
 
 if ($scoopInstall -eq $True) {
 	if (!(Get-Command scoop -ErrorAction SilentlyContinue)) {
-		# follow https://github.com/ScoopInstaller/Install#for-admin
+		# `scoop` is recommended to be installed from a non-administrative
+		# PowerShell terminal. However, since we are in administrative shell,
+		# it is required to invoke the installer with the `-RunAsAdmin` parameter.
+
+		# Source: - https://github.com/ScoopInstaller/Install#for-admin
 		Write-Verbose -Message "Installing scoop"
 		Invoke-Expression "& {$(Invoke-RestMethod get.scoop.sh)} -RunAsAdmin"
 	}
 
-	# Configure aria2c task
+	# Configure aria2
 	if (!(Get-Command aria2c -ErrorAction SilentlyContinue)) { scoop install aria2 }
 	if (!($(scoop config aria2-enabled) -eq $True)) { scoop config aria2-enabled true }
 	if (!($(scoop config aria2-warning-enabled) -eq $False)) { scoop config aria2-warning-enabled false }
+
+	# Create a scheduled task for aria2 so that it will always be active when we logon the machine
+	# Idea is from: - https://gist.github.com/mikepruett3/7ca6518051383ee14f9cf8ae63ba18a7
 	if (!(Get-ScheduledTaskInfo -TaskName "Aria2RPC" -ErrorAction Ignore)) {
-		$scoopDir = (Get-Command scoop.ps1 -ErrorAction SilentlyContinue).Source | Split-Path | Split-Path
-		$Action = New-ScheduledTaskAction -Execute "$scoopDir\apps\aria2\current\aria2c.exe" -Argument "--enable-rpc --rpc-listen-all" -WorkingDirectory "$Env:USERPROFILE\Downloads"
-		$Trigger = New-ScheduledTaskTrigger -AtStartup
-		$Principal = New-ScheduledTaskPrincipal -UserID "$Env:USERDOMAIN\$Env:USERNAME" -LogonType S4U
-		$Settings = New-ScheduledTaskSettingsSet -ExecutionTimeLimit 0 -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
-		Register-ScheduledTask -TaskName "Aria2RPC" -Action $Action -Trigger $Trigger -Principal $Principal -Settings $Settings
+		try {
+			$scoopDir = (Get-Command scoop.ps1 -ErrorAction SilentlyContinue).Source | Split-Path | Split-Path
+			$Action = New-ScheduledTaskAction -Execute "$scoopDir\apps\aria2\current\aria2c.exe" -Argument "--enable-rpc --rpc-listen-all" -WorkingDirectory "$Env:USERPROFILE\Downloads"
+			$Trigger = New-ScheduledTaskTrigger -AtStartup
+			$Principal = New-ScheduledTaskPrincipal -UserID "$Env:USERDOMAIN\$Env:USERNAME" -LogonType S4U
+			$Settings = New-ScheduledTaskSettingsSet -ExecutionTimeLimit 0 -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
+			Register-ScheduledTask -TaskName "Aria2RPC" -Action $Action -Trigger $Trigger -Principal $Principal -Settings $Settings
+		} catch {
+			Write-Error "An error occurred: $_"
+		}
 	}
 
+	# Add scoop buckets
 	foreach ($bucket in $scoopBuckets) {
 		$bucketName = $bucket.bucketName
 		$bucketRepo = $bucket.bucketRepo
@@ -387,6 +467,10 @@ if ($scoopInstall -eq $True) {
 			Add-ScoopBucket -BucketName $bucketName
 		}
 	}
+
+	''
+
+	# Install applications from scoop
 	foreach ($pkg in $scoopPkgs) {
 		$pkgName = $pkg.packageName
 		$pkgScope = $pkg.packageScope
@@ -405,6 +489,7 @@ if ($scoopInstall -eq $True) {
 ###																										POWERSHELL MODULES 																						 ###
 ########################################################################################################################
 # Powershell Modules
+Write-TitleBox -Title "PowerShell Modules Installation"
 $moduleItem = $json.powershellModule
 $moduleList = $moduleItem.moduleList
 $moduleArgs = $moduleItem.additionalArgs
@@ -419,12 +504,17 @@ if ($moduleInstall -eq $True) {
 ###																												GIT SETUP																									 ###
 ########################################################################################################################
 # Configure git
+Write-TitleBox -Title "SETUP GIT FOR WINDOWS"
 if (Get-Command git -ErrorAction SilentlyContinue) {
 	$gitUserName = (git config user.name)
 	$gitUserMail = (git config user.email)
 
-	if ($null -eq $gitUserName) { $gitUserName = $(Write-Host "Input your git name: " -NoNewline -ForegroundColor Magenta; Read-Host) }
-	if ($null -eq $gitUserMail) { $gitUserMail = $(Write-Host "Input your git email: " -NoNewline -ForegroundColor Magenta; Read-Host) }
+	if ($null -eq $gitUserName) {
+		$gitUserName = $(Write-Host "Input your git name: " -NoNewline -ForegroundColor Magenta; Read-Host)
+	} else { Write-ColorText "{Magenta}Git Name: {Gray}$gitUserName" }
+	if ($null -eq $gitUserMail) {
+		$gitUserMail = $(Write-Host "Input your git email: " -NoNewline -ForegroundColor Magenta; Read-Host)
+	} else { Write-ColorText "{Magenta}Git Email: {Gray}$gitUserMail" }
 
 	git submodule update --init --recursive
 }
@@ -437,6 +527,7 @@ if (Get-Command gh -ErrorAction SilentlyContinue) {
 ###																													SYMLINKS 																								 ###
 ########################################################################################################################
 # symlinks
+Write-TitleBox -Title "Add symbolic links for dotfiles"
 $symlinks = @{
 	$PROFILE.CurrentUserAllHosts                                                                  = ".\Profile.ps1"
 	"$Env:APPDATA\bat"                                                                            = ".\config\bat"
@@ -468,6 +559,7 @@ foreach ($symlink in $symlinks.GetEnumerator()) {
 	Write-Verbose -Message "Creating symlink for $(Resolve-Path $symlink.Value) --> $($symlink.Key)"
 	Get-Item -Path $symlink.Key -ErrorAction SilentlyContinue | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
 	New-Item -ItemType SymbolicLink -Path $symlink.Key -Target (Resolve-Path $symlink.Value) -Force | Out-Null
+	Write-ColorText "{Blue}[symlink] {Green}$(Resolve-Path $symlink.Value) {Yellow}--> {Gray}$($symlink.Key)"
 }
 Refresh ($i++)
 
@@ -481,7 +573,8 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
 ###																									ENVIRONMENT VARIABLES																						 ###
 ########################################################################################################################
 # add environment variables
-$envVars = $json.environmentVariables
+Write-TitleBox -Title "Set Environment Variables"
+$envVars = $json.environmentVariable
 foreach ($env in $envVars) {
 	$envCommand = $env.commandName
 	$envKey = $env.environmentKey
@@ -491,9 +584,13 @@ foreach ($env in $envVars) {
 			Write-Verbose "Set environment variable of $envCommand`: $envKey -> $envValue"
 			try {
 				[System.Environment]::SetEnvironmentVariable("$envKey", "$envValue", "User")
+				Write-ColorText "{Blue}[environment] {Magenta}(added) {Green}$envKey {Yellow}--> {Gray}$envValue"
 			} catch {
 				Write-Error -ErrorAction Stop "An error occurred: $_"
 			}
+		} else {
+			$value = [System.Environment]::GetEnvironmentVariable("$envKey")
+			Write-ColorText "{Blue}[environment] {Magenta}(exists) {Green}$envKey {Yellow}--> {Gray}$value"
 		}
 	}
 }
@@ -503,6 +600,7 @@ Refresh ($i++)
 ###																		SETUP NODEJS / INSTALL NVM (Node Version Manager)															 ###
 ########################################################################################################################
 if (!(Get-Command nvm -ErrorAction SilentlyContinue)) {
+	Write-TitleBox -Title "Nvm (Node Version Manager) Installation"
 	$installNvm = $(Write-Host "Install NVM? (y/N) " -ForegroundColor Magenta -NoNewline; Read-Host)
 	if ($installNvm.ToUpper() -eq 'Y') {
 		Write-Verbose "Installing NVM from GitHub Repo"
@@ -526,22 +624,26 @@ if (Get-Command nvm -ErrorAction SilentlyContinue) {
 ###																										ADDONS / PLUGINS																							 ###
 ########################################################################################################################
 # plugins / extensions / addons
-$pluginItems = $json.package_plugins
-foreach ($plugin in $pluginItems) {
-	$p = [PSCustomObject]@{
-		CommandName   = $plugin.command_name
-		InvokeCommand = $plugin.invoke_command
-		CheckCommand  = $plugin.check_command
-		List          = [array]$plugin.plugins
-		InstallOrNot  = $plugin.install
-	}
+$myAddons = $json.packageAddon
+foreach ($a in $myAddons) {
+	$aCommandName = $a.commandName
+	$aCommandCheck = $a.commandCheck
+	$aCommandInvoke = $a.commandInvoke
+	$aList = [array]$a.addonList
+	$aInstall = $a.install
 
-	if ($p.InstallOrNot -eq $True) {
-		if (Get-Command "$($p.CommandName)" -ErrorAction SilentlyContinue) {
-			foreach ($pkg in $($p.List)) {
-				if (!(Invoke-Expression "$($p.CheckCommand)" | Select-String "$pkg")) {
-					Write-Verbose "Executing: $($p.InvokeCommand) $pkg"
-					Invoke-Expression "$($p.InvokeCommand) $pkg"
+	if ($aInstall -eq $True) {
+		if (Get-Command $aCommandName -ErrorAction SilentlyContinue) {
+			Write-TitleBox -Title "$aCommandName's Addons Installation"
+			foreach ($p in $aList) {
+				if (!(Invoke-Expression "$aCommandCheck" | Select-String "$p" -SimpleMatch)) {
+					Write-Verbose "Executin: $aCommandInvoke $p"
+					Invoke-Expression "$aCommandInvoke $p"
+					if ($LASTEXITCODE -eq 0) {
+						Write-ColorText "➕ {Blue}[Addon] {Green}$aCommandName`: {Magenta}(installed) {Gray}$p"
+					}
+				} else {
+					Write-ColorText "➕ {Blue}[Addon] {Green}$aCommandName`: {Magenta}(exists) {Gray}$p"
 				}
 			}
 		}
@@ -554,11 +656,14 @@ Refresh ($i++)
 ########################################################################################################################
 # VSCode Extensions
 if (Get-Command code -ErrorAction SilentlyContinue) {
+	Write-TitleBox -Title "VSCode Extensions Installation"
 	$extensionList = Get-Content "$PSScriptRoot\vscode\extensions.list"
 	foreach ($ext in $extensionList) {
 		if (!(code --list-extensions | Select-String "$ext")) {
 			Write-Verbose -Message "Installing VSCode Extension: $ext"
 			Invoke-Expression "code --install-extension $ext"
+		} else {
+			Write-ColorText "{Blue}[extension] {Magenta}(exists) {Gray}$ext"
 		}
 	}
 }
@@ -566,6 +671,7 @@ if (Get-Command code -ErrorAction SilentlyContinue) {
 ########################################################################################################################
 ###																										CATPPUCCIN THEMES 								 														 ###
 ########################################################################################################################
+Write-TitleBox -Title "Per Application Catppuccin Themes Installation"
 # Catppuccin Themes
 $catppuccinThemes = @('Frappe', 'Latte', 'Macchiato', 'Mocha')
 
@@ -577,6 +683,9 @@ if (Test-Path "$flowLauncherDir" -PathType Container) {
 		if (!(Test-Path "$flowLauncherThemeDir\Catppuccin $_.xaml" -PathType Leaf)) {
 			Write-Verbose "Adding file: `"Catppuccin $_.xaml`" to $flowLauncherThemeDir."
 			Install-OnlineFile -OutputDir "$flowLauncherThemeDir" -Url "https://raw.githubusercontent.com/catppuccin/flow-launcher/refs/heads/main/themes/Catppuccin%20$_.xaml"
+			Write-ColorText "{Blue}[theme] {Green}flowlauncher: {Magenta}(installed) {Gray}Catppuccin $_"
+		} else {
+			Write-ColorText "{Blue}[theme] {Green}flowlauncher: {Magenta}(exists) {Gray}Catppuccin $_"
 		}
 	}
 }
@@ -591,6 +700,10 @@ if (Get-Command btop -ErrorAction SilentlyContinue) {
 		if (!(Test-Path "$btopThemeDir\catppuccin_$_.theme" -PathType Leaf)) {
 			Write-Verbose "Adding file: catppuccin_$_.theme to $btopThemeDir."
 			Install-OnlineFile -OutputDir "$btopThemeDir" -Url "https://raw.githubusercontent.com/catppuccin/btop/refs/heads/main/themes/catppuccin_$_.theme"
+			Write-ColorText "{Blue}[theme] {Green}btop: {Magenta}(installed) {Gray}catppuccin $_"
+
+		} else {
+			Write-ColorText "{Blue}[theme] {Green}btop: {Magenta}(exists) {Gray}catppuccin $_"
 		}
 	}
 }
@@ -599,10 +712,13 @@ if (Get-Command btop -ErrorAction SilentlyContinue) {
 ###																										START KOMOREBI + YASB																					 ###
 ########################################################################################################################
 # start komorebi
+Write-TitleBox -Title "Start Komorebi and YASB (if installed)"
 if (Get-Command komorebic -ErrorAction SilentlyContinue) {
 	if ((!(Get-Process -Name komorebi -ErrorAction SilentlyContinue)) -and (!(Get-Process -Name whkd -ErrorAction SilentlyContinue))) {
 		Write-Verbose "Starting Komorebi with WHKD"
 		Invoke-Expression "komorebic start --whkd"
+	} else {
+		Write-Host "✅ Komorebi is already running."
 	}
 }
 
@@ -617,10 +733,13 @@ if (Get-Command yasb -ErrorAction SilentlyContinue) {
 		} elseif (Test-Path -Path "$yasbPath") {
 			Start-Process -FilePath $yasbPath -Wait
 		}
+	} else {
+		Write-Host "✅ YASB Status Bar is already running."
 	}
 }
 
 # yazi plugins
+Write-TitleBox "Miscellaneous"
 if (Get-Command ya -ErrorAction SilentlyContinue) {
 	Write-Verbose "Installing yazi plugins / themes"
 	ya pack -i >$null 2>&1
@@ -630,8 +749,8 @@ if (Get-Command ya -ErrorAction SilentlyContinue) {
 # bat build theme
 if (Get-Command bat -ErrorAction SilentlyContinue) {
 	Write-Verbose "Building bat theme"
-	bat cache --clear >$null 2>&1
-	bat cache --build >$null 2>&1
+	bat cache --clear
+	bat cache --build
 }
 
 ########################################################################################################################
@@ -649,8 +768,7 @@ if (!(Get-Command wsl -CommandType Application -ErrorAction Ignore)) {
 Set-Location $currentLocation
 Start-Sleep -Seconds 5
 
-''
-Write-Host "┌────────────────────────────────────────────────────────────────────────────────┐" -ForegroundColor "Green"
+Write-Host "`n`n┌────────────────────────────────────────────────────────────────────────────────┐" -ForegroundColor "Green"
 Write-Host "│                                                                                │" -ForegroundColor "Green"
 Write-Host "│        █████╗ ██╗     ██╗         ██████╗  ██████╗ ███╗   ██╗███████╗ ██╗      │" -ForegroundColor "Green"
 Write-Host "│       ██╔══██╗██║     ██║         ██╔══██╗██╔═══██╗████╗  ██║██╔════╝ ██║      │" -ForegroundColor "Green"
@@ -659,12 +777,9 @@ Write-Host "│       ██╔══██║██║     ██║         �
 Write-Host "│       ██║  ██║███████╗███████╗    ██████╔╝╚██████╔╝██║ ╚████║███████╗ ██╗      │" -ForegroundColor "Green"
 Write-Host "│       ╚═╝  ╚═╝╚══════╝╚══════╝    ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚══════╝ ╚═╝      │" -ForegroundColor "Green"
 Write-Host "│                                                                                │" -ForegroundColor "Green"
-Write-Host "└────────────────────────────────────────────────────────────────────────────────┘" -ForegroundColor "Green"
+Write-Host "└────────────────────────────────────────────────────────────────────────────────┘`n`n" -ForegroundColor "Green"
 
-''
-Write-Host "For more information, please visit: " -NoNewline
-Write-Host "https://github.com/jacquindev/windots" -ForegroundColor Blue
-Write-Host "- Submit an issue via: " -NoNewline -ForegroundColor DarkGray
-Write-Host "https://github.com/jacquindev/windots/issues/new" -ForegroundColor Blue
-Write-Host "- Contact me via email: " -NoNewline -ForegroundColor DarkGray
-Write-Host "jacquindev@outlook.com" -ForegroundColor Blue
+
+Write-ColorText "{Grey}For more information, please visit: {Blue}https://github.com/jacquindev/windots"
+Write-ColorText " ☑️  {DarkGray}Submit an issue via: {Blue}https://github.com/jacquindev/windots/issues/new"
+Write-ColorText " ☑️  {DarkGray}Contact me via email: {Blue}jacquindev@outlook.com"
