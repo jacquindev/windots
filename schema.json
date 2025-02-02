@@ -121,7 +121,17 @@
 							"type": "array",
 							"uniqueItems": true,
 							"items": {
-								"type": "string"
+								"type": "object",
+								"properties": {
+									"bucketName": {
+										"description": "Name of a scoop bucket",
+										"type": "string"
+									},
+									"bucketRepo": {
+										"description": "Repository URL of a scoop bucket",
+										"type": "string"
+									}
+								}
 							}
 						},
 						"additionalArgs": {

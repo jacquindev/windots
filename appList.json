@@ -69,7 +69,12 @@
 		},
 		"scoop": {
 			"autoInstall": true,
-			"bucketList": ["extras", "java", "sysinternals"],
+			"bucketList": [
+				{ "bucketName": "dorado", "bucketRepo": "https://github.com/chawyehsu/dorado" },
+				{ "bucketName": "extras" },
+				{ "bucketName": "java" },
+				{ "bucketName": "sysinternals" }
+			],
 			"packageList": [
 				// Prerequisites of scoop (run `scoop checkup`)
 				{ "packageName": "7zip" },

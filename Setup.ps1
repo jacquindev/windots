@@ -48,12 +48,16 @@ $VerbosePreference = "SilentlyContinue"
 ########################################################################################################################
 ###																											HELPER FUNCTIONS																						 ###
 ########################################################################################################################
-
 function Add-ScoopBucket {
-	param ([string]$BucketName)
+	param ([string]$BucketName, [string]$BucketRepo)
+
 	$scoopDir = (Get-Command scoop.ps1 -ErrorAction SilentlyContinue).Source | Split-Path | Split-Path
 	if (!(Test-Path "$scoopDir\buckets\$BucketName" -PathType Container)) {
-		scoop bucket add $BucketName
+		if ($BucketRepo) {
+			scoop bucket add $BucketName $BucketRepo
+		} else {
+			scoop bucket add $BucketName
+		}
 	}
 }
 
@@ -202,7 +206,7 @@ function Write-LockFile {
 		}
 		"scoop" {
 			if (!(Get-Command scoop -ErrorAction SilentlyContinue)) { return }
-			scoop export > $dest
+			scoop export -c > $dest
 			if ($?) {
 				Write-Host "Packages installed by Scoop are exported at " -NoNewline -ForegroundColor Green
 				Write-Host "$dest" -ForegroundColor Yellow
@@ -374,7 +378,15 @@ if ($scoopInstall -eq $True) {
 		Register-ScheduledTask -TaskName "Aria2RPC" -Action $Action -Trigger $Trigger -Principal $Principal -Settings $Settings
 	}
 
-	foreach ($bucket in $scoopBuckets) { Add-ScoopBucket -BucketName $bucket }
+	foreach ($bucket in $scoopBuckets) {
+		$bucketName = $bucket.bucketName
+		$bucketRepo = $bucket.bucketRepo
+		if ($null -ne $bucketRepo) {
+			Add-ScoopBucket -BucketName $bucketName -BucketRepo $bucketRepo
+		} else {
+			Add-ScoopBucket -BucketName $bucketName
+		}
+	}
 	foreach ($pkg in $scoopPkgs) {
 		$pkgName = $pkg.packageName
 		$pkgScope = $pkg.packageScope
