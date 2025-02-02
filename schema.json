@@ -1,155 +1,222 @@
 {
-	"$schema": "https://json-schema.org/draft-04/schema#",
-	"$id": "https://example.com/packages.schema.json",
+	"$schema": "https://json-schema.org/draft-07/schema#",
 	"title": "Applications / Packages",
-	"description": "A schema for defining applications or packages to install on Windows machine.",
-	"required": ["package_source", "powershell_modules", "package_plugins"],
+	"description": "Define applications / packages to install on Windows machine.",
+	"required": ["installSource", "packageAddon", "powershellModule", "environmentVariable"],
 	"type": "object",
 	"properties": {
-		"environment_variables": {
-			"type": "array",
-			"items": {
-				"type": "object",
-				"required": ["name", "value", "command"],
-				"properties": {
-					"value": { "type": "string" },
-					"name": { "type": "string" },
-					"command": { "type": "string" }
-				},
-				"uniqueItems": true
-			}
-		},
-		"package_source": {
-			"description": "The source (command line) to get package from",
+		"installSource": {
+			"description": "Define which command used to install packages",
 			"type": "object",
-			"required": ["winget", "scoop", "choco"],
+			"required": ["winget", "choco", "scoop"],
 			"properties": {
 				"winget": {
+					"description": "Define `winget` cli settings to install packages",
 					"type": "object",
-					"description": "Install applications using `winget` cli.",
-					"required": ["auto_install", "packages"],
+					"required": ["autoInstall", "packageList", "additionalArgs"],
 					"properties": {
-						"auto_install": {
+						"autoInstall": {
 							"type": "boolean",
-							"description": "Whether or not automatically install `winget` cli and install packages from the list if it is not found."
+							"description": "Whether or not automatically install `winget` if not found and install packages from the list"
 						},
-						"packages": {
+						"packageList": {
+							"description": "List of winget packages",
 							"type": "array",
-							"description": "List of winget packages' IDs to install.",
 							"uniqueItems": true,
-							"required": ["id"],
-							"properties": {
-								"id": {
-									"type": "string",
-									"description": "Winget Package ID"
-								},
-								"source": {
-									"type": "string",
-									"enum": ["msstore", "winget"]
+							"items": {
+								"required": ["packageId"],
+								"type": "object",
+								"properties": {
+									"packageId": {
+										"description": "winget package's id",
+										"type": "string"
+									},
+									"packageSource": {
+										"description": "winget package's source",
+										"type": "string",
+										"enum": [ "msstore", "winget" ]
+									}
 								}
 							}
 						},
-						"additional_args": {
+						"additionalArgs": {
+							"description": "Extra arguments passed in for `winget install [package]` command",
 							"type": "array",
-							"description": "Additional args for `winget install [package]`"
+							"uniqueItems": true,
+							"items": {
+								"type": "string"
+							}
 						}
 					}
 				},
 				"choco": {
+					"description": "Define `choco` cli settings to install packages",
 					"type": "object",
-					"description": "Install applications using `choco` cli: To add programs for developers which will be available for all users",
-					"required": ["auto_install", "packages"],
+					"required": ["autoInstall", "packageList", "additionalArgs"],
 					"properties": {
-						"auto_install": {
-							"type": "boolean",
-							"description": "Whether or not automatically install `choco` cli and install packages from the list if it is not found."
+						"autoInstall": {
+							"description": "Whether or not automatically install `choco` if not found and install packages from the list",
+							"type": "boolean"
 						},
-						"packages": {
+						"packageList": {
+							"description": "List of chocolatey packages",
 							"type": "array",
-							"description": "List of choco packages' names to install.",
-							"uniqueItems": true
+							"uniqueItems": true,
+							"items": {
+								"type": "object",
+								"required": ["packageName"],
+								"properties": {
+									"packageName": {
+										"description": "Name of chocolatey package",
+										"type": "string"
+									},
+									"packageVersion": {
+										"description": "Version of specified chocolatey package",
+										"type": "string"
+									}
+								}
+							}
 						},
-						"additional_args": {
+						"additionalArgs": {
+							"description": "Extra arguments passed in for `choco install [package]` command",
 							"type": "array",
-							"description": "Additional args for `choco install [package]`"
+							"uniqueItems": true,
+							"items": {
+								"type": "string"
+							}
 						}
 					}
 				},
 				"scoop": {
+					"description": "Define `scoop` cli settings to install packages",
 					"type": "object",
-					"description": "Install applications using `scoop` cli: To add packages which installed for current user.",
-					"required": ["auto_install", "packages", "buckets"],
+					"required": ["autoInstall", "packageList", "bucketList", "additionalArgs"],
 					"properties": {
-						"auto_install": {
-							"type": "boolean",
-							"description": "Whether or not automatically install `scoop` cli and install packages from the list if it is not found."
+						"autoInstall": {
+							"description": "Whether or not automatically install `scoop` if not found and install packages from the list",
+							"type": "boolean"
 						},
-						"packages": {
+						"packageList": {
+							"description": "List of scoop packages",
 							"type": "array",
-							"description": "List of scoop packages' names to install.",
-							"uniqueItems": true
+							"uniqueItems": true,
+							"items": {
+								"type": "object",
+								"required": ["packageName"],
+								"properties": {
+									"packageName": {
+										"description": "Name of scoop package",
+										"type": "string"
+									},
+									"packageScope": {
+										"description": "Install specified package for AllUsers (global) or CurrentUser (local) only",
+										"type": "string",
+										"enum": ["global", "local"]
+									}
+								}
+							}
 						},
-						"buckets": {
+						"bucketList": {
+							"description": "List of scoop buckets to add",
 							"type": "array",
-							"description": "List of scoop buckets to add.",
-							"uniqueItems": true
+							"uniqueItems": true,
+							"items": {
+								"type": "string"
+							}
 						},
-						"additional_args": {
+						"additionalArgs": {
+							"description": "Extra arguments passed in for `scoop install [package]` command",
 							"type": "array",
-							"description": "Additional args for `scoop install [package]`"
+							"uniqueItems": true,
+							"items": {
+								"type": "string"
+							}
 						}
 					}
 				}
 			}
 		},
-		"package_plugins": {
-			"description": "Addons for installed packages",
+		"packageAddon": {
+			"description": "Define extra addons for an installed package/application/tool",
 			"type": "array",
+			"uniqueItems": true,
 			"items": {
 				"type": "object",
-				"required": ["command_name", "invoke_command", "check_command", "plugins", "install"],
+				"required": ["commandName", "commandCheck", "commandInvoke", "addonList", "install"],
 				"properties": {
-					"command_name": {
-						"type": "string",
-						"description": "Installed command name"
-					},
-					"invoke_command": {
-						"type": "string",
-						"description": "Command to invoke to install an addon"
-					},
-					"check_command": {
-						"type": "string",
-						"description": "Command to if an addon is installed or not"
-					},
 					"install": {
-						"type": "boolean",
-						"description": "Whether or not to install provided plugins/extensions for application in the list"
+						"description": "Whether or not to install the addons' list of a package",
+						"type": "boolean"
 					},
-					"plugins": {
+					"commandName": {
+						"description": "Command (application) which to use to install addons to",
+						"type": "string"
+					},
+					"commandCheck": {
+						"description": "Command to check if an addon is installed or not",
+						"type": "string"
+					},
+					"commandInvoke": {
+						"description": "Command to invoke to install a specified addon from the list",
+						"type": "string"
+					},
+					"addonList": {
+						"description": "List of addons to install",
 						"type": "array",
-						"uniqueItems": true
+						"uniqueItems": true,
+						"items": {
+							"type": "string"
+						}
 					}
-				},
-				"uniqueItems": true
+				}
 			}
 		},
-		"powershell_modules": {
+		"powershellModule": {
+			"description": "Define `Install-Module` PowerShell builtin cmdlet settings to install modules",
 			"type": "object",
-			"description": "Powershell Core",
-			"uniqueItems": true,
-			"required": ["modules", "install"],
+			"required": ["install", "moduleList", "additionalArgs"],
 			"properties": {
 				"install": {
-					"type": "boolean",
-					"description": "Whether or not to install powershell modules in provided list"
+					"description": "Whether or not to install the PowerShell modules in the list",
+					"type": "boolean"
 				},
-				"modules": {
+				"moduleList": {
+					"description": "List of PowerShell modules to install on the machine",
 					"type": "array",
-					"description": "List of powershell modules"
+					"uniqueItems": true,
+					"items": {
+						"type": "string"
+					}
 				},
-				"additional_args": {
+				"additionalArgs": {
+					"description": "Extra arguments passed in for `Install-Module [module name]` command",
 					"type": "array",
-					"description": "Additional args for `Install-Module [module name]`"
+					"uniqueItems": true,
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"environmentVariable": {
+			"description": "Define user environment variables and add them to the machine",
+			"type": "array",
+			"uniqueItems": true,
+			"items": {
+				"type": "object",
+				"properties": {
+					"commandName": {
+						"description": "The command which will use this environment variable",
+						"type": "string"
+					},
+					"environmentKey": {
+						"description": "Environment variable key of specified command",
+						"type": "string"
+					},
+					"environmentValue": {
+						"description": "Value inherits from the specified `environmentKey`",
+						"type": "string"
+					}
 				}
 			}
 		}

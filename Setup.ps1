@@ -1,7 +1,7 @@
 
 <#PSScriptInfo
 
-.VERSION 1.0
+.VERSION 1.0.1
 
 .GUID ccb5be4c-ea07-4c45-a5b4-6310df24e2bc
 
@@ -58,12 +58,15 @@ function Add-ScoopBucket {
 }
 
 function Install-ScoopApp {
-	param ([string]$Package, [array]$AdditionalArgs)
+	param ([string]$Package, [switch]$Global, [array]$AdditionalArgs)
 	if (!(scoop info $Package).Installed) {
+		$scoopCmd = "scoop install $Package"
+		if ($Global) { $scoopCmd += " -g" }
 		if ($AdditionalArgs.Count -ge 1) {
 			$AdditionalArgs = $AdditionalArgs -join ' '
-			Invoke-Expression "scoop install $Package $AdditionalArgs"
-		} else { Invoke-Expression "scoop install $Package" }
+			$scoopCmd += " $AdditionalArgs"
+		}
+		Invoke-Expression "$scoopCmd"
 	}
 }
 
@@ -84,14 +87,20 @@ function Install-WinGetApp {
 }
 
 function Install-ChocoApp {
-	param ([string]$Package, [array]$AdditionalArgs)
+	param ([string]$Package, [string]$Version, [array]$AdditionalArgs)
 
 	$chocoList = choco list $Package
 	if ($chocoList -like "0 packages installed.") {
+		$chocoCmd = "choco install $Package"
+		if ($Version) {
+			$pkgVer = "--version=$Version"
+			$chocoCmd += " $pkgVer"
+		}
 		if ($AdditionalArgs.Count -ge 1) {
 			$AdditionalArgs = $AdditionalArgs -join ' '
-			Invoke-Expression "choco install $Package $AdditionArgs"
-		} else { Invoke-Expression "choco install $Package" }
+			$chocoCmd += " $AdditionalArgs"
+		}
+		Invoke-Expression "$chocoCmd"
 	}
 }
 
@@ -248,10 +257,10 @@ if ($installNerdFonts.ToUpper() -eq 'Y') {
 $json = Get-Content "$PSScriptRoot\appList.json" -Raw | ConvertFrom-Json
 
 # Winget Packages
-$wingetItem = $json.package_source.winget
-$wingetPkgs = $wingetItem.packages
-$wingetArgs = $wingetItem.additional_args
-$wingetInstall = $wingetItem.auto_install
+$wingetItem = $json.installSource.winget
+$wingetPkgs = $wingetItem.packageList
+$wingetArgs = $wingetItem.additionalArgs
+$wingetInstall = $wingetItem.autoInstall
 
 if ($wingetInstall -eq $True) {
 	if (!(Get-Command winget -ErrorAction SilentlyContinue)) {
@@ -261,6 +270,7 @@ if ($wingetInstall -eq $True) {
 	}
 
 	# Configure winget settings for better performance
+	# Note that this will always overwrite existed winget settings file whenever you run this script
 	$settingsPath = "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json"
 	$settingsJson = @'
 {
@@ -292,10 +302,12 @@ if ($wingetInstall -eq $True) {
 
 	# Download packages
 	foreach ($pkg in $wingetPkgs) {
-		if ($null -ne $pkg.source) {
-			Install-WinGetApp -PackageID "$($pkg.id)" -AdditionalArgs $wingetArgs -Source "$($pkg.source)"
+		$pkgId = $pkg.packageId
+		$pkgSource = $pkg.packageSource
+		if ($null -ne $pkgSource) {
+			Install-WinGetApp -PackageID $pkgId -AdditionalArgs $wingetArgs -Source $pkgSource
 		} else {
-			Install-WinGetApp -PackageID "$($pkg.id)" -AdditionalArgs $wingetArgs
+			Install-WinGetApp -PackageID $pkgId -AdditionalArgs $wingetArgs
 		}
 	}
 	Write-LockFile -PackageSource winget -FileName wingetfile.json -OutputPath $PSScriptRoot
@@ -306,10 +318,10 @@ if ($wingetInstall -eq $True) {
 ###																										CHOCOLATEY PACKAGES 											  									 ###
 ########################################################################################################################
 # Chocolatey Packages
-$chocoItem = $json.package_source.choco
-$chocoPkgs = $chocoItem.packages
-$chocoArgs = $chocoItem.additional_args
-$chocoInstall = $chocoItem.auto_install
+$chocoItem = $json.installSource.choco
+$chocoPkgs = $chocoItem.packageList
+$chocoArgs = $chocoItem.additionalArgs
+$chocoInstall = $chocoItem.autoInstall
 
 if ($chocoInstall -eq $True) {
 	if (!(Get-Command choco -ErrorAction SilentlyContinue)) {
@@ -319,7 +331,15 @@ if ($chocoInstall -eq $True) {
 		[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
 		Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 	}
-	foreach ($pkg in $chocoPkgs) { Install-ChocoApp -Package $pkg -AdditionalArgs $chocoArgs }
+	foreach ($pkg in $chocoPkgs) {
+		$chocoPkg = $pkg.packageName
+		$chocoVer = $pkg.packageVersion
+		if ($null -ne $chocoVer) {
+			Install-ChocoApp -Package $chocoPkg -Version $chocoVer -AdditionalArgs $chocoArgs
+		} else {
+			Install-ChocoApp -Package $chocoPkg -AdditionalArgs $chocoArgs
+		}
+	}
 	Write-LockFile -PackageSource choco -FileName chocolatey.config -OutputPath $PSScriptRoot
 	Refresh ($i++)
 }
@@ -328,11 +348,11 @@ if ($chocoInstall -eq $True) {
 ###																					 						SCOOP PACKAGES 	 							 															 ###
 ########################################################################################################################
 # Scoop Packages
-$scoopItem = $json.package_source.scoop
-$scoopBuckets = $scoopItem.buckets
-$scoopPkgs = $scoopItem.packages
-$scoopArgs = $scoopItem.additional_args
-$scoopInstall = $scoopItem.auto_install
+$scoopItem = $json.installSource.scoop
+$scoopBuckets = $scoopItem.bucketList
+$scoopPkgs = $scoopItem.packageList
+$scoopArgs = $scoopItem.additionalArgs
+$scoopInstall = $scoopItem.autoInstall
 
 if ($scoopInstall -eq $True) {
 	if (!(Get-Command scoop -ErrorAction SilentlyContinue)) {
@@ -340,6 +360,8 @@ if ($scoopInstall -eq $True) {
 		Write-Verbose -Message "Installing scoop"
 		Invoke-Expression "& {$(Invoke-RestMethod get.scoop.sh)} -RunAsAdmin"
 	}
+
+	# Configure aria2c task
 	if (!(Get-Command aria2c -ErrorAction SilentlyContinue)) { scoop install aria2 }
 	if (!($(scoop config aria2-enabled) -eq $True)) { scoop config aria2-enabled true }
 	if (!($(scoop config aria2-warning-enabled) -eq $False)) { scoop config aria2-warning-enabled false }
@@ -353,7 +375,16 @@ if ($scoopInstall -eq $True) {
 	}
 
 	foreach ($bucket in $scoopBuckets) { Add-ScoopBucket -BucketName $bucket }
-	foreach ($pkg in $scoopPkgs) { Install-ScoopApp -Package $pkg -AdditionalArgs $scoopArgs }
+	foreach ($pkg in $scoopPkgs) {
+		$pkgName = $pkg.packageName
+		$pkgScope = $pkg.packageScope
+		if (($null -ne $pkgScope) -and ($pkgScope -eq "global")) { $Global = $True } else { $Global = $False }
+		if ($null -ne $scoopArgs) {
+			Install-ScoopApp -Package $pkgName -Global:$Global -AdditionalArgs $scoopArgs
+		} else {
+			Install-ScoopApp -Package $pkgName -Global:$Global
+		}
+	}
 	Write-LockFile -PackageSource scoop -FileName scoopfile.json -OutputPath $PSScriptRoot
 	Refresh ($i++)
 }
@@ -362,9 +393,9 @@ if ($scoopInstall -eq $True) {
 ###																										POWERSHELL MODULES 																						 ###
 ########################################################################################################################
 # Powershell Modules
-$moduleItem = $json.powershell_modules
-$moduleList = $moduleItem.modules
-$moduleArgs = $moduleItem.additional_args
+$moduleItem = $json.powershellModule
+$moduleList = $moduleItem.moduleList
+$moduleArgs = $moduleItem.additionalArgs
 $moduleInstall = $moduleItem.install
 if ($moduleInstall -eq $True) {
 	foreach ($module in $moduleList) { Install-PowerShellModule -Module $module -AdditionalArgs $moduleArgs }
@@ -438,13 +469,19 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
 ###																									ENVIRONMENT VARIABLES																						 ###
 ########################################################################################################################
 # add environment variables
-$envVar = $json.environment_variables
-foreach ($env in $envVar) {
-	if (Get-Command $($env.command) -ErrorAction SilentlyContinue) {
-		if (!([System.Environment]::GetEnvironmentVariable("$($env.name)"))) {
-			Write-Verbose "Setting environment variable for: $($env.name) --> $($env.value)"
-			[System.Environment]::SetEnvironmentVariable("$($env.name)", "$($env.value)", "User")
-			if ($LASTEXITCODE -ne 0) { Write-Error -ErrorAction Stop "An error occurred while creating environment variable with value $($env.value)" }
+$envVars = $json.environmentVariables
+foreach ($env in $envVars) {
+	$envCommand = $env.commandName
+	$envKey = $env.environmentKey
+	$envValue = $env.environmentValue
+	if (Get-Command $envCommand -ErrorAction SilentlyContinue) {
+		if (![System.Environment]::GetEnvironmentVariable("$envKey")) {
+			Write-Verbose "Set environment variable of $envCommand`: $envKey -> $envValue"
+			try {
+				[System.Environment]::SetEnvironmentVariable("$envKey", "$envValue", "User")
+			} catch {
+				Write-Error -ErrorAction Stop "An error occurred: $_"
+			}
 		}
 	}
 }

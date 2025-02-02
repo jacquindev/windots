@@ -1,125 +1,241 @@
-// PLEASE MODIFY THIS FILE WITH YOUR PREFERRED APPLICATIONS / PACKAGES / TOOLS BEFOR RUNNING `Setup.ps1` script!!
-// ADD or REMOVE applications below:
 {
+	// PLEASE MODIFY THIS FILE WITH YOUR PREFERRED APPLICATIONS / PACKAGES / TOOLS
+	// BEFORE RUNNING `Setup.ps` SCRIPT!! YOU CAN ADD OR REMOVE SPECIFIC SETTINGS BELOW:
 	"$schema": "https://raw.githubusercontent.com/jacquindev/windots/refs/heads/main/schema.json",
-	"environment_variables": [
-		// Please modify the `path/value` for your environment names
-		{ "command": "eza", "name": "EZA_CONFIG_DIR", "value": "C:\\Users\\jqnhi\\.config\\eza" },
-		{ "command": "komorebic", "name": "KOMOREBI_CONFIG_HOME", "value": "C:\\Users\\jqnhi\\.config\\komorebi" },
-		{ "command": "yazi", "name": "YAZI_FILE_ONE", "value": "C:\\Program Files\\Git\\usr\\bin\\file.exe" },
-		{ "command": "yazi", "name": "YAZI_CONFIG_HOME", "value": "C:\\Users\\jqnhi\\.config\\yazi" },
-		{ "command": "vagrant", "name": "VAGRANT_DEFAULT_PROVIDER", "value": "virtualbox" }
+	"environmentVariable": [
+		// Modify the below key-pair values according to your paths
+		{ "commandName": "eza", "environmentKey": "EZA_CONFIG_DIR", "environmentValue": "C:\\Users\\jqnhi\\.config\\eza" },
+		{ "commandName": "komorebic", "environmentKey": "KOMOREBI_CONFIG_HOME", "environmentValue": "C:\\Users\\jqnhi\\.config\\komorebi" },
+		{ "commandName": "yazi", "environmentKey": "YAZI_FILE_ONE", "environmentValue": "C:\\Program Files\\Git\\usr\\bin\\file.exe" },
+		{ "commandName": "yazi", "environmentKey": "YAZI_CONFIG_HOME", "environmentValue": "C:\\Users\\jqnhi\\.config\\yazi" },
+		{ "commandName": "vagrant", "environmentKey": "VAGRANT_DEFAULT_PROVIDER", "environmentValue": "virtualbox" }
 	],
-	"package_source": {
+	"installSource": {
 		"winget": {
-			"auto_install": true,
-			"packages": [
-				{ "id": "AmN.yasb" },
-				{ "id": "chrisant996.Clink" },
-				{ "id": "gerardog.gsudo" },
-				{ "id": "Git.Git" },
-				{ "id": "GitHub.GitHubDesktop" },
-				{ "id": "Google.Chrome" },
-				{ "id": "ImageMagick.ImageMagick" },
-				{ "id": "JanDeDobbeleer.OhMyPosh" },
-				{ "id": "LGUG2Z.komorebi" },
-				{ "id": "LGUG2Z.whkd" },
-				{ "id": "Microsoft.PowerShell" },
-				{ "id": "Microsoft.PowerToys" },
-				{ "id": "Rainmeter.Rainmeter" },
-				{ "id": "rocksdanister.LivelyWallpaper" },
-				{ "id": "Stardock.Start11" },
-				{ "id": "9NRX63209R7B", "source": "msstore" }, // Outlook for Windows
-				{ "id": "9NHT9RB2F4HD", "source": "msstore" } // Microsoft Copilot
+			"autoInstall": true,
+			"packageList": [
+				// Must-haves
+				{ "packageId": "gerardog.gsudo" },
+				{ "packageId": "Git.Git" },
+				{ "packageId": "Microsoft.PowerShell" },
+
+				// Shell supports
+				{ "packageId": "chrisant996.Clink" },
+				{ "packageId": "JanDeDobbeleer.OhMyPosh" },
+
+				// Development Tools
+				{ "packageId": "GitHub.GitHubDesktop" },
+				{ "packageId": "Microsoft.DotNet.SDK.8" },
+				{ "packageId": "Microsoft.DotNet.SDK.9" },
+				{ "packageId": "Postman.Postman" },
+				{ "packageId": "Python.Python.3.13" },
+
+				// Editors / Productivity
+				{ "packageId": "ImageMagick.ImageMagick" },
+				{ "packageId": "Microsoft.PowerToys" },
+				{ "packageId": "Microsoft.VisualStudio.2022.Community" },
+				{ "packageId": "Microsoft.VisualStudioCode" },
+				{ "packageId": "Obsidian.Obsidian" },
+				{ "packageId": "Symless.Synergy" },
+
+				{ "packageId": "9NRX63209R7B", "packageSource": "msstore" }, // Outlook for Windows
+				{ "packageId": "9NHT9RB2F4HD", "packageSource": "msstore" }, // Microsoft Copilot
+
+				// Containerization/Virtualization
+				{ "packageId": "Docker.DockerDesktop" },
+				{ "packageId": "Oracle.VirtualBox" },
+				{ "packageId": "Hashicorp.Vagrant" },
+
+				// Windows Tweaks
+				{ "packageId": "AmN.yasb" },
+				{ "packageId": "LGUG2Z.komorebi" },
+				{ "packageId": "LGUG2Z.whkd" },
+				{ "packageId": "Rainmeter.Rainmeter" },
+				{ "packageId": "rocksdanister.LivelyWallpaper" },
+				{ "packageId": "Stardock.Start11" }
 			],
-			"additional_args": [
-				"--exact",
-				"--silent",
-				"--accept-package-agreements",
-				"--accept-source-agreements"
-			]
+			"additionalArgs": ["--exact", "--silent", "--accept-package-agreements", "--accept-source-agreements"]
 		},
 		"choco": {
-			"auto_install": true,
-			"packages": [
-				"awscli",
-				"choco-cleaner",
-				"ngrok"
+			"autoInstall": true,
+			"packageList": [
+				{ "packageName": "choco-cleaner" },
+				{ "packageName": "cmake" },
+				{ "packageName": "make" },
+				{ "packageName": "gpg4win" },
+				{ "packageName": "vmwareworkstation" }
 			],
-			"additional_args": [
-				"-y"
-			]
+			"additionalArgs": ["-y"]
 		},
 		"scoop": {
-			"auto_install": true,
-			"buckets": ["extras", "sysinternals"],
-			"packages": [
-				"aria2",
-				"bat",
-				"btop",
-				"charm-gum",
-				"delta",
-				"eza",
-				"fastfetch",
-				"fd",
-				"ffmpeg",
-				"fzf",
-				"gh",
-				"git-aliases",
-				"jq",
-				"lazygit",
-				"poppler",
-				"pskill",
-				"scoop-completion",
-				"scoop-search",
-				"secureuxtheme",
-				"shfmt",
-				"speedtest-cli",
-				"spicetify-cli",
-				"spotify-tui",
-				"starship",
-				"wget",
-				"wixtoolset",
-				"yazi",
-				"yq",
-				"zoxide"
+			"autoInstall": true,
+			"bucketList": ["extras", "java", "sysinternals"],
+			"packageList": [
+				// Prerequisites of scoop (run `scoop doctor`)
+				{ "packageName": "7zip" },
+				{ "packageName": "aria2" },
+				{ "packageName": "cacert" },
+				{ "packageName": "wixtoolset" },
+
+				// Scoop Extras
+				{ "packageName": "scoop-completion" },
+				{ "packageName": "scoop-search" },
+
+				// Git helpers
+				{ "packageName": "bfg" },
+				{ "packageName": "delta" },
+				{ "packageName": "gh" },
+				{ "packageName": "git-aliases" },
+				{ "packageName": "git-crypt" },
+				{ "packageName": "git-lfs" },
+				{ "packageName": "git-sizer" },
+				{ "packageName": "gitleaks" },
+				{ "packageName": "lazygit" },
+
+				// CLIs / Utils
+				{ "packageName": "bat" },
+				{ "packageName": "btop" },
+				{ "packageName": "charm-gum" },
+				{ "packageName": "eza" },
+				{ "packageName": "fastfetch" },
+				{ "packageName": "fd" },
+				{ "packageName": "ffmpeg" },
+				{ "packageName": "fzf" },
+				{ "packageName": "jq" },
+				{ "packageName": "poppler" },
+				{ "packageName": "shfmt" },
+				{ "packageName": "speedtest-cli" },
+				{ "packageName": "spicetify-cli" },
+				{ "packageName": "spotify-tui" },
+				{ "packageName": "starship" },
+				{ "packageName": "wget" },
+				{ "packageName": "yazi" },
+				{ "packageName": "yq" },
+				{ "packageName": "zoxide" },
+
+				// CI/CD tools
+				{ "packageName": "aws" },
+				{ "packageName": "aws-vault" },
+				{ "packageName": "restic" },
+				{ "packageName": "task" },
+
+				// Java
+				{ "packageName": "openjdk21", "packageScope": "global" },
+				{ "packageName": "corretto17-jdk", "packageScope": "global" },
+				{ "packageName": "maven", "packageScope": "global" },
+
+				// Sysinternal Suites
+				{ "packageName": "pskill", "packageScope": "global" },
+				{ "packageName": "pslist", "packageScope": "global" },
+				{ "packageName": "psservice", "packageScope": "global" }
+
 			],
-			"additional_args": []
+			"additionalArgs": []
 		}
 	},
-	"package_plugins": [
-		// You can add extra plugins/extensions/addons list here with the following format:
-		// Set `"install": true` to install the plugins
+	"packageAddon": [
+		// Add / Remove addons list here with the following format:
+		// To install the addons, please set `"install": true`
 		{
-			"command_name": "gh",
-			"invoke_command": "gh extension install",
-			"check_command": "gh extension list",
-			"plugins": [
+			"commandName": "gh",
+			"commandCheck": "gh extension list",
+			"commandInvoke": "gh extension install",
+			"addonList": [
 				"dlvhdr/gh-dash",
 				"Shresht7/gh-license",
+				"yuler/gh-download",
+				"seachicken/gh-poi",
+				"Link-/gh-token",
 				"yusukebe/gh-markdown-preview"
+			],
+			"install": false
+		},
+		{
+			"commandName": "npm",
+			"commandCheck": "npm list -g",
+			"commandInvoke": "npm install -g",
+			"addonList": [
+				"npm@latest",
+				"npm-check-updates",
+				"bun"
+			],
+			"install": false
+		},
+		{
+			// I personally prefer bun over other Node package managers since it's faster
+			// This option required `bun` cli is installed on your machine
+			"commandName": "bun",
+			"commandCheck": "bun pm ls -g",
+			"commandInvoke": "bun install -g",
+			"addonList": [
+				"@angular/cli",
+				"commitizen",
+				"cz-git",
+				"typescript"
+			],
+			"install": false
+		},
+		{
+			"commandName": "dotnet",
+			"commandCheck": "dotnet tool list -g",
+			"commandInvoke": "dotnet tool install -g",
+			"addonList": [
+				"dotnet-ef",
+				"dotnet-outdated-tool",
+				"gitversion.tool"
+			],
+			"install": false
+		},
+		{
+			"commandName": "vagrant",
+			"commandCheck": "vagrant plugin list",
+			"commandInvoke": "vagrant plugin install",
+			"addonList": [
+				"vagrant-hostmanager",
+				"vagrant-share",
+				"vagrant-winnfsd"
+			],
+			"install": false
+		},
+		{
+			"commandName": "az",
+			"commandCheck": "az extension list",
+			"commandInvoke": "az extension add --name",
+			"addonList": [],
+			"install": false
+		},
+		{
+			"commandName": "pipx",
+			"commandCheck": "pipx list",
+			"commandInvoke": "pipx install",
+			"addonList": [
+				"cookiecutter",
+				"copier",
+				"pdm",
+				"uv"
 			],
 			"install": false
 		}
 	],
-	"powershell_modules": {
+	"powershellModule": {
 		"install": true,
-		"modules": [
+		"moduleList": [
 			"BurntToast",
 			"CompletionPredictor",
 			"DockerCompletion",
+			"DotNetVersionLister",
+			"Microsoft.PowerShell.SecretManagement",
+			"Microsoft.PowerShell.SecretStore",
 			"npm-completion",
 			"posh-git",
+			"posh-sshell",
 			"powershell-yaml",
 			"PSFzf",
+			"PSParseHTML",
+			"PSScriptTools",
 			"PSToml",
 			"Terminal-Icons"
 		],
-		"additional_args": [
-			"-Scope",
-			"CurrentUser",
-			"-Force",
-			"-AllowClobber"
-		]
+		"additionalArgs": ["-Scope", "CurrentUser", "-Force", "-AllowClobber"]
 	}
 }
