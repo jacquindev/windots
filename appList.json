@@ -71,10 +71,11 @@
 			"autoInstall": true,
 			"bucketList": ["extras", "java", "sysinternals"],
 			"packageList": [
-				// Prerequisites of scoop (run `scoop doctor`)
+				// Prerequisites of scoop (run `scoop checkup`)
 				{ "packageName": "7zip" },
 				{ "packageName": "aria2" },
 				{ "packageName": "cacert" },
+				{ "packageName": "innounp" },
 				{ "packageName": "wixtoolset" },
 
 				// Scoop Extras
