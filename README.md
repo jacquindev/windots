@@ -51,6 +51,10 @@ So, please keep in mind that:
 - **[Git for Windows](https://gitforwindows.org/)**
 - **[PowerShell 7](https://github.com/PowerShell/PowerShell)**
 
+***Highly Recommended:***
+
+- **[Windows Terminal](https://aka.ms/terminal)** or **[Windows Terminal Preview](https://aka.ms/terminal-preview)**
+
 <h2 id="preview">🌆 Preview</h2>
 
 - 2 status bar options: [Rainmeter](https://github.com/modkavartini/catppuccin/tree/main) / [Yasb](./config/yasb)
