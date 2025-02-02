@@ -10,8 +10,6 @@
 # with extra `mvn` completion plugin-goals + missing options.
 #
 
-if (!(Get-Command mvn -ErrorAction SilentlyContinue)) { return }
-
 # Define Maven options and long options.
 $MvnShortOpts = '-am', '-amd', '-B', '-b', '-C', '-c', '-cpu', '-D', '-e', '-emp', '-ep', '-f', '-fae', '-ff', '-fn', '-gs', '-gt', '-h', '-itr', '-l', '-llr', '-N', '-npr', '-npu', '-nsu', '-ntp', '-o', '-P', '-pl', '-q', '-rf', '-s', '-T', '-t', '-U', '-up', '-V', '-v', '-X'
 $MvnLongOpts = '--also-make', '--also-make-dependents', '--batch-mode', '--builder', '--strict-checksums', '--lax-checksums', '--color', '--check-plugin-updates', '--define', '--errors', '--encrypt-master-password', '--encrypt-password', '--file', '--fail-at-end', '--fail-fast', '--fail-never', '--global-settings', '--global-toolchains', '--help', '--ignore-transitive-repositories', '--log-file', '--legacy-local-repository', '--non-recursive', '--no-plugin-registry', '--no-plugin-updates', '--no-snapshot-updates', '--no-transfer-progress', '--offline', '--activate-profiles', '--projects', '--quiet', '--resume-from', '--settings', '--threads', '--toolchains', '--update-snapshots', '--update-plugins', '--show-version', '--version', '--debug'

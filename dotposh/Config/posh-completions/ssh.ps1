@@ -17,8 +17,7 @@ function Get-SshKnownHosts {
 	}
 }
 
-
-$sshScriptBlock = {
+Register-ArgumentCompleter -CommandName ssh -Native -ScriptBlock {
 	param($wordToComplete, $commandAst, $cursorPosition)
 
 	$options = "-4", "-6", "-A", "-a", "-C", "-f", "-G", "-g", "-K", "-k", "-M", "-N", "-n", "-q", "-s", "-T", "-t", "-V", "-v", "-X", "-x", "-Y", "-y", "-B", "-b", "-c", "-D", "-E", "-e", "-F", "-I", "-i", "-J", "-L", "-l", "-m", "-O", "-o", "-p", "-Q", "-R", "-S", "-W", "-w"
@@ -51,7 +50,7 @@ $sshScriptBlock = {
 	}
 }
 
-$scpScriptBlock = {
+Register-ArgumentCompleter -CommandName scp -Native -ScriptBlock {
 	param($wordToComplete, $commandAst, $cursorPosition)
 	if ($wordToComplete -eq "-") {}
 	else {
@@ -60,6 +59,3 @@ $scpScriptBlock = {
 		$c + $k | Where-Object { $_ -like "$wordToComplete*" } | ForEach-Object { "${_}:" }
 	}
 }
-
-Register-ArgumentCompleter -CommandName ssh -Native -ScriptBlock $sshScriptBlock
-Register-ArgumentCompleter -CommandName scp -Native -ScriptBlock $scpScriptBlock

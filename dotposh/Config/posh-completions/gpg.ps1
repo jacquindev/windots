@@ -1,8 +1,6 @@
 ﻿# Sources:
 # - https://github.com/artiga033/PwshComplete
 
-if (!(Get-Command gpg -ErrorAction SilentlyContinue)) { return }
-
 function Get-KeyCompletions {
 	$o = gpg --list-keys --keyid-format LONG
 
@@ -20,7 +18,7 @@ function Get-KeyCompletions {
 	foreach ($i in $m) { $i.Matches[0].Groups["keyid"].Value }
 }
 
-$gpgScriptBlock = {
+Register-ArgumentCompleter -CommandName gpg -Native -ScriptBlock {
 	param($wordToComplete, $commandAst, $cursorPosition)
 
 	$prev = Get-PrevAst $commandAst $cursorPosition
@@ -37,8 +35,7 @@ $gpgScriptBlock = {
 		$gpgShortOpts + $gpgLongOpts | Where-Object {	$_ -like "$wordToComplete*" } | ForEach-Object {	$_ }
 	}
 }
-
-$gpgvScriptBlock = {
+Register-ArgumentCompleter -CommandName gpgv -Native -ScriptBlock {
 	param($wordToComplete, $commandAst, $cursorPosition)
 
 	if ($wordToComplete -like "-*") {
@@ -47,6 +44,3 @@ $gpgvScriptBlock = {
 		$gpgvShortOpts + $gpgvLongOpts | Where-Object {	$_ -like "$wordToComplete*" } | ForEach-Object { $_ }
 	}
 }
-
-Register-ArgumentCompleter -CommandName gpg -Native -ScriptBlock $gpgScriptBlock
-Register-ArgumentCompleter -CommandName gpgv -Native -ScriptBlock $gpgvScriptBlock

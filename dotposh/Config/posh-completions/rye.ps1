@@ -1,8 +1,6 @@
 using namespace System.Management.Automation
 using namespace System.Management.Automation.Language
 
-if (!(Get-Command rye -ErrorAction SilentlyContinue)) { return }
-
 Register-ArgumentCompleter -Native -CommandName 'rye' -ScriptBlock {
     param($wordToComplete, $commandAst, $cursorPosition)
 

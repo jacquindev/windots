@@ -1,3 +1,1 @@
-﻿if (Get-Command deno -ErrorAction SilentlyContinue) {
-	deno completions powershell | Out-String | Invoke-Expression
-}
+﻿deno completions powershell | Out-String | Invoke-Expression

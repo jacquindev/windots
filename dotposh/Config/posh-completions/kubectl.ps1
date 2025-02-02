@@ -1,6 +1,3 @@
-# kubectl
-if (Get-Command kubectl -ErrorAction SilentlyContinue) {
-    kubectl completion powershell | Out-String | Invoke-Expression
-    Set-Alias -Name 'k' -Value 'kubectl'
-    Register-ArgumentCompleter -CommandName k -ScriptBlock $__kubectlCompleterBlock
-}
+kubectl completion powershell | Out-String | Invoke-Expression
+Set-Alias -Name 'k' -Value 'kubectl'
+Register-ArgumentCompleter -CommandName k -ScriptBlock $__kubectlCompleterBlock

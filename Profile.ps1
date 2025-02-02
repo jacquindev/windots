@@ -164,6 +164,11 @@ Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -SupportEvent -Action {
 foreach ($module in $((Get-ChildItem -Path "$env:DOTPOSH\Modules\*" -Include *.psm1).FullName )) {
     Import-Module "$module" -Global
 }
-foreach ($file in $((Get-ChildItem -Path "$env:DOTPOSH\Config\*" -Include *.ps1 -Recurse | Sort-Object -Property File).FullName)) {
+foreach ($file in $((Get-ChildItem -Path "$env:DOTPOSH\Config\*" -Include *.ps1).FullName)) {
     . "$file"
 }
+foreach ($completion in $((Get-ChildItem -Path "$env:DOTPOSH\Config\posh-completions\*" -Include *.ps1).FullName)) {
+    $myCmd = Split-Path $completion -LeafBase
+    if (Get-Command $myCmd -ErrorAction SilentlyContinue) { . "$completion" }
+}
+Remove-Variable module, file, completion, myCmd
