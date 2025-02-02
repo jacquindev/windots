@@ -102,6 +102,17 @@ function Remove-MyItem {
     Remove-Item $Path -Recurse:$rf -Force:$rf
 }
 
+function Get-PSProfile {
+    <#
+    .SYNOPSIS
+        Get all current in-use powershell profile
+    .LINK
+        https://powershellmagazine.com/2012/10/03/pstip-find-all-powershell-profiles-from-profile/
+    #>
+    $PROFILE.PSExtended.PSObject.Properties |
+    Select-Object Name, Value, @{Name = 'IsExist'; Expression = { Test-Path -Path $_.Value -PathType Leaf } }
+}
+
 # ----------------------------------------------------------------------------------- #
 # general
 Set-Alias -Name 'aliases' -Value 'Get-Aliases'
@@ -114,76 +125,50 @@ Set-Alias -Name 'which' -Value 'Get-CommandInfo'
 #Remove-Item Alias:rm -Force -ErrorAction SilentlyContinue
 Set-Alias -Name 'rm' -Value 'Remove-MyItem'
 
-# ----------------------------------------------------------------------------------- #
-# We need 'posh-alias' module to add the following aliases.
-if (!(Get-Command 'Add-Alias' -ErrorAction SilentlyContinue)) {
-    Install-Module -Name "posh-alias" -Scope CurrentUser -Force
-}
-# ----------------------------------------------------------------------------------- #
-
-# eza
-if (Get-Command eza -ErrorAction SilentlyContinue) {
-    Remove-Item Alias:ls -Force -ErrorAction SilentlyContinue
-    $_eza_params = '--icons --header --hyperlink --group --git -I="*NTUSER.DAT*|*ntuser.dat*" --group-directories-first'
-
-    Add-Alias ls "eza $_eza_params"
-    Add-Alias la "eza $_eza_params -al --time-style=relative --sort=modified"
-    Add-Alias ld "eza $_eza_params -lDa --show-symlinks"                    # lists only directories
-    Add-Alias lf "eza $_eza_params -lfa --show-symlinks"                    # lists only files (included hidden files)
-    Add-Alias ll "eza $_eza_params -lbhHigUmuSa"                            # Lists everything in details of date
-    Add-Alias lt "eza $_eza_params -lT"                                     # Tree view of detailed information
-    Add-Alias tree "eza $_eza_params --tree"                                # Tree view
-}
-
 # windows file explorer
-Add-Alias e 'Invoke-Item .'
+function e { Invoke-Item . }
 
 # common locations
-Add-Alias dotf "Set-Location $env:DOTFILES"
-Add-Alias dotp "Set-Location $env:DOTPOSH"
-Add-Alias home "Set-Location $env:USERPROFILE"
-Add-Alias docs "Set-Location $env:USERPROFILE\Documents"
-Add-Alias desktop "Set-Location $env:USERPROFILE\Desktop"
-Add-Alias downloads "Set-Location $env:USERPROFILE\Downloads"
+function dotf { Set-Location $env:DOTFILES }
+function dotp { Set-Location $env:DOTPOSH }
+function home { Set-Location $env:USERPROFILE }
+function docs { Set-Location $env:USERPROFILE\Documents }
+function desktop { Set-Location $env:USERPROFILE\Desktop }
+function downloads { Set-Location $env:USERPROFILE\Downloads }
+function HKLM { Set-Location HKLM: }
+function HKCU { Set-Location HKCU: }
 
 # network
-Add-Alias flushdns 'ipconfig /flushdns'
-Add-Alias displaydns 'ipconfig /displaydns'
-
-Add-Alias chrome 'Start-Process chrome'
-Add-Alias edge 'Start-Process microsoft-edge:'
+function flushdns { ipconfig /flushdns }
+function displaydns { ipconfig /displaydns }
+function chrome { Start-Process chrome }
+function edge { Start-Process microsoft-edge: }
 
 # powershell reload /restart
-# Source: - https://stackoverflow.com/questions/11546069/refreshing-restarting-powershell-session-w-out-exiting
-if (Test-Path -Path $PROFILE) {
-    Add-Alias reload '. $PROFILE'
+# Source: - https://stackoverflow.com/questions/11546069/refreshing-restarting-powershell-session-w-out-exiting\
+function reload {
+    if (Test-Path -Path $PROFILE) { . $PROFILE }
+    elseif (Test-Path -Path $PROFILE.CurrentUserAllHosts) { . $PROFILE.CurrentUserAllHosts }
 }
-if (Test-Path -Path $PROFILE.CurrentUserAllHosts) {
-    Add-Alias reload '. $PROFILE.CurrentUserAllHosts'
-}
-Add-Alias restart 'Get-Process -Id $PID | Select-Object -ExpandProperty Path | ForEach-Object { Invoke-Command { & "$_" } -NoNewScope }'
+function restart { Get-Process -Id $PID | Select-Object -ExpandProperty Path | ForEach-Object { Invoke-Command { & "$_" } -NoNewScope } }
 
 # windows system
-if (Get-Command fastfetch -ErrorAction SilentlyContinue) {
-    Add-Alias sysinfo 'fastfetch -c all'
-} else {
-    Add-Alias sysinfo 'Get-ComputerInfo'
-}
+function sysinfo { if (Get-Command fastfetch -ErrorAction SilentlyContinue) { fastfetch -c all } else { Get-ComputerInfo } }
+function lock { Invoke-Command { rundll32.exe user32.dll, LockWorkStation } }
+function hibernate { shutdown.exe /h }
+function shutdown { Stop-Computer }
+function reboot { Restart-Computer }
 
-Add-Alias lock 'Invoke-Command { rundll32.exe user32.dll,LockWorkStation }'
-Add-Alias hibernate 'shutdown.exe /h'
-Add-Alias shutdown 'Stop-Computer'
-Add-Alias reboot 'Restart-Computer'
-
-Add-Alias paths '$env:PATH -Split ";"'
-Add-Alias envs 'Get-ChildItem Env:'
-Add-Alias profiles 'Get-PSProfile {$_.exists -eq "True"} | Format-List'
-
-Add-Alias HKLM: 'Set-Location HKLM:'
-Add-Alias HKCU: 'Set-Location HKCU:'
+function paths { $env:PATH -Split ';' }
+function envs { Get-ChildItem Env: }
+function profiles { Get-PSProfile { $_.exists -eq "True" } | Format-List }
 
 # List NPM (NodeJS) Global Packages
 # To export global packages to a file, for-example: `npm-ls > global_packages.txt`
-Add-Alias npm-ls '(npm ls -g | Select-Object -skip 1).Trim().Split() | ForEach-Object { if ($_ -match [regex]::Escape("@")) { Write-Output $_ } };'
-Add-Alias bun-ls '(bun pm ls -g | Select-Object -Skip 1).Trim().Split() | ForEach-Object { if ($_ -match [regex]::Escape("@")) { Write-Output $_ } };'
-Add-Alias pnpm-ls '(pnpm ls -g | Select-Object -Skip 5) | ForEach-Object { $name = $_.Split()[0]; $version = $_.Split()[1]; Write-Output "$name@$version" };'
+function Get-NpmGlobalPackages { (npm ls -g | Select-Object -skip 1).Trim().Split() | ForEach-Object { if ($_ -match [regex]::Escape("@")) { Write-Output $_ } } }
+function Get-BunGlobalPackages { (bun pm ls -g | Select-Object -Skip 1).Trim().Split() | ForEach-Object { if ($_ -match [regex]::Escape("@")) { Write-Output $_ } } }
+function Get-PnpmGlobalPackages { (pnpm ls -g | Select-Object -Skip 5) | ForEach-Object { $name = $_.Split()[0]; $version = $_.Split()[1]; Write-Output "$name@$version" } }
+
+Set-Alias -Name 'npm-ls' -Value 'Get-NpmGlobalPackages'
+Set-Alias -Name 'bun-ls' -Value 'Get-BunGlobalPackages'
+Set-Alias -Name 'pnpm-ls' -Value 'Get-PnpmGlobalPackages'
