@@ -23,35 +23,44 @@ if (-not (Get-Module -ListAvailable -Name Catppuccin -ErrorAction SilentlyContin
     git clone "https://github.com/catppuccin/powershell.git" "$env:USERPROFILE\Documents\PowerShell\Modules\Catppuccin"
 }
 
+# Import required Modules
 Import-Module Catppuccin
+
+
 $Flavor = $Catppuccin['Mocha']
 
-# Verbose foreground color
-$PSStyle.Formatting.Verbose = $PSStyle.Foreground.Black
+#PSStyle
+$PSStyle.Formatting.TableHeader = $Flavor.Mauve.Foreground()
+$PSStyle.Formatting.CustomTableHeaderLabel = $Flavor.Mauve.Background() + $Flavor.Base.Foreground()
+$PSStyle.Formatting.Debug = $Flavor.Peach.Foreground()
+$PSStyle.Formatting.Verbose = $Flavor.Lavender.Foreground()
+$PSStyle.Formatting.FeedbackText = $Flavor.Sky.Foreground()
+$PSStyle.FileInfo.SymbolicLink = $Flavor.Blue.Foreground()
+$PSStyle.Progress.Style = $Flavor.Blue.Background() + $Flavor.Base.Foreground()
 
 # PSReadline
 # ----------------------------------------------------------------
 $PSReadLineOptions = @{
     BellStyle                     = "None"
     Colors                        = @{
-        ContinuationPrompt     = $Flavor.Teal.Foreground()
-        Emphasis               = $Flavor.Red.Foreground()
-        Selection              = $Flavor.Surface0.Background()
-        InlinePrediction       = $Flavor.Overlay0.Foreground()
-        ListPrediction         = $Flavor.Mauve.Foreground()
-        ListPredictionSelected = $Flavor.Surface0.Background()
         Command                = $Flavor.Blue.Foreground()
         Comment                = $Flavor.Overlay0.Foreground()
+        # ContinuationPrompt     = $Flavor.Teal.Foreground()
         Default                = $Flavor.Text.Foreground()
+        Emphasis               = $Flavor.Lavender.Foreground()
         Error                  = $Flavor.Red.Foreground()
+        InlinePrediction       = $Flavor.Overlay0.Foreground()
         Keyword                = $Flavor.Mauve.Foreground()
+        ListPrediction         = $Flavor.Overlay0.Foreground()
+        ListPredictionSelected = $Flavor.Surface0.Background() + $Flavor.Mauve.Foreground()
         Member                 = $Flavor.Rosewater.Foreground()
         Number                 = $Flavor.Peach.Foreground()
-        Operator               = $Flavor.Sky.Foreground()
+        Operator               = $Flavor.Yellow.Foreground()
         Parameter              = $Flavor.Pink.Foreground()
+        Selection              = $Flavor.Surface0.Background()
         String                 = $Flavor.Green.Foreground()
-        Type                   = $Flavor.Yellow.Foreground()
-        Variable               = $Flavor.Lavender.Foreground()
+        Type                   = $Flavor.Sky.Foreground()
+        Variable               = $Flavor.Mauve.Foreground()
     }
     ExtraPromptLineCount          = $True
     HistoryNoDuplicates           = $True
@@ -347,6 +356,7 @@ function _fzf_open_path {
             Set-Location $InputPath
         }
         'vim'    = { vim $InputPath }
+        'code'   = { code $InputPath }
         'remove' = { Remove-Item -Recurse -Force $InputPath }
         'echo'   = { Write-Output $InputPath }
     }
