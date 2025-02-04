@@ -181,29 +181,67 @@
 				}
 			}
 		},
-		"powershellModule": {
-			"description": "Define `Install-Module` PowerShell builtin cmdlet settings to install modules",
+		"powershell": {
+			"description": "PowerShell Configuration (Modules + ...)",
 			"type": "object",
-			"required": ["install", "moduleList", "additionalArgs"],
+			"required": ["psmodule", "psexperimentalfeature"],
 			"properties": {
-				"install": {
-					"description": "Whether or not to install the PowerShell modules in the list",
-					"type": "boolean"
-				},
-				"moduleList": {
-					"description": "List of PowerShell modules to install on the machine",
-					"type": "array",
-					"uniqueItems": true,
-					"items": {
-						"type": "string"
+				"psmodule": {
+					"description": "PowerShell Modules",
+					"type": "object",
+					"required": ["install", "moduleList", "additionalArgs"],
+					"properties": {
+						"install": {
+							"description": "Whether or not to install the PowerShell modules in the list",
+							"type": "boolean"
+						},
+						"moduleList": {
+							"description": "List of PowerShell modules to install on the machine",
+							"type": "array",
+							"uniqueItems": true,
+							"items": {
+								"type": "object",
+								"required": ["moduleName"],
+								"properties": {
+									"moduleName": {
+										"description": "Name of the PowerShell Module",
+										"type": "string"
+									},
+									"moduleVersion": {
+										"description": "Version of the PowerShell Module",
+										"type": "string"
+									}
+								}
+							}
+						},
+						"additionalArgs": {
+							"description": "Extra arguments passed in for `Install-Module [module name]` command",
+							"type": "array",
+							"uniqueItems": true,
+							"items": {
+								"type": "string"
+							}
+						}
 					}
 				},
-				"additionalArgs": {
-					"description": "Extra arguments passed in for `Install-Module [module name]` command",
-					"type": "array",
-					"uniqueItems": true,
-					"items": {
-						"type": "string"
+				"psexperimentalfeature": {
+					"description": "PowerShell Experimental Features",
+					"type": "object",
+					"required": ["enable", "featureList"],
+					"properties": {
+						"enable": {
+							"description": "Whether or not to enable PowerShell Experimental Feature(s) defined in the list",
+							"type": "boolean"
+						},
+						"featureList": {
+							"description": "List of PowerShell Experimental Features to enable",
+							"type": "array",
+							"uniqueItems": true,
+							"items": {
+								"description": "Name of the PowerShell Experimental Features",
+								"type": "string"
+							}
+						}
 					}
 				}
 			}

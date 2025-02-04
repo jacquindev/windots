@@ -63,6 +63,8 @@
 		"choco": {
 			"autoInstall": true,
 			"packageList": [
+				// add "packageVersion" field to install a specific version of a package, e.g.:
+				// { "packageName": "virtualbox", "packageVersion": "7.1.4" }
 				{ "packageName": "choco-cleaner" },
 				{ "packageName": "cmake" },
 				{ "packageName": "make" },
@@ -227,25 +229,39 @@
 			"install": true
 		}
 	],
-	"powershellModule": {
-		"install": true,
-		"moduleList": [
-			"BurntToast",
-			"CompletionPredictor",
-			"DockerCompletion",
-			"DotNetVersionLister",
-			"Microsoft.PowerShell.SecretManagement",
-			"Microsoft.PowerShell.SecretStore",
-			"npm-completion",
-			"posh-git",
-			"posh-sshell",
-			"powershell-yaml",
-			"PSFzf",
-			"PSParseHTML",
-			"PSScriptTools",
-			"PSToml",
-			"Terminal-Icons"
-		],
-		"additionalArgs": ["-Scope", "CurrentUser", "-Force", "-AllowClobber"]
+	"powershell": {
+		"psmodule": {
+			"install": true,
+			"moduleList": [
+				// add "moduleVersion" field if you want to install a specific version of module, e.g.:
+				// { "moduleName": "DockerCompletion", "moduleVersion": "1.2300.0.230804" }
+				{ "moduleName": "BurntToast" },
+				{ "moduleName": "CompletionPredictor" },
+				{ "moduleName": "DockerCompletion" },
+				{ "moduleName": "DotNetVersionLister" },
+				{ "moduleName": "Microsoft.PowerShell.SecretManagement" },
+				{ "moduleName": "Microsoft.PowerShell.SecretStore" },
+				{ "moduleName": "npm-completion" },
+				{ "moduleName": "posh-git" },
+				{ "moduleName": "posh-sshell" },
+				{ "moduleName": "powershell-yaml" },
+				{ "moduleName": "PSFzf" },
+				{ "moduleName": "PSParseHTML" },
+				{ "moduleName": "PSScriptTools" },
+				{ "moduleName": "PSToml" },
+				{ "moduleName": "Terminal-Icons" }
+			],
+			"additionalArgs": ["-Scope", "CurrentUser", "-Force", "-AllowClobber"]
+		},
+		// PowerShell Experimental Features (not recommended to use in production environment!)
+		// For more information: https://learn.microsoft.com/en-us/powershell/scripting/learn/experimental-features?view=powershell-7.5
+		// `Get-ExperimentalFeature`
+		"psexperimentalfeature": {
+			"enable": true,
+			"featureList": [
+				"PSNativeWindowsTildeExpansion",
+				"PSSubsystemPluginModule"
+			]
+		}
 	}
 }

@@ -158,13 +158,17 @@ function Install-ChocoApp {
 }
 
 function Install-PowerShellModule {
-	param ([string]$Module, [array]$AdditionalArgs)
+	param ([string]$Module, [string]$Version, [array]$AdditionalArgs)
 
 	if (!(Get-InstalledModule -Name $Module -ErrorAction SilentlyContinue)) {
+		$installModule = "Install-Module -Name $Module"
+		if ($null -ne $Version) { $installModule += " -RequiredVersion $Version" }
 		if ($AdditionalArgs.Count -ge 1) {
-			$AdditionalArgs = $AdditionalArgs -join ' '
-			Invoke-Expression "Install-Module $Module $AdditionalArgs"
-		} else { Invoke-Expression "Install-Module $Module" }
+			$addArgs = $AdditionalArgs -join ' '
+			$installModule = " $addArgs"
+		}
+
+		Invoke-Expression "$installModule"
 	} else {
 		Write-ColorText "{Blue}[module] {Green}pwsh: {Magenta}(exists) {Gray}$Module"
 	}
@@ -486,17 +490,45 @@ if ($scoopInstall -eq $True) {
 }
 
 ########################################################################################################################
-###																										POWERSHELL MODULES 																						 ###
+###																											POWERSHELL SETUP 																						 ###
 ########################################################################################################################
 # Powershell Modules
-Write-TitleBox -Title "PowerShell Modules Installation"
-$moduleItem = $json.powershellModule
+Write-TitleBox -Title "PowerShell Modules + Experimental Features"
+
+# Install modules if not installed yet
+$moduleItem = $json.powershell.psmodule
 $moduleList = $moduleItem.moduleList
 $moduleArgs = $moduleItem.additionalArgs
 $moduleInstall = $moduleItem.install
 if ($moduleInstall -eq $True) {
-	foreach ($module in $moduleList) { Install-PowerShellModule -Module $module -AdditionalArgs $moduleArgs }
+	foreach ($module in $moduleList) {
+		$mName = $module.moduleName
+		$mVersion = $module.moduleVersion
+		if ($null -ne $mVersion) {
+			Install-PowerShellModule -Module $mName -Version $mVersion -AdditionalArgs $moduleArgs
+		} else {
+			Install-PowerShellModule -Module $mName -AdditionalArgs $moduleArgs
+		}
+	}
 	Write-LockFile -PackageSource modules -FileName modules.json -OutputPath $PSScriptRoot
+	Refresh ($i++)
+}
+
+# Enable powershell experimental features
+$feature = $json.powershell.psexperimentalfeature
+$featureEnable = $feature.enable
+$featureList = $feature.featureList
+
+if ($featureEnable -eq $True) {
+	if (!(Get-Command Get-ExperimentalFeature -ErrorAction SilentlyContinue)) { return }
+	foreach ($f in $featureList) {
+		$featureExists = Get-ExperimentalFeature -Name $f -ErrorAction SilentlyContinue
+		if ($featureExists -and ($featureExists.Enabled -eq $False)) {
+			Enable-ExperimentalFeature -Name $f -Scope CurrentUser -ErrorAction SilentlyContinue
+		} else {
+			Write-ColorText "{Blue}[experimental feature] {Green}pwsh: {Magenta}(enabled) {Gray}$f"
+		}
+	}
 	Refresh ($i++)
 }
 
@@ -639,12 +671,8 @@ foreach ($a in $myAddons) {
 				if (!(Invoke-Expression "$aCommandCheck" | Select-String "$p" -SimpleMatch)) {
 					Write-Verbose "Executin: $aCommandInvoke $p"
 					Invoke-Expression "$aCommandInvoke $p"
-					if ($LASTEXITCODE -eq 0) {
-						Write-ColorText "➕ {Blue}[Addon] {Green}$aCommandName`: {Magenta}(installed) {Gray}$p"
-					}
-				} else {
-					Write-ColorText "➕ {Blue}[Addon] {Green}$aCommandName`: {Magenta}(exists) {Gray}$p"
-				}
+					if ($LASTEXITCODE -eq 0) {	Write-ColorText "➕ {Blue}[addon] {Green}$aCommandName`: {Magenta}(installed) {Gray}$p" }
+				} else { Write-ColorText "➕ {Blue}[addon] {Green}$aCommandName`: {Magenta}(exists) {Gray}$p" }
 			}
 		}
 	}
@@ -709,6 +737,24 @@ if (Get-Command btop -ErrorAction SilentlyContinue) {
 }
 
 ########################################################################################################################
+###																												MISCELLANEOUS		 																					 ###
+########################################################################################################################
+# yazi plugins
+Write-TitleBox "Miscellaneous"
+if (Get-Command ya -ErrorAction SilentlyContinue) {
+	Write-Verbose "Installing yazi plugins / themes"
+	ya pack -i >$null 2>&1
+	ya pack -u >$null 2>&1
+}
+
+# bat build theme
+if (Get-Command bat -ErrorAction SilentlyContinue) {
+	Write-Verbose "Building bat theme"
+	bat cache --clear
+	bat cache --build
+}
+
+########################################################################################################################
 ###																										START KOMOREBI + YASB																					 ###
 ########################################################################################################################
 # start komorebi
@@ -736,21 +782,6 @@ if (Get-Command yasb -ErrorAction SilentlyContinue) {
 	} else {
 		Write-Host "✅ YASB Status Bar is already running."
 	}
-}
-
-# yazi plugins
-Write-TitleBox "Miscellaneous"
-if (Get-Command ya -ErrorAction SilentlyContinue) {
-	Write-Verbose "Installing yazi plugins / themes"
-	ya pack -i >$null 2>&1
-	ya pack -u >$null 2>&1
-}
-
-# bat build theme
-if (Get-Command bat -ErrorAction SilentlyContinue) {
-	Write-Verbose "Building bat theme"
-	bat cache --clear
-	bat cache --build
 }
 
 ########################################################################################################################
