@@ -1,5 +1,5 @@
-(& uv generate-shell-completion powershell) | Out-String | Invoke-Expression
+Invoke-Expression -Command $(uv generate-shell-completion powershell | Out-String)
 
 if (Get-Command uvx -ErrorAction SilentlyContinue) {
-	(& uvx --generate-shell-completion powershell) | Out-String | Invoke-Expression
+	Invoke-Expression -Command $(uvx --generate-shell-completion powershell | Out-String)
 }
