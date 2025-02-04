@@ -61,6 +61,12 @@ ubuntu = ''
 windows = ''
 
 [[blocks.segments]]
+template = ' admin '
+type = 'root'
+style = 'plain'
+foreground = 'p:Overlay0'
+
+[[blocks.segments]]
 template = '{{ .Path }} '
 foreground = 'p:Pink'
 type = 'path'

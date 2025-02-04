@@ -57,6 +57,12 @@
           "type": "os"
         },
         {
+          "type": "root",
+          "style": "plain",
+          "template": " admin ",
+          "foreground": "p:Overlay0"
+        },
+        {
           "properties": {
             "folder_icon": "..\ue5fe..",
             "home_icon": "~",
