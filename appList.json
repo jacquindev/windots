@@ -23,6 +23,8 @@
 				// { "packageId": "Microsoft.WindowsTerminal" },
 				{ "packageId": "Microsoft.WindowsTerminal.Preview" },
 
+				// { "packageId": "Microsoft.WingetCreate" },
+
 				// Shell supports
 				{ "packageId": "chrisant996.Clink" },
 				{ "packageId": "JanDeDobbeleer.OhMyPosh" },
@@ -31,6 +33,7 @@
 				{ "packageId": "GitHub.GitHubDesktop" },
 				{ "packageId": "Microsoft.DotNet.SDK.8" },
 				{ "packageId": "Microsoft.DotNet.SDK.9" },
+				// { "packageId": "Microsoft.DotNet.UninstallTool" },
 				{ "packageId": "Postman.Postman" },
 				{ "packageId": "Python.Python.3.13" },
 
@@ -131,6 +134,12 @@
 				{ "packageName": "restic" },
 				{ "packageName": "task" },
 
+				// `ngrok` is required to use the `vagrant-share` plugin (Vagrant).
+				// Docs: - https://developer.hashicorp.com/vagrant/docs/share
+				// While there are multiple ways to install `ngrok`, I decided to
+				// use `scoop` for simplicity
+				{ "packageName": "ngrok", "packageScope": "global" },
+
 				// Java
 				{ "packageName": "openjdk21", "packageScope": "global" },
 				{ "packageName": "corretto17-jdk", "packageScope": "global" },
@@ -154,38 +163,35 @@
 			"commandInvoke": "gh extension install",
 			"addonList": [
 				"dlvhdr/gh-dash",
-				"Shresht7/gh-license",
 				"yuler/gh-download",
 				"seachicken/gh-poi",
 				"Link-/gh-token",
-				"yusukebe/gh-markdown-preview"
+				"yusukebe/gh-markdown-preview",
+				"Shresht7/gh-license"
 			],
-			"install": true
+			"install": false
 		},
 		{
 			"commandName": "npm",
 			"commandCheck": "npm list -g",
-			"commandInvoke": "npm install -g --silent",
+			"commandInvoke": "npm install -g",
 			"addonList": [
-				"npm@latest",
 				"npm-check-updates",
-				"bun"
+				"czg"
 			],
-			"install": true
+			"install": false
 		},
 		{
 			// I personally prefer bun over other Node package managers since it's faster
 			// This option required `bun` cli is installed on your machine
 			"commandName": "bun",
 			"commandCheck": "bun pm ls -g",
-			"commandInvoke": "bun install -g --silent",
+			"commandInvoke": "bun install -g",
 			"addonList": [
 				"@angular/cli",
-				"commitizen",
-				"cz-git",
 				"typescript"
 			],
-			"install": true
+			"install": false
 		},
 		{
 			"commandName": "dotnet",
@@ -196,7 +202,7 @@
 				"dotnet-outdated-tool",
 				"gitversion.tool"
 			],
-			"install": true
+			"install": false
 		},
 		{
 			"commandName": "vagrant",
@@ -207,7 +213,7 @@
 				"vagrant-share",
 				"vagrant-winnfsd"
 			],
-			"install": true
+			"install": false
 		},
 		{
 			"commandName": "az",
@@ -220,13 +226,8 @@
 			"commandName": "pipx",
 			"commandCheck": "pipx list",
 			"commandInvoke": "pipx install",
-			"addonList": [
-				"cookiecutter",
-				"copier",
-				"pdm",
-				"uv"
-			],
-			"install": true
+			"addonList": ["cookiecutter","copier","pdm","uv"],
+			"install": false
 		}
 	],
 	"powershell": {

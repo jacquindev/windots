@@ -1,7 +1,7 @@
 
 <#PSScriptInfo
 
-.VERSION 1.0.1
+.VERSION 1.0.2
 
 .GUID ccb5be4c-ea07-4c45-a5b4-6310df24e2bc
 
@@ -100,7 +100,7 @@ function Add-ScoopBucket {
 			scoop bucket add $BucketName
 		}
 	} else {
-		Write-ColorText "{Blue}[bucket] {Green}scoop: {Magenta}(exists) {Gray}$BucketName"
+		Write-ColorText "{Blue}[bucket] {Magenta}scoop: {Yellow}(exists) {Gray}$BucketName"
 	}
 }
 
@@ -113,9 +113,9 @@ function Install-ScoopApp {
 			$AdditionalArgs = $AdditionalArgs -join ' '
 			$scoopCmd += " $AdditionalArgs"
 		}
-		Invoke-Expression "$scoopCmd"
+		''; Invoke-Expression "$scoopCmd"; ''
 	} else {
-		Write-ColorText "{Blue}[package] {Green}scoop: {Magenta}(exists) {Gray}$Package"
+		Write-ColorText "{Blue}[package] {Magenta}scoop: {Yellow}(exists) {Gray}$Package"
 	}
 }
 
@@ -131,9 +131,14 @@ function Install-WinGetApp {
 		}
 		if ($Source -eq "msstore") { $wingetCmd += " --source msstore" }
 		else { $wingetCmd += " --source winget" }
-		Invoke-Expression "$wingetCmd"
+		Invoke-Expression "$wingetCmd >`$null 2>&1"
+		if ($LASTEXITCODE -eq 0) {
+			Write-ColorText "{Blue}[package] {Magenta}winget: {Green}(success) {Gray}$PackageID"
+		} else {
+			Write-ColorText "{Blue}[package] {Magenta}winget: {Red}(failed) {Gray}$PackageID"
+		}
 	} else {
-		Write-ColorText "{Blue}[package] {Green}winget: {Magenta}(exists) {Gray}$PackageID"
+		Write-ColorText "{Blue}[package] {Magenta}winget: {Yellow}(exists) {Gray}$PackageID"
 	}
 }
 
@@ -151,9 +156,14 @@ function Install-ChocoApp {
 			$AdditionalArgs = $AdditionalArgs -join ' '
 			$chocoCmd += " $AdditionalArgs"
 		}
-		Invoke-Expression "$chocoCmd"
+		Invoke-Expression "$chocoCmd >`$null 2>&1"
+		if ($LASTEXITCODE -eq 0) {
+			Write-ColorText "{Blue}[package] {Magenta}choco: {Green}(success) {Gray}$Package"
+		} else {
+			Write-ColorText "{Blue}[package] {Magenta}choco: {Red}(failed) {Gray}$Package"
+		}
 	} else {
-		Write-ColorText "{Blue}[package] {Green}choco: {Magenta}(exists) {Gray}$Package"
+		Write-ColorText "{Blue}[package] {Magenta}choco: {Yellow}(exists) {Gray}$Package"
 	}
 }
 
@@ -167,10 +177,9 @@ function Install-PowerShellModule {
 			$addArgs = $AdditionalArgs -join ' '
 			$installModule = " $addArgs"
 		}
-
 		Invoke-Expression "$installModule"
 	} else {
-		Write-ColorText "{Blue}[module] {Green}pwsh: {Magenta}(exists) {Gray}$Module"
+		Write-ColorText "{Blue}[module] {Magenta}pwsh: {Yellow}(exists) {Gray}$Module"
 	}
 }
 
@@ -235,7 +244,7 @@ function Write-LockFile {
 		[ValidateSet('winget', 'choco', 'scoop', 'modules')]
 		[Alias('s', 'p')][string]$PackageSource,
 		[Alias('f')][string]$FileName,
-		[Alias('o')][string]$OutputPath = "$($(Get-Location).Path)"
+		[Alias('o')][string]$OutputPath = "$PSScriptRoot\out"
 	)
 
 	$dest = "$OutputPath\$FileName"
@@ -244,31 +253,31 @@ function Write-LockFile {
 		"winget" {
 			if (!(Get-Command winget -ErrorAction SilentlyContinue)) { return }
 			winget export -o $dest | Out-Null
-			if ($?) {
-				Write-ColorText "`n✔️  Packages installed by {Green}$PackageSource {Gray}are exported at {Red}$dest"
+			if ($LASTEXITCODE -eq 0) {
+				Write-ColorText "`n✔️  Packages installed by {Green}$PackageSource {Gray}are exported at {Red}$((Resolve-Path $dest).Path)"
 			}
 			Start-Sleep -Seconds 1
 		}
 		"choco" {
 			if (!(Get-Command choco -ErrorAction SilentlyContinue)) { return }
 			choco export $dest | Out-Null
-			if ($?) {
-				Write-ColorText "`n✔️  Packages installed by {Green}$PackageSource {Gray}are exported at {Red}$dest"
+			if ($LASTEXITCODE -eq 0) {
+				Write-ColorText "`n✔️  Packages installed by {Green}$PackageSource {Gray}are exported at {Red}$((Resolve-Path $dest).Path)"
 			}
 			Start-Sleep -Seconds 1
 		}
 		"scoop" {
 			if (!(Get-Command scoop -ErrorAction SilentlyContinue)) { return }
 			scoop export -c > $dest
-			if ($?) {
-				Write-ColorText "`n✔️  Packages installed by {Green}$PackageSource {Gray}are exported at {Red}$dest"
+			if ($LASTEXITCODE -eq 0) {
+				Write-ColorText "`n✔️  Packages installed by {Green}$PackageSource {Gray}are exported at {Red}$((Resolve-Path $dest).Path)"
 			}
 			Start-Sleep -Seconds 1
 		}
 		"modules" {
 			Get-InstalledModule | Select-Object -Property Name, Version | ConvertTo-Json -Depth 100 | Out-File $dest
-			if ($?) {
-				Write-ColorText "`n✔️  {Green}PowerShell Modules {Gray}installed are exported at {Red}$dest"
+			if ($LASTEXITCODE -eq 0) {
+				Write-ColorText "`n✔️  {Green}PowerShell Modules {Gray}installed are exported at {Red}$((Resolve-Path $dest).Path)"
 			}
 			Start-Sleep -Seconds 1
 		}
@@ -278,6 +287,24 @@ function Write-LockFile {
 ########################################################################################################################
 ###																					  						MAIN SCRIPT 		  																				 ###
 ########################################################################################################################
+# if not internet connection, then we will exit this script immediately
+$internetConnection = Test-NetConnection google.com -CommonTCPPort HTTP -InformationLevel Detailed -WarningAction SilentlyContinue
+$internetAvailable = $internetConnection.TcpTestSucceeded
+if ($internetAvailable -eq $False) {
+	Write-Warning "NO INTERNET CONNECTION AVAILABLE!"
+	Write-Host "Please check your internet connection and re-run this script.`n"
+	for ($countdown = 3; $countdown -ge 0; $countdown--) {
+		Write-ColorText "`r{DarkGray}Automatically exit this script in {Blue}$countdown second(s){DarkGray}..." -NoNewLine
+		Start-Sleep -Seconds 1
+	}
+	exit
+}
+
+Write-Progress -Completed; Clear-Host
+
+Write-ColorText "`n✅ {Green}Internet Connection available.`n`n{DarkGray}Start running setup process..."
+Start-Sleep -Seconds 3
+
 # set current working directory location
 $currentLocation = "$($(Get-Location).Path)"
 
@@ -302,13 +329,15 @@ for ($count = 5; $count -ge 0; $count--) {
 			Write-ColorText "`r{DarkGray}Skipped installing Nerd Fonts...                                                                 "
 			break
 		} else {
-			& ([scriptblock]::Create((Invoke-WebRequest 'https://to.loredo.me/Install-NerdFont.ps1')))
+			& ([scriptblock]::Create((Invoke-WebRequest 'https://to.loredo.me/Install-NerdFont.ps1'))) -Scope AllUsers -Confirm:$False
 			break
 		}
 	}
 	Start-Sleep -Seconds 1
 }
 Refresh ($i++)
+
+Clear-Host
 
 ########################################################################################################################
 ###																											WINGET PACKAGES 																						 ###
@@ -372,7 +401,7 @@ if ($wingetInstall -eq $True) {
 			Install-WinGetApp -PackageID $pkgId -AdditionalArgs $wingetArgs
 		}
 	}
-	Write-LockFile -PackageSource winget -FileName wingetfile.json -OutputPath $PSScriptRoot
+	Write-LockFile -PackageSource winget -FileName wingetfile.json
 	Refresh ($i++)
 }
 
@@ -403,7 +432,8 @@ if ($chocoInstall -eq $True) {
 	# happen, but for the sake of this script, we will just inform the simplest option
 	# in the majority of cases.
 	if ($chocoPkgs.packageName -match "vmware*") {
-		Write-ColorText "{DarkGray}====================================================================================`n`n{Yellow}IMPORTANT NOTES: `n----------------`n`n{DarkGray}about VMWARE APPLICATION(s) installation`n`n{Gray}While installing VMWare Application, it is possible that a dialog box would appear`nand notify that the file 'vmnetbridge.dll' cannot be found by VMWare Installer. It`nmight prompt you to specify that path of the folder where 'vmnetbridge.dll' file is.`nIf that is the case, try to find the VMWare Application folder and provide the full`npath to it. `n`nFor example, if you are trying to install 'VMWare Workstation', then the path to its`nfolder could be (depending on your machine):`n`n	{Magenta}C:\Program Files (x86)\VMware\VMware Workstation`n{Gray}or`n	{Magenta}C:\Program Files\VMWare\VMWare Workstation `n`n{Gray}Rare case is that if you cannot find the file 'vmnetbridge.dll' in the installation`nfolder, then you could try to install the file from one of the following links,`nextract the zip file and tell VMWare Installer the path to that folder:`n`n	{Blue}https://windll.com/dll/vmware-inc/vmnetbridge`n{Gray}or`n	{Blue}https://www.dll-files.com/vmnetbridge.dll.html`n`n{DarkGray}===================================================================================={Gray}"
+		Write-ColorText "`n{Yellow}IMPORTANT NOTES: `n----------------`n`n{DarkGray}about VMWARE APPLICATION(s) installation`n`n{Gray}While installing VMWare Application, it is possible that a dialog box would appear`nand notify that the file 'vmnetbridge.dll' cannot be found by VMWare Installer. It`nmight prompt you to specify that path of the folder where 'vmnetbridge.dll' file is.`nIf that is the case, try to find the VMWare Application folder and provide the full`npath to it. `n`nFor example, if you are trying to install 'VMWare Workstation', then the path to its`nfolder could be (depending on your machine):`n`n	{Magenta}C:\Program Files (x86)\VMware\VMware Workstation`n{Gray}or`n	{Magenta}C:\Program Files\VMWare\VMWare Workstation `n`n{Gray}Rare case is that if you cannot find the file 'vmnetbridge.dll' in the installation`nfolder, then you could try to install the file from one of the following links,`nextract the zip file and tell VMWare Installer the path to that folder:`n`n	{Blue}https://windll.com/dll/vmware-inc/vmnetbridge`n{Gray}or`n	{Blue}https://www.dll-files.com/vmnetbridge.dll.html`n`n{Yellow}----------------`n"
+		Start-Sleep 3
 	}
 
 	foreach ($pkg in $chocoPkgs) {
@@ -415,7 +445,7 @@ if ($chocoInstall -eq $True) {
 			Install-ChocoApp -Package $chocoPkg -AdditionalArgs $chocoArgs
 		}
 	}
-	Write-LockFile -PackageSource choco -FileName chocolatey.config -OutputPath $PSScriptRoot
+	Write-LockFile -PackageSource choco -FileName chocolatey.config -OutputPath "$PSScriptRoot\out"
 	Refresh ($i++)
 }
 
@@ -485,7 +515,7 @@ if ($scoopInstall -eq $True) {
 			Install-ScoopApp -Package $pkgName -Global:$Global
 		}
 	}
-	Write-LockFile -PackageSource scoop -FileName scoopfile.json -OutputPath $PSScriptRoot
+	Write-LockFile -PackageSource scoop -FileName scoopfile.json
 	Refresh ($i++)
 }
 
@@ -510,7 +540,7 @@ if ($moduleInstall -eq $True) {
 			Install-PowerShellModule -Module $mName -AdditionalArgs $moduleArgs
 		}
 	}
-	Write-LockFile -PackageSource modules -FileName modules.json -OutputPath $PSScriptRoot
+	Write-LockFile -PackageSource modules -FileName modules.json
 	Refresh ($i++)
 }
 
@@ -521,14 +551,22 @@ $featureList = $feature.featureList
 
 if ($featureEnable -eq $True) {
 	if (!(Get-Command Get-ExperimentalFeature -ErrorAction SilentlyContinue)) { return }
+
+	''
 	foreach ($f in $featureList) {
 		$featureExists = Get-ExperimentalFeature -Name $f -ErrorAction SilentlyContinue
 		if ($featureExists -and ($featureExists.Enabled -eq $False)) {
 			Enable-ExperimentalFeature -Name $f -Scope CurrentUser -ErrorAction SilentlyContinue
+			if ($LASTEXITCODE -eq 0) {
+				Write-ColorText "{Blue}[experimental feature] {Magenta}pwsh: {Green}(success) {Gray}$f"
+			} else {
+				Write-ColorText "{Blue}[experimental feature] {Magenta}pwsh: {Red}(failed) {Gray}$f"
+			}
 		} else {
-			Write-ColorText "{Blue}[experimental feature] {Green}pwsh: {Magenta}(enabled) {Gray}$f"
+			Write-ColorText "{Blue}[experimental feature] {Magenta}pwsh: {Yellow}(enabled) {Gray}$f"
 		}
 	}
+
 	Refresh ($i++)
 }
 
@@ -543,10 +581,14 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
 
 	if ($null -eq $gitUserName) {
 		$gitUserName = $(Write-Host "Input your git name: " -NoNewline -ForegroundColor Magenta; Read-Host)
-	} else { Write-ColorText "{Magenta}Git Name: {Gray}$gitUserName" }
+	} else {
+		Write-ColorText "{Blue}[user.name] {Magenta}git: {Yellow}(already set) {Gray}$gitUserName"
+	}
 	if ($null -eq $gitUserMail) {
 		$gitUserMail = $(Write-Host "Input your git email: " -NoNewline -ForegroundColor Magenta; Read-Host)
-	} else { Write-ColorText "{Magenta}Git Email: {Gray}$gitUserMail" }
+	} else {
+		Write-ColorText "{Blue}[user.email] {Magenta}git: {Yellow}(already set) {Gray}$gitUserMail"
+	}
 
 	git submodule update --init --recursive
 }
@@ -580,7 +622,7 @@ $symlinks = @{
 	"$HOME\.config\whkdrc"                                                                        = ".\config\whkdrc"
 	"$HOME\.config\yasb"                                                                          = ".\config\yasb"
 	"$HOME\.config\yazi"                                                                          = ".\config\yazi"
-	"$HOME\.czrc"                                                                                 = ".\home\.czrc"
+	"$HOME\.config\.czrc"                                                                         = ".\config\.czrc"
 	"$HOME\.gitconfig"                                                                            = ".\home\.gitconfig"
 	"$HOME\.inputrc"                                                                              = ".\home\.inputrc"
 	"$HOME\.wslconfig"                                                                            = ".\home\.wslconfig"
@@ -616,13 +658,13 @@ foreach ($env in $envVars) {
 			Write-Verbose "Set environment variable of $envCommand`: $envKey -> $envValue"
 			try {
 				[System.Environment]::SetEnvironmentVariable("$envKey", "$envValue", "User")
-				Write-ColorText "{Blue}[environment] {Magenta}(added) {Green}$envKey {Yellow}--> {Gray}$envValue"
+				Write-ColorText "{Blue}[environment] {Green}(added) {Magenta}$envKey {Yellow}--> {Gray}$envValue"
 			} catch {
 				Write-Error -ErrorAction Stop "An error occurred: $_"
 			}
 		} else {
 			$value = [System.Environment]::GetEnvironmentVariable("$envKey")
-			Write-ColorText "{Blue}[environment] {Magenta}(exists) {Green}$envKey {Yellow}--> {Gray}$value"
+			Write-ColorText "{Blue}[environment] {Yellow}(exists) {Magenta}$envKey {Yellow}--> {Gray}$value"
 		}
 	}
 }
@@ -644,11 +686,11 @@ if (!(Get-Command nvm -ErrorAction SilentlyContinue)) {
 if (Get-Command nvm -ErrorAction SilentlyContinue) {
 	if (!(Get-Command node -ErrorAction SilentlyContinue)) {
 		$whichNode = $(Write-Host "Install LTS (y) or latest (N) Node version? " -ForegroundColor Magenta -NoNewline; Read-Host)
-		if ($whichNode.ToUpper() -eq 'Y') {	nvm install lts }
-		else { nvm install latest }
+		if ($whichNode.ToUpper() -eq 'Y') {	nvm install lts } else { nvm install latest }
 		nvm use newest
-		npm install -g npm@latest yarn@latest pnpm@latest bun@latest npm-check-updates@latest
+		npm install -g npm@latest
 	}
+	if (!(Get-Command bun -ErrorAction SilentlyContinue)) { npm install -g bun }
 }
 
 
@@ -668,11 +710,12 @@ foreach ($a in $myAddons) {
 		if (Get-Command $aCommandName -ErrorAction SilentlyContinue) {
 			Write-TitleBox -Title "$aCommandName's Addons Installation"
 			foreach ($p in $aList) {
-				if (!(Invoke-Expression "$aCommandCheck" | Select-String "$p" -SimpleMatch)) {
-					Write-Verbose "Executin: $aCommandInvoke $p"
-					Invoke-Expression "$aCommandInvoke $p"
-					if ($LASTEXITCODE -eq 0) {	Write-ColorText "➕ {Blue}[addon] {Green}$aCommandName`: {Magenta}(installed) {Gray}$p" }
-				} else { Write-ColorText "➕ {Blue}[addon] {Green}$aCommandName`: {Magenta}(exists) {Gray}$p" }
+				if (Invoke-Expression "$aCommandCheck" | Out-String | Where-Object { $_ -notmatch "$p*" }) {
+					Write-Verbose "Executing: $aCommandInvoke $p"
+					Invoke-Expression "$aCommandInvoke $p >`$null 2>&1"
+					if ($LASTEXITCODE -eq 0) {	Write-ColorText "➕ {Blue}[addon] {Magenta}$aCommandName`: {Green}(success) {Gray}$p" }
+					else {	Write-ColorText "➕ {Blue}[addon] {Magenta}$aCommandName`: {Red}(failed) {Gray}$p" }
+				} else { Write-ColorText "➕ {Blue}[addon] {Magenta}$aCommandName`: {Yellow}(exists) {Gray}$p" }
 			}
 		}
 	}
@@ -689,9 +732,14 @@ if (Get-Command code -ErrorAction SilentlyContinue) {
 	foreach ($ext in $extensionList) {
 		if (!(code --list-extensions | Select-String "$ext")) {
 			Write-Verbose -Message "Installing VSCode Extension: $ext"
-			Invoke-Expression "code --install-extension $ext"
+			Invoke-Expression "code --install-extension $ext >`$null 2>&1"
+			if ($LASTEXITCODE -eq 0) {
+				Write-ColorText "{Blue}[extension] {Green}(success) {Gray}$ext"
+			} else {
+				Write-ColorText "{Blue}[extension] {Red}(failed) {Gray}$ext"
+			}
 		} else {
-			Write-ColorText "{Blue}[extension] {Magenta}(exists) {Gray}$ext"
+			Write-ColorText "{Blue}[extension] {Yellow}(exists) {Gray}$ext"
 		}
 	}
 }
@@ -711,10 +759,12 @@ if (Test-Path "$flowLauncherDir" -PathType Container) {
 		if (!(Test-Path "$flowLauncherThemeDir\Catppuccin $_.xaml" -PathType Leaf)) {
 			Write-Verbose "Adding file: `"Catppuccin $_.xaml`" to $flowLauncherThemeDir."
 			Install-OnlineFile -OutputDir "$flowLauncherThemeDir" -Url "https://raw.githubusercontent.com/catppuccin/flow-launcher/refs/heads/main/themes/Catppuccin%20$_.xaml"
-			Write-ColorText "{Blue}[theme] {Green}flowlauncher: {Magenta}(installed) {Gray}Catppuccin $_"
-		} else {
-			Write-ColorText "{Blue}[theme] {Green}flowlauncher: {Magenta}(exists) {Gray}Catppuccin $_"
-		}
+			if ($LASTEXITCODE -eq 0) {
+				Write-ColorText "{Blue}[theme] {Magenta}flowlauncher: {Green}(success) {Gray}Catppuccin ${_}.xaml"
+			} else {
+				Write-ColorText "{Blue}[theme] {Magenta}flowlauncher: {Red}(failed) {Gray}Catppuccin ${_}.xaml"
+			}
+		} else { Write-ColorText "{Blue}[theme] {Magenta}flowlauncher: {Yellow}(exists) {Gray}Catppuccin ${_}.xaml" }
 	}
 }
 
@@ -728,11 +778,12 @@ if (Get-Command btop -ErrorAction SilentlyContinue) {
 		if (!(Test-Path "$btopThemeDir\catppuccin_$_.theme" -PathType Leaf)) {
 			Write-Verbose "Adding file: catppuccin_$_.theme to $btopThemeDir."
 			Install-OnlineFile -OutputDir "$btopThemeDir" -Url "https://raw.githubusercontent.com/catppuccin/btop/refs/heads/main/themes/catppuccin_$_.theme"
-			Write-ColorText "{Blue}[theme] {Green}btop: {Magenta}(installed) {Gray}catppuccin $_"
-
-		} else {
-			Write-ColorText "{Blue}[theme] {Green}btop: {Magenta}(exists) {Gray}catppuccin $_"
-		}
+			if ($LASTEXITCODE -eq 0) {
+				Write-ColorText "{Blue}[theme] {Magenta}btop: {Green}(success) {Gray}catppuccin_${_}.theme"
+			} else {
+				Write-ColorText "{Blue}[theme] {Magenta}btop: {Red}(failed) {Gray}catppuccin_${_}.theme"
+			}
+		} else { Write-ColorText "{Blue}[theme] {Magenta}btop: {Yellow}(exists) {Gray}catppuccin_${_}.theme" }
 	}
 }
 
@@ -757,32 +808,35 @@ if (Get-Command bat -ErrorAction SilentlyContinue) {
 ########################################################################################################################
 ###																										START KOMOREBI + YASB																					 ###
 ########################################################################################################################
-# start komorebi
-Write-TitleBox -Title "Start Komorebi and YASB (if installed)"
-if (Get-Command komorebic -ErrorAction SilentlyContinue) {
-	if ((!(Get-Process -Name komorebi -ErrorAction SilentlyContinue)) -and (!(Get-Process -Name whkd -ErrorAction SilentlyContinue))) {
-		Write-Verbose "Starting Komorebi with WHKD"
-		Invoke-Expression "komorebic start --whkd"
-	} else {
-		Write-Host "✅ Komorebi is already running."
-	}
-}
+Write-TitleBox "Komorebi & Yasb Engines"
 
-# start yasb
-if (Get-Command yasb -ErrorAction SilentlyContinue) {
+# yasb
+if (Get-Command yasbc -ErrorAction SilentlyContinue) {
+	if (!(Get-ScheduledTask -ErrorAction SilentlyContinue | Where-Object { $_.TaskName -match "yasb*" } )) {
+		try { & yasbc.exe enable-autostart --task } catch { Write-Error "$_" }
+	} else {
+		$yasbTaskName = Get-ScheduledTask -ErrorAction SilentlyContinue | Where-Object { $_.TaskName -match "yasb*" } | Select-Object -ExpandProperty TaskName
+		Write-Host "✅ Task: $yasbTaskName already created."
+	}
 	if (!(Get-Process -Name yasb -ErrorAction SilentlyContinue)) {
-		Write-Verbose "Starting YASB Status Bar"
-		# Ensure the correct path to `yasb.exe` file
-		$yasbPath = (Get-Command yasb -ErrorAction SilentlyContinue).Source
-		if (Get-Command yasbc -ErrorAction SilentlyContinue) {
-			Invoke-Expression "yasbc start"
-		} elseif (Test-Path -Path "$yasbPath") {
-			Start-Process -FilePath $yasbPath -Wait
-		}
+		try { & yasbc.exe start } catch { Write-Error "$_" }
 	} else {
 		Write-Host "✅ YASB Status Bar is already running."
 	}
 }
+
+# komorebi
+if (Get-Command komorebic -ErrorAction SilentlyContinue) {
+	if (!(Get-Process -Name komorebi -ErrorAction SilentlyContinue)) {
+		$whkdExists = Get-Command whkd -ErrorAction SilentlyContinue
+		$whkdProcess = Get-Process -Name whkd -ErrorAction SilentlyContinue
+		Write-Host "Starting Komorebi in the background..."
+		if ($whkdExists -and (!$whkdProcess)) { try { & komorebic.exe start --whkd >$null 2>&1 } catch { Write-Error "$_" } }
+	} else {
+		Write-Host "✅ Komorebi Tiling Window Management is already running."
+	}
+}
+
 
 ########################################################################################################################
 ###																								WINDOWS SUBSYSTEMS FOR LINUX																			 ###
@@ -799,7 +853,8 @@ if (!(Get-Command wsl -CommandType Application -ErrorAction Ignore)) {
 Set-Location $currentLocation
 Start-Sleep -Seconds 5
 
-Write-Host "`n`n┌────────────────────────────────────────────────────────────────────────────────┐" -ForegroundColor "Green"
+Write-Host "`n----------------------------------------------------------------------------------" -ForegroundColor DarkGray
+Write-Host "`n┌────────────────────────────────────────────────────────────────────────────────┐" -ForegroundColor "Green"
 Write-Host "│                                                                                │" -ForegroundColor "Green"
 Write-Host "│        █████╗ ██╗     ██╗         ██████╗  ██████╗ ███╗   ██╗███████╗ ██╗      │" -ForegroundColor "Green"
 Write-Host "│       ██╔══██╗██║     ██║         ██╔══██╗██╔═══██╗████╗  ██║██╔════╝ ██║      │" -ForegroundColor "Green"
@@ -810,7 +865,6 @@ Write-Host "│       ╚═╝  ╚═╝╚══════╝╚═══�
 Write-Host "│                                                                                │" -ForegroundColor "Green"
 Write-Host "└────────────────────────────────────────────────────────────────────────────────┘`n`n" -ForegroundColor "Green"
 
-
 Write-ColorText "{Grey}For more information, please visit: {Blue}https://github.com/jacquindev/windots"
-Write-ColorText " ☑️  {DarkGray}Submit an issue via: {Blue}https://github.com/jacquindev/windots/issues/new"
-Write-ColorText " ☑️  {DarkGray}Contact me via email: {Blue}jacquindev@outlook.com"
+Write-ColorText "🔆 {Gray}Submit an issue via: {Blue}https://github.com/jacquindev/windots/issues/new"
+Write-ColorText "🔆 {Gray}Contact me via email: {Cyan}jacquindev@outlook.com"
