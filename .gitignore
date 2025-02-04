@@ -9,10 +9,11 @@ archive/
 
 db.zo
 
-modules.json
-wingetfile.json
-scoopfile.json
-chocolatey.config
-
 .spotify_token_cache.json
 config/lazygit/state.yml
+
+.vscode/
+
+out/*
+
+!*/.gitkeep
