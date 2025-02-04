@@ -25,7 +25,20 @@ if (Get-Command fastfetch -ErrorAction SilentlyContinue) {
 function prompt {
     # oh-my-posh will override this prompt, however because we're loading it async we want to communicate that the
     # real prompt is still loading.
-    "[async]:: $($executionContext.SessionState.Path.CurrentLocation) :: $(Get-Date -Format "HH:mm tt") $('❯' * ($nestedPromptLevel + 1)) "
+    # "[async]:: $($executionContext.SessionState.Path.CurrentLocation) :: $(Get-Date -Format "HH:mm tt") $('❯' * ($nestedPromptLevel + 1)) "
+
+    $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+    $principal = [Security.Principal.WindowsPrincipal] $identity
+    $adminRole = [Security.Principal.WindowsBuiltInRole]::Administrator
+
+    $prefix = "[async]::"
+    if ($principal.IsInRole($adminRole)) { $prefix = "[async][admin]::" }
+
+    $body = 'PS ' + $PWD.path
+    $suffix = $(if ($NestedPromptLevel -ge 1) { '❯❯ ' }) + '❯ '
+    $time = $(Get-Date -Format "HH:mm tt")
+
+    "${prefix}${body} ${time} ${suffix}"
 }
 
 # Load modules asynchronously to reduce shell startup time
@@ -106,9 +119,12 @@ function prompt {
         }
     },
     {
-        # Default editor: VSCode
-        if (Get-Command code -ErrorAction SilentlyContinue) {
-            $Env:EDITOR = "code"
+        # Set default editor
+        if (Get-Command code -ErrorAction SilentlyContinue) { $Env:EDITOR = "code" }
+        else {
+            if (Get-Command nvim -ErrorAction SilentlyContinue) { $Env:EDITOR = "nvim" }
+            elseif (Get-Command vim -ErrorAction SilentlyContinue) { $Env:EDITOR = "vim" }
+            else { $Env:EDITOR = "notepad" }
         }
     },
     {
@@ -167,8 +183,10 @@ foreach ($module in $((Get-ChildItem -Path "$env:DOTPOSH\Modules\*" -Include *.p
 foreach ($file in $((Get-ChildItem -Path "$env:DOTPOSH\Config\*" -Include *.ps1).FullName)) {
     . "$file"
 }
-foreach ($completion in $((Get-ChildItem -Path "$env:DOTPOSH\Config\posh-completions\*" -Include *.ps1).FullName)) {
-    $myCmd = Split-Path $completion -LeafBase
-    if (Get-Command $myCmd -ErrorAction SilentlyContinue) { . "$completion" }
+
+foreach ($completionFile in $((Get-ChildItem -Path "$env:DOTPOSH\Config\posh-completions" -Recurse -Include *.ps1).BaseName)) {
+    if (Get-Command -Name "$completionFile" -ErrorAction SilentlyContinue) {
+        . "$env:DOTPOSH\Config\posh-completions\$completionFile.ps1"
+    }
 }
-Remove-Variable module, file, completion, myCmd
+Remove-Variable module, file, completionFile
