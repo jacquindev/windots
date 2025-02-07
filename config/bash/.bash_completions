@@ -3,6 +3,7 @@
 # shellcheck disable=SC1090,SC1091
 
 BASH_COMPLETIONS_DIR="$DOTFILES/config/bash/custom/completions"
+source "$BASH_COMPLETIONS_DIR/00_utils.bash"
 
 # Git-For-Windows completion
 if [ -f /usr/share/git/completion/git-completion.bash ]; then
@@ -20,19 +21,6 @@ alias g=git
 if type -t __git_complete &>/dev/null; then
 	__git_complete g git
 fi
-
-# Resolve `__ltrim_colon_completions not found` for Git-Bash-Windows
-# __ltrim_colon_completions: many completions required this function to work
-__ltrim_colon_completions() {
-	if [[ "$1" == *:* && "$COMP_WORDBREAKS" == *:* ]]; then
-		# Remove colon-word prefix from COMPREPLY items
-		local colon_word=${1%"${1##*:}"}
-		local i=${#COMPREPLY[*]}
-		while [[ $((--i)) -ge 0 ]]; do
-			COMPREPLY[$i]=${COMPREPLY[$i]#"$colon_word"}
-		done
-	fi
-}
 
 command_exists() {
 	command -v "$@" >/dev/null 2>&1
