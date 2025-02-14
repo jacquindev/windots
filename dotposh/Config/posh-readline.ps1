@@ -26,7 +26,6 @@ if (-not (Get-Module -ListAvailable -Name Catppuccin -ErrorAction SilentlyContin
 # Import required Modules
 Import-Module Catppuccin
 
-
 $Flavor = $Catppuccin['Mocha']
 
 #PSStyle
@@ -45,7 +44,7 @@ $PSReadLineOptions = @{
     Colors                        = @{
         Command                = $Flavor.Blue.Foreground()
         Comment                = $Flavor.Overlay0.Foreground()
-        # ContinuationPrompt     = $Flavor.Teal.Foreground()
+        ContinuationPrompt     = $Flavor.Teal.Foreground()
         Default                = $Flavor.Text.Foreground()
         Emphasis               = $Flavor.Lavender.Foreground()
         Error                  = $Flavor.Red.Foreground()
