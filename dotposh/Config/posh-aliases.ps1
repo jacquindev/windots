@@ -10,7 +10,7 @@ function New-Directory {
     #>
     [CmdletBinding()]
     param ([Parameter(Mandatory = $True)]$Path)
-    New-Item -Path $Path -ItemType Directory | Out-Null
+    if (!(Test-Path $Path -PathType Container)) { New-Item -Path $Path -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null }
     Set-Location -Path $Path
 }
 
@@ -84,7 +84,13 @@ function Get-CommandInfo {
         [Parameter(Mandatory = $true, Position = 0)]
         [string]$Name
     )
-    Get-Command $Name | Select-Object -ExpandProperty Definition
+    $commandExists = Get-Command $Name -ErrorAction SilentlyContinue
+    if ($commandExists) {
+        return $commandExists | Select-Object -ExpandProperty Definition
+    } else {
+        Write-Warning "Command not found: $Name."
+        break
+    }
 }
 
 function Remove-MyItem {
