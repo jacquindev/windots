@@ -99,6 +99,13 @@ function prompt {
         }
     },
     {
+        # vfox (Hook `vfox` into Powershell)
+        # - https://vfox.lhan.me/guides/quick-start.html#_2-hook-vfox-to-your-shell
+        if (Get-Command vfox -ErrorAction SilentlyContinue) {
+            Invoke-Expression "$(vfox activate pwsh)"
+        }
+    },
+    {
         if (Get-InstalledModule -Name "powershell-yaml" -ErrorAction SilentlyContinue) {
             Import-Module -Name powershell-yaml -Global
         }
