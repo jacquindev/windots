@@ -1,5 +1,54 @@
-[plugin]
-deps = [{ use = "yazi-rs/plugins:diff", rev = "f202fa8" }, { use = "lpnh/fg", rev = "9bba743" }, { use = "yazi-rs/plugins:full-border", rev = "f202fa8" }, { use = "yazi-rs/plugins:git", rev = "f202fa8" }, { use = "yazi-rs/plugins:smart-filter", rev = "f202fa8" }, { use = "Reledia/glow", rev = "5ce76dc" }, { use = "imsi32/yatline-githead", rev = "a6377a8" }, { use = "imsi32/yatline", rev = "9328205" }]
+[[plugin.deps]]
+use = "yazi-rs/plugins:diff"
+rev = "8945e54"
+hash = "fb4650dc4e95b9b56dcadab3608dcfed"
 
-[flavor]
-deps = [{ use = "dangooddd/kanagawa", rev = "d98f0c3" }, { use = "yazi-rs/flavors:catppuccin-mocha", rev = "fd85060" }, { use = "yazi-rs/flavors:catppuccin-macchiato", rev = "fd85060" }]
+[[plugin.deps]]
+use = "lpnh/fg"
+rev = "f6b3264"
+hash = "1b489164400451bb49244616e387c0b5"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:full-border"
+rev = "8945e54"
+hash = "206e2448171dad0bda0a3cdece4ee8f5"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:git"
+rev = "8945e54"
+hash = "e683c4188b7c9ae70be1c5c12f701f9e"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:smart-filter"
+rev = "8945e54"
+hash = "f9d872e5bd1aac3a153dee63c2bbc618"
+
+[[plugin.deps]]
+use = "Reledia/glow"
+rev = "5ce76dc"
+hash = "ef662e271ac6fbb4c60550bae2b2b753"
+
+[[plugin.deps]]
+use = "imsi32/yatline-githead"
+rev = "a6377a8"
+hash = "dbc5d26c6d42dbd1c4801464bbc5dbfb"
+
+[[plugin.deps]]
+use = "imsi32/yatline"
+rev = "9328205"
+hash = "ead7449512d0c3f2e312ef9f72f31db0"
+
+[[flavor.deps]]
+use = "dangooddd/kanagawa"
+rev = "d98f0c3"
+hash = "1004bfcf4a256479ccbf21e030d05819"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-mocha"
+rev = "302c0d5"
+hash = "6a9f2e1018d0ac8f90cfaa6d9c352cd9"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-macchiato"
+rev = "302c0d5"
+hash = "8f348f7cdc6b3a5d0883f38d94866865"
