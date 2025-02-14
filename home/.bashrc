@@ -7,7 +7,7 @@ export DOTFILES
 
 # Source bash configuration files
 for file in ~/.config/bash/.bash_*; do
-  source "$file"
+	source "$file"
 done
 unset file
 
@@ -31,15 +31,20 @@ shopt -s histappend histverify
 
 # oh-my-posh
 if command -v oh-my-posh >/dev/null 2>&1; then
-  eval "$(oh-my-posh init bash --config "$DOTFILES"/home/bash-zen.toml)"
+	eval "$(oh-my-posh init bash --config "$DOTFILES"/home/bash-zen.toml)"
+fi
+
+# vfox
+if command -v vfox >/dev/null 2>&1; then
+	eval "$(vfox activate bash)"
 fi
 
 # zoxide
 if command -v zoxide >/dev/null 2>&1; then
-  eval "$(zoxide init bash --cmd cd)"
+	eval "$(zoxide init bash --cmd cd)"
 fi
 
 # fastfetch
 if command -v fastfetch >/dev/null 2>&1; then
-  fastfetch
+	fastfetch
 fi
