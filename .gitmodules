@@ -13,3 +13,6 @@
 [submodule "config/bash/git-bash-completions"]
 	path = config/bash/git-bash-completions
 	url = https://github.com/jacquindev/git-bash-completions.git
+[submodule "dotposh/Config/powershell-completions-collection"]
+	path = dotposh/Config/powershell-completions-collection
+	url = https://github.com/jacquindev/powershell-completions-collection.git
