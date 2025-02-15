@@ -182,7 +182,7 @@ Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -SupportEvent -Action {
     }
 }
 
-# 🎲 DOTPOSH Configuration + Completion + Custom Modules
+# 🎲 DOTPOSH Configuration + Custom Modules + Completion
 # -----------------------------------------------------------------------------------------
 foreach ($module in $((Get-ChildItem -Path "$env:DOTPOSH\Modules\*" -Include *.psm1).FullName )) {
     Import-Module "$module" -Global
@@ -191,9 +191,8 @@ foreach ($file in $((Get-ChildItem -Path "$env:DOTPOSH\Config\*" -Include *.ps1)
     . "$file"
 }
 
-foreach ($completionFile in $((Get-ChildItem -Path "$env:DOTPOSH\Config\posh-completions" -Recurse -Include *.ps1).BaseName)) {
-    if (Get-Command -Name "$completionFile" -ErrorAction SilentlyContinue) {
-        . "$env:DOTPOSH\Config\posh-completions\$completionFile.ps1"
-    }
+# ---
+if (Test-Path "$env:DOTPOSH\Config\powershell-completions-collection\exec.ps1" -PathType Leaf) {
+    . "$env:DOTPOSH\Config\powershell-completions-collection\exec.ps1"
 }
-Remove-Variable module, file, completionFile
+# ---
