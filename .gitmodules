@@ -10,3 +10,6 @@
 [submodule "clink/more-clink-completions"]
 	path = clink/more-clink-completions
 	url = https://github.com/sebthom/more-clink-completions.git
+[submodule "config/bash/git-bash-completions"]
+	path = config/bash/git-bash-completions
+	url = https://github.com/jacquindev/git-bash-completions.git
