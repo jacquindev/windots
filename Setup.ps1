@@ -46,7 +46,7 @@ Param()
 $VerbosePreference = "SilentlyContinue"
 
 ########################################################################################################################
-###																											HELPER FUNCTIONS																						 ###
+###												  	HELPER FUNCTIONS												 ###
 ########################################################################################################################
 function Write-TitleBox {
 	param ([string]$Title, [string]$BorderChar = "*", [int]$Padding = 10)
@@ -285,7 +285,7 @@ function Write-LockFile {
 }
 
 ########################################################################################################################
-###																					  						MAIN SCRIPT 		  																				 ###
+###														MAIN SCRIPT 		  					 			 		 ###
 ########################################################################################################################
 # if not internet connection, then we will exit this script immediately
 $internetConnection = Test-NetConnection google.com -CommonTCPPort HTTP -InformationLevel Detailed -WarningAction SilentlyContinue
@@ -314,7 +314,7 @@ Set-Location $PSScriptRoot
 $i = 1
 
 ########################################################################################################################
-###																												NERD FONTS																								 ###
+###													NERD FONTS														 ###
 ########################################################################################################################
 # install nerd fonts
 Write-TitleBox -Title "Nerd Fonts Installation"
@@ -340,7 +340,7 @@ Refresh ($i++)
 Clear-Host
 
 ########################################################################################################################
-###																											WINGET PACKAGES 																						 ###
+###													WINGET PACKAGES 			 									 ###
 ########################################################################################################################
 # Retrieve information from json file
 $json = Get-Content "$PSScriptRoot\appList.json" -Raw | ConvertFrom-Json
@@ -406,7 +406,7 @@ if ($wingetInstall -eq $True) {
 }
 
 ########################################################################################################################
-###																										CHOCOLATEY PACKAGES 											  									 ###
+###														CHOCOLATEY PACKAGES 				   						 ###
 ########################################################################################################################
 # Chocolatey Packages
 Write-TitleBox -Title "Chocolatey Packages Installation"
@@ -450,7 +450,7 @@ if ($chocoInstall -eq $True) {
 }
 
 ########################################################################################################################
-###																					 						SCOOP PACKAGES 	 							 															 ###
+###														SCOOP PACKAGES 	 							 				 ###
 ########################################################################################################################
 # Scoop Packages
 Write-TitleBox -Title "Scoop Packages Installation"
@@ -485,7 +485,7 @@ if ($scoopInstall -eq $True) {
 			$Trigger = New-ScheduledTaskTrigger -AtStartup
 			$Principal = New-ScheduledTaskPrincipal -UserID "$Env:USERDOMAIN\$Env:USERNAME" -LogonType S4U
 			$Settings = New-ScheduledTaskSettingsSet -ExecutionTimeLimit 0 -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
-			Register-ScheduledTask -TaskName "Aria2RPC" -Action $Action -Trigger $Trigger -Principal $Principal -Settings $Settings
+			Register-ScheduledTask -TaskName "Aria2RPC" -Action $Action -Trigger $Trigger -Principal $Principal -Settings $Settings | Out-Null
 		} catch {
 			Write-Error "An error occurred: $_"
 		}
@@ -520,7 +520,7 @@ if ($scoopInstall -eq $True) {
 }
 
 ########################################################################################################################
-###																											POWERSHELL SETUP 																						 ###
+###												 	POWERSHELL SETUP 												 ###
 ########################################################################################################################
 # Powershell Modules
 Write-TitleBox -Title "PowerShell Modules + Experimental Features"
@@ -571,7 +571,7 @@ if ($featureEnable -eq $True) {
 }
 
 ########################################################################################################################
-###																												GIT SETUP																									 ###
+###														GIT SETUP											    	 ###
 ########################################################################################################################
 # Configure git
 Write-TitleBox -Title "SETUP GIT FOR WINDOWS"
@@ -582,7 +582,7 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
 	if ($null -eq $gitUserName) {
 		$gitUserName = $(Write-Host "Input your git name: " -NoNewline -ForegroundColor Magenta; Read-Host)
 	} else {
-		Write-ColorText "{Blue}[user.name] {Magenta}git: {Yellow}(already set) {Gray}$gitUserName"
+		Write-ColorText "{Blue}[user.name]  {Magenta}git: {Yellow}(already set) {Gray}$gitUserName"
 	}
 	if ($null -eq $gitUserMail) {
 		$gitUserMail = $(Write-Host "Input your git email: " -NoNewline -ForegroundColor Magenta; Read-Host)
@@ -598,7 +598,7 @@ if (Get-Command gh -ErrorAction SilentlyContinue) {
 }
 
 ########################################################################################################################
-###																													SYMLINKS 																								 ###
+###															SYMLINKS 												 ###
 ########################################################################################################################
 # symlinks
 Write-TitleBox -Title "Add symbolic links for dotfiles"
@@ -644,7 +644,7 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
 }
 
 ########################################################################################################################
-###																									ENVIRONMENT VARIABLES																						 ###
+###													ENVIRONMENT VARIABLES											 ###
 ########################################################################################################################
 # add environment variables
 Write-TitleBox -Title "Set Environment Variables"
@@ -668,34 +668,49 @@ foreach ($env in $envVars) {
 		}
 	}
 }
+if (Get-Command gh -ErrorAction SilentlyContinue) {
+	$ghDashAvailable = (& gh.exe extension list | Select-String -Pattern "dlvhdr/gh-dash" -SimpleMatch -CaseSensitive)
+	if ($ghDashAvailable) {
+		if (![System.Environment]::GetEnvironmentVariable("GH_DASH_CONFIG")) {
+			try {
+				[System.Environment]::SetEnvironmentVariable("GH_DASH_CONFIG", "$env:USERPROFILE\.config\gh-dash\config.yml", "User")
+				Write-ColorText "{Blue}[environment] {Green}(added) {Magenta}GH_DASH_CONFIG {Yellow}--> {Gray}$env:USERPROFILE\.config\gh-dash\config.yml"
+			} catch {
+				Write-Error -ErrorAction Stop "An error occurred: $_"
+			}
+		} else {
+			$value = [System.Environment]::GetEnvironmentVariable("GH_DASH_CONFIG")
+			Write-ColorText "{Blue}[environment] {Yellow}(exists) {Magenta}GH_DASH_CONFIG {Yellow}--> {Gray}$value"
+		}
+	}
+}
 Refresh ($i++)
 
 ########################################################################################################################
-###																		SETUP NODEJS / INSTALL NVM (Node Version Manager)															 ###
+###										SETUP NODEJS / INSTALL NVM (Node Version Manager)							 ###
 ########################################################################################################################
-if (!(Get-Command nvm -ErrorAction SilentlyContinue)) {
-	Write-TitleBox -Title "Nvm (Node Version Manager) Installation"
-	$installNvm = $(Write-Host "Install NVM? (y/N) " -ForegroundColor Magenta -NoNewline; Read-Host)
-	if ($installNvm.ToUpper() -eq 'Y') {
-		Write-Verbose "Installing NVM from GitHub Repo"
-		Install-AppFromGitHub -RepoName "coreybutler/nvm-windows" -FileName "nvm-setup.exe"
-	}
-	Refresh ($i++)
-}
+# if (!(Get-Command nvm -ErrorAction SilentlyContinue)) {
+# 	Write-TitleBox -Title "Nvm (Node Version Manager) Installation"
+# 	$installNvm = $(Write-Host "Install NVM? (y/N) " -ForegroundColor Magenta -NoNewline; Read-Host)
+# 	if ($installNvm.ToUpper() -eq 'Y') {
+# 		Write-Verbose "Installing NVM from GitHub Repo"
+# 		Install-AppFromGitHub -RepoName "coreybutler/nvm-windows" -FileName "nvm-setup.exe"
+# 	}
+# 	Refresh ($i++)
+# }
 
-if (Get-Command nvm -ErrorAction SilentlyContinue) {
-	if (!(Get-Command node -ErrorAction SilentlyContinue)) {
-		$whichNode = $(Write-Host "Install LTS (y) or latest (N) Node version? " -ForegroundColor Magenta -NoNewline; Read-Host)
-		if ($whichNode.ToUpper() -eq 'Y') {	nvm install lts } else { nvm install latest }
-		nvm use newest
-		npm install -g npm@latest
-	}
-	if (!(Get-Command bun -ErrorAction SilentlyContinue)) { npm install -g bun }
-}
-
+# if (Get-Command nvm -ErrorAction SilentlyContinue) {
+# 	if (!(Get-Command node -ErrorAction SilentlyContinue)) {
+# 		$whichNode = $(Write-Host "Install LTS (y) or latest (N) Node version? " -ForegroundColor Magenta -NoNewline; Read-Host)
+# 		if ($whichNode.ToUpper() -eq 'Y') {	nvm install lts } else { nvm install latest }
+# 		nvm use newest
+# 		npm install -g npm@latest
+# 	}
+# 	if (!(Get-Command bun -ErrorAction SilentlyContinue)) { npm install -g bun }
+# }
 
 ########################################################################################################################
-###																										ADDONS / PLUGINS																							 ###
+###														ADDONS / PLUGINS											 ###
 ########################################################################################################################
 # plugins / extensions / addons
 $myAddons = $json.packageAddon
@@ -723,7 +738,7 @@ foreach ($a in $myAddons) {
 Refresh ($i++)
 
 ########################################################################################################################
-###																										VSCODE EXTENSIONS																							 ###
+###													VSCODE EXTENSIONS												 ###
 ########################################################################################################################
 # VSCode Extensions
 if (Get-Command code -ErrorAction SilentlyContinue) {
@@ -745,7 +760,7 @@ if (Get-Command code -ErrorAction SilentlyContinue) {
 }
 
 ########################################################################################################################
-###																										CATPPUCCIN THEMES 								 														 ###
+###													CATPPUCCIN THEMES 								 				 ###
 ########################################################################################################################
 Write-TitleBox -Title "Per Application Catppuccin Themes Installation"
 # Catppuccin Themes
@@ -754,41 +769,65 @@ $catppuccinThemes = @('Frappe', 'Latte', 'Macchiato', 'Mocha')
 # FLowlauncher themes
 $flowLauncherDir = "$env:LOCALAPPDATA\FlowLauncher"
 if (Test-Path "$flowLauncherDir" -PathType Container) {
-	$flowLauncherThemeDir = "$flowLauncherDir\Themes"
+	$flowLauncherThemeDir = Join-Path "$flowLaucherDir" -ChildPath "Themes"
 	$catppuccinThemes | ForEach-Object {
-		if (!(Test-Path "$flowLauncherThemeDir\Catppuccin $_.xaml" -PathType Leaf)) {
-			Write-Verbose "Adding file: `"Catppuccin $_.xaml`" to $flowLauncherThemeDir."
-			Install-OnlineFile -OutputDir "$flowLauncherThemeDir" -Url "https://raw.githubusercontent.com/catppuccin/flow-launcher/refs/heads/main/themes/Catppuccin%20$_.xaml"
+		$themeFile = Join-Path "$flowLauncherThemeDir" -ChildPath "Catppuccin ${_}.xaml"
+		if (!(Test-Path "$themeFile" -PathType Leaf)) {
+			Write-Verbose "Adding file: $themeFile to $flowLauncherThemeDir."
+			Install-OnlineFile -OutputDir "$flowLauncherThemeDir" -Url "https://raw.githubusercontent.com/catppuccin/flow-launcher/refs/heads/main/themes/Catppuccin%20${_}.xaml"
 			if ($LASTEXITCODE -eq 0) {
-				Write-ColorText "{Blue}[theme] {Magenta}flowlauncher: {Green}(success) {Gray}Catppuccin ${_}.xaml"
+				Write-ColorText "{Blue}[theme] {Magenta}flowlauncher: {Green}(success) {Gray}$themeFile"
 			} else {
-				Write-ColorText "{Blue}[theme] {Magenta}flowlauncher: {Red}(failed) {Gray}Catppuccin ${_}.xaml"
+				Write-ColorText "{Blue}[theme] {Magenta}flowlauncher: {Red}(failed) {Gray}$themeFile"
 			}
-		} else { Write-ColorText "{Blue}[theme] {Magenta}flowlauncher: {Yellow}(exists) {Gray}Catppuccin ${_}.xaml" }
+		} else { Write-ColorText "{Blue}[theme] {Magenta}flowlauncher: {Yellow}(exists) {Gray}$themeFile" }
 	}
 }
+
+$catppuccinThemes = $catppuccinThemes.ToLower()
 
 # add btop theme
 # since we install btop by scoop, then the application folder would be in scoop directory
-if (Get-Command btop -ErrorAction SilentlyContinue) {
-	$scoopDir = (Get-Command scoop.ps1).Source | Split-Path | Split-Path
-	$btopThemeDir = "$scoopDir\apps\btop\current\themes"
-	$catppuccinThemes = $catppuccinThemes.ToLower()
+$btopExists = Get-Command btop -ErrorAction SilentlyContinue
+if ($btopExists) {
+	if ($btopExists.Source | Select-String -SimpleMatch -CaseSensitive "scoop") {
+		$btopThemeDir = Join-Path (scoop prefix btop) -ChildPath "themes"
+	} else {
+		$btopThemeDir = Join-Path ($btopExists.Source | Split-Path) -ChildPath "themes"
+	}
 	$catppuccinThemes | ForEach-Object {
-		if (!(Test-Path "$btopThemeDir\catppuccin_$_.theme" -PathType Leaf)) {
-			Write-Verbose "Adding file: catppuccin_$_.theme to $btopThemeDir."
-			Install-OnlineFile -OutputDir "$btopThemeDir" -Url "https://raw.githubusercontent.com/catppuccin/btop/refs/heads/main/themes/catppuccin_$_.theme"
+		$themeFile = Join-Path "$btopThemeDir" -ChildPath "catppuccin_${_}.theme"
+		if (!(Test-Path "$themeFile" -PathType Leaf)) {
+			Write-Verbose "Adding file: $themeFile to $btopThemeDir."
+			Install-OnlineFile -OutputDir "$btopThemeDir" -Url "https://raw.githubusercontent.com/catppuccin/btop/refs/heads/main/themes/catppuccin_${_}.theme"
 			if ($LASTEXITCODE -eq 0) {
-				Write-ColorText "{Blue}[theme] {Magenta}btop: {Green}(success) {Gray}catppuccin_${_}.theme"
+				Write-ColorText "{Blue}[theme] {Magenta}btop: {Green}(success) {Gray}$themeFile"
 			} else {
-				Write-ColorText "{Blue}[theme] {Magenta}btop: {Red}(failed) {Gray}catppuccin_${_}.theme"
+				Write-ColorText "{Blue}[theme] {Magenta}btop: {Red}(failed) {Gray}$themeFile"
 			}
-		} else { Write-ColorText "{Blue}[theme] {Magenta}btop: {Yellow}(exists) {Gray}catppuccin_${_}.theme" }
+		} else { Write-ColorText "{Blue}[theme] {Magenta}btop: {Yellow}(exists) {Gray}$themeFile" }
 	}
 }
 
+if ((Test-Path "C:\Program Files\Notepad++" -PathType Container) -or (Get-Command 'notepad++.exe' -ErrorAction SilentlyContinue)) {
+	$notepadPlusPlusThemeDir = Join-Path "C:\Program Files\Notepad++" -ChildPath "themes"
+	$catppuccinThemes | ForEach-Object {
+		$themeFile = Join-Path "$notepadPlusPlusThemeDir" -ChildPath "catppuccin-${_}.xml"
+		if (!(Test-Path "$themeFile" -PathType Leaf)) {
+			Write-Verbose "Adding file: $themeFile to $notepadPlusPlusThemeDir."
+			Install-OnlineFile -OutputDir "$notepadPlusPlusThemeDir" -Url "https://raw.githubusercontent.com/catppuccin/notepad-plus-plus/refs/heads/main/themes/catppuccin-${_}.xml"
+			if ($LASTEXITCODE -eq 0) {
+				Write-ColorText "{Blue}[theme] {Magenta}notepad++: {Green}(success) {Gray}$themeFile"
+			} else {
+				Write-ColorText "{Blue}[theme] {Magenta}notepad++: {Red}(failed) {Gray}$themeFile"
+			}
+		} else { Write-ColorText "{Blue}[theme] {Magenta}notepad++: {Yellow}(exists) {Gray}$themeFile" }
+	}
+}
+
+
 ########################################################################################################################
-###																												MISCELLANEOUS		 																					 ###
+###														MISCELLANEOUS		 										 ###
 ########################################################################################################################
 # yazi plugins
 Write-TitleBox "Miscellaneous"
@@ -806,7 +845,7 @@ if (Get-Command bat -ErrorAction SilentlyContinue) {
 }
 
 ########################################################################################################################
-###																										START KOMOREBI + YASB																					 ###
+###													START KOMOREBI + YASB											 ###
 ########################################################################################################################
 Write-TitleBox "Komorebi & Yasb Engines"
 
@@ -827,6 +866,16 @@ if (Get-Command yasbc -ErrorAction SilentlyContinue) {
 
 # komorebi
 if (Get-Command komorebic -ErrorAction SilentlyContinue) {
+	# Registry: Long path support for komorebi
+	# - https://lgug2z.github.io/komorebi/installation.html#installation
+
+	# $longPathPath = "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem"
+	# $longPathName = "LongPathsEnabled"
+	# $longPathValue = 1
+	# if ($null -eq $((Get-ItemProperty -Path $longPathPath -ErrorAction SilentlyContinue).LongPathsEnabled) -or ($(Get-ItemPropertyValue -Path $longPathPath -Name $longPathName -ErrorAction SilentlyContinue) -ne 1)) {
+	# 	Set-ItemProperty -Path $longPathPath -Name $longPathName -Value $longPathValue
+	# }
+
 	if (!(Get-Process -Name komorebi -ErrorAction SilentlyContinue)) {
 		$whkdExists = Get-Command whkd -ErrorAction SilentlyContinue
 		$whkdProcess = Get-Process -Name whkd -ErrorAction SilentlyContinue
@@ -839,7 +888,7 @@ if (Get-Command komorebic -ErrorAction SilentlyContinue) {
 
 
 ########################################################################################################################
-###																								WINDOWS SUBSYSTEMS FOR LINUX																			 ###
+###												WINDOWS SUBSYSTEMS FOR LINUX										 ###
 ########################################################################################################################
 if (!(Get-Command wsl -CommandType Application -ErrorAction Ignore)) {
 	Write-Verbose -Message "Installing Windows SubSystems for Linux..."
@@ -848,13 +897,13 @@ if (!(Get-Command wsl -CommandType Application -ErrorAction Ignore)) {
 
 
 ########################################################################################################################
-###																												END SCRIPT																								 ###
+###													END SCRIPT														 ###
 ########################################################################################################################
 Set-Location $currentLocation
 Start-Sleep -Seconds 5
 
-Write-Host "`n----------------------------------------------------------------------------------" -ForegroundColor DarkGray
-Write-Host "`n┌────────────────────────────────────────────────────────────────────────────────┐" -ForegroundColor "Green"
+Write-Host "`n----------------------------------------------------------------------------------`n" -ForegroundColor DarkGray
+Write-Host "┌────────────────────────────────────────────────────────────────────────────────┐" -ForegroundColor "Green"
 Write-Host "│                                                                                │" -ForegroundColor "Green"
 Write-Host "│        █████╗ ██╗     ██╗         ██████╗  ██████╗ ███╗   ██╗███████╗ ██╗      │" -ForegroundColor "Green"
 Write-Host "│       ██╔══██╗██║     ██║         ██╔══██╗██╔═══██╗████╗  ██║██╔════╝ ██║      │" -ForegroundColor "Green"
@@ -863,8 +912,8 @@ Write-Host "│       ██╔══██║██║     ██║         �
 Write-Host "│       ██║  ██║███████╗███████╗    ██████╔╝╚██████╔╝██║ ╚████║███████╗ ██╗      │" -ForegroundColor "Green"
 Write-Host "│       ╚═╝  ╚═╝╚══════╝╚══════╝    ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚══════╝ ╚═╝      │" -ForegroundColor "Green"
 Write-Host "│                                                                                │" -ForegroundColor "Green"
-Write-Host "└────────────────────────────────────────────────────────────────────────────────┘`n`n" -ForegroundColor "Green"
+Write-Host "└────────────────────────────────────────────────────────────────────────────────┘" -ForegroundColor "Green"
 
-Write-ColorText "{Grey}For more information, please visit: {Blue}https://github.com/jacquindev/windots"
+Write-ColorText "`n`n{Grey}For more information, please visit: {Blue}https://github.com/jacquindev/windots`n"
 Write-ColorText "🔆 {Gray}Submit an issue via: {Blue}https://github.com/jacquindev/windots/issues/new"
 Write-ColorText "🔆 {Gray}Contact me via email: {Cyan}jacquindev@outlook.com"
