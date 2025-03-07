@@ -14,52 +14,52 @@
 		"winget": {
 			"autoInstall": true,
 			"packageList": [
-				// Must-haves
-				{ "packageId": "gerardog.gsudo" },
+				// All about Git
 				{ "packageId": "Git.Git" },
-				{ "packageId": "Microsoft.PowerShell" },
+				{ "packageId": "GitHub.GitHubDesktop" },
+				{ "packageId": "Axosoft.GitKraken" },
 
-				// One of the following is recommended:
+				// Must-haves
+				{ "packageId": "Microsoft.PowerShell" },
 				// { "packageId": "Microsoft.WindowsTerminal" },
 				{ "packageId": "Microsoft.WindowsTerminal.Preview" },
 
-				// { "packageId": "Microsoft.WingetCreate" },
-
 				// Shell supports
 				{ "packageId": "chrisant996.Clink" },
+				{ "packageId": "gerardog.gsudo" },
 				{ "packageId": "JanDeDobbeleer.OhMyPosh" },
 
 				// Development Tools
-				{ "packageId": "GitHub.GitHubDesktop" },
-				{ "packageId": "Microsoft.DotNet.SDK.8" },
-				{ "packageId": "Microsoft.DotNet.SDK.9" },
-				// { "packageId": "Microsoft.DotNet.UninstallTool" },
-				{ "packageId": "Postman.Postman" },
-				{ "packageId": "Python.Python.3.13" },
-
-				// Editors / Productivity
 				{ "packageId": "ImageMagick.ImageMagick" },
-				{ "packageId": "Microsoft.PowerToys" },
-				{ "packageId": "Microsoft.VisualStudio.2022.Community" },
-				{ "packageId": "Microsoft.VisualStudioCode" },
-				{ "packageId": "Obsidian.Obsidian" },
-				{ "packageId": "Symless.Synergy" },
+				{ "packageId": "Postman.Postman" },
 
+				// Editors
+				{ "packageId": "JetBrains.IntelliJIDEA.Community" },
+				{ "packageId": "Microsoft.VisualStudioCode" },
+				{ "packageId": "Notepad++.Notepad++" },
+				{ "packageId": "Obsidian.Obsidian" },
+
+				// Productivity
+				{ "packageId": "Microsoft.PowerToys" },
 				{ "packageId": "9NRX63209R7B", "packageSource": "msstore" }, // Outlook for Windows
 				{ "packageId": "9NHT9RB2F4HD", "packageSource": "msstore" }, // Microsoft Copilot
 
-				// Containerization/Virtualization
+				// Containerization / Virtualization
 				{ "packageId": "Docker.DockerDesktop" },
 				{ "packageId": "Oracle.VirtualBox" },
 				{ "packageId": "Hashicorp.Vagrant" },
 
-				// Windows Tweaks
+				// Paid services
+				{ "packageId": "Symless.Synergy" },
+				{ "packageId": "Proton.ProtonVPN" },
+				{ "packageId": "Stardock.Start11" },
+
+				// Windows Tweak Managers
 				{ "packageId": "AmN.yasb" },
 				{ "packageId": "LGUG2Z.komorebi" },
 				{ "packageId": "LGUG2Z.whkd" },
 				{ "packageId": "Rainmeter.Rainmeter" },
-				{ "packageId": "rocksdanister.LivelyWallpaper" },
-				{ "packageId": "Stardock.Start11" }
+				{ "packageId": "rocksdanister.LivelyWallpaper" }
 			],
 			"additionalArgs": ["--exact", "--silent", "--accept-package-agreements", "--accept-source-agreements"]
 		},
@@ -69,8 +69,6 @@
 				// add "packageVersion" field to install a specific version of a package, e.g.:
 				// { "packageName": "virtualbox", "packageVersion": "7.1.4" }
 				{ "packageName": "choco-cleaner" },
-				{ "packageName": "cmake" },
-				{ "packageName": "make" },
 				{ "packageName": "gpg4win" },
 				{ "packageName": "vmwareworkstation" }
 			],
@@ -79,14 +77,12 @@
 		"scoop": {
 			"autoInstall": true,
 			"bucketList": [
-				{ "bucketName": "dorado", "bucketRepo": "https://github.com/chawyehsu/dorado" },
+				// { "bucketName": "dorado", "bucketRepo": "https://github.com/chawyehsu/dorado" },
 				{ "bucketName": "extras" },
-				{ "bucketName": "java" },
 				{ "bucketName": "sysinternals" }
 			],
 			"packageList": [
 				// Prerequisites of scoop (run `scoop checkup`)
-				{ "packageName": "7zip" },
 				{ "packageName": "aria2" },
 				{ "packageName": "cacert" },
 				{ "packageName": "innounp" },
@@ -129,23 +125,11 @@
 				{ "packageName": "zoxide" },
 
 				// CI/CD tools
-				{ "packageName": "aws" },
-				{ "packageName": "aws-vault" },
 				{ "packageName": "restic" },
 				{ "packageName": "task" },
 
-				// `ngrok` is required to use the `vagrant-share` plugin (Vagrant).
-				// Docs: - https://developer.hashicorp.com/vagrant/docs/share
-				// While there are multiple ways to install `ngrok`, I decided to
-				// use `scoop` for simplicity
-				{ "packageName": "ngrok", "packageScope": "global" },
-
-				// Java
-				{ "packageName": "openjdk21", "packageScope": "global" },
-				{ "packageName": "corretto17-jdk", "packageScope": "global" },
-				{ "packageName": "maven", "packageScope": "global" },
-
 				// Sysinternal Suites
+				{ "packageName": "process-explorer", "packageScope": "global" },
 				{ "packageName": "pskill", "packageScope": "global" },
 				{ "packageName": "pslist", "packageScope": "global" },
 				{ "packageName": "psservice", "packageScope": "global" }
@@ -175,10 +159,7 @@
 			"commandName": "npm",
 			"commandCheck": "npm list -g",
 			"commandInvoke": "npm install -g",
-			"addonList": [
-				"npm-check-updates",
-				"czg"
-			],
+			"addonList": [ "npm-check-updates", "npm-run-all" ],
 			"install": false
 		},
 		{
@@ -187,46 +168,14 @@
 			"commandName": "bun",
 			"commandCheck": "bun pm ls -g",
 			"commandInvoke": "bun install -g",
-			"addonList": [
-				"@angular/cli",
-				"typescript"
-			],
-			"install": false
-		},
-		{
-			"commandName": "dotnet",
-			"commandCheck": "dotnet tool list -g",
-			"commandInvoke": "dotnet tool install -g",
-			"addonList": [
-				"dotnet-ef",
-				"dotnet-outdated-tool",
-				"gitversion.tool"
-			],
-			"install": false
-		},
-		{
-			"commandName": "vagrant",
-			"commandCheck": "vagrant plugin list",
-			"commandInvoke": "vagrant plugin install",
-			"addonList": [
-				"vagrant-hostmanager",
-				"vagrant-share",
-				"vagrant-winnfsd"
-			],
-			"install": false
-		},
-		{
-			"commandName": "az",
-			"commandCheck": "az extension list",
-			"commandInvoke": "az extension add --name",
-			"addonList": [],
+			"addonList": [ "@angular/cli", "czg" ],
 			"install": false
 		},
 		{
 			"commandName": "pipx",
 			"commandCheck": "pipx list",
 			"commandInvoke": "pipx install",
-			"addonList": ["cookiecutter","copier","pdm","uv"],
+			"addonList": [],
 			"install": false
 		}
 	],
@@ -244,10 +193,10 @@
 				{ "moduleName": "Microsoft.PowerShell.SecretStore" },
 				{ "moduleName": "npm-completion" },
 				{ "moduleName": "posh-git" },
-				{ "moduleName": "posh-sshell" },
 				{ "moduleName": "powershell-yaml" },
 				{ "moduleName": "PSFzf" },
 				{ "moduleName": "PSParseHTML" },
+				{ "moduleName": "PSScriptAnalyzer" },
 				{ "moduleName": "PSScriptTools" },
 				{ "moduleName": "PSToml" },
 				{ "moduleName": "Terminal-Icons" }
