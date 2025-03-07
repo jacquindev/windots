@@ -114,7 +114,7 @@ widgets:
         - {icon: "\udb82\ude1e", launch: "code"}
         - {icon: "\uf489", launch: "wt"}
         #- {icon: "\udb80\ude39", launch: "C:\\Program Files\\Mozilla Firefox\\firefox.exe"}
-        - {icon: "\uf1ff", launch: "C:\\Users\\jqnhi\\AppData\\Local\\Discord\\Update.exe --processStart Discord.exe"}
+        #- {icon: "\uf1ff", launch: "C:\\Users\\amn\\AppData\\Local\\Discord\\Update.exe --processStart Discord.exe"}
         #- {icon: "\ue217", launch: "C:\\Users\\amn\\AppData\\Roaming\\Telegram Desktop\\Telegram.exe"}
         - {icon: "\uf0a2", launch: "notification_center"}
         - {icon: "\ueb51", launch: "quick_settings"}
@@ -234,11 +234,10 @@ widgets:
     options:
       label: "<span>{icon}</span> {temp}"
       label_alt: "{location}: Min {min_temp}, Max {max_temp}, Humidity {humidity}"
-      api_key: env # Get your free API key from https://www.weatherapi.com/
-      # Environment variable: YASB_WEATHER_API_KEY
-      update_interval: 600 # Update interval in seconds, Min 600 seconds
+      api_key: env  # environment variable: YASB_WEATHER_API_KEY
+      update_interval: 600
       hide_decimal: true
-      location: 'Ho Chi Minh City' # You can use "USA Los Angeles 90006" {COUNTRY CITY ZIP_CODE}, or just city.
+      location: Ho Chi Minh City # env  # environment variable: YASB_WEATHER_LOCATION
       callbacks:
         on_left: "toggle_label"
       icons:
@@ -277,7 +276,7 @@ widgets:
       blur: False
       blur_background: True
       animation_duration: 300 # Milisecond
-      button_row: 3 # Number of buttons in row, min 1 max 5
+      button_row: 5 # Number of buttons in row, min 1 max 5
       buttons:
         lock: ["\uea75","Lock"]
         signout: ["\udb80\udf43","Sign out"]
@@ -285,7 +284,7 @@ widgets:
         shutdown: ["\uf011","Shut Down"]
         restart: ["\uead2","Restart"]
         hibernate: ["\uf28e","Hibernate"]
-        cancel: ["\udb81\udf3a","Cancel"]
+        cancel: ["","Cancel"]  # ["\udb81\udf3a","Cancel"]
         #force_shutdown: ["\uf011","Force Shut Down"]
         #force_restart: ["\uead2","Force Restart"]
 

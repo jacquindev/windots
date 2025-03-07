@@ -143,56 +143,52 @@
     background-color: var(--base);
 }
 .power-menu-popup {
-    border-radius: 15px;
+	background-color: transparent;
 }
 .power-menu-popup .button {
-    width: 240px;
-    height: 120px;
-    font-family: "SegoeUI";
-    background-color: var(--base);
-    border-color: transparent;
-    border-radius: 15px;
+	padding: 0;
+	width: 180px;
+	height: 230px;
+	border-radius: 8px;
+	background-color: var(--base);
+	color: var(--text);
+	border-left: 4px solid rgba(58, 59, 83, 0);
+    border-right: 4px solid rgba(58, 59, 83, 0);
+    border-top: 8px solid rgba(58, 59, 83, 0);
+    border-bottom: 8px solid rgba(58, 59, 83, 0);
+	margin: 0px;
 }
 .power-menu-popup .button.hover {
-    background-color: var(--surface0);
-    border: 1px solid var(--surface0);
+	background-color:var(--surface0);
+	border-left: 4px solid var(--surface0);
+    border-right: 4px solid var(--surface0);
+    border-top: 8px solid var(--surface0);
+    border-bottom: 8px solid var(--surface0);
 }
 .power-menu-popup .button .label {
-	margin: 0 8px;
-    padding: 0 8px;
-    color: var(--subtext0);
-    font-family: "FantasqueSansM Nerd Font Propo";
-    font-size: 20px;
+	margin-bottom: 8px;
+	font-size: 20px;
+	font-weight: 500;
+	color: var(--subtext1);
 }
 .power-menu-popup .button .icon {
-	font-size: 43px;
-	padding-top: 8px;
-	color: var(--subtext0);
+	font-size: 64px;
+	padding-top: 32px;
+	color: var(--subtext1);
 }
-.power-menu-popup .button.cancel .icon,
+.power-menu-popup .button.cancel .icon {
+    padding: 0;
+    margin: 0;
+}
 .power-menu-popup .button.cancel .label {
-    color: var(--red);
+	color: var(--red);
+    margin: 0;
 }
-.power-menu-popup .button.hibernate .icon,
-.power-menu-popup .button.hibernate .label {
-    color: var(--yellow);
+.power-menu-popup .button.cancel {
+    height: 32px;
+    border-radius: 15px;
 }
-.power-menu-popup .button.restart .icon,
-.power-menu-popup .button.restart .label {
-    color: var(--green);
-}
-.power-menu-popup .button.shutdown .icon,
-.power-menu-popup .button.shutdown .label {
-    color: var(--peach);
-}
-.power-menu-popup .button.signout .icon,
-.power-menu-popup .button.signout .label {
-    color: var(--pink);
-}
-.power-menu-popup .button.lock .icon,
-.power-menu-popup .button.lock .label {
-    color: var(--blue);
-}
+
 
 .language-widget .icon,
 .volume-widget .icon,
