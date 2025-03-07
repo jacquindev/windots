@@ -862,6 +862,8 @@ if (Get-Command yasbc -ErrorAction SilentlyContinue) {
 	} else {
 		Write-Host "✅ YASB Status Bar is already running."
 	}
+} else {
+	Write-Warning "Command not found: yasbc."
 }
 
 # komorebi
@@ -879,11 +881,22 @@ if (Get-Command komorebic -ErrorAction SilentlyContinue) {
 	if (!(Get-Process -Name komorebi -ErrorAction SilentlyContinue)) {
 		$whkdExists = Get-Command whkd -ErrorAction SilentlyContinue
 		$whkdProcess = Get-Process -Name whkd -ErrorAction SilentlyContinue
+		if ($whkdExists -and (!(Test-Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\komorebi.lnk"))) {
+			try { Start-Process "powershell.exe" -ArgumentList "komorebic.exe", "enable-autostart", "--whkd" -WindowStyle Hidden -Wait }
+			catch { Write-Error "$_" }
+		} else {
+			Write-Host "✅ Shortcut: komorebi.lnk created in shell:Startup."
+		}
 		Write-Host "Starting Komorebi in the background..."
-		if ($whkdExists -and (!$whkdProcess)) { try { & komorebic.exe start --whkd >$null 2>&1 } catch { Write-Error "$_" } }
+		if ($whkdExists -and (!$whkdProcess)) {
+			try { Start-Process "powershell.exe" -ArgumentList "komorebic.exe", "start", "--whkd" -WindowStyle Hidden }
+			catch { Write-Error "$_" }
+		}
 	} else {
 		Write-Host "✅ Komorebi Tiling Window Management is already running."
 	}
+} else {
+	Write-Warning "Command not found: komorebic."
 }
 
 
