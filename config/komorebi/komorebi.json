@@ -39,11 +39,6 @@
     }
   },
   "transparency": false,
-  "display_index_preferences": {
-    "0": "XMI3447-5&27a467dc&0&UID260",
-    "1": "VIE0994-5&27a467dc&0&UID280",
-    "2": "XYM2405-5&27a467dc&0&UID281"
-  },
   "ignore_rules": [
     {
       "kind": "Exe",
@@ -56,6 +51,11 @@
       "matching_strategy": "Equals"
     },
     {
+      "kind": "Exe",
+      "id": "yasb.exe",
+      "matching_strategy": "Equals"
+    },
+    {
       "kind": "Title",
       "id": "Microsoft Store",
       "matching_strategy": "Equals"
@@ -64,35 +64,39 @@
       "kind": "Exe",
       "id": "vmware.exe",
       "matching_strategy": "Equals"
-    },
-    {
-      "kind": "Exe",
-      "id": "yasb.exe",
-      "matching_strategy": "Equals"
-    },
-    {
-      "kind": "Exe",
-      "id": "Notepad.exe",
-      "matching_strategy": "Equals"
     }
   ],
   "monitors": [
     {
+      "work_area_offset": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
       "workspaces": [
         {
-          "name": "1"
-        },
-        {
-          "name": "2",
-          "layout": "UltrawideVerticalStack"
-        },
-        {
-          "name": "3",
+          "name": "1",
           "layout": "BSP"
         },
         {
+          "name": "2"
+        },
+        {
+          "name": "3",
+          "layout": "UltrawideVerticalStack"
+        },
+        {
           "name": "4",
-          "layout": "VerticalStack"
+          "layout": "RightMainVerticalStack"
+        },
+        {
+          "name": "5",
+          "layout": "HorizontalStack"
+        },
+        {
+          "name": "6",
+          "layout": "Grid"
         }
       ]
     },
