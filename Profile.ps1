@@ -19,6 +19,12 @@ if (Get-Command fastfetch -ErrorAction SilentlyContinue) {
     fastfetch
 }
 
+# 🦊 VFox (SDKs Version Manager)
+# -----------------------------------------------------------------------------------------
+if (Get-Command vfox -ErrorAction SilentlyContinue) {
+    Invoke-Expression "$(vfox activate pwsh)"
+}
+
 # ⏳ Asynchronous Processes (Boost PowerShell performance)
 # -----------------------------------------------------------------------------------------
 # Original idea is from: https://matt.kotsenas.com/posts/pwsh-profiling-async-startup
@@ -96,13 +102,6 @@ function prompt {
         if (Get-Command gsudo -ErrorAction SilentlyContinue) {
             $gsudoPath = Split-Path (Get-Command gsudo.exe).Path
             Import-Module "$gsudoPath\gsudoModule.psd1" -Global
-        }
-    },
-    {
-        # vfox (Hook `vfox` into Powershell)
-        # - https://vfox.lhan.me/guides/quick-start.html#_2-hook-vfox-to-your-shell
-        if (Get-Command vfox -ErrorAction SilentlyContinue) {
-            Invoke-Expression "$(vfox activate pwsh)"
         }
     },
     {

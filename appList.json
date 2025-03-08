@@ -119,6 +119,7 @@
 				{ "packageName": "spicetify-cli" },
 				{ "packageName": "spotify-tui" },
 				{ "packageName": "starship" },
+				{ "packageName": "vfox" },
 				{ "packageName": "wget" },
 				{ "packageName": "yazi" },
 				{ "packageName": "yq" },
