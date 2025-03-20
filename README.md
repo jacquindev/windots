@@ -102,11 +102,13 @@ cd `your_location`
 . .\Setup.ps1
 ```
 
-> [!NOTE]<br/>
+<h4>⁉️ Overriding Defaults</h4>
+
+> [!IMPORTANT]
 > Before running the `Setup.ps1` script, please check the **[appList.json](./appList.json)** file to **ADD/REMOVE** the apps you would like to install.<br/>
-> <br/>
+>
 > <b><i><ins>VSCode Extensions:</ins></i></b><br/>
-> Edit the **[extensions list](./vscode/extensions.list)** to **ADD/REMOVE** the extensions you would like to install.
+> Edit the **[VSCode's extensions list](./vscode/extensions.list)** to **ADD/REMOVE** the extensions you would like to install.
 
 <br>
 
@@ -223,12 +225,12 @@ Follow the below links to download and learn to how to setup:
 <summary><b>🌎 Replacement</b></summary>
 
 | Entry | App                                                                      |
-| ----- | ------------------------------------------------------------------------ |
-| cat   | [bat](https://github.com/sharkdp/bat) [⚙️](./config/bat/config)          |
-| cd    | [zoxide](https://github.com/ajeetdsouza/zoxide)                          |
+| ----- | ------------------------------------------------------------------------- |
+| cat   | [bat](https://github.com/sharkdp/bat) [⚙️](./config/bat/config) |
+| cd    | [zoxide](https://github.com/ajeetdsouza/zoxide) |
 | ls    | [eza](https://github.com/eza-community/eza) [⚙️](./config/eza/theme.yml) |
-| find  | [fd](https://github.com/sharkdp/fd)                                      |
-| grep  | [ripgrep](https://github.com/sharkdp/ripgrep)                            |
+| find  | [fd](https://github.com/sharkdp/fd) |
+| grep  | [ripgrep](https://github.com/sharkdp/ripgrep) |
 
 </details>
 
@@ -254,7 +256,6 @@ Follow the below links to download and learn to how to setup:
 | ---------------- | ---------------------------------------------- |
 | **App Launcher** | [Flow Launcher](https://www.flowlauncher.com/) |
 | **Music Player** | [Spotify](https://open.spotify.com/)           |
-| **Web Browser**  | [Zen Browser](https://www.zen-browser.com/)    |
 
 </details>
 <details>
@@ -263,13 +264,14 @@ Follow the below links to download and learn to how to setup:
 | Installer | Link                                                                                          | Description                                                        |
 | --------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
 | winget    | **[GitHub Desktop](https://github.com/apps/desktop)**                                         | Simple collaboration from your desktop                             |
+| winget    | **[GitKraken Desktop](https://www.gitkraken.com/)**                                           | Dev Tools that simplify & supercharge Git                          |
 | scoop     | **[gh](https://github.com/cli/cli)**                                                          | Bring GitHub to the command line                                   |
+| scoop     | **[git-aliases](https://github.com/AGWA/git-crypt)**                                          | Oh My Zsh's Git aliases for PowerShell.                            |
 | scoop     | **[git-crypt](https://github.com/AGWA/git-crypt)**                                            | Transparent file encryption in Git                                 |
 | scoop     | **[git-filter-repo](https://github.com/newren/git-filter-repo)**                              | Quickly rewrite git repository history (filter-branch replacement) |
 | scoop     | **[git-lfs](https://git-lfs.com/)**                                                           | Improve then handling of large files                               |
 | scoop     | **[git-sizer](https://github.com/github/git-sizer)**                                          | Compute various size metrics for a Git repository                  |
 | scoop     | **[gitleaks](https://github.com/gitleaks/gitleaks)**                                          | Detect secrets like passwords, API keys, and tokens                |
-| scoop     | **[bfg](https://rtyley.github.io/bfg-repo-cleaner/)**                                         | Remove large or troublesome blobs (required **java** installed)    |
 | npm       | **[commitizen](https://github.com/commitizen/cz-cli)** + **[cz-git](https://cz-git.qbb.sh/)** | Write better Git commits                                           |
 | npm       | **[git-open](https://github.com/paulirish/git-open)**                                         | Open the GitHub page or website for a repository in your browser   |
 | npm       | **[git-recent](https://github.com/paulirish/git-recent)**                                     | See your latest local git branches, formatted real fancy           |

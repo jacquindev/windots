@@ -98,6 +98,7 @@
 				{ "packageName": "gh" },
 				{ "packageName": "git-aliases" },
 				{ "packageName": "git-crypt" },
+				{ "packageName": "git-filter-repo" },
 				{ "packageName": "git-lfs" },
 				{ "packageName": "git-sizer" },
 				{ "packageName": "gitleaks" },
@@ -160,7 +161,13 @@
 			"commandName": "npm",
 			"commandCheck": "npm list -g",
 			"commandInvoke": "npm install -g",
-			"addonList": [ "npm-check-updates", "npm-run-all" ],
+			"addonList": [
+				"npm-check-updates",
+				"npm-run-all",
+				"czg",
+				"git-open",
+				"git-recent"
+			],
 			"install": false
 		},
 		{
