@@ -1,25 +1,16 @@
 {
-	"useEmoji": false,
+	"useEmoji": true,
 	"emojiAlign": "left",
 	"alias": {
 		"fd": "fix: fix typos",
-		"ur": "docs: update README.md",
+		"ur": "docs: update README",
 		"ui": "chore: update .gitignore",
 		"um": "chore: update .gitmodules",
-		"al": "docs: add LICENSE",
-		"ai": "chore: add .gitignore",
-		"ar": "docs: add README.md"
+		"al": "chore: add LICENSE",
+		"ai": "chore: add .gitignore"
 	},
 	"typesAppend": [
-		{
-			"value": "workflow",
-			"name": "workflow: Workflow changes",
-			"emoji": ":arrows_counterclockwise:"
-		},
-		{
-			"value": "*!",
-			"name": "*!:       BREAKING CHANGES",
-			"emoji": ":heavy_exclamation_mark:"
-		}
+		{ "value": "workflow", "name": "workflow: Workflow changes", "emoji": ":arrows_counterclockwise:" },
+		{ "value": "*!", "name": "*!:       BREAKING CHANGES", "emoji": ":heavy_exclamation_mark:" }
 	]
 }
