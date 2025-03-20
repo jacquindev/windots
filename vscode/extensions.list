@@ -2,6 +2,12 @@ aaron-bond.better-comments
 alefragnani.project-manager
 alexcvzz.vscode-sqlite
 angular.ng-template
+bierner.markdown-checkbox
+bierner.markdown-emoji
+bierner.markdown-footnotes
+bierner.markdown-mermaid
+bierner.markdown-preview-github-styles
+bierner.markdown-yaml-preamble	
 bradlc.vscode-tailwindcss
 catppuccin.catppuccin-vsc
 christian-kohler.npm-intellisense
@@ -50,6 +56,7 @@ postman.postman-for-vscode
 redhat.vscode-xml
 redhat.vscode-yaml
 s-nlf-fh.glassit
+saeris.markdown-github-alerts
 steoates.autoimport
 stivo.tailwind-fold
 streetsidesoftware.code-spell-checker
