@@ -1,7 +1,7 @@
 
 <#PSScriptInfo
 
-.VERSION 1.0.2
+.VERSION 1.0.3
 
 .GUID ccb5be4c-ea07-4c45-a5b4-6310df24e2bc
 
@@ -616,16 +616,18 @@ $symlinks = @{
 	"$HOME\.config\delta"                                                                         = ".\config\delta"
 	"$HOME\.config\eza"                                                                           = ".\config\eza"
 	"$HOME\.config\gh-dash"                                                                       = ".\config\gh-dash"
+	"$HOME\.config\gitaliases"                                                                    = ".\config\gitaliases"
 	"$HOME\.config\komorebi"                                                                      = ".\config\komorebi"
 	"$HOME\.config\mise"                                                                          = ".\config\mise"
 	"$HOME\.config\spotify-tui"                                                                   = ".\config\spotify-tui"
+	"$HOME\.config\starship.toml"                                                                 = ".\config\starship.toml"
 	"$HOME\.config\whkdrc"                                                                        = ".\config\whkdrc"
 	"$HOME\.config\yasb"                                                                          = ".\config\yasb"
 	"$HOME\.config\yazi"                                                                          = ".\config\yazi"
 	"$HOME\.czrc"                                                                                 = ".\home\.czrc"
-	"$HOME\.npmrc"                                                                                = ".\home\.npmrc"
 	"$HOME\.gitconfig"                                                                            = ".\home\.gitconfig"
 	"$HOME\.inputrc"                                                                              = ".\home\.inputrc"
+	"$HOME\.npmrc"                                                                                = ".\home\.npmrc"
 	"$HOME\.wslconfig"                                                                            = ".\home\.wslconfig"
 }
 
