@@ -3,8 +3,9 @@
 Manual clone of [githead.yazi](https://github.com/llanosrocas/githead.yazi) for supporting [yatline.yazi](https://github.com/imsi32/yatline.yazi)
 
 > [!IMPORTANT]
-> This repository will not add new features other than coming from orginal repository.  
-> The latest commit in there is bf150f3ee982e565940c63dc98603d275120ca96.
+> This repository will not add new features other than coming from original repository.  
+> The latest commit in there is 23750247d59da485e4b5257ad5e83837bb86a685.
+> Which can be found in [here](https://github.com/llanosrocas/githead.yazi/blob/23750247d59da485e4b5257ad5e83837bb86a685/main.lua)
 
 All supported features are listed [here](#features)
 
@@ -137,3 +138,4 @@ This command provides information about branches, stashes, staged files, unstage
 - [githead.yazi](https://github.com/llanosrocas/githead.yazi)
 - [yazi source code](https://github.com/sxyazi/yazi)
 - [powerlevel10k](https://github.com/romkatv/powerlevel10k)
+- [twio142](https://github.com/twio142/githead.yazi)
