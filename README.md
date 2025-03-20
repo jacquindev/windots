@@ -202,10 +202,11 @@ Follow the below links to download and learn to how to setup:
 - 🌸 All-In-One VSCode setup (**_[extensions list](./vscode/extensions.list)_**)
 - ⚙️ [Rainmeter](./windows/rainmeter/) setup
 - \>\_ Sleek [Windows Terminal config](./windows/settings.json)
-- 🌈 Oh-My-Posh [minimal theme](./dotposh/posh-zen.toml) (with Spotify status if playing!)
-- 🦄 **Super fast** PowerShell startup time _(load asynchronously)_ + **[extra config](./dotposh/Config/)** + **[custom functions](./dotposh/Modules/)**
+- 🌈 Oh-My-Posh [minimal theme](./dotposh/posh-zen.toml) (with Spotify status if playing)
+- 🦄 **Super fast** PowerShell startup time _(load asynchronously)_ + [custom configurations & modules](./dotposh/)
 - 🍄 Simple fastfetch configuration, which I copied from [scottmckendry's config](https://github.com/scottmckendry/Windots/tree/main/fastfetch)
-- 🥂 Many addons for Git!
+- 🥂 Many [addons](#git-addons) for Git!
+- 🐱 Use [MISE](https://mise.jdx.dev/) *(mise-en-place)* to manage [development tools](./config/mise/config.toml). Learn more about `mise` here: https://mise.jdx.dev/
 
 <details>
 <summary><b>🖥️ CLI/TUI Apps</b></summary>
@@ -258,8 +259,9 @@ Follow the below links to download and learn to how to setup:
 | **Music Player** | [Spotify](https://open.spotify.com/)           |
 
 </details>
+
 <details>
-<summary><b>📌 Git Addons</b></summary>
+<summary id="git-addons"><b>📌 Git Addons</b></summary>
 
 | Installer | Link                                                                                          | Description                                                        |
 | --------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
@@ -282,7 +284,7 @@ Follow the below links to download and learn to how to setup:
 
 - [Notepad++](https://notepad-plus-plus.org/)
 - [Obsidian](https://obsidian.md/)
-- [VSCode](https://code.visualstudio.com/) [⚙️](./vscode/settings.json)
+- [Visual Studio Code](https://code.visualstudio.com/) [⚙️](./vscode/settings.json)
 
 </details>
 
