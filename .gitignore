@@ -16,4 +16,4 @@ config/lazygit/state.yml
 
 out/*
 
-!*/.gitkeep
+!.gitkeep
