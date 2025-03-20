@@ -284,9 +284,9 @@ function Write-LockFile {
 	}
 }
 
-########################################################################################################################
+########################################################################
 ###														MAIN SCRIPT 		  					 			 		 ###
-########################################################################################################################
+########################################################################
 # if not internet connection, then we will exit this script immediately
 $internetConnection = Test-NetConnection google.com -CommonTCPPort HTTP -InformationLevel Detailed -WarningAction SilentlyContinue
 $internetAvailable = $internetConnection.TcpTestSucceeded
@@ -313,9 +313,9 @@ Set-Location $PSScriptRoot
 
 $i = 1
 
-########################################################################################################################
+######################################################################
 ###													NERD FONTS														 ###
-########################################################################################################################
+######################################################################
 # install nerd fonts
 Write-TitleBox -Title "Nerd Fonts Installation"
 Write-ColorText "{Green}The following fonts are highly recommended:`n{DarkGray}(Please skip this step if you already installed Nerd Fonts)`n`n  {Gray}● Cascadia Code Nerd Font`n  ● FantasqueSansM Nerd Font`n  ● FiraCode Nerd Font`n  ● JetBrainsMono Nerd Font`n"
@@ -339,9 +339,9 @@ Refresh ($i++)
 
 Clear-Host
 
-########################################################################################################################
+########################################################################
 ###													WINGET PACKAGES 			 									 ###
-########################################################################################################################
+########################################################################
 # Retrieve information from json file
 $json = Get-Content "$PSScriptRoot\appList.json" -Raw | ConvertFrom-Json
 
@@ -405,9 +405,9 @@ if ($wingetInstall -eq $True) {
 	Refresh ($i++)
 }
 
-########################################################################################################################
+############################################################################
 ###														CHOCOLATEY PACKAGES 				   						 ###
-########################################################################################################################
+############################################################################
 # Chocolatey Packages
 Write-TitleBox -Title "Chocolatey Packages Installation"
 $chocoItem = $json.installSource.choco
@@ -449,9 +449,9 @@ if ($chocoInstall -eq $True) {
 	Refresh ($i++)
 }
 
-########################################################################################################################
+########################################################################
 ###														SCOOP PACKAGES 	 							 				 ###
-########################################################################################################################
+########################################################################
 # Scoop Packages
 Write-TitleBox -Title "Scoop Packages Installation"
 $scoopItem = $json.installSource.scoop
@@ -519,9 +519,9 @@ if ($scoopInstall -eq $True) {
 	Refresh ($i++)
 }
 
-########################################################################################################################
+########################################################################
 ###												 	POWERSHELL SETUP 												 ###
-########################################################################################################################
+########################################################################
 # Powershell Modules
 Write-TitleBox -Title "PowerShell Modules + Experimental Features"
 
@@ -570,9 +570,9 @@ if ($featureEnable -eq $True) {
 	Refresh ($i++)
 }
 
-########################################################################################################################
+######################################################################
 ###														GIT SETUP											    	 ###
-########################################################################################################################
+######################################################################
 # Configure git
 Write-TitleBox -Title "SETUP GIT FOR WINDOWS"
 if (Get-Command git -ErrorAction SilentlyContinue) {
@@ -597,9 +597,9 @@ if (Get-Command gh -ErrorAction SilentlyContinue) {
 	if (!(gh auth status)) { gh auth login }
 }
 
-########################################################################################################################
+####################################################################
 ###															SYMLINKS 												 ###
-########################################################################################################################
+####################################################################
 # symlinks
 Write-TitleBox -Title "Add symbolic links for dotfiles"
 $symlinks = @{
@@ -617,12 +617,12 @@ $symlinks = @{
 	"$HOME\.config\eza"                                                                           = ".\config\eza"
 	"$HOME\.config\gh-dash"                                                                       = ".\config\gh-dash"
 	"$HOME\.config\komorebi"                                                                      = ".\config\komorebi"
-	"$HOME\.config\npm"                                                                           = ".\config\npm"
 	"$HOME\.config\spotify-tui"                                                                   = ".\config\spotify-tui"
 	"$HOME\.config\whkdrc"                                                                        = ".\config\whkdrc"
 	"$HOME\.config\yasb"                                                                          = ".\config\yasb"
 	"$HOME\.config\yazi"                                                                          = ".\config\yazi"
-	"$HOME\.config\.czrc"                                                                         = ".\config\.czrc"
+	"$HOME\.czrc"                                                                                 = ".\home\.czrc"
+	"$HOME\.npmrc"                                                                                = ".\home\.npmrc"
 	"$HOME\.gitconfig"                                                                            = ".\home\.gitconfig"
 	"$HOME\.inputrc"                                                                              = ".\home\.inputrc"
 	"$HOME\.wslconfig"                                                                            = ".\home\.wslconfig"
@@ -643,10 +643,9 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
 	git config --global user.email $gitUserMail
 }
 
-########################################################################################################################
+##########################################################################
 ###													ENVIRONMENT VARIABLES											 ###
-########################################################################################################################
-# add environment variables
+##########################################################################
 Write-TitleBox -Title "Set Environment Variables"
 $envVars = $json.environmentVariable
 foreach ($env in $envVars) {
@@ -686,9 +685,9 @@ if (Get-Command gh -ErrorAction SilentlyContinue) {
 }
 Refresh ($i++)
 
-########################################################################################################################
+########################################################################################
 ###										SETUP NODEJS / INSTALL NVM (Node Version Manager)							 ###
-########################################################################################################################
+########################################################################################
 # if (!(Get-Command nvm -ErrorAction SilentlyContinue)) {
 # 	Write-TitleBox -Title "Nvm (Node Version Manager) Installation"
 # 	$installNvm = $(Write-Host "Install NVM? (y/N) " -ForegroundColor Magenta -NoNewline; Read-Host)
@@ -709,9 +708,9 @@ Refresh ($i++)
 # 	if (!(Get-Command bun -ErrorAction SilentlyContinue)) { npm install -g bun }
 # }
 
-########################################################################################################################
+########################################################################
 ###														ADDONS / PLUGINS											 ###
-########################################################################################################################
+########################################################################
 # plugins / extensions / addons
 $myAddons = $json.packageAddon
 foreach ($a in $myAddons) {
@@ -737,9 +736,9 @@ foreach ($a in $myAddons) {
 }
 Refresh ($i++)
 
-########################################################################################################################
+########################################################################
 ###													VSCODE EXTENSIONS												 ###
-########################################################################################################################
+########################################################################
 # VSCode Extensions
 if (Get-Command code -ErrorAction SilentlyContinue) {
 	Write-TitleBox -Title "VSCode Extensions Installation"
@@ -759,9 +758,9 @@ if (Get-Command code -ErrorAction SilentlyContinue) {
 	}
 }
 
-########################################################################################################################
+##########################################################################
 ###													CATPPUCCIN THEMES 								 				 ###
-########################################################################################################################
+##########################################################################
 Write-TitleBox -Title "Per Application Catppuccin Themes Installation"
 # Catppuccin Themes
 $catppuccinThemes = @('Frappe', 'Latte', 'Macchiato', 'Mocha')
@@ -826,9 +825,9 @@ if ((Test-Path "C:\Program Files\Notepad++" -PathType Container) -or (Get-Comman
 }
 
 
-########################################################################################################################
+######################################################################
 ###														MISCELLANEOUS		 										 ###
-########################################################################################################################
+######################################################################
 # yazi plugins
 Write-TitleBox "Miscellaneous"
 if (Get-Command ya -ErrorAction SilentlyContinue) {
@@ -844,19 +843,19 @@ if (Get-Command bat -ErrorAction SilentlyContinue) {
 	bat cache --build
 }
 
-########################################################################################################################
+##########################################################################
 ###													START KOMOREBI + YASB											 ###
-########################################################################################################################
+##########################################################################
 Write-TitleBox "Komorebi & Yasb Engines"
 
 # yasb
 if (Get-Command yasbc -ErrorAction SilentlyContinue) {
-	if (!(Get-ScheduledTask -ErrorAction SilentlyContinue | Where-Object { $_.TaskName -match "yasb*" } )) {
-		try { & yasbc.exe enable-autostart --task } catch { Write-Error "$_" }
-	} else {
-		$yasbTaskName = Get-ScheduledTask -ErrorAction SilentlyContinue | Where-Object { $_.TaskName -match "yasb*" } | Select-Object -ExpandProperty TaskName
-		Write-Host "✅ Task: $yasbTaskName already created."
-	}
+	# if (!(Get-ScheduledTask -ErrorAction SilentlyContinue | Where-Object { $_.TaskName -match "yasb*" } )) {
+	# 	try { & yasbc.exe enable-autostart --task } catch { Write-Error "$_" }
+	# } else {
+	# 	$yasbTaskName = Get-ScheduledTask -ErrorAction SilentlyContinue | Where-Object { $_.TaskName -match "yasb*" } | Select-Object -ExpandProperty TaskName
+	# 	Write-Host "✅ Task: $yasbTaskName already created."
+	# }
 	if (!(Get-Process -Name yasb -ErrorAction SilentlyContinue)) {
 		try { & yasbc.exe start } catch { Write-Error "$_" }
 	} else {
@@ -881,12 +880,12 @@ if (Get-Command komorebic -ErrorAction SilentlyContinue) {
 	if (!(Get-Process -Name komorebi -ErrorAction SilentlyContinue)) {
 		$whkdExists = Get-Command whkd -ErrorAction SilentlyContinue
 		$whkdProcess = Get-Process -Name whkd -ErrorAction SilentlyContinue
-		if ($whkdExists -and (!(Test-Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\komorebi.lnk"))) {
-			try { Start-Process "powershell.exe" -ArgumentList "komorebic.exe", "enable-autostart", "--whkd" -WindowStyle Hidden -Wait }
-			catch { Write-Error "$_" }
-		} else {
-			Write-Host "✅ Shortcut: komorebi.lnk created in shell:Startup."
-		}
+		# if ($whkdExists -and (!(Test-Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\komorebi.lnk"))) {
+		# 	try { Start-Process "powershell.exe" -ArgumentList "komorebic.exe", "enable-autostart", "--whkd" -WindowStyle Hidden -Wait }
+		# 	catch { Write-Error "$_" }
+		# } else {
+		# 	Write-Host "✅ Shortcut: komorebi.lnk created in shell:Startup."
+		# }
 		Write-Host "Starting Komorebi in the background..."
 		if ($whkdExists -and (!$whkdProcess)) {
 			try { Start-Process "powershell.exe" -ArgumentList "komorebic.exe", "start", "--whkd" -WindowStyle Hidden }
@@ -900,18 +899,18 @@ if (Get-Command komorebic -ErrorAction SilentlyContinue) {
 }
 
 
-########################################################################################################################
+##############################################################################
 ###												WINDOWS SUBSYSTEMS FOR LINUX										 ###
-########################################################################################################################
+##############################################################################
 if (!(Get-Command wsl -CommandType Application -ErrorAction Ignore)) {
 	Write-Verbose -Message "Installing Windows SubSystems for Linux..."
 	Start-Process -FilePath "PowerShell" -ArgumentList "wsl", "--install" -Verb RunAs -Wait -WindowStyle Hidden
 }
 
 
-########################################################################################################################
+######################################################################
 ###													END SCRIPT														 ###
-########################################################################################################################
+######################################################################
 Set-Location $currentLocation
 Start-Sleep -Seconds 5
 
