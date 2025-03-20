@@ -1,34 +1,5 @@
 [am]
     threeWay = true
-[alias]
-    a = add
-    aa = add --all
-    aliases = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\ \t => \\2/' | sort
-    b = branch
-    branches = branch --sort=authordate
-    cm = commit -m
-    co = checkout
-    get = !git fetch --prune && git pull --rebase && git submodule update --init --recursive
-    last = log -1 HEAD --stat
-    lg = log --oneline --graph --decorate --date=short
-    ll = log --graph --topo-order --date=short --abbrev-commit --decorate --all --boundary --pretty=format:'%Cblue%ad %C(auto)%h%Creset -%C(auto)%d%Creset %s %Cblue[%aN]%Creset %Cblue%G?%Creset'
-    ls = ls-files
-    ls-ignored = ls-files --ignored --others --exclude-standard
-    m = merge
-    pr = !gh pr
-    prls = !gh pr list --author=@me
-    prs = !gh pr status
-    prv = !gh pr view
-    prvw = !gh pr view -w
-    rblame = !git blame -w -M -C -C -C
-    remotes = remote -v
-    root = !cd $(git rev-parse --show-toplevel)
-    st = status
-    stashes = stash list
-    uncommit = reset --mixed HEAD~
-    unstage = reset -q HEAD --
-    what = show --no-patch --pretty='tformat:%h (%s, %ad)' --date=short
-    who = shortlog --summary --numbered --no-merges
 [core]
     # Configure Git to ensure line endings in files you checkout are correct for different os systems
     autocrlf = true
@@ -59,6 +30,7 @@
     hyperlinks-file-link-format = "vscode://file/{path}:{line}"
 [include]
     path = ~/.config/delta/themes/themes.gitconfig
+    path = ~/.config/gitaliases
 [interactive]
     diffFilter = delta --color-only
 [help]
@@ -91,4 +63,6 @@
 [user]
 	name = Jacquin Moon
 	email = jacquindev@outlook.com
-
+    signingkey = ~/.ssh/id_ed25519.pub
+[gpg]
+	format = ssh
