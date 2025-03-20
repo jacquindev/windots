@@ -1,6 +1,6 @@
 [[plugin.deps]]
 use = "yazi-rs/plugins:diff"
-rev = "5186af7"
+rev = "2730199"
 hash = "fb4650dc4e95b9b56dcadab3608dcfed"
 
 [[plugin.deps]]
@@ -10,18 +10,18 @@ hash = "bf34a775050aec528822d524f0f93713"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:full-border"
-rev = "5186af7"
-hash = "206e2448171dad0bda0a3cdece4ee8f5"
+rev = "2730199"
+hash = "748a68f7271c60161ff649e2699ea9e6"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:git"
-rev = "5186af7"
-hash = "e683c4188b7c9ae70be1c5c12f701f9e"
+rev = "2730199"
+hash = "3e934f2d6f703ee6a6ff4242460dfa7e"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:smart-filter"
-rev = "5186af7"
-hash = "f9d872e5bd1aac3a153dee63c2bbc618"
+rev = "2730199"
+hash = "475bcde87495ff68f017f39e0a138ac1"
 
 [[plugin.deps]]
 use = "Reledia/glow"
@@ -30,25 +30,25 @@ hash = "7246659779ff5bca5f4a461bdab6e8df"
 
 [[plugin.deps]]
 use = "imsi32/yatline-githead"
-rev = "a6377a8"
-hash = "dbc5d26c6d42dbd1c4801464bbc5dbfb"
+rev = "3b0eb7c"
+hash = "7ae04eb50f224080cafdde377e9cfd5d"
 
 [[plugin.deps]]
 use = "imsi32/yatline"
-rev = "9328205"
-hash = "ead7449512d0c3f2e312ef9f72f31db0"
+rev = "6b0fc1e"
+hash = "6e0f07994039f84a2c57c573bb6ceb79"
 
 [[flavor.deps]]
 use = "dangooddd/kanagawa"
-rev = "d98f0c3"
-hash = "1004bfcf4a256479ccbf21e030d05819"
+rev = "31167ed"
+hash = "7a1de9de34cdecfdf41405cbc485b34"
 
 [[flavor.deps]]
 use = "yazi-rs/flavors:catppuccin-mocha"
-rev = "df95930"
-hash = "6a9f2e1018d0ac8f90cfaa6d9c352cd9"
+rev = "68326b4"
+hash = "800799d6ab64ece50a4e516641b96fa0"
 
 [[flavor.deps]]
 use = "yazi-rs/flavors:catppuccin-macchiato"
-rev = "df95930"
-hash = "8f348f7cdc6b3a5d0883f38d94866865"
+rev = "68326b4"
+hash = "4f33260910430eca8a7937d9c2cfd855"
