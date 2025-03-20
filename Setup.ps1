@@ -617,6 +617,7 @@ $symlinks = @{
 	"$HOME\.config\eza"                                                                           = ".\config\eza"
 	"$HOME\.config\gh-dash"                                                                       = ".\config\gh-dash"
 	"$HOME\.config\komorebi"                                                                      = ".\config\komorebi"
+	"$HOME\.config\mise"                                                                          = ".\config\mise"
 	"$HOME\.config\spotify-tui"                                                                   = ".\config\spotify-tui"
 	"$HOME\.config\whkdrc"                                                                        = ".\config\whkdrc"
 	"$HOME\.config\yasb"                                                                          = ".\config\yasb"
