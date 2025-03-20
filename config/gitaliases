@@ -1716,7 +1716,7 @@
   };f"
 
   topic-end = topic-finish
-
+  
   # Update the current topic branch by synchronizing changes.
   #
   # Example:
