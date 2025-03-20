@@ -1,54 +1,69 @@
 [[plugin.deps]]
-use = "yazi-rs/plugins:diff"
-rev = "2730199"
-hash = "fb4650dc4e95b9b56dcadab3608dcfed"
-
-[[plugin.deps]]
-use = "lpnh/fg"
-rev = "92edf0b"
-hash = "bf34a775050aec528822d524f0f93713"
-
-[[plugin.deps]]
-use = "yazi-rs/plugins:full-border"
-rev = "2730199"
-hash = "748a68f7271c60161ff649e2699ea9e6"
-
-[[plugin.deps]]
-use = "yazi-rs/plugins:git"
-rev = "2730199"
-hash = "3e934f2d6f703ee6a6ff4242460dfa7e"
-
-[[plugin.deps]]
-use = "yazi-rs/plugins:smart-filter"
-rev = "2730199"
-hash = "475bcde87495ff68f017f39e0a138ac1"
-
-[[plugin.deps]]
-use = "Reledia/glow"
-rev = "c76bf4f"
-hash = "7246659779ff5bca5f4a461bdab6e8df"
-
-[[plugin.deps]]
 use = "imsi32/yatline-githead"
 rev = "3b0eb7c"
-hash = "7ae04eb50f224080cafdde377e9cfd5d"
+hash = "bfd30c396bbe2af526cb949d97ce3dcf"
 
 [[plugin.deps]]
 use = "imsi32/yatline"
 rev = "6b0fc1e"
-hash = "6e0f07994039f84a2c57c573bb6ceb79"
+hash = "ab115c6cc77f5710c27f39dfa2f3d4d"
 
-[[flavor.deps]]
-use = "dangooddd/kanagawa"
-rev = "31167ed"
-hash = "7a1de9de34cdecfdf41405cbc485b34"
+[[plugin.deps]]
+use = "yazi-rs/plugins:git"
+rev = "2bf70d8"
+hash = "806cb2842b64e976ba2c65a3e3724518"
 
-[[flavor.deps]]
-use = "yazi-rs/flavors:catppuccin-mocha"
-rev = "68326b4"
-hash = "800799d6ab64ece50a4e516641b96fa0"
+[[plugin.deps]]
+use = "yazi-rs/plugins:full-border"
+rev = "2bf70d8"
+hash = "9dce00232a0e0e2502565c7aa2b0ed4e"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:hide-preview"
+rev = "2bf70d8"
+hash = "53f826884e2c7e521cecc492a7f31d7e"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:smart-filter"
+rev = "2bf70d8"
+hash = "f0c4b41b5d19a3144958383333eff6e7"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:diff"
+rev = "2bf70d8"
+hash = "7a08e303167d5b655c06da6d570f0333"
+
+[[plugin.deps]]
+use = "lpnh/fg"
+rev = "92edf0b"
+hash = "b0edc5e9b7f44b2d3303e74f785d0bc9"
+
+[[plugin.deps]]
+use = "AnirudhG07/rich-preview"
+rev = "2559e5f"
+hash = "c9a3d0731e7d7340e2c6d6126b1f3aa3"
+
+[[plugin.deps]]
+use = "Rolv-Apneseth/starship"
+rev = "6c639b4"
+hash = "5614c46d5de76623c283d415bfac8025"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:chmod"
+rev = "2bf70d8"
+hash = "2f1053f89d1a301a648ab181d0948e38"
+
+[[plugin.deps]]
+use = "AnirudhG07/custom-shell"
+rev = "6b4550a"
+hash = "43019cca17a4d7b41746c2e0a6b8f33f"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:max-preview"
+rev = "2bf70d8"
+hash = "a8025f2bb311e869069364fba01abffc"
 
 [[flavor.deps]]
 use = "yazi-rs/flavors:catppuccin-macchiato"
-rev = "68326b4"
-hash = "4f33260910430eca8a7937d9c2cfd855"
+rev = "b929df6"
+hash = "3ec21bcfd2735cfcbab61faaf43e59e4"

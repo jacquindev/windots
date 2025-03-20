@@ -1,4 +1,4 @@
---- @since 25.2.26
+--- @since 25.2.7
 
 local WINDOWS = ya.target_family() == "windows"
 
@@ -138,27 +138,28 @@ local function setup(st, opts)
 	opts = opts or {}
 	opts.order = opts.order or 1500
 
-	local t = th.git or {}
+	-- Chosen by ChatGPT fairly, PRs are welcome to adjust them
+	local t = THEME.git or {}
 	local styles = {
-		[CODES.ignored] = t.ignored and ui.Style(t.ignored) or ui.Style():fg("darkgray"),
-		[CODES.untracked] = t.untracked and ui.Style(t.untracked) or ui.Style():fg("magenta"),
-		[CODES.modified] = t.modified and ui.Style(t.modified) or ui.Style():fg("yellow"),
-		[CODES.added] = t.added and ui.Style(t.added) or ui.Style():fg("green"),
-		[CODES.deleted] = t.deleted and ui.Style(t.deleted) or ui.Style():fg("red"),
-		[CODES.updated] = t.updated and ui.Style(t.updated) or ui.Style():fg("yellow"),
+		[CODES.ignored] = t.ignored and ui.Style(t.ignored) or ui.Style():fg("#696969"),
+		[CODES.untracked] = t.untracked and ui.Style(t.untracked) or ui.Style():fg("#a9a9a9"),
+		[CODES.modified] = t.modified and ui.Style(t.modified) or ui.Style():fg("#ffa500"),
+		[CODES.added] = t.added and ui.Style(t.added) or ui.Style():fg("#32cd32"),
+		[CODES.deleted] = t.deleted and ui.Style(t.deleted) or ui.Style():fg("#ff4500"),
+		[CODES.updated] = t.updated and ui.Style(t.updated) or ui.Style():fg("#1e90ff"),
 	}
 	local signs = {
-		[CODES.ignored] = t.ignored_sign or "",
-		[CODES.untracked] = t.untracked_sign or "?",
-		[CODES.modified] = t.modified_sign or "",
-		[CODES.added] = t.added_sign or "",
-		[CODES.deleted] = t.deleted_sign or "",
-		[CODES.updated] = t.updated_sign or "",
+		[CODES.ignored] = t.ignored_sign or "",
+		[CODES.untracked] = t.untracked_sign or "",
+		[CODES.modified] = t.modified_sign or "",
+		[CODES.added] = t.added_sign or "",
+		[CODES.deleted] = t.deleted_sign or "",
+		[CODES.updated] = t.updated_sign or "U",
 	}
 
 	Linemode:children_add(function(self)
 		local url = self._file.url
-		local repo = st.dirs[tostring(url.base or url:parent())] -- TODO: remove this
+		local repo = st.dirs[tostring(url:parent())]
 		local code
 		if repo then
 			code = repo == CODES.excluded and CODES.ignored or st.repos[repo][tostring(url):sub(#repo + 2)]
@@ -175,7 +176,7 @@ local function setup(st, opts)
 end
 
 local function fetch(_, job)
-	local cwd = job.files[1].url.base or job.files[1].url:parent() -- TODO: remove this
+	local cwd = job.files[1].url:parent()
 	local repo = root(cwd)
 	if not repo then
 		remove(tostring(cwd))
