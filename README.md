@@ -22,8 +22,11 @@ A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppu
 </p>
 </div>
 
-> [!IMPORTANT]<br> > **Screenshots** are taken on my main monitor, which has the **resolution of 3440x1440**.<br>
-> Works seamlessly on my **1920x1080** monitors as well!
+> [!IMPORTANT]
+> The below **screenshots** are taken on my main monitor, which has the **resolution of 3440x1440**.
+> Configurations in this repository seem to work seamlessly on my **1920x1080** monitors as well.
+
+<br>
 
 <div align="center">
   <a href="#preview"><kbd> <br> 🌆 Preview <br> </kbd></a>&ensp;&ensp;
@@ -34,7 +37,7 @@ A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppu
   <a href="#author"><kbd> <br> 👤 Author <br> </kbd></a>&ensp;&ensp;
 </div>
 
-<br>
+
 <hr>
 
 ## ⚠️ Disclaimer
@@ -134,7 +137,6 @@ clink installscripts "your_location\clink\more-clink-completions"
 > - `starship` - [`clink/clink-custom/starship.lua`](./clink/clink-custom/starship.lua)
 > - `vfox` - [`clink/clink-custom/vfox.lua`](./clink/clink-custom/vfox.lua)
 > - `zoxide` - [`clink/clink-custom/zoxide.lua`](./clink/clink-custom/zoxide.lua)
->
 
 </details>
 
@@ -201,7 +203,7 @@ Follow the below links to download and learn to how to setup:
 </div>
 </details>
 
-<hr>
+<br>
 
 <h2 id="features">✨ Features</h2>
 
@@ -218,6 +220,8 @@ Follow the below links to download and learn to how to setup:
 - 🍄 Simple fastfetch configuration, which I copied from [scottmckendry's config](https://github.com/scottmckendry/Windots/tree/main/fastfetch)
 - 🥂 Many [addons](#git-addons) for Git!
 - 🐱 Use [MISE](https://mise.jdx.dev/) *(mise-en-place)* to manage [development tools](./config/mise/config.toml). Learn more about `mise` here: https://mise.jdx.dev/
+
+<br>
 
 <details>
 <summary><b>🖥️ CLI/TUI Apps</b></summary>
@@ -274,20 +278,21 @@ Follow the below links to download and learn to how to setup:
 <details>
 <summary id="git-addons"><b>📌 Git Addons</b></summary>
 
-| Installer | Link                                                                                          | Description                                                        |
-| --------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| winget    | **[GitHub Desktop](https://github.com/apps/desktop)**                                         | Simple collaboration from your desktop                             |
-| winget    | **[GitKraken Desktop](https://www.gitkraken.com/)**                                           | Dev Tools that simplify & supercharge Git                          |
-| scoop     | **[gh](https://github.com/cli/cli)**                                                          | Bring GitHub to the command line                                   |
-| scoop     | **[git-aliases](https://github.com/AGWA/git-crypt)**                                          | Oh My Zsh's Git aliases for PowerShell.                            |
-| scoop     | **[git-crypt](https://github.com/AGWA/git-crypt)**                                            | Transparent file encryption in Git                                 |
-| scoop     | **[git-filter-repo](https://github.com/newren/git-filter-repo)**                              | Quickly rewrite git repository history (filter-branch replacement) |
-| scoop     | **[git-lfs](https://git-lfs.com/)**                                                           | Improve then handling of large files                               |
-| scoop     | **[git-sizer](https://github.com/github/git-sizer)**                                          | Compute various size metrics for a Git repository                  |
-| scoop     | **[gitleaks](https://github.com/gitleaks/gitleaks)**                                          | Detect secrets like passwords, API keys, and tokens                |
-| npm       | **[commitizen](https://github.com/commitizen/cz-cli)** + **[cz-git](https://cz-git.qbb.sh/)** | Write better Git commits                                           |
-| npm       | **[git-open](https://github.com/paulirish/git-open)**                                         | Open the GitHub page or website for a repository in your browser   |
-| npm       | **[git-recent](https://github.com/paulirish/git-recent)**                                     | See your latest local git branches, formatted real fancy           |
+| Installer | Link | Description |
+| --- | --- | --- |
+| winget | **[GitHub Desktop](https://github.com/apps/desktop)** | Simple collaboration from your desktop.|
+| winget | **[GitKraken Desktop](https://www.gitkraken.com/)** | Dev Tools that simplify & supercharge Git. |
+| scoop | **[gh](https://github.com/cli/cli)** | Bring GitHub to the command line. |
+| scoop | **[git-aliases](https://github.com/AGWA/git-crypt)** | Oh My Zsh's Git aliases for PowerShell. |
+| scoop | **[git-crypt](https://github.com/AGWA/git-crypt)** | Transparent file encryption in Git. |
+| scoop | **[git-filter-repo](https://github.com/newren/git-filter-repo)** | Quickly rewrite git repository history (filter-branch replacement). |
+| scoop | **[git-lfs](https://git-lfs.com/)** | Improve then handling of large files. |
+| scoop | **[git-sizer](https://github.com/github/git-sizer)** | Compute various size metrics for a Git repository. |
+| scoop | **[gitleaks](https://github.com/gitleaks/gitleaks)** | Detect secrets like passwords, API keys, and tokens. |
+| npm | **[commitizen](https://github.com/commitizen/cz-cli)** + **[cz-git](https://cz-git.qbb.sh/)** | Write better Git commits. |
+| npm | **[git-open](https://github.com/paulirish/git-open)** | Open the GitHub page or website for a repository in your browser. |
+| npm | **[git-recent](https://github.com/paulirish/git-recent)** | See your latest local git branches, formatted real fancy. |
+| | **[git aliases](https://github.com/GitAlias/gitalias/blob/main/gitalias.txt)** | Include [git aliases](./config/gitaliases) for `git` command for faster version control. |
 
 </details>
 <details>
@@ -299,7 +304,8 @@ Follow the below links to download and learn to how to setup:
 
 </details>
 
-<hr>
+<br>
+
 <h2 id="credits">🎉 Credits</h2>
 
 Big thanks for those inspirations:
@@ -309,19 +315,23 @@ Big thanks for those inspirations:
 - [MattFTW's Dotfiles](https://github.com/Matt-FTW/dotfiles) - Most of my wallpapers are from here.
 - [DevDrive PowerShell's Scripts](https://github.com/ran-dall/Dev-Drive) - I copied most of DevDrive's functions for PowerShell here.
 
-<hr>
+<br>
+
 <h2 id="author">👤 Author</h2>
 
 - Name: **Jacquin Moon**
 - Github: [@jacquindev](https://github.com/jacquindev)
 - Email: jacquindev@outlook.com
 
-<hr>
+<br>
+
 <h2 id="license">📜 License</h2>
 
 This repository is released under the [MIT License](https://github.com/jacquindev/windots/blob/main/LICENSE).
 
 Feel free to use and modify these dotfiles to suit your needs.
+
+<br>
 
 ## Show your support
 
