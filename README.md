@@ -132,6 +132,8 @@ clink installscripts "your_location\clink\more-clink-completions"
 
 - Replace _`your_location`_ with full path to where you cloned this repository.
 
+</details>
+
 > [!NOTE]
 > The [`clink-custom`](./clink/clink-custom/) directory contains Lua scripts to [extend `clink`](https://chrisant996.github.io/clink/clink.html#extending-clink) based on the programs you use.
 > If you don't have any of the corresponding programs, you can disable them by commenting out the files or simply remove them:
@@ -140,8 +142,6 @@ clink installscripts "your_location\clink\more-clink-completions"
 > - `starship` - [`clink/clink-custom/starship.lua`](./clink/clink-custom/starship.lua)
 > - `vfox` - [`clink/clink-custom/vfox.lua`](./clink/clink-custom/vfox.lua)
 > - `zoxide` - [`clink/clink-custom/zoxide.lua`](./clink/clink-custom/zoxide.lua)
-
-</details>
 
 <br>
 
