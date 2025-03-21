@@ -126,19 +126,30 @@ clink installscripts "your_location\clink\more-clink-completions"
 
 - Replace _`your_location`_ with full path to where you cloned this repository.
 
+> [!Important]
+> The [`clink-custom`](./clink/clink-custom/) directory contains Lua scripts to [extend `clink`](https://chrisant996.github.io/clink/clink.html#extending-clink) based on the programs you use.
+> If you don't have any of the corresponding programs, you can disable them by commenting out the files or simply remove them:
+>
+> - `oh-my-posh` - [`clink/clink-custom/oh-my-posh.lua`](./clink/clink-custom/oh-my-posh.lua)
+> - `starship` - [`clink/clink-custom/starship.lua`](./clink/clink-custom/starship.lua)
+> - `vfox` - [`clink/clink-custom/vfox.lua`](./clink/clink-custom/vfox.lua)
+> - `zoxide` - [`clink/clink-custom/zoxide.lua`](./clink/clink-custom/zoxide.lua)
+>
+
 </details>
 
 <br>
 
 <details open>
-<summary><b>🌟 WSL Setup</b></summary>
-<br>
+<summary><b>🌟 Bootstrap WSL</b></summary>
 
-- Any configurations related to **WSL** are maintained in this repo: 👉👉 **[dotfiles](https://github.com/jacquindev/dotfiles)** 👈👈
+- WSL setup can be done automatically by using [Ansible](https://docs.ansible.com/ansible/latest/index.html). Any details can be found here: https://github.com/jacquindev/automated-wsl2-setup.
+
+- WSL dotfiles are maintained in [this](https://github.com/jacquindev/dotfiles) repository: https://github.com/jacquindev/dotfiles.
 
 </details>
-
 <br>
+
 <h3 id="extras">⛏🧱 Extra Setup (optional)</h3>
 
 Follow the below links to download and learn to how to setup:
