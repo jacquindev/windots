@@ -37,7 +37,6 @@ A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppu
   <a href="#author"><kbd> <br> 👤 Author <br> </kbd></a>&ensp;&ensp;
 </div>
 
-
 <hr>
 
 ## ⚠️ Disclaimer
@@ -49,6 +48,8 @@ So, please keep in mind that:
 - **This repository is under very active development.**
 - You might expect bugs and breaking changes.
 
+<br>
+
 ## ✨ Prerequisites
 
 - **[Git for Windows](https://gitforwindows.org/)**
@@ -57,6 +58,8 @@ So, please keep in mind that:
 ***Highly Recommended:***
 
 - **[Windows Terminal](https://aka.ms/terminal)** or **[Windows Terminal Preview](https://aka.ms/terminal-preview)**
+
+<br>
 
 <h2 id="preview">🌆 Preview</h2>
 
