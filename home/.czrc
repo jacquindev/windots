@@ -2,13 +2,13 @@
 	"useEmoji": true,
 	"emojiAlign": "left",
 	"alias": {
-		"ai": "chore: add .gitignore",
-		"al": "chore: add LICENSE",
-		"ar": "add README.md",
-		"ft": "fix: fix typos",
-		"ui": "chore: update .gitignore",
-		"um": "chore: update .gitmodules",
-		"ur": "docs: update README.md"
+		"ai": ":hammer: chore: add .gitignore",
+		"al": ":hammer: chore: add LICENSE",
+		"ar": ":memo: docs: add README.md",
+		"ft": ":bug: fix: fix typos",
+		"ui": ":hammer: chore: update .gitignore",
+		"um": ":hammer: chore: update .gitmodules",
+		"ur": ":memo: docs: update README.md"
 	},
 	"typesAppend": [
 		{ "value": "workflow", "name": "workflow: Workflow changes", "emoji": ":arrows_counterclockwise:" },
