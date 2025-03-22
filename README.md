@@ -339,3 +339,5 @@ Feel free to use and modify these dotfiles to suit your needs.
 ## Show your support
 
 Please give a ⭐️ if this project helped you!
+
+<a href="https://www.buymeacoffee.com/jacquindev" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="43" width="176"></a>
