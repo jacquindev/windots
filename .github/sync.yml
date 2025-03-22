@@ -1,0 +1,6 @@
+group:
+  - repos: |
+      jacquindev/windots
+      jacquindev/automated-wsl2-setup
+    files: .github/FUNDING.yml
+    dest: .github/FUNDING.yml
