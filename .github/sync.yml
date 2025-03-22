@@ -2,5 +2,6 @@ group:
   - repos: |
       jacquindev/dotfiles
       jacquindev/automated-wsl2-setup
-    files: .github/FUNDING.yml
-    dest: .github/FUNDING.yml
+    files:
+      - source: .github/FUNDING.yml
+        dest: .github/FUNDING.yml
