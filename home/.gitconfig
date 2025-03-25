@@ -17,12 +17,14 @@
     colorMoved = default
 [difftool "default-difftool"]
     cmd = code --wait --diff $LOCAL $REMOTE
+[alias]
+    # https://dandavison.github.io/delta/tips-and-tricks/toggling-delta-features.html
+    diffs = -c delta.side-by-side=true diff
 [delta]
-    features = catppuccin-mocha
+    features = catppuccin-macchiato
     file-style = omit
     file-decoration-style = none
     hunk-label = "  󰡏 "
-    side-by-side = true
     navigate = true
     tabs = 2
     true-color = always
@@ -30,6 +32,7 @@
     hyperlinks-file-link-format = "vscode://file/{path}:{line}"
 [include]
     path = ~/.config/delta/themes/themes.gitconfig
+    path = ~/.config/delta/themes/catppuccin.gitconfig
     path = ~/.config/gitaliases
 [interactive]
     diffFilter = delta --color-only
@@ -66,3 +69,5 @@
     signingkey = ~/.ssh/id_ed25519.pub
 [gpg]
 	format = ssh
+[gpg "ssh"]
+	program = ssh-keygen
