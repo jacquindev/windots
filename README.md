@@ -1,6 +1,6 @@
-<h3 align="center">
+<h3>
 <div align="center">
-<img src="./assets/title.png" alt="title">
+<img src="./.github/assets/title.png" alt="title">
 
 <br>
 <br>
@@ -63,26 +63,26 @@ So, please keep in mind that:
 
 <h2 id="preview">🌆 Preview</h2>
 
-- 2 status bar options: [Rainmeter](https://github.com/modkavartini/catppuccin/tree/main) / [Yasb](./config/yasb)
+- 2 status bar options: [Rainmeter](https://github.com/modkavartini/catppuccin/tree/main) / [Yasb](./config/config/yasb)
 
 ### Yasb's Catppuccin Statusbar
 
-![yasb1](./assets/yasb1.png)<br/><br/>
-![lazygit](./assets/lazygit.png)<br/><br/>
-![preview](./assets/preview.png)<br/><br/>
-![yasb3](./assets/yasb3.png)<br/><br/>
+![yasb1](./.github/assets/yasb1.png)<br/><br/>
+![lazygit](./.github/assets/lazygit.png)<br/><br/>
+![preview](./.github/assets/preview.png)<br/><br/>
+![yasb3](./.github/assets/yasb3.png)<br/><br/>
 
 ### Rainmeter's Catppuccin Statusbar
 
-![rainmeter1](./assets/rainmeter1.png)<br/><br/>
-![rainmeter2](./assets/rainmeter2.png)<br/><br/>
-![rainmeter3](./assets/rainmeter3.png)<br/><br/>
+![rainmeter1](./.github/rainmeter1.png)<br/><br/>
+![rainmeter2](./.github/rainmeter2.png)<br/><br/>
+![rainmeter3](./.github/rainmeter3.png)<br/><br/>
 
 - Transparent File Explorer
 
 ### [ExplorerBlurMica](https://github.com/Maplespe/ExplorerBlurMica) + [Catppuccin Themes](https://www.deviantart.com/niivu/art/Catppuccin-for-Windows-11-1076249390)
 
-![fileexplorer](./assets/fileexplorer.png)
+![fileexplorer](./.github/assets/fileexplorer.png)
 
 <hr>
 
@@ -114,7 +114,7 @@ cd `your_location`
 > Before running the `Setup.ps1` script, please check the **[appList.json](./appList.json)** file to **ADD/REMOVE** the apps you would like to install.<br/>
 >
 > <b><i><ins>VSCode Extensions:</ins></i></b><br/>
-> Edit the **[VSCode's extensions list](./vscode/extensions.list)** to **ADD/REMOVE** the extensions you would like to install.
+> Edit the **[VSCode's extensions list](./extensions.list)** to **ADD/REMOVE** the extensions you would like to install.
 
 <br>
 
@@ -166,11 +166,11 @@ Follow the below links to download and learn to how to setup:
 <table>
 <tr>
   <td><a href="https://www.deviantart.com/niivu/art/Catppuccin-Cursors-921387705">Cursors</a></td>
-  <td><img src="./assets/cursors.png" alt="cursors"></td>
+  <td><img src="./.github/assets/cursors.png" alt="cursors"></td>
 </tr>
 <tr>
   <td><a href="https://www.deviantart.com/niivu/art/Catppuccin-for-Windows-11-1076249390">Themes</a></td>
-  <td><img src="./assets/themes.png" alt="themes"></td>
+  <td><img src="./.github/assets/themes.png" alt="themes"></td>
 </tr>
 </table>
 </div>
@@ -198,7 +198,7 @@ Follow the below links to download and learn to how to setup:
 <td>Themes</td>
 <td>
   <a href="https://github.com/Comfy-Themes/Spicetify">Comfy Themes</a>&nbsp;
-  <a href="./config/spicetify/comfy.js">⚙️</a>
+  <a href="./config/config/spicetify/comfy.js">⚙️</a>
 </td>
 <tr>
 </tr>
@@ -215,14 +215,14 @@ Follow the below links to download and learn to how to setup:
 - 🎀 Minimal [Yasb](https://github.com/amnweb/yasb) status bar
 - 💖 Beautiful **_[wallpapers](https://github.com/jacquindev/windots/tree/main/windows/walls#readme)_**, and [live wallpapers](./windows/walls/live-walls/) for [Lively Wallpapers](https://www.rocksdanister.com/lively/)
 - 🪟 [Komorebi](./config/komorebi) config
-- 🌸 All-In-One VSCode setup (**_[extensions list](./vscode/extensions.list)_**)
+- 🌸 All-In-One VSCode setup (**_[extensions list](./extensions.list)_**)
 - ⚙️ [Rainmeter](./windows/rainmeter/) setup
-- \>\_ Sleek [Windows Terminal config](./windows/settings.json)
+- \>\_ Sleek [Windows Terminal config](./config/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json)
 - 🌈 Oh-My-Posh [minimal theme](./dotposh/posh-zen.toml) (with Spotify status if playing)
 - 🦄 **Super fast** PowerShell startup time _(load asynchronously)_ + [custom configurations & modules](./dotposh/)
 - 🍄 Simple fastfetch configuration, which I copied from [scottmckendry's config](https://github.com/scottmckendry/Windots/tree/main/fastfetch)
 - 🥂 Many [addons](#git-addons) for Git!
-- 🐱 Use [MISE](https://mise.jdx.dev/) *(mise-en-place)* to manage [development tools](./config/mise/config.toml). Learn more about `mise` here: https://mise.jdx.dev/
+- 🐱 Use [MISE](https://mise.jdx.dev/) *(mise-en-place)* to manage [development tools](https://mise.jdx.dev/dev-tools/). Learn more about `mise` here: https://mise.jdx.dev/
 
 <br>
 
@@ -231,12 +231,12 @@ Follow the below links to download and learn to how to setup:
 
 | Entry                 | App                                                                                           |
 | --------------------- | --------------------------------------------------------------------------------------------- |
-| **Terminal Emulator** | [Windows Terminal](https://github.com/microsoft/terminal) [⚙️](./windows/settings.json)       |
-| **File Explorer**     | [yazi](https://github.com/sxyazi/yazi) [⚙️](./config/yazi/)                                   |
+| **Terminal Emulator** | [Windows Terminal](https://github.com/microsoft/terminal) [⚙️](./config/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json)       |
+| **File Explorer**     | [yazi](https://github.com/sxyazi/yazi) [⚙️](./config/config/yazi/)                                   |
 | **Fuzzy File Finder** | [fzf](https://github.com/junegunn/fzf)                                                        |
 | **System Monitor**    | [btop](https://github.com/aristocratos/btop)                                                  |
-| **System Fetch**      | [fastfetch](https://github.com/fastfetch-cli/fastfetch) [⚙️](./config/fastfetch/config.jsonc) |
-| **Git TUI**           | [lazygit](https://github.com/jesseduffield/lazygit) [⚙️](./config/lazygit/config.yml)         |
+| **System Fetch**      | [fastfetch](https://github.com/fastfetch-cli/fastfetch) [⚙️](./config/AppData/Local/fastfetch/config.jsonc) |
+| **Git TUI**           | [lazygit](https://github.com/jesseduffield/lazygit) [⚙️](./config/AppData/Local/lazygit/config.yml)         |
 
 </details>
 
@@ -245,7 +245,7 @@ Follow the below links to download and learn to how to setup:
 
 | Entry | App                                                                      |
 | ----- | ------------------------------------------------------------------------- |
-| cat   | [bat](https://github.com/sharkdp/bat) [⚙️](./config/bat/config) |
+| cat   | [bat](https://github.com/sharkdp/bat) [⚙️](./config/AppData/Roaming/bat/config) |
 | cd    | [zoxide](https://github.com/ajeetdsouza/zoxide) |
 | ls    | [eza](https://github.com/eza-community/eza) [⚙️](./config/eza/theme.yml) |
 | find  | [fd](https://github.com/sharkdp/fd) |
@@ -259,7 +259,7 @@ Follow the below links to download and learn to how to setup:
 <table style="width:100%">
 <tr>
   <th><a href="https://spicetify.app/">spicetify</a></th>
-  <th><a href="https://github.com/Rigellute/spotify-tui">spotify-tui</a> <a href="./config/spotify-tui/config.yml">⚙️</a></th>
+  <th><a href="https://github.com/Rigellute/spotify-tui">spotify-tui</a> <a href="./config/config/spotify-tui/config.yml">⚙️</a></th>
 </tr>
 <tr style="height:400px,width:630px">
   <td><video alt="spicetify" src="https://github.com/user-attachments/assets/a622561e-1c6e-421a-87fe-4ef675c0a54f"></video></td>
@@ -295,7 +295,7 @@ Follow the below links to download and learn to how to setup:
 | npm | **[commitizen](https://github.com/commitizen/cz-cli)** + **[cz-git](https://cz-git.qbb.sh/)** | Write better Git commits. |
 | npm | **[git-open](https://github.com/paulirish/git-open)** | Open the GitHub page or website for a repository in your browser. |
 | npm | **[git-recent](https://github.com/paulirish/git-recent)** | See your latest local git branches, formatted real fancy. |
-| | **[git aliases](https://github.com/GitAlias/gitalias/blob/main/gitalias.txt)** | Include [git aliases](./config/gitaliases) for `git` command for faster version control. |
+| | **[git aliases](https://github.com/GitAlias/gitalias/blob/main/gitalias.txt)** | Include [git aliases](./config/config/gitaliases) for `git` command for faster version control. |
 
 </details>
 <details>
@@ -303,7 +303,7 @@ Follow the below links to download and learn to how to setup:
 
 - [Notepad++](https://notepad-plus-plus.org/)
 - [Obsidian](https://obsidian.md/)
-- [Visual Studio Code](https://code.visualstudio.com/) [⚙️](./vscode/settings.json)
+- [Visual Studio Code](https://code.visualstudio.com/) [⚙️](./config/AppData/Roaming/Code/User/settings.json)
 
 </details>
 
