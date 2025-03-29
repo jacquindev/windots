@@ -74,22 +74,15 @@ So, please keep in mind that:
 
 ### Rainmeter's Catppuccin Statusbar
 
-![rainmeter1](./.github/rainmeter1.png)<br/><br/>
-![rainmeter2](./.github/rainmeter2.png)<br/><br/>
-![rainmeter3](./.github/rainmeter3.png)<br/><br/>
+![rainmeter1](./.github/assets/rainmeter1.png)<br/><br/>
+![rainmeter2](./.github/assets/rainmeter2.png)<br/><br/>
+![rainmeter3](./.github/assets/rainmeter3.png)<br/><br/>
 
 - Transparent File Explorer
 
 ### [ExplorerBlurMica](https://github.com/Maplespe/ExplorerBlurMica) + [Catppuccin Themes](https://www.deviantart.com/niivu/art/Catppuccin-for-Windows-11-1076249390)
 
 ![fileexplorer](./.github/assets/fileexplorer.png)
-
-<hr>
-
-<div align="center">
-  <video src="https://github.com/user-attachments/assets/c6e214f5-d4ca-4bf6-81e3-16e74a1a08bc"></video>
-  <video src="https://github.com/user-attachments/assets/b068e898-1007-4f19-8076-7b8637e261dc"></video>
-</div>
 
 <hr>
 
@@ -251,21 +244,6 @@ Follow the below links to download and learn to how to setup:
 | find  | [fd](https://github.com/sharkdp/fd) |
 | grep  | [ripgrep](https://github.com/sharkdp/ripgrep) |
 
-</details>
-
-<details>
-<summary><b>🎧 Spotify</b></summary>
-<br>
-<table style="width:100%">
-<tr>
-  <th><a href="https://spicetify.app/">spicetify</a></th>
-  <th><a href="https://github.com/Rigellute/spotify-tui">spotify-tui</a> <a href="./config/config/spotify-tui/config.yml">⚙️</a></th>
-</tr>
-<tr style="height:400px,width:630px">
-  <td><video alt="spicetify" src="https://github.com/user-attachments/assets/a622561e-1c6e-421a-87fe-4ef675c0a54f"></video></td>
-  <td><video alt="spotify-tui" src="https://github.com/user-attachments/assets/577c96b1-4e57-4864-b19c-48b06a10c3c5"></video></td>
-</tr>
-</table>
 </details>
 
 <details>
