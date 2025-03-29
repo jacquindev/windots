@@ -3,15 +3,15 @@
 <img src="./.github/assets/title.png" alt="title">
 
 <br>
-<br>
 
 A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppuccin</a> Theme
 <a href="https://twitter.com/intent/tweet?text=Windows%2011%20Dotfiles%20Infused%20With%20Catppuccin%20Theme&url=https://github.com/jacquindev/windots"><img src="https://img.shields.io/badge/Tweet-share-8AADF4?style=social&logo=x&logoColor=8AADF4&labelColor=302D41&color=8AADF4" alt="TWITTER"></a>&nbsp;&nbsp;
 
 </div>
-</h3>
 
-<hr>
+<br>
+
+</h3>
 
 <div align="center">
 <p>
@@ -21,6 +21,8 @@ A Windows 11 Dotfiles Repo infused with <a href="https://catppuccin.com/">Catppu
   <a href="https://github.com/jacquindev/windots/stargazers"><img alt="Stargazers" src="https://img.shields.io/github/stars/jacquindev/windots?style=for-the-badge&logo=starship&color=B7BDF8&logoColor=B7BDF8&labelColor=302D41"></a>&nbsp;&nbsp;
 </p>
 </div>
+
+<hr>
 
 > [!IMPORTANT]
 > The below **screenshots** are taken on my main monitor, which has the **resolution of 3440x1440**.
@@ -116,12 +118,12 @@ cd `your_location`
 
 - In your **`Command Prompt`** console, type:
 
-```cmd
-clink installscripts "your_location\clink\clink-custom"
-clink installscripts "your_location\clink\clink-completions"
-clink installscripts "your_location\clink\clink-gizmos"
-clink installscripts "your_location\clink\more-clink-completions"
-```
+  ```cmd
+  clink installscripts "your_location\clink\clink-custom"
+  clink installscripts "your_location\clink\clink-completions"
+  clink installscripts "your_location\clink\clink-gizmos"
+  clink installscripts "your_location\clink\more-clink-completions"
+  ```
 
 - Replace _`your_location`_ with full path to where you cloned this repository.
 
@@ -140,10 +142,11 @@ clink installscripts "your_location\clink\more-clink-completions"
 
 <details open>
 <summary><b>🌟 Bootstrap WSL</b></summary>
+<br>
 
-- WSL setup can be done automatically by using [Ansible](https://docs.ansible.com/ansible/latest/index.html). Any details can be found here: https://github.com/jacquindev/automated-wsl2-setup.
-
-- WSL dotfiles are maintained in [this](https://github.com/jacquindev/dotfiles) repository: https://github.com/jacquindev/dotfiles.
+> [!IMPORTANT]
+> - WSL setup can be done automatically by using [Ansible](https://docs.ansible.com/ansible/latest/index.html). Any details can be found here: https://github.com/jacquindev/automated-wsl2-setup.
+> - WSL dotfiles are maintained in [this](https://github.com/jacquindev/dotfiles) repository: https://github.com/jacquindev/dotfiles.
 
 </details>
 <br>
@@ -217,9 +220,8 @@ Follow the below links to download and learn to how to setup:
 - 🥂 Many [addons](#git-addons) for Git!
 - 🐱 Use [MISE](https://mise.jdx.dev/) *(mise-en-place)* to manage [development tools](https://mise.jdx.dev/dev-tools/). Learn more about `mise` here: https://mise.jdx.dev/
 
+<details open>
 <br>
-
-<details>
 <summary><b>🖥️ CLI/TUI Apps</b></summary>
 
 | Entry                 | App                                                                                           |
@@ -233,7 +235,10 @@ Follow the below links to download and learn to how to setup:
 
 </details>
 
-<details>
+<br>
+
+<details open>
+<br>
 <summary><b>🌎 Replacement</b></summary>
 
 | Entry | App                                                                      |
@@ -246,7 +251,10 @@ Follow the below links to download and learn to how to setup:
 
 </details>
 
-<details>
+<br>
+
+<details open>
+<br>
 <summary><b>🖱️ GUI Apps</b></summary>
 
 | Entry            | App                                            |
@@ -256,7 +264,10 @@ Follow the below links to download and learn to how to setup:
 
 </details>
 
-<details>
+<br>
+
+<details open>
+<br>
 <summary id="git-addons"><b>📌 Git Addons</b></summary>
 
 | Installer | Link | Description |
@@ -276,7 +287,11 @@ Follow the below links to download and learn to how to setup:
 | | **[git aliases](https://github.com/GitAlias/gitalias/blob/main/gitalias.txt)** | Include [git aliases](./config/config/gitaliases) for `git` command for faster version control. |
 
 </details>
-<details>
+
+
+
+<details open>
+<br>
 <summary><b>📝 Text Editor / Note Taking</b></summary>
 
 - [Notepad++](https://notepad-plus-plus.org/)
