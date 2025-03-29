@@ -146,10 +146,9 @@ cd `your_location`
 <summary><b>🌟 Bootstrap WSL</b></summary>
 <br>
 
-> [!IMPORTANT]
-> WSL setup can be done automatically by using [Ansible](https://docs.ansible.com/ansible/latest/index.html). Any details can be found here: https://github.com/jacquindev/automated-wsl2-setup.
->
-> WSL dotfiles are maintained in [this](https://github.com/jacquindev/dotfiles) repository: https://github.com/jacquindev/dotfiles.
+WSL setup can be done automatically by using [Ansible](https://docs.ansible.com/ansible/latest/index.html). Any details can be found here: https://github.com/jacquindev/automated-wsl2-setup.
+
+➝ WSL dotfiles are maintained in [this](https://github.com/jacquindev/dotfiles) repository: https://github.com/jacquindev/dotfiles.
 
 </details>
 <br>
