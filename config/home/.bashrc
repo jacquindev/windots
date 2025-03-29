@@ -2,7 +2,7 @@
 
 # shellcheck disable=SC1090
 
-DOTFILES="$(dirname "$(dirname "$(readlink "$HOME/.bashrc")")")"
+DOTFILES="$(dirname "$(dirname "$(dirname "$(readlink "$HOME/.bashrc")")")")"
 export DOTFILES
 
 # Source bash configuration files
