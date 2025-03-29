@@ -130,15 +130,17 @@ cd `your_location`
 </details>
 
 > [!NOTE]
-> The [`clink-custom`](./clink/clink-custom/) directory contains Lua scripts to [extend `clink`](https://chrisant996.github.io/clink/clink.html#extending-clink) based on the programs you use.
-> If you don't have any of the corresponding programs, you can disable them by commenting out the files or simply remove them:
+> The [`clink-custom`](./clink/clink-custom/) directory contains Lua scripts to [extend `clink`](https://chrisant996.github.io/clink/clink.html#extending-clink) based on the programs you use. If you do not have the programs define in the scripts, they will not be activated.
 >
-> - `oh-my-posh` - [`clink/clink-custom/oh-my-posh.lua`](./clink/clink-custom/oh-my-posh.lua)
-> - `starship` - [`clink/clink-custom/starship.lua`](./clink/clink-custom/starship.lua)
-> - `vfox` - [`clink/clink-custom/vfox.lua`](./clink/clink-custom/vfox.lua)
-> - `zoxide` - [`clink/clink-custom/zoxide.lua`](./clink/clink-custom/zoxide.lua)
+> - custom prompt ➝ [`clink/clink-custom/prompt.lua`](./clink/clink-custom/prompt.lua).
+>   (Only one of the following should be set to `true`, otherwise `false`)
+>   - **`oh-my-posh`**: to <u>enable</u>, set *`local ohmyposh_enabled = true`*
+>   - **`starship`**: to <u>enable</u>, set *`local starship_enabled = true`*
+> - `vfox` ➝ [`clink/clink-custom/vfox.lua`](./clink/clink-custom/vfox.lua)
+> - `zoxide` ➝ [`clink/clink-custom/zoxide.lua`](./clink/clink-custom/zoxide.lua)
 
 <br>
+
 
 <details open>
 <summary><b>🌟 Bootstrap WSL</b></summary>
