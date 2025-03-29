@@ -1,5 +1,5 @@
 #!/bin/bash
 
-if [ -f ~/.config/bash/git-bash-completions/exec.sh ]; then
-	source ~/.config/bash/git-bash-completions/exec.sh
+if [ -f "$HOME/.config/bash/git-bash-completions/exec.sh" ]; then
+	source "$HOME/.config/bash/git-bash-completions/exec.sh"
 fi

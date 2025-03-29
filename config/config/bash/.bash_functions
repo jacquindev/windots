@@ -47,49 +47,49 @@ unshorten() {
 }
 
 # git-open: Open Git repository in web browser
-git-open() {
-	current_location="$(pwd)"
-	working_dir=${1:-$(pwd)}
-	working_dir="$(realpath "$working_dir")"
+# git-open() {
+# 	current_location="$(pwd)"
+# 	working_dir=${1:-$(pwd)}
+# 	working_dir="$(realpath "$working_dir")"
 
-	if ! test -d "$working_dir"; then
-		return
-	elif ! test -d "$working_dir/.git"; then
-		return
-	fi
+# 	if ! test -d "$working_dir"; then
+# 		return
+# 	elif ! test -d "$working_dir/.git"; then
+# 		return
+# 	fi
 
-	branch="$(git -C "$working_dir" symbolic-ref -q --short HEAD)"
+# 	branch="$(git -C "$working_dir" symbolic-ref -q --short HEAD)"
 
-	# Use `GitHub CLI` to open git repository
-	if command -v gh >/dev/null 2>&1; then
-		cd "$working_dir" && gh repo view --branch "$branch" --web
-		cd "$current_location" || exit 0
-	# Resolve git url
-	else
-		remote="$(git -C "$working_dir" config "branch.$branch.remote")"
-		url="$(git -C "$working_dir" ls-remote --get-url "$remote")"
+# 	# Use `GitHub CLI` to open git repository
+# 	if command -v gh >/dev/null 2>&1; then
+# 		cd "$working_dir" && gh repo view --branch "$branch" --web
+# 		cd "$current_location" || exit 0
+# 	# Resolve git url
+# 	else
+# 		remote="$(git -C "$working_dir" config "branch.$branch.remote")"
+# 		url="$(git -C "$working_dir" ls-remote --get-url "$remote")"
 
-		if [[ "$url" =~ ^[a-z\+]+://.* ]]; then
-			uri=${url#*://}
-			uri=${uri#*@}
-			domain=${uri%%/*}
-			urlpath=${uri#*/}
+# 		if [[ "$url" =~ ^[a-z\+]+://.* ]]; then
+# 			uri=${url#*://}
+# 			uri=${uri#*@}
+# 			domain=${uri%%/*}
+# 			urlpath=${uri#*/}
 
-			gitprotocol=${url%%://*}
+# 			gitprotocol=${url%%://*}
 
-			if [[ $gitprotocol != 'https' && $gitprotocol != 'http' ]]; then
-				domain=${domain%:*}
-			fi
-		else
-			uri=${url##*@}
-			domain=${uri%%:*}
-			urlpath=${uri#*:}
-		fi
-		urlpath=${urlpath#/} urlpath=${urlpath%/} urlpath=${urlpath%.git}
-		if [[ $gitprotocol == 'http' ]]; then protocol='http'; else protocol='https'; fi
+# 			if [[ $gitprotocol != 'https' && $gitprotocol != 'http' ]]; then
+# 				domain=${domain%:*}
+# 			fi
+# 		else
+# 			uri=${url##*@}
+# 			domain=${uri%%:*}
+# 			urlpath=${uri#*:}
+# 		fi
+# 		urlpath=${urlpath#/} urlpath=${urlpath%/} urlpath=${urlpath%.git}
+# 		if [[ $gitprotocol == 'http' ]]; then protocol='http'; else protocol='https'; fi
 
-		openurl="$protocol://$domain/$urlpath/tree/$branch"
-		echo "Opening $openurl in your browser."
-		start "$openurl"
-	fi
-}
+# 		openurl="$protocol://$domain/$urlpath/tree/$branch"
+# 		echo "Opening $openurl in your browser."
+# 		start "$openurl"
+# 	fi
+# }
