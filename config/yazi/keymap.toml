@@ -1,0 +1,82 @@
+"$schema" = "https://yazi-rs.github.io/schemas/keymap.json"
+
+[input]
+prepend_keymap = [{ on = ["<Esc>"], run = "close", desc = "Cancel input" }]
+
+[[manager.prepend_keymap]]
+on = ["<F5>"]
+run = "refresh"
+desc = "Refresh the current directory"
+
+[[manager.prepend_keymap]]
+on = "!"
+run = 'shell "$SHELL" --block --confirm'
+desc = "Open shell here"
+
+# hide-preview
+[[manager.prepend_keymap]]
+on = "B"
+run = "plugin --sync hide-preview"
+desc = "Hide or show preview"
+
+# max-preview
+[[manager.prepend_keymap]]
+on = "T"
+run = "plugin max-preview"
+desc = "Maximize or restore preview"
+
+# diff
+[[manager.prepend_keymap]]
+on = "<C-d>"
+run = "plugin diff"
+desc = "Diff the selected with the hovered file"
+
+# fg
+[[manager.prepend_keymap]]
+on = ["f", "g"]
+run = "plugin fg"
+desc = "find file by content (fuzzy match)"
+[[manager.prepend_keymap]]
+on = ["f", "G"]
+run = "plugin fg --args='rg'"
+desc = "find file by content (ripgrep match)"
+[[manager.prepend_keymap]]
+on = ["f", "f"]
+run = "plugin fg --args='fzf'"
+desc = "find file by name"
+
+# smart-filter
+[[manager.prepend_keymap]]
+on = ["f", "s"]
+run = "plugin smart-filter"
+desc = "Smart filter"
+
+# chmod
+[[manager.prepend_keymap]]
+on = ["c", "m"]
+run = "plugin chmod"
+desc = "Chmod on selected files"
+
+# custom-shell
+[[manager.prepend_keymap]]
+on = ["l", "g"]
+run = "plugin custom-shell --args='custom auto lazygit'"
+desc = "Run lazygit"
+[[manager.prepend_keymap]]
+on = ["'", "h"]
+run = "plugin custom-shell --args=history"
+desc = "Show Custom-shell history"
+
+# github
+[[manager.prepend_keymap]]
+on = ["g", "b"]
+run = '''
+    shell 'gh browse .'
+'''
+desc = "Browse repo on github"
+[[manager.prepend_keymap]]
+on = ["g", "f"]
+run = '''
+    shell 'gh browse $(git ls-files $0) --branch=$(git branch --show-current)'
+'''
+desc = "Browse file on github"
