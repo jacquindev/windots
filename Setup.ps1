@@ -1,7 +1,7 @@
 
 <#PSScriptInfo
 
-.VERSION 1.0.3
+.VERSION 1.1.0
 
 .GUID ccb5be4c-ea07-4c45-a5b4-6310df24e2bc
 
@@ -281,6 +281,23 @@ function Write-LockFile {
 			}
 			Start-Sleep -Seconds 1
 		}
+	}
+}
+
+function New-SymbolicLinks {
+	param (
+		[string]$Source,
+		[string]$Destination,
+		[switch]$Recurse
+	)
+
+	Get-ChildItem $Source -Recurse:$Recurse | Where-Object { !$_.PSIsContainer } | ForEach-Object {
+		$destinationPath = $_.FullName -replace [regex]::Escape($Source), $Destination
+		if (!(Test-Path (Split-Path $destinationPath))) {
+			New-Item (Split-Path $destinationPath) -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
+		}
+		New-Item -ItemType SymbolicLink -Path $destinationPath -Target $($_.FullName) -Force -ErrorAction SilentlyContinue | Out-Null
+		Write-ColorText "{Blue}[symlink] {Green}$($_.FullName) {Yellow}--> {Gray}$destinationPath"
 	}
 }
 
@@ -602,42 +619,9 @@ if (Get-Command gh -ErrorAction SilentlyContinue) {
 ####################################################################
 # symlinks
 Write-TitleBox -Title "Add symbolic links for dotfiles"
-$symlinks = @{
-	$PROFILE.CurrentUserAllHosts                                                                  = ".\Profile.ps1"
-	"$Env:APPDATA\bat"                                                                            = ".\config\bat"
-	"$Env:APPDATA\Code\User\keybindings.json"                                                     = ".\vscode\keybindings.json"
-	"$Env:APPDATA\Code\User\settings.json"                                                        = ".\vscode\settings.json"
-	"$Env:LOCALAPPDATA\fastfetch"                                                                 = ".\config\fastfetch"
-	"$Env:LOCALAPPDATA\lazygit"                                                                   = ".\config\lazygit"
-	"$Env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" = ".\windows\settings.json"
-	"$HOME\.bash_profile"                                                                         = ".\home\.bash_profile"
-	"$HOME\.bashrc"                                                                               = ".\home\.bashrc"
-	"$HOME\.config\bash"                                                                          = ".\config\bash"
-	"$HOME\.config\delta"                                                                         = ".\config\delta"
-	"$HOME\.config\eza"                                                                           = ".\config\eza"
-	"$HOME\.config\gh-dash"                                                                       = ".\config\gh-dash"
-	"$HOME\.config\gitaliases"                                                                    = ".\config\gitaliases"
-	"$HOME\.config\komorebi"                                                                      = ".\config\komorebi"
-	"$HOME\.config\mise"                                                                          = ".\config\mise"
-	"$HOME\.config\spotify-tui"                                                                   = ".\config\spotify-tui"
-	"$HOME\.config\starship.toml"                                                                 = ".\config\starship.toml"
-	"$HOME\.config\whkdrc"                                                                        = ".\config\whkdrc"
-	"$HOME\.config\yasb"                                                                          = ".\config\yasb"
-	"$HOME\.config\yazi"                                                                          = ".\config\yazi"
-	"$HOME\.czrc"                                                                                 = ".\home\.czrc"
-	"$HOME\.gitconfig"                                                                            = ".\home\.gitconfig"
-	"$HOME\.inputrc"                                                                              = ".\home\.inputrc"
-	"$HOME\.npmrc"                                                                                = ".\home\.npmrc"
-	"$HOME\.wslconfig"                                                                            = ".\home\.wslconfig"
-}
-
-# add symlinks
-foreach ($symlink in $symlinks.GetEnumerator()) {
-	Write-Verbose -Message "Creating symlink for $(Resolve-Path $symlink.Value) --> $($symlink.Key)"
-	Get-Item -Path $symlink.Key -ErrorAction SilentlyContinue | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
-	New-Item -ItemType SymbolicLink -Path $symlink.Key -Target (Resolve-Path $symlink.Value) -Force | Out-Null
-	Write-ColorText "{Blue}[symlink] {Green}$(Resolve-Path $symlink.Value) {Yellow}--> {Gray}$($symlink.Key)"
-}
+New-SymbolicLinks -Source "$PSScriptRoot\config\home" -Destination "$env:USERPROFILE" -Recurse
+New-SymbolicLinks -Source "$PSScriptRoot\config\AppData" -Destination "$env:USERPROFILE\AppData" -Recurse
+New-SymbolicLinks -Source "$PSScriptRoot\config\config" -Destination "$env:USERPROFILE\.config" -Recurse
 Refresh ($i++)
 
 # Set the right git name and email for the user after symlinking
@@ -745,7 +729,7 @@ Refresh ($i++)
 # VSCode Extensions
 if (Get-Command code -ErrorAction SilentlyContinue) {
 	Write-TitleBox -Title "VSCode Extensions Installation"
-	$extensionList = Get-Content "$PSScriptRoot\vscode\extensions.list"
+	$extensionList = Get-Content "$PSScriptRoot\extensions.list"
 	foreach ($ext in $extensionList) {
 		if (!(code --list-extensions | Select-String "$ext")) {
 			Write-Verbose -Message "Installing VSCode Extension: $ext"
