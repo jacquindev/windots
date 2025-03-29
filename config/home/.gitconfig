@@ -1,0 +1,73 @@
+[am]
+    threeWay = true
+[core]
+    # Configure Git to ensure line endings in files you checkout are correct for different os systems
+    autocrlf = true
+    branch = auto
+    editor = code --wait
+    grep = auto
+    interactive = auto
+    longpaths = true
+    pager = delta
+    showBranch = auto
+    status = auto
+    ui = true
+[diff]
+    tool = default-difftool
+    colorMoved = default
+[difftool "default-difftool"]
+    cmd = code --wait --diff $LOCAL $REMOTE
+[alias]
+    # https://dandavison.github.io/delta/tips-and-tricks/toggling-delta-features.html
+    diffs = -c delta.side-by-side=true diff
+[delta]
+    features = catppuccin-macchiato
+    file-style = omit
+    file-decoration-style = none
+    hunk-label = "  󰡏 "
+    navigate = true
+    tabs = 2
+    true-color = always
+    hyperlinks = true
+    hyperlinks-file-link-format = "vscode://file/{path}:{line}"
+[include]
+    path = ~/.config/delta/themes/themes.gitconfig
+    path = ~/.config/delta/themes/catppuccin.gitconfig
+    path = ~/.config/gitaliases
+[interactive]
+    diffFilter = delta --color-only
+[help]
+    autocorrect = 1
+[log]
+    abbrevCommit = true
+    decorate = short
+[merge]
+    tool = code
+    conflictstyle = zdiff3
+[mergetool "code"]
+    cmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED
+[pager]
+    log = delta
+    reflog = delta
+    show = delta
+    difftool = true
+[pull]
+    ff = only
+[push]
+    default = current
+[rerere]
+    enabled = true
+    autoUpdate = true
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+[user]
+	name = Jacquin Moon
+	email = jacquindev@outlook.com
+    signingkey = ~/.ssh/id_ed25519.pub
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	program = ssh-keygen

@@ -1,0 +1,34 @@
+[
+    {
+        "key": "ctrl+\\",
+        "command": "workbench.action.terminal.toggleTerminal",
+        "when": "terminal.active"
+    },
+    {
+        "key": "ctrl+`",
+        "command": "workbench.action.terminal.new",
+        "when": "terminalProcessSupported || terminalWebExtensionContributedProfile"
+    },
+    {
+        "key": "ctrl+shift+\\",
+        "command": "workbench.action.splitEditor"
+    },
+    {
+        "key": "ctrl+shift+\\",
+        "command": "workbench.action.terminal.split",
+        "when": "terminalFocus && terminalProcessSupported"
+    },
+    {
+        "key": "ctrl+alt+z",
+        "command": "workbench.action.toggleZenMode",
+        "when": "!isAuxiliaryWindowFocusedContext"
+    },
+    {
+        "key": "ctrl+shift+=",
+        "command": "glassit.increase"
+    },
+    {
+        "key": "ctrl+shift+-",
+        "command": "glassit.decrease"
+    }
+]
