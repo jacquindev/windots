@@ -141,6 +141,27 @@ cd `your_location`
 
 <br>
 
+<details open>
+<summary><b>⛏ Setup Development Tools with MISE <i>(mise-en-place)</i></b></summary>
+<br>
+
+Ensure that `mise` command available on your system (using `scoop install mise`)
+
+```bash
+# Enable experimental features:
+mise settings experimental true
+```
+
+The below command with install latest LTS version of NodeJS, and also automatically install NPM global packages define in [`.default-npm-packages`](./config/home/.default-npm-packages)
+
+```bash
+# Install latest NodeJS LTS
+mise use -g node@lts
+```
+
+For further information please visit: https://mise.jdx.dev.
+
+<br>
 
 <details open>
 <summary><b>🌟 Bootstrap WSL</b></summary>
