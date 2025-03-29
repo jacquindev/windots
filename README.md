@@ -134,8 +134,8 @@ cd `your_location`
 >
 > - custom prompt ➝ [`clink/clink-custom/prompt.lua`](./clink/clink-custom/prompt.lua).
 >   (Only one of the following should be set to `true`, otherwise `false`)
->   - **`oh-my-posh`**: to <u>enable</u>, set *`local ohmyposh_enabled = true`*
->   - **`starship`**: to <u>enable</u>, set *`local starship_enabled = true`*
+>   - **`oh-my-posh`**: to enable, set *`local ohmyposh_enabled = true`*.
+>   - **`starship`**: to enable, set *`local starship_enabled = true`*.
 > - `vfox` ➝ [`clink/clink-custom/vfox.lua`](./clink/clink-custom/vfox.lua)
 > - `zoxide` ➝ [`clink/clink-custom/zoxide.lua`](./clink/clink-custom/zoxide.lua)
 
