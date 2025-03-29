@@ -8,9 +8,7 @@
 		{ "commandName": "komorebic", "environmentKey": "KOMOREBI_CONFIG_HOME", "environmentValue": "C:\\Users\\jqnhi\\.config\\komorebi" },
 		{ "commandName": "yazi", "environmentKey": "YAZI_FILE_ONE", "environmentValue": "C:\\Program Files\\Git\\usr\\bin\\file.exe" },
 		{ "commandName": "yazi", "environmentKey": "YAZI_CONFIG_HOME", "environmentValue": "C:\\Users\\jqnhi\\.config\\yazi" },
-		{ "commandName": "vagrant", "environmentKey": "VAGRANT_DEFAULT_PROVIDER", "environmentValue": "virtualbox" },
-		{ "commandName": "mise", "environmentKey": "MISE_CONFIG_DIR", "environmentValue": "C:\\Users\\jqnhi\\.config\\mise" },
-		{ "commandName": "mise", "environmentKey": "MISE_GLOBAL_CONFIG_FILE", "environmentValue": "C:\\Users\\jqnhi\\.config\\mise\\config.toml" }
+		{ "commandName": "vagrant", "environmentKey": "VAGRANT_DEFAULT_PROVIDER", "environmentValue": "virtualbox" }
 	],
 	"installSource": {
 		"winget": {
