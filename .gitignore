@@ -10,7 +10,7 @@ archive/
 db.zo
 
 .spotify_token_cache.json
-config/lazygit/state.yml
+config/AppData/Local/lazygit/state.yml
 
 .vscode/
 
