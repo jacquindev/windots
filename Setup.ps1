@@ -755,7 +755,7 @@ $catppuccinThemes = @('Frappe', 'Latte', 'Macchiato', 'Mocha')
 # FLowlauncher themes
 $flowLauncherDir = "$env:LOCALAPPDATA\FlowLauncher"
 if (Test-Path "$flowLauncherDir" -PathType Container) {
-	$flowLauncherThemeDir = Join-Path "$flowLaucherDir" -ChildPath "Themes"
+	$flowLauncherThemeDir = Join-Path "$flowLauncherDir" -ChildPath "Themes"
 	$catppuccinThemes | ForEach-Object {
 		$themeFile = Join-Path "$flowLauncherThemeDir" -ChildPath "Catppuccin ${_}.xaml"
 		if (!(Test-Path "$themeFile" -PathType Leaf)) {
