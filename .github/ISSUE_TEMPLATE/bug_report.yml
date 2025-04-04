@@ -1,0 +1,35 @@
+name: "🐛 Bug Report"
+description: Create a bug/issue report
+title: "🐛 Bug: "
+labels: [bug]
+assignees: [jacquindev]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+
+  - type: checkboxes
+    attributes:
+      label: Did you check existing issues?
+      description: Make sure that you checked all of the below before submitting an issue to avoid duplicates
+      options:
+        - label: I have searched for existing issues
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description of a bug
+      description: Describe the bug in detail. Include screenshots if possible.
+      placeholder: A clear and concise description of what the bug is.
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshots
+      description: If needed, add screenshots to help explain your problem.
+    validations:
+      required: false
