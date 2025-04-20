@@ -178,3 +178,8 @@ function Get-PnpmGlobalPackages { (pnpm ls -g | Select-Object -Skip 5) | ForEach
 Set-Alias -Name 'npm-ls' -Value 'Get-NpmGlobalPackages'
 Set-Alias -Name 'bun-ls' -Value 'Get-BunGlobalPackages'
 Set-Alias -Name 'pnpm-ls' -Value 'Get-PnpmGlobalPackages'
+
+## Podman ##
+if (Get-Command podman -ErrorAction SilentlyContinue) {
+    Set-Alias -Name 'docker' -Value 'podman'
+}
