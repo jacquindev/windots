@@ -35,12 +35,14 @@
 				// Development Tools
 				{ "packageId": "ImageMagick.ImageMagick" },
 				{ "packageId": "Postman.Postman" },
+				{ "packageId": "9NTRNFT9ZWS2" }, // LocalStack Desktop
 
 				// Editors
 				{ "packageId": "JetBrains.IntelliJIDEA.Community" },
 				{ "packageId": "Microsoft.VisualStudioCode" },
 				{ "packageId": "Notepad++.Notepad++" },
 				{ "packageId": "Obsidian.Obsidian" },
+				{ "packageId": "LoftLabs.DevPod" }, // Client-Only Codespaces
 
 				// Productivity
 				{ "packageId": "Microsoft.PowerToys" },
@@ -48,7 +50,8 @@
 				{ "packageId": "9NHT9RB2F4HD", "packageSource": "msstore" }, // Microsoft Copilot
 
 				// Containerization / Virtualization
-				{ "packageId": "Docker.DockerDesktop" },
+				// { "packageId": "Docker.DockerDesktop" },
+				{ "packageId": "RedHat.Podman-Desktop" },
 				{ "packageId": "Oracle.VirtualBox" },
 				{ "packageId": "Hashicorp.Vagrant" },
 
@@ -117,7 +120,7 @@
 				{ "packageName": "ffmpeg" },
 				{ "packageName": "fzf" },
 				{ "packageName": "jq" },
-				{ "packageName": "mise" },
+				{ "packageName": "mise" }, // Development tools management (e.g: NodeJS, Java,...)
 				{ "packageName": "poppler" },
 				{ "packageName": "shfmt" },
 				{ "packageName": "speedtest-cli" },
@@ -153,11 +156,13 @@
 			"commandInvoke": "gh extension install",
 			"addonList": [
 				"dlvhdr/gh-dash",
-				"yuler/gh-download",
-				"seachicken/gh-poi",
-				"Link-/gh-token",
-				"yusukebe/gh-markdown-preview",
-				"Shresht7/gh-license"
+				"gennaro-tedesco/gh-f",
+				"gennaro-tedesco/gh-s",
+				// "Link-/gh-token",
+				// "seachicken/gh-poi",
+				"Shresht7/gh-license",
+				"yuler/gh-download"
+				// "yusukebe/gh-markdown-preview",
 			],
 			"install": false
 		},
