@@ -102,17 +102,24 @@ function Set-DevDrive {
 		@{ Name = "npm_config_cache"; Value = "$cachePath\npm"; Sources = @("$env:APPDATA\npm-cache", "$env:LOCALAPPDATA\npm-cache") },
 		@{ Name = "YARN_CACHE_FOLDER"; Value = "$cachePath\npm"; Sources = @("$env:LOCALAPPDATA\Yarn\Cache") },
 		@{ Name = "DENO_DIR"; Value = "$cachePath\deno"; Sources = @("$env:LOCALAPPDATA\deno") },
-		@{ Name = "PIP_CACHE_DIR"; Value = "$cachePath\pip"; Sources = @("$env:APPDATA\pip\Cache") },
+		@{ Name = "PIP_CACHE_DIR"; Value = "$cachePath\pip"; Sources = @("$env:APPDATA\pip\Cache", "$env:LOCALAPPDATA\pip\Cache") },
 		@{ Name = "PIPX_HOME"; Value = "$cachePath\pipx"; Sources = @("$env:USERPROFILE\pipx") },
+		@{ Name = "PIPX_BIN_DIR"; Value = "$selectedDrive\bin"; Source = @("$env:USERPROFILE\.local\bin") },
+		@{ Name = "PIPX_MAN_DIR"; Value = "$cachePath\pipx\man"; Source = @("$env:USERPROFILE\.local\share\man") },
 		@{ Name = "POETRY_CACHE_DIR"; Value = "$cachePath\poetry"; Sources = @("$env:LOCALAPPDATA\pypoetry\Cache") },
 		@{ Name = "RYE_HOME"; Value = "$cachePath\rye"; Sources = @("$env:USERPROFILE\.rye") },
 		@{ Name = "UV_CACHE_DIR"; Value = "$cachePath\uv"; Sources = @("$env:LOCALAPPDATA\uv\cache") },
-		@{ Name = "NUGET_PACKAGES"; Value = "$cachePath\.nuget\packages"; Sources = @("$env:USERPROFILE\.nuget\packages") },
-		@{ Name = "VAGRANT_HOME"; Value = "$selectedDrive\.vagrant.d"; Sources = @("$env:USERPROFILE\.vagrant.d") },
+		@{ Name = "NUGET_PACKAGES"; Value = "$selectedDrive\.nuget\packages"; Sources = @("$env:USERPROFILE\.nuget\packages") },
+		#@{ Name = "VAGRANT_HOME"; Value = "$selectedDrive\.vagrant.d"; Sources = @("$env:USERPROFILE\.vagrant.d") },
 		@{ Name = "VCPKG_DEFAULT_BINARY_CACHE"; Value = "$cachePath\vcpkg"; Sources = @("$env:LOCALAPPDATA\vcpkg\archives", "$env:APPDATA\vcpkg\archives") },
 		@{ Name = "CARGO_HOME"; Value = "$cachePath\cargo"; Sources = @("$env:USERPROFILE\.cargo") },
 		@{ Name = "GRADLE_USER_HOME"; Value = "$cachePath\gradle"; Sources = @("$env:USERPROFILE\.gradle") },
-		@{ Name = "MAVEN_OPTS"; Value = "$cachePath\maven"; Sources = @("$env:USERPROFILE\.m2\repository") }
+		@{ Name = "MAVEN_OPTS"; Value = "$cachePath\maven"; Sources = @("$env:USERPROFILE\.m2\repository") },
+		@{ Name = "HELM_CACHE_HOME"; Value = "$cachePath\helm\cache"; Sources = @("$env:LOCALAPPDATA\Temp\helm") },
+		@{ Name = "HELM_CONFIG_HOME"; Value = "$cachePath\helm"; Sources = @("$env:APPDATA\helm") },
+		@{ Name = "HELM_DATA_HOME"; Value = "$cachePath\helm"; Sources = @("$env:APPDATA\helm") },
+		@{ Name = "GOCACHE"; Value = "$cachePath\go"; Sources = @("$env:LOCALAPPDATA\go-build") },
+		@{ Name = "TRDL_HOME_DIR"; Value = "$selectedDrive\.trdl"; Sources = @("$env:USERPROFILE\.trdl") }
 	)
 
 	$envNames = gum choose --no-limit --header="Choose Environment Variables to set:" $($cacheSettings.Name)
