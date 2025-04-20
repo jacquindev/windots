@@ -4,10 +4,12 @@
 	"customScopesAlign": "top",
 	"confirmColorize": true,
 	"alias": {
-		"ai": ":hammer: chore: add .gitignore",
-		"al": ":hammer: chore: add LICENSE",
+		"aa": ":gear: config: add .gitattributes",
+		"ai": ":gear: config: add .gitignore",
+		"al": ":memo: docs: add LICENSE",
 		"ar": ":memo: docs: add README.md",
 		"ft": ":bug: fix: fix typos",
+		"ua": ":hammer: chore: update .gitattributes",
 		"ui": ":hammer: chore: update .gitignore",
 		"um": ":hammer: chore: update .gitmodules",
 		"ur": ":memo: docs: update README.md"
