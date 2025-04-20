@@ -4,6 +4,8 @@
 *.png filter=lfs diff=lfs merge=lfs -text
 *.rmskin filter=lfs diff=lfs merge=lfs -text
 
+# Line ending sequences
+.bash text eol=lf
 .bash* text eol=lf
 
 # Git-crypt
