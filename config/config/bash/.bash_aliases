@@ -1,3 +1,5 @@
+#!/usr/env/bin/bash
+
 # clear
 alias c='clear'
 alias cls='clear'
@@ -49,10 +51,12 @@ alias 775='chmod 775'                  # -rwxrwxr-x (user: rwx, group: rwx, othe
 alias mx='chmod a+x'                   # ---x--x--x (user: --x, group: --x, other: --x)
 alias ux='chmod u+x'                   # ---x------ (user: --x, group: -, other: -)
 
+# lazygit
 if command -v lazygit >/dev/null 2>&1; then
   alias lg='lazygit'
 fi
 
+# eza
 if command -v eza >/dev/null 2>&1; then
   alias ls='eza --git --icons --group --group-directories-first --time-style=long-iso --color-scale=all'
   alias l='ls --git-ignore'
@@ -81,4 +85,9 @@ if command -v node >/dev/null 2>&1; then
 else
   alias urlencode='python3 -c "import sys; del sys.path[0]; import urllib.parse as up; print(up.quote_plus(sys.argv[1]))"'
   alias urldecode='python3 -c "import sys; del sys.path[0]; import urllib.parse as up; print(up.unquote_plus(sys.argv[1]))"'
+fi
+
+# podman
+if command -v podman >/dev/null 2>&1; then
+  alias docker='podman'
 fi
