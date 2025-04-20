@@ -25,7 +25,7 @@ function Invoke-EzaDir {
 		[Parameter(ValueFromRemainingArguments = $true)]
 		[string[]]$Path
 	)
-	eza.exe --icons --header --hyperlink --group --grid --git -I='*NTUSER.DAT*|*ntuser.dat*' --group-directories-first -lDa --show-symlinks --time-style=relative @Path
+	eza.exe --icons --header --hyperlink --group --git -I='*NTUSER.DAT*|*ntuser.dat*' --group-directories-first -lDa --show-symlinks --time-style=relative @Path
 }
 function Invoke-EzaFile {
 	[alias('lF')]
@@ -33,7 +33,7 @@ function Invoke-EzaFile {
 		[Parameter(ValueFromRemainingArguments = $true)]
 		[string[]]$Path
 	)
-	eza.exe --icons --header --hyperlink --group --grid --git -I='*NTUSER.DAT*|*ntuser.dat*' --group-directories-first -lfa --show-symlinks --time-style=relative @Path
+	eza.exe --icons --header --hyperlink --group --git -I='*NTUSER.DAT*|*ntuser.dat*' --group-directories-first -lfa --show-symlinks --time-style=relative @Path
 }
 function Invoke-EzaList {
 	[alias('ll')]
@@ -41,7 +41,7 @@ function Invoke-EzaList {
 		[Parameter(ValueFromRemainingArguments = $true)]
 		[string[]]$Path
 	)
-	eza.exe --icons --header --hyperlink --group --grid --git -I='*NTUSER.DAT*|*ntuser.dat*' --group-directories-first -lbhHigUmuSa --time-style=relative --sort=modified --reverse @Path
+	eza.exe --icons --header --hyperlink --group --git -I='*NTUSER.DAT*|*ntuser.dat*' --group-directories-first -lbhHigUmuSa --time-style=relative --sort=modified --reverse @Path
 }
 function Invoke-EzaOneline {
 	[alias('lo')]
